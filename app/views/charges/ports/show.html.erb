@@ -1,0 +1,10 @@
+<div class="container-fluid">
+  <p id="notice"><%= notice %></p>
+
+  <h1><%= @port.name %></h1>
+
+  <div class="btn-group">
+    <%= link_to 'Edit', edit_port_path(@port), :class => "btn" %>
+    <%= link_to 'Back', ports_path, :class => "btn" %>
+  </div>
+</div>

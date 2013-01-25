@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <h1>Taxes</h1>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Rate</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @taxes.each do |tax| %>
+    <tr>
+      <td><%= tax.name %></td>
+      <td><%= tax.code %></td>
+      <td><%= tax.rate %></td>
+      <td>
+        <div class="btn-group">
+          <%= link_to 'Show', tax, :class => 'btn btn-info' %>
+          <%= link_to 'Edit', edit_tax_path(tax), :class => 'btn' %>
+          <%= link_to 'Delete', tax, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger' %>
+        </div>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'New Tax', new_tax_path, :class => 'btn btn-primary' %>
+</div>

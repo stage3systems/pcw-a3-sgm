@@ -1,0 +1,34 @@
+@import "twitter/bootstrap";
+@import "twitter/bootstrap-responsive";
+
+/* base layout */
+html {height: 100%; font-size: 62.5%;}
+body {height: 100%; font-size: 13px; /*font-size: 1.3rem;*/ background: #eee; color: #333;}
+label {color: #aaa;}
+
+#hd {margin-bottom: 20px;}
+#hd .navbar-inner {border: none; background-color: #0e4079; background-image: none;}
+#hd.navbar-static-top .navbar-inner {box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;}
+#hd.navbar .brand {padding: 10px 30px; background: url(logo_monson.png) center center no-repeat; color: #fff; text-shadow: 0 -1px 0 rgba(0,0,0,0.2); text-indent: -9999px; outline: none;}
+#hd.navbar .nav > li > a {color: #afcae8; text-shadow: 0 -1px 0 rgba(0,0,0,0.2);}
+#hd.navbar .nav > li > a:focus, #hd.navbar .nav > li > a:hover {color: #fff;}
+#hd.navbar .nav > .active > a {background-color: #eee; color: #0e4079; text-shadow: 0 1px 0 rgba(255,255,255,0.5);}
+#hd .date {font-size: 15px; color: #fff; text-align: right;}
+#hd .date > label {margin: 2px 0 -4px; font-size: 11px; display: block;}
+
+/* sticky footer */
+.wrapper {min-height: 100%; margin-bottom: -30px;}
+.push, #ft {height: 30px; text-align: center; font-size: 10px;}
+#ft {color: #999;}
+#ft a {color: #61afd6; text-decoration: none;}
+#ft a:hover {color: #1797d7;}
+.axis text {
+  font-size: 9px;
+}
+
+table.table { background-color: #fff;}
+#sortable {
+  tr.item {
+    cursor: row-resize;
+  }
+}

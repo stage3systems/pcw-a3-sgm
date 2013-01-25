@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  port_id: 1
+  tax_id: 1
+  code: MyText
+  name: MyString
+  key: MyString
+
+two:
+  port_id: 1
+  tax_id: 1
+  code: MyText
+  name: MyString
+  key: MyString

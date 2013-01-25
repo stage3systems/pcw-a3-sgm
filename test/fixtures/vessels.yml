@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  loa: 9.99
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+
+two:
+  name: MyString
+  loa: 9.99
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99

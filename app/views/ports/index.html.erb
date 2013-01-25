@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <h1>Ports</h1>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Charges</th>
+      <th>Currency</th>
+      <th>Tax</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @ports.each do |port| %>
+    <tr>
+      <td><%= port.name %></td>
+      <td><%= link_to port.charges.count.to_s, port_charges_path(port)  %></td>
+      <td><%= port.currency.name  %></td>
+      <td><%= port.tax.name  %></td>
+      <td>
+        <div class="btn-group">
+          <%= link_to 'Show', port, :class => 'btn btn-info' %>
+          <%= link_to 'Edit', edit_port_path(port), :class => 'btn' %>
+          <%= link_to 'Delete', port, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger' %>
+        </div>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'New Port', new_port_path, :class => 'btn btn-primary' %>
+</div>

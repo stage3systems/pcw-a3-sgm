@@ -1,0 +1,10 @@
+<div class="container-fluid">
+  <p id="notice"><%= notice %></p>
+
+  <h1><%= @tax.name %></h1>
+
+  <div class="btn-group">
+    <%= link_to 'Edit', edit_tax_path(@tax), :class => "btn" %>
+    <%= link_to 'Back', taxes_path, :class => "btn" %>
+  </div>
+</div>

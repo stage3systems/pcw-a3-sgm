@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  port_id: 1
+  vessel_id: 1
+  tugs_in: 1
+  tugs_out: 1
+  cargo_qty: 1
+  loadtime: 1
+  days_alongside: 1
+
+two:
+  port_id: 1
+  vessel_id: 1
+  tugs_in: 1
+  tugs_out: 1
+  cargo_qty: 1
+  loadtime: 1
+  days_alongside: 1

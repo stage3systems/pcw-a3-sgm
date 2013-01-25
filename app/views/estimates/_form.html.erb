@@ -1,0 +1,135 @@
+<%= simple_form_for(@estimate, html: {class: "form-horizontal"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <div class="span6">
+    <%= f.association :port %>
+    <%= f.association :vessel %>
+    </div>
+    <div class="span6">
+    <%= f.input :cargo_qty, label: "Cargo Qty" %>
+    <%= f.input :tugs_in, label: "Tugs In" %>
+    <%= f.input :tugs_out, label: "Tugs Out" %>
+    <%= f.input :loadtime, label: "Load Time" %>
+    <%= f.input :days_alongside %>
+    </div>
+    <div class="clearfix"></div>
+    <h4>Charges</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th class="tax">AMOUNT</th>
+          <th class="tax_inc">AMOUNT TAX INC.</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <tfoot>
+        <th>TOTAL</th>
+        <td class="total"></td>
+        <td class="total_tax_inc"></td>
+      </tfoot>
+    </table>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var ctx = {
+      <% if @estimate.vessel %>
+      vessel: <%= @estimate.vessel.to_json.html_safe %><% if @estimate.port %>,<% end %>
+      <% end %>
+      <% if @estimate.port %>
+      port: <%= @estimate.port.to_json(:include => :charges).html_safe %>
+      <% end %>
+    };
+    <% if Rails.env == 'development' %>
+    window.getCtx = function() {return ctx;};
+    <% end %>
+    var updateVessel = function() {
+      $("div.vessel-fields").remove();
+      var vessel_id = $("select#estimate_vessel_id").val();
+      if (vessel_id) {
+        $.ajax("/vessels/"+vessel_id, {
+          dataType: 'json',
+          success: function(d) {
+            ctx.vessel = d;
+            var fields = '<div class="controls vessel-fields"><strong>GRT:</strong> '+d.grt+'</div>';
+            fields += '<div class="controls vessel-fields"><strong>NRT:</strong> '+d.nrt+'</div>';
+            fields += '<div class="controls vessel-fields"><strong>DWT:</strong> '+d.dwt+'</div>';
+            fields += '<div class="controls vessel-fields"><strong>LOA:</strong> '+d.loa+'</div>';
+            $("select#estimate_vessel_id").parent().parent().append(fields);
+            compute();
+          }
+        });
+      }
+    };
+    $("select#estimate_vessel_id").on("change", updateVessel);
+    var updatePort = function() {
+      $("div.port-fields").remove();
+      var port_id = $("select#estimate_port_id").val();
+      if (port_id) {
+        $.ajax("/ports/"+port_id, {
+          dataType: 'json',
+          success: function(d) {
+            ctx.port = d;
+            var fields = '<div class="controls port-fields"><strong>Currency:</strong> '+d.currency.name+' ('+d.currency.code+')</div>';
+            fields += '<div class="controls port-fields"><strong>Tax:</strong> '+d.tax.name+' ('+d.tax.code+')</div>';
+            $("select#estimate_port_id").parent().parent().append(fields);
+            compute();
+          }
+        });
+      }
+    };
+    $("select#estimate_port_id").on("change", updatePort);
+    var compute = function() {
+      ctx.estimate = {
+        cargo_qty: parseInt($("input#estimate_cargo_qty").val()),
+        tugs_in: parseInt($("input#estimate_tugs_in").val()),
+        tugs_out: parseInt($("input#estimate_tugs_out").val()),
+        loadtime: parseInt($("input#estimate_loadtime").val()),
+        days_alongside: parseInt($("input#days_alongside").val())
+      };
+      var total = 0,
+          totalTaxInc = 0;
+      var rows = '';
+      $("tr.charge").remove();
+      for (var i = 0; i < ctx.port.charges.length; ++i) {
+        var currency = '$';
+        if (ctx.port && ctx.port.currency && ctx.port.currency.symbol) {
+          currency = ctx.port.currency.symbol;
+        }
+        var convert = function(n) {
+          return numberToCurrency(n, {unit: currency});
+        };
+        var c = ctx.port.charges[i];
+        var code = eval("("+c.code+")");
+        var val = parseFloat(code.compute(ctx));
+        total += val;
+        var valTaxInc = val;
+        if (code.taxApplies) {
+          if (code.taxRate) {
+            valTaxInc = val*code.taxRate;
+          } else if (ctx.port.tax && ctx.port.tax.rate) {
+            valTaxInc = val*parseFloat(ctx.port.tax.rate);
+          }
+        }
+        totalTaxInc += valTaxInc;
+        rows += '<tr class="charge"><th>'+c.name+'</th><td class="charge" id="'+c.key+'">'+convert(val)+'</td><td class="charge_tax_inc">'+convert(valTaxInc)+'</td></tr>';
+      }
+      $("table.table tbody").append(rows);
+      $("td.total").html(convert(total));
+      $("td.total_tax_inc").html(convert(totalTaxInc));
+    }
+    $("input#estimate_cargo_qty").on("change", compute);
+    $("input#estimate_tugs_in").on("change", compute);
+    $("input#estimate_tugs_out").on("change", compute);
+    $("input#estimate_loadtime").on("change", compute);
+    $("input#days_alongside").on("change", compute);
+    updateVessel();
+    updatePort();
+  });
+</script>

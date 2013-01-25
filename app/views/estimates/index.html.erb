@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <h1>Estimates</h1>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Date</th>
+      <th>Vessel</th>
+      <th>Port</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @estimates.each do |estimate| %>
+    <tr>
+      <td><%= l estimate.updated_at %></td>
+      <td><%= estimate.vessel.name %></td>
+      <td><%= estimate.port.name %></td>
+      <td>
+        <div class="btn-group">
+          <%= link_to 'Show', estimate, :class => 'btn btn-info' %>
+          <%= link_to 'Edit', edit_estimate_path(estimate), :class => 'btn' %>
+          <%= link_to 'Delete', estimate, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger' %>
+        </div>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'New Estimate', new_estimate_path, :class => 'btn btn-primary' %>
+</div>
