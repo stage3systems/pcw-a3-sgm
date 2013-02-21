@@ -3,7 +3,8 @@
 
   <table class="table table-bordered">
     <tr>
-      <th>Date</th>
+      <th>Status</th>
+      <th>Last Modified</th>
       <th>Vessel</th>
       <th>Port</th>
       <th>Actions</th>
@@ -11,14 +12,26 @@
 
   <% @estimates.each do |estimate| %>
     <tr>
+      
+      <td>
+        <% if estimate.draft? %>
+        Draft
+        <% else %>
+        <%= link_to 'Published', published_url(:id => estimate.publication_id) %>
+        <% end %>
+      </td>
       <td><%= l estimate.updated_at %></td>
       <td><%= estimate.vessel.name %></td>
       <td><%= estimate.port.name %></td>
       <td>
         <div class="btn-group">
-          <%= link_to 'Show', estimate, :class => 'btn btn-info' %>
-          <%= link_to 'Edit', edit_estimate_path(estimate), :class => 'btn' %>
-          <%= link_to 'Delete', estimate, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger' %>
+          <% if estimate.draft? %>
+          <%= link_to 'Publish', publish_estimate_path(estimate), :class => 'btn btn-info btn-small' %>
+          <%= link_to 'Edit', edit_estimate_path(estimate), :class => 'btn btn-small' %>
+          <% else %>
+          <%= link_to 'Unpublish', unpublish_estimate_path(estimate), :class => 'btn btn-info btn-small' %>
+          <% end %>
+          <%= link_to 'Delete', estimate, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
         </div>
     </tr>
   <% end %>

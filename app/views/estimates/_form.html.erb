@@ -15,7 +15,9 @@
     </div>
     <div class="clearfix"></div>
     <h4>Charges</h4>
-    <table class="table table-bordered">
+    <div class="overriden">
+    </div>
+    <table class="table table-bordered table-condensed">
       <thead>
         <tr>
           <th>NAME</th>
@@ -38,6 +40,21 @@
 <% end %>
 <script type="text/javascript">
   $(document).ready(function() {
+    $.fn.editable.defaults.mode = 'inline';
+    var convert = function(n) {return n;}
+    var overriden = {};
+    window.revertValue = function(key) {
+      delete overriden[key];
+      $("td#charge_"+key+" a.editable_value").removeClass("editable-unsaved");
+      $("td#charge_"+key+" i").addClass("hidden");
+      compute();
+    };
+    $.fn.editable.defaults.display = function(value, sourceData) {
+      var key = $(this).attr("id").split("_")[1];
+      overriden[key] = parseFloat(value);
+      $(this).html(convert(value));
+      compute();
+    };
     var ctx = {
       <% if @estimate.vessel %>
       vessel: <%= @estimate.vessel.to_json.html_safe %><% if @estimate.port %>,<% end %>
@@ -85,6 +102,15 @@
       }
     };
     $("select#estimate_port_id").on("change", updatePort);
+    var setup = function() {
+      var tbody = $("table.table tbody");
+      for (var i = 0; i < ctx.port.charges.length; ++i) {
+        var c = ctx.port.charges[i];
+        var row = $('<tr class="charge"><th>'+c.name+'</th><td id="charge_'+c.key+'"><a class="editable_value" id="field_'+c.key+'" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue(\''+c.key+'\')"></i><input type="hidden" name="value_'+c.key+'" /><input  type="hidden" name="value_with_tax_'+c.key+'" /></td><td id="charge_with_tax_'+c.key+'"></td></tr>');
+        tbody.append(row);
+      }
+      //$("a.editable_value").tooltip();
+    }
     var compute = function() {
       ctx.estimate = {
         cargo_qty: parseInt($("input#estimate_cargo_qty").val()),
@@ -95,19 +121,21 @@
       };
       var total = 0,
           totalTaxInc = 0;
-      var rows = '';
-      $("tr.charge").remove();
       for (var i = 0; i < ctx.port.charges.length; ++i) {
         var currency = '$';
         if (ctx.port && ctx.port.currency && ctx.port.currency.symbol) {
           currency = ctx.port.currency.symbol;
         }
-        var convert = function(n) {
+        convert = function(n) {
           return numberToCurrency(n, {unit: currency});
         };
         var c = ctx.port.charges[i];
         var code = eval("("+c.code+")");
         var val = parseFloat(code.compute(ctx));
+        if (overriden[c.key]) {
+          $("td#charge_"+c.key+" i").removeClass("hidden");
+          val = overriden[c.key];
+        }
         total += val;
         var valTaxInc = val;
         if (code.taxApplies) {
@@ -118,17 +146,27 @@
           }
         }
         totalTaxInc += valTaxInc;
-        rows += '<tr class="charge"><th>'+c.name+'</th><td class="charge" id="'+c.key+'">'+convert(val)+'</td><td class="charge_tax_inc">'+convert(valTaxInc)+'</td></tr>';
+        $("td#charge_"+c.key+" a").html(convert(val));
+        $("td#charge_"+c.key+" a").attr("data-value", val.toFixed(2));
+        $("td#charge_with_tax_"+c.key).html(convert(valTaxInc));
+        $('input[name="value_'+c.key+'"]').val(val);
+        $('input[name="value_with_tax_'+c.key+'"]').val(valTaxInc);
       }
-      $("table.table tbody").append(rows);
       $("td.total").html(convert(total));
       $("td.total_tax_inc").html(convert(totalTaxInc));
+      $("td a.editable_value").editable();
     }
-    $("input#estimate_cargo_qty").on("change", compute);
-    $("input#estimate_tugs_in").on("change", compute);
-    $("input#estimate_tugs_out").on("change", compute);
-    $("input#estimate_loadtime").on("change", compute);
-    $("input#days_alongside").on("change", compute);
+    var cleanCompute = function() {
+      overriden = {};
+      $("a.editable_value").removeClass("editable-unsaved");
+      compute();
+    };
+    $("input#estimate_cargo_qty").on("change", cleanCompute);
+    $("input#estimate_tugs_in").on("change", cleanCompute);
+    $("input#estimate_tugs_out").on("change", cleanCompute);
+    $("input#estimate_loadtime").on("change", cleanCompute);
+    $("input#days_alongside").on("change", cleanCompute);
+    setup();
     updateVessel();
     updatePort();
   });

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125123702) do
+ActiveRecord::Schema.define(:version => 20130221153937) do
 
   create_table "charges", :force => true do |t|
     t.integer  "port_id"
@@ -39,9 +39,15 @@ ActiveRecord::Schema.define(:version => 20130125123702) do
     t.integer  "cargo_qty"
     t.integer  "loadtime"
     t.integer  "days_alongside"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.hstore   "data"
+    t.integer  "status_cd",       :default => 0
+    t.string   "publication_id"
+    t.hstore   "fields"
+    t.hstore   "descriptions"
+    t.hstore   "values"
+    t.hstore   "values_with_tax"
   end
 
   create_table "ports", :force => true do |t|

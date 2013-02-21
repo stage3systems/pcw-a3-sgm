@@ -31,4 +31,6 @@
 //= require twitter/bootstrap/carousel
 //= require twitter/bootstrap/typeahead
 //= require twitter/bootstrap/affix
+//= require bootstrap-editable
+//= require bootstrap-editable-rails
 //= require bootstrap_init
