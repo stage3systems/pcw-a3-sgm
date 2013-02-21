@@ -69,7 +69,7 @@ class EstimatesController < ApplicationController
   # POST /estimates.json
   def create
     @estimate = Estimate.new(params[:estimate])
-    cristalize_estimate
+    crystalize_estimate
     respond_to do |format|
       if @estimate.save
         format.html { redirect_to @estimate, notice: 'Estimate was successfully created.' }
