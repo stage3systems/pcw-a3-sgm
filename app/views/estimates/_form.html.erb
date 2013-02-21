@@ -86,6 +86,7 @@
     };
     $("select#estimate_vessel_id").on("change", updateVessel);
     var updatePort = function() {
+      $("table tbody tr").remove();
       $("div.port-fields").remove();
       var port_id = $("select#estimate_port_id").val();
       if (port_id) {
@@ -96,6 +97,7 @@
             var fields = '<div class="controls port-fields"><strong>Currency:</strong> '+d.currency.name+' ('+d.currency.code+')</div>';
             fields += '<div class="controls port-fields"><strong>Tax:</strong> '+d.tax.name+' ('+d.tax.code+')</div>';
             $("select#estimate_port_id").parent().parent().append(fields);
+            setup();
             compute();
           }
         });
@@ -121,6 +123,7 @@
       };
       var total = 0,
           totalTaxInc = 0;
+      if (ctx.port == undefined) { return; }
       for (var i = 0; i < ctx.port.charges.length; ++i) {
         var currency = '$';
         if (ctx.port && ctx.port.currency && ctx.port.currency.symbol) {
@@ -166,7 +169,6 @@
     $("input#estimate_tugs_out").on("change", cleanCompute);
     $("input#estimate_loadtime").on("change", cleanCompute);
     $("input#days_alongside").on("change", cleanCompute);
-    setup();
     updateVessel();
     updatePort();
   });
