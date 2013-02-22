@@ -27,12 +27,20 @@ class EstimateRevision < ActiveRecord::Base
         rev.send("#{k}=", revision.send(k))
       end
       rev.crystalize
+      total = BigDecimal.new("0")
+      total_with_tax = BigDecimal.new("0")
       revision.fields.keys.each do |k|
         if rev.fields.has_key?(k) 
-          rev.values[k] = revision.values[k]
-          rev.values_with_tax[k] = revision.values_with_tax[k]
+          value = revision.values[k]
+          rev.values[k] = value
+          total += BigDecimal.new(value)
+          value_with_tax = revision.values_with_tax[k]
+          rev.values_with_tax[k] = values_with_tax
+          total_with_tax += BigDecimal.new(value_with_tax)
         end
       end
+      rev.data["total"] = total.round(2).to_s
+      rev.data["total_with_tax"] = total_with_tax.round(2).to_s
     end
     rev.save
     rev

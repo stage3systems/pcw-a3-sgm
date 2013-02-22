@@ -80,15 +80,15 @@ class EstimatesController < ApplicationController
   end
 
   def crystalize_revision
-    total = BigDecimal("0")
-    total_with_tax = BigDecimal("0")
+    total = BigDecimal.new("0")
+    total_with_tax = BigDecimal.new("0")
     @revision.field_keys.each do |k|
       value = params["value_#{k}"]
       @revision.values[k] = value
-      total += BigDecimal(value)
+      total += BigDecimal.new(value)
       value_with_tax = params["value_with_tax_#{k}"]
       @revision.values_with_tax[k] = value_with_tax
-      total_with_tax += BigDecimal(value_with_tax)
+      total_with_tax += BigDecimal.new(value_with_tax)
     end
     @revision.data["total"] = total.round(2).to_s
     @revision.data["total_with_tax"] = total_with_tax.round(2).to_s
