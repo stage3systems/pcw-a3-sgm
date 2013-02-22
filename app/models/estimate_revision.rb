@@ -35,7 +35,7 @@ class EstimateRevision < ActiveRecord::Base
           rev.values[k] = value
           total += BigDecimal.new(value)
           value_with_tax = revision.values_with_tax[k]
-          rev.values_with_tax[k] = values_with_tax
+          rev.values_with_tax[k] = value_with_tax
           total_with_tax += BigDecimal.new(value_with_tax)
         end
       end
