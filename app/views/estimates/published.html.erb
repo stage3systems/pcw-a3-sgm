@@ -7,6 +7,29 @@
       </div>
     </div>
     <div class="row">
+      <div class="span4">
+        <p style="padding-left: 1em;">
+          <strong>Vessel GRT:</strong> <%= @revision.data["vessel_grt"] %><br />
+          <strong>Vessel NRT:</strong> <%= @revision.data["vessel_nrt"] %><br />
+          <strong>Vessel DWT:</strong> <%= @revision.data["vessel_dwt"] %><br />
+          <strong>Vessel LOA:</strong> <%= @revision.data["vessel_loa"] %><br />
+        </p>
+      </div>
+      <div class="span4">
+        <p style="padding-left: 1em;">
+          <strong>Cargo Qty:</strong> <%= @revision.cargo_qty %><br />
+          <strong>Load Time:</strong> <%= @revision.loadtime %><br />
+          <strong>Days alongside:</strong> <%= @revision.days_alongside %><br />
+        </p>
+      </div>
+      <div class="span4">
+        <p style="padding-left: 1em;">
+          <strong>Tugs In:</strong> <%= @revision.tugs_in %><br />
+          <strong>Tugs Out:</strong> <%= @revision.tugs_out %><br />
+        </p>
+      </div>
+    </div>
+    <div class="row">
       <div class="span12 well well-small">
         <table class="table table-condensed">
           <thead>
