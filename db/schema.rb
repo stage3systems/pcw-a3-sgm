@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130221153937) do
+ActiveRecord::Schema.define(:version => 20130222121420) do
 
   create_table "charges", :force => true do |t|
     t.integer  "port_id"
@@ -31,23 +31,31 @@ ActiveRecord::Schema.define(:version => 20130221153937) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "estimates", :force => true do |t|
-    t.integer  "port_id"
-    t.integer  "vessel_id"
-    t.integer  "tugs_in"
-    t.integer  "tugs_out"
-    t.integer  "cargo_qty"
-    t.integer  "loadtime"
-    t.integer  "days_alongside"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+  create_table "estimate_revisions", :force => true do |t|
+    t.integer  "estimate_id"
     t.hstore   "data"
-    t.integer  "status_cd",       :default => 0
-    t.string   "publication_id"
     t.hstore   "fields"
     t.hstore   "descriptions"
     t.hstore   "values"
     t.hstore   "values_with_tax"
+    t.hstore   "codes"
+    t.integer  "number"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.integer  "cargo_qty",       :default => 0
+    t.integer  "days_alongside",  :default => 0
+    t.integer  "loadtime",        :default => 0
+    t.integer  "tugs_in",         :default => 0
+    t.integer  "tugs_out",        :default => 0
+  end
+
+  create_table "estimates", :force => true do |t|
+    t.integer  "port_id"
+    t.integer  "vessel_id"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.integer  "status_cd",      :default => 0
+    t.string   "publication_id"
   end
 
   create_table "ports", :force => true do |t|

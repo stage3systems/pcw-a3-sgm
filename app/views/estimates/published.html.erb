@@ -1,0 +1,41 @@
+<div class="container">
+  <% if @published  and @published.published? %>
+    <div class="row">
+      <div class="span12 well well-small">
+        <h4>Estimate for <%= @published.vessel.name %> in <%= @published.port.name %>: <%= number_to_currency @revision.data["total_with_tax"] %> <%= @revision.data["currency_code"] %> Tax Inc.</h4>
+        <p><small>Revision <%= @revision.number %> | Last revised on <%= l @revision.updated_at %></small></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span12 well well-small">
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount <%= @revision.data["currency_code"] %></th>
+              <th>Amount <%= @revision.data["currency_code"] %> Tax Inc.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @revision.field_keys.each do |f| %>
+              <tr>
+                <td><%= @revision.descriptions[f] %></td>
+                <td><%= number_to_currency @revision.values[f] %></td>
+                <td><%= number_to_currency @revision.values_with_tax[f] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <th><%= number_to_currency @revision.data["total"] %></th>
+              <th><%= number_to_currency @revision.data["total_with_tax"] %></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <div class="well"><h3>The requested document cannot be found.</h3></div>
+  <% end %>
+</div>

@@ -44,7 +44,6 @@ class ChargesController < ApplicationController
   end
 
   def create
-    puts params
     @port = Port.find(params[:port_id])
     @charge = Charge.new(params[:charge])
     @charge.port = @port

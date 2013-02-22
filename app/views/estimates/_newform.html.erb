@@ -1,0 +1,11 @@
+<%= simple_form_for(@estimate, html: {class: "form-horizontal"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :port %>
+    <%= f.association :vessel %>
+  <div>
+  <div class="form-actions">
+    <%= f.submit 'Next' %>
+  </div>
+<% end %>

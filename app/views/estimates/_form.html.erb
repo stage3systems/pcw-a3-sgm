@@ -1,49 +1,92 @@
-<%= simple_form_for(@estimate, html: {class: "form-horizontal"}) do |f| %>
+<%= simple_form_for(@revision, url: estimate_url(@estimate),
+                    method: :put, html: {class: "form-horizontal"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <div class="span6">
-    <%= f.association :port %>
-    <%= f.association :vessel %>
+    <div class="span4">
+      <table class="table table-condensed table-bordered">
+        <tbody>
+          <tr>
+            <th>Port</th>
+            <td><%= @revision.data["port_name"] %></td>
+          </tr>
+          <tr>
+            <th>Vessel</th>
+            <td><%= @revision.data["vessel_name"] %></td>
+          </tr>
+          <tr>
+            <th>Vessel GRT</th>
+            <td><%= @revision.data["vessel_grt"] %></td>
+          </tr>
+          <tr>
+            <th>Vessel NRT</th>
+            <td><%= @revision.data["vessel_nrt"] %></td>
+          </tr>
+          <tr>
+            <th>Vessel DWT</th>
+            <td><%= @revision.data["vessel_dwt"] %></td>
+          </tr>
+          <tr>
+            <th>Vessel LOA</th>
+            <td><%= @revision.data["vessel_loa"] %></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="span6">
+    <div class="span4">
     <%= f.input :cargo_qty, label: "Cargo Qty" %>
-    <%= f.input :tugs_in, label: "Tugs In" %>
-    <%= f.input :tugs_out, label: "Tugs Out" %>
     <%= f.input :loadtime, label: "Load Time" %>
     <%= f.input :days_alongside %>
+    </div>
+    <div class="span4">
+    <%= f.input :tugs_in, label: "Tugs In" %>
+    <%= f.input :tugs_out, label: "Tugs Out" %>
     </div>
     <div class="clearfix"></div>
     <h4>Charges</h4>
     <div class="overriden">
     </div>
-    <table class="table table-bordered table-condensed">
+    <table class="estimate table table-bordered table-condensed">
       <thead>
         <tr>
           <th>NAME</th>
-          <th class="tax">AMOUNT</th>
-          <th class="tax_inc">AMOUNT TAX INC.</th>
+          <th class="tax">AMOUNT <%= @revision.data["currency_code"] %></th>
+          <th class="tax_inc">AMOUNT <%= @revision.data["currency_code"] %> TAX INC.</th>
         </tr>
       </thead>
       <tbody>
+        <% @revision.field_keys.each do |k| %>
+          <tr class="charge">
+            <th><%= @revision.descriptions[k] %></th>
+            <td id="charge_<%= k %>">
+              <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue('<%= k %>')"></i>
+              <input type="hidden" name="value_<%= k %>" />
+              <input  type="hidden" name="value_with_tax_<%= k %>" />
+            </td>
+            <td id="charge_with_tax_<%= k %>"></td></tr>
+        <% end %>
       </tbody>
       <tfoot>
         <th>TOTAL</th>
-        <td class="total"></td>
-        <td class="total_tax_inc"></td>
+        <th class="total"></th>
+        <th class="total_tax_inc"></th>
       </tfoot>
     </table>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.submit "Save Estimate" %>
   </div>
 <% end %>
 <script type="text/javascript">
   $(document).ready(function() {
     $.fn.editable.defaults.mode = 'inline';
-    var convert = function(n) {return n;}
+    var convert = function(n) {
+      return numberToCurrency(n, {unit: '<%= @revision.data["currency_symbol"] %>'});
+    };
     var overriden = {};
     window.revertValue = function(key) {
+      $("td#charge_"+key+" a").editable('setValue', ctx.computed[key]);
+      delete ctx.values[key];
       delete overriden[key];
       $("td#charge_"+key+" a.editable_value").removeClass("editable-unsaved");
       $("td#charge_"+key+" i").addClass("hidden");
@@ -56,107 +99,67 @@
       compute();
     };
     var ctx = {
-      <% if @estimate.vessel %>
-      vessel: <%= @estimate.vessel.to_json.html_safe %><% if @estimate.port %>,<% end %>
-      <% end %>
-      <% if @estimate.port %>
-      port: <%= @estimate.port.to_json(:include => :charges).html_safe %>
-      <% end %>
+      charges: <%= @revision.field_keys.to_json.html_safe %>,
+      vessel: {
+        nrt: <%= @revision.data["vessel_nrt"] %>,
+        grt: <%= @revision.data["vessel_grt"] %>,
+        dwt: <%= @revision.data["vessel_dwt"] %>,
+        loa: <%= @revision.data["vessel_loa"] %>,
+      },
+      tax_rate: <%= @revision.data["tax_rate"] %>,
+      data: <%= @revision.data.to_json.html_safe %>,
+      codes: <%= @revision.codes.to_json.html_safe %>,
+      values: <%= @revision.values.to_json.html_safe %>,
+      computed: {}
     };
-    <% if Rails.env == 'development' %>
-    window.getCtx = function() {return ctx;};
-    <% end %>
-    var updateVessel = function() {
-      $("div.vessel-fields").remove();
-      var vessel_id = $("select#estimate_vessel_id").val();
-      if (vessel_id) {
-        $.ajax("/vessels/"+vessel_id, {
-          dataType: 'json',
-          success: function(d) {
-            ctx.vessel = d;
-            var fields = '<div class="controls vessel-fields"><strong>GRT:</strong> '+d.grt+'</div>';
-            fields += '<div class="controls vessel-fields"><strong>NRT:</strong> '+d.nrt+'</div>';
-            fields += '<div class="controls vessel-fields"><strong>DWT:</strong> '+d.dwt+'</div>';
-            fields += '<div class="controls vessel-fields"><strong>LOA:</strong> '+d.loa+'</div>';
-            $("select#estimate_vessel_id").parent().parent().append(fields);
-            compute();
-          }
-        });
-      }
-    };
-    $("select#estimate_vessel_id").on("change", updateVessel);
-    var updatePort = function() {
-      $("table tbody tr").remove();
-      $("div.port-fields").remove();
-      var port_id = $("select#estimate_port_id").val();
-      if (port_id) {
-        $.ajax("/ports/"+port_id, {
-          dataType: 'json',
-          success: function(d) {
-            ctx.port = d;
-            var fields = '<div class="controls port-fields"><strong>Currency:</strong> '+d.currency.name+' ('+d.currency.code+')</div>';
-            fields += '<div class="controls port-fields"><strong>Tax:</strong> '+d.tax.name+' ('+d.tax.code+')</div>';
-            $("select#estimate_port_id").parent().parent().append(fields);
-            setup();
-            compute();
-          }
-        });
-      }
-    };
-    $("select#estimate_port_id").on("change", updatePort);
-    var setup = function() {
-      var tbody = $("table.table tbody");
-      for (var i = 0; i < ctx.port.charges.length; ++i) {
-        var c = ctx.port.charges[i];
-        var row = $('<tr class="charge"><th>'+c.name+'</th><td id="charge_'+c.key+'"><a class="editable_value" id="field_'+c.key+'" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue(\''+c.key+'\')"></i><input type="hidden" name="value_'+c.key+'" /><input  type="hidden" name="value_with_tax_'+c.key+'" /></td><td id="charge_with_tax_'+c.key+'"></td></tr>');
-        tbody.append(row);
-      }
-      //$("a.editable_value").tooltip();
-    }
     var compute = function() {
       ctx.estimate = {
-        cargo_qty: parseInt($("input#estimate_cargo_qty").val()),
-        tugs_in: parseInt($("input#estimate_tugs_in").val()),
-        tugs_out: parseInt($("input#estimate_tugs_out").val()),
-        loadtime: parseInt($("input#estimate_loadtime").val()),
-        days_alongside: parseInt($("input#days_alongside").val())
+        cargo_qty: parseInt($("input#estimate_revision_cargo_qty").val()),
+        tugs_in: parseInt($("input#estimate_revision_tugs_in").val()),
+        tugs_out: parseInt($("input#estimate_revision_tugs_out").val()),
+        loadtime: parseInt($("input#estimate_revision_loadtime").val()),
+        days_alongside: parseInt($("input#estimate_revision_days_alongside").val())
       };
       var total = 0,
           totalTaxInc = 0;
-      if (ctx.port == undefined) { return; }
-      for (var i = 0; i < ctx.port.charges.length; ++i) {
-        var currency = '$';
-        if (ctx.port && ctx.port.currency && ctx.port.currency.symbol) {
-          currency = ctx.port.currency.symbol;
-        }
-        convert = function(n) {
-          return numberToCurrency(n, {unit: currency});
-        };
-        var c = ctx.port.charges[i];
-        var code = eval("("+c.code+")");
+      for (var i = 0; i < ctx.charges.length; ++i) {
+        var key = ctx.charges[i];
+        var code = eval("("+ctx.codes[key]+")");
         var val = parseFloat(code.compute(ctx));
-        if (overriden[c.key]) {
-          $("td#charge_"+c.key+" i").removeClass("hidden");
-          val = overriden[c.key];
+        ctx.computed[key] = val;
+        if (ctx.values[key]) {
+          var saved = parseFloat(ctx.values[key]);
+          if (saved != val) {
+            overriden[key] = saved;
+            $("td#charge_"+key+" a").addClass("editable-unsaved");
+          }
         }
-        total += val;
+        if (overriden[key]) {
+          $("td#charge_"+key+" i").removeClass("hidden");
+          val = overriden[key];
+        }
+        if (!isNaN(val)) {
+          total += val;
+        }
         var valTaxInc = val;
         if (code.taxApplies) {
           if (code.taxRate) {
             valTaxInc = val*code.taxRate;
-          } else if (ctx.port.tax && ctx.port.tax.rate) {
-            valTaxInc = val*parseFloat(ctx.port.tax.rate);
+          } else {
+            valTaxInc = val*parseFloat(ctx.tax_rate);
           }
         }
-        totalTaxInc += valTaxInc;
-        $("td#charge_"+c.key+" a").html(convert(val));
-        $("td#charge_"+c.key+" a").attr("data-value", val.toFixed(2));
-        $("td#charge_with_tax_"+c.key).html(convert(valTaxInc));
-        $('input[name="value_'+c.key+'"]').val(val);
-        $('input[name="value_with_tax_'+c.key+'"]').val(valTaxInc);
+        if (!isNaN(valTaxInc)) {
+          totalTaxInc += valTaxInc;
+        }
+        $("td#charge_"+key+" a").html(convert(val));
+        $("td#charge_"+key+" a").attr("data-value", val.toFixed(2));
+        $("td#charge_with_tax_"+key).html(convert(valTaxInc));
+        $('input[name="value_'+key+'"]').val(val);
+        $('input[name="value_with_tax_'+key+'"]').val(valTaxInc);
       }
-      $("td.total").html(convert(total));
-      $("td.total_tax_inc").html(convert(totalTaxInc));
+      $("th.total").html(convert(total));
+      $("th.total_tax_inc").html(convert(totalTaxInc));
       $("td a.editable_value").editable();
     }
     var cleanCompute = function() {
@@ -164,12 +167,11 @@
       $("a.editable_value").removeClass("editable-unsaved");
       compute();
     };
-    $("input#estimate_cargo_qty").on("change", cleanCompute);
-    $("input#estimate_tugs_in").on("change", cleanCompute);
-    $("input#estimate_tugs_out").on("change", cleanCompute);
-    $("input#estimate_loadtime").on("change", cleanCompute);
-    $("input#days_alongside").on("change", cleanCompute);
-    updateVessel();
-    updatePort();
+    $("input#estimate_revision_cargo_qty").on("change", cleanCompute);
+    $("input#estimate_revision_tugs_in").on("change", cleanCompute);
+    $("input#estimate_revision_tugs_out").on("change", cleanCompute);
+    $("input#estimate_revision_loadtime").on("change", cleanCompute);
+    $("input#estimate_revision_days_alongside").on("change", cleanCompute);
+    compute();
   });
 </script>

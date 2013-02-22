@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  estimate_id: 1
+  data: 
+  fields: 
+  descriptions: 
+  values: 
+  values_with_tax: 
+  codes: 
+  number: 1
+
+two:
+  estimate_id: 1
+  data: 
+  fields: 
+  descriptions: 
+  values: 
+  values_with_tax: 
+  codes: 
+  number: 1
