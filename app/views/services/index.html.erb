@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <h1>Services for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %></h1>
+
+  <table class="table table-bordered">
+  <table class="table table-bordered" id="sortable" data-update_url="<%= @terminal.nil? ? sort_port_services_path(@port) : sort_port_terminal_services_path(@port, @terminal) %>" data-object_type="service">
+    <tr>
+      <th>Item</th>
+      <th>Key</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @services.each do |service| %>
+    <tr class="item" data-item_id="<%= service.id %>">
+      <td><%= link_to service.item, @terminal.nil? ? port_service_url(@port, service) : port_terminal_service_url(@port, @terminal, service) %></td>
+      <td><%= service.key %></td>
+      <td>
+        <div class="btn-group">
+          <% if @terminal %>
+            <%= link_to 'Show', port_terminal_service_path(@port, @terminal, service), :class => 'btn btn-info btn-small' %>
+            <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, service), :class => 'btn btn-small' %>
+            <%= link_to 'Delete', port_terminal_service_path(@port, @terminal, service), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+          <% else %>
+            <%= link_to 'Show', port_service_path(@port, service), :class => 'btn btn-info btn-small' %>
+            <%= link_to 'Edit', edit_port_service_path(@port, service), :class => 'btn btn-small' %>
+            <%= link_to 'Delete', port_service_path(@port, service), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+          <% end %>
+        </div>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+  <% if @terminal %>
+    <%= link_to 'New Service', new_port_terminal_service_path(@port, @terminal), :class => 'btn btn-primary' %>
+  <% else %>
+    <%= link_to 'New Service', new_port_service_path(@port), :class => 'btn btn-primary' %>
+  <% end %>
+</div>

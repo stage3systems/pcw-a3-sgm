@@ -1,0 +1,10 @@
+<div class="container-fluid">
+  <p id="notice"><%= notice %></p>
+
+  <h1>PFDA from <%= l @disbursment.updated_at %></h1>
+
+  <div class="btn-group">
+    <%= link_to 'Edit', edit_disbursment_path(@disbursment), :class => "btn" %>
+    <%= link_to 'Back', disbursments_path, :class => "btn" %>
+  </div>
+</div>

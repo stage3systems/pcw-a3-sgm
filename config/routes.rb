@@ -15,22 +15,30 @@ MonsonDisbursments::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   
-  resources :estimates do
+  resources :disbursments do
     member do
       get 'publish'
       get 'unpublish'
     end
   end
-  match 'published_estimate/:id' => 'estimates#published', :as => :published
+  match 'proforma_disbursments/:id' => 'disbursments#published', :as => :published
 
   resources :ports do
-    resources :charges do
+    resources :terminals do
+      resources :services do
+        collection do
+          post 'sort'
+        end
+      end
+    end
+    resources :services do
       collection do
         post 'sort'
       end
     end
   end
   resources :vessels
+  resources :companies
   resources :taxes
 
   # Sample resource route with options:

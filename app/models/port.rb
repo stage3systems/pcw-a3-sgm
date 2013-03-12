@@ -1,7 +1,8 @@
 class Port < ActiveRecord::Base
   attr_accessible :name, :tax_id, :currency_id
   validates_presence_of :name, :tax_id, :currency_id
-  has_many :charges, :order => 'row_order ASC'
+  has_many :services, :order => 'row_order ASC'
+  has_many :terminals
   belongs_to :currency
   belongs_to :tax
 
@@ -21,9 +22,9 @@ class Port < ActiveRecord::Base
       descriptions: {},
       codes: {}
     }
-    self.charges.each_with_index do |c, i|
+    self.services.each_with_index do |c, i|
       d[:fields][c.key] = i
-      d[:descriptions][c.key] = c.name
+      d[:descriptions][c.key] = c.item
       d[:codes][c.key] = c.code
     end
     d

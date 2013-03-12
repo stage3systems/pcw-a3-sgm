@@ -16,14 +16,16 @@
     <div class="navbar-inner">
       <a class="brand" href="#">Monson</a>
       <ul class="nav">
-        <li class="<%= "active" if controller_name == 'home' %>"><a href="/">Dashboard</a></li>
-        <li class="<%= "active" if controller_name == 'estimates' %>"><a href="/estimates">Estimates</a></li>
-        <li class="<%= "active" if ['ports','charges'].member? controller_name %>"><a href="/ports">Ports</a></li>
-        <li class="<%= "active" if controller_name == 'vessels' %>"><a href="/vessels">Vessels</a></li>
-        <li class="<%= "active" if controller_name == 'taxes' %>"><a href="/taxes">Taxes</a></li>
+        <li class="<%= "active" if controller_name == 'home' %>"><a href="<%= root_url %>">Dashboard</a></li>
+        <li class="<%= "active" if controller_name == 'disbursments' %>"><a href="<%= disbursments_url %>">Proforma Disbursments</a></li>
+        <li class="<%= "active" if ['ports','terminals','services'].member? controller_name %>"><a href="<%= ports_url %>">Ports Setup</a></li>
+        <li class="<%= "active" if controller_name == 'vessels' %>"><a href="<%= vessels_url %>">Vessels</a></li>
+        <li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_url %>">Companies</a></li>
+        <li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_url %>">Taxes</a></li>
       </ul>
     </div>
   </header>
+  <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
     <%= yield %>
   </div>
   <footer id="ft">

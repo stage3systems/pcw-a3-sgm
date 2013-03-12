@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  disbursment_id: 1
+  data: 
+  fields: 
+  descriptions: 
+  values: 
+  values_with_tax: 
+  codes: 
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: MyString
+
+two:
+  disbursment_id: 1
+  data: 
+  fields: 
+  descriptions: 
+  values: 
+  values_with_tax: 
+  codes: 
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: MyString

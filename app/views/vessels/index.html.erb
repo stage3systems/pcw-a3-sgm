@@ -13,7 +13,7 @@
 
   <% @vessels.each do |vessel| %>
     <tr>
-      <td><%= vessel.name %></td>
+      <td><%= link_to vessel.name, vessel %></td>
       <td><%= vessel.loa %></td>
       <td><%= vessel.grt %></td>
       <td><%= vessel.nrt %></td>

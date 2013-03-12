@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  port_id: 1
+  vessel_id: 1
+  company_id: 1
+  status_cd: 1
+  publication_id: MyString
+  tbn: false
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
+two:
+  port_id: 1
+  vessel_id: 1
+  company_id: 1
+  status_cd: 1
+  publication_id: MyString
+  tbn: false
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99

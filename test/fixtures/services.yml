@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  port_id: 1
+  terminal_id: 1
+  code: MyText
+  item: MyString
+  key: MyString
+  row_order: 1
+
+two:
+  port_id: 1
+  terminal_id: 1
+  code: MyText
+  item: MyString
+  key: MyString
+  row_order: 1

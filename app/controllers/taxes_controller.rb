@@ -1,4 +1,6 @@
 class TaxesController < ApplicationController
+  add_breadcrumb "Taxes", :taxes_url
+
   # GET /taxes
   # GET /taxes.json
   def index
@@ -14,6 +16,7 @@ class TaxesController < ApplicationController
   # GET /taxes/1.json
   def show
     @tax = Tax.find(params[:id])
+    add_breadcrumb "#{@tax.code}", tax_url(@tax)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +28,7 @@ class TaxesController < ApplicationController
   # GET /taxes/new.json
   def new
     @tax = Tax.new
+    add_breadcrumb "New", new_tax_url
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,12 +39,14 @@ class TaxesController < ApplicationController
   # GET /taxes/1/edit
   def edit
     @tax = Tax.find(params[:id])
+    add_breadcrumb "Edit #{@tax.code}", edit_tax_url(@tax)
   end
 
   # POST /taxes
   # POST /taxes.json
   def create
     @tax = Tax.new(params[:tax])
+    add_breadcrumb "New", new_tax_url
 
     respond_to do |format|
       if @tax.save
@@ -57,6 +63,7 @@ class TaxesController < ApplicationController
   # PUT /taxes/1.json
   def update
     @tax = Tax.find(params[:id])
+    add_breadcrumb "Edit #{@tax.code}", edit_tax_url(@tax)
 
     respond_to do |format|
       if @tax.update_attributes(params[:tax])

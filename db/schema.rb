@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130222121420) do
+ActiveRecord::Schema.define(:version => 20130312151332) do
 
   create_table "charges", :force => true do |t|
     t.integer  "port_id"
@@ -23,12 +23,54 @@ ActiveRecord::Schema.define(:version => 20130222121420) do
     t.integer  "row_order"
   end
 
+  create_table "companies", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "currencies", :force => true do |t|
     t.string   "name"
     t.string   "code"
     t.string   "symbol"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "disbursment_revisions", :force => true do |t|
+    t.integer  "disbursment_id"
+    t.hstore   "data"
+    t.hstore   "fields"
+    t.hstore   "descriptions"
+    t.hstore   "values"
+    t.hstore   "values_with_tax"
+    t.hstore   "codes"
+    t.boolean  "tax_exempt",      :default => false
+    t.integer  "number"
+    t.integer  "cargo_qty",       :default => 0
+    t.integer  "days_alongside",  :default => 0
+    t.integer  "loadtime",        :default => 0
+    t.integer  "tugs_in",         :default => 0
+    t.integer  "tugs_out",        :default => 0
+    t.string   "reference"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "disbursments", :force => true do |t|
+    t.integer  "port_id"
+    t.integer  "vessel_id"
+    t.integer  "company_id"
+    t.integer  "status_cd",      :default => 0
+    t.string   "publication_id"
+    t.boolean  "tbn",            :default => false
+    t.decimal  "grt"
+    t.decimal  "nrt"
+    t.decimal  "dwt"
+    t.decimal  "loa"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "estimate_revisions", :force => true do |t|
@@ -66,12 +108,30 @@ ActiveRecord::Schema.define(:version => 20130222121420) do
     t.integer  "tax_id"
   end
 
+  create_table "services", :force => true do |t|
+    t.integer  "port_id"
+    t.integer  "terminal_id"
+    t.text     "code"
+    t.string   "item"
+    t.string   "key"
+    t.integer  "row_order"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "taxes", :force => true do |t|
     t.string   "name"
     t.decimal  "rate"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "code"
+  end
+
+  create_table "terminals", :force => true do |t|
+    t.integer  "port_id"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

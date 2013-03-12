@@ -1,4 +1,6 @@
 class PortsController < ApplicationController
+  add_breadcrumb "Ports", :ports_url
+
   # GET /ports
   # GET /ports.json
   def index
@@ -14,10 +16,11 @@ class PortsController < ApplicationController
   # GET /ports/1.json
   def show
     @port = Port.find(params[:id])
+    add_breadcrumb "#{@port.name}", port_url(@port)
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @port.to_json(:include => [:charges, :tax, :currency]) }
+      format.json { render json: @port.to_json(:include => [:services, :tax, :currency]) }
     end
   end
 
@@ -25,6 +28,7 @@ class PortsController < ApplicationController
   # GET /ports/new.json
   def new
     @port = Port.new
+    add_breadcrumb "New Port", new_port_url
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,12 +39,14 @@ class PortsController < ApplicationController
   # GET /ports/1/edit
   def edit
     @port = Port.find(params[:id])
+    add_breadcrumb "Edit #{@port.name}", edit_port_url(@port)
   end
 
   # POST /ports
   # POST /ports.json
   def create
     @port = Port.new(params[:port])
+    add_breadcrumb "New Port", new_port_url
 
     respond_to do |format|
       if @port.save
@@ -57,6 +63,7 @@ class PortsController < ApplicationController
   # PUT /ports/1.json
   def update
     @port = Port.find(params[:id])
+    add_breadcrumb "Edit #{@port.name}", edit_port_url(@port)
 
     respond_to do |format|
       if @port.update_attributes(params[:port])

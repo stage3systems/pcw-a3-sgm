@@ -1,0 +1,50 @@
+<div class="container-fluid">
+  <h1>Proforma Disbursments</h1>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Reference</th>
+      <th>Status</th>
+      <th>Port</th>
+      <th>Company</th>
+      <th>Vessel</th>
+      <th>Amount</th>
+      <th>Last Modified</th>
+      <th>Revision</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @disbursments.each do |disbursment| %>
+    <tr>
+      <td><%= disbursment.current_revision.reference %></td>
+      <td>
+        <% if disbursment.draft? %>
+        Draft
+        <% else %>
+        <%= link_to 'Published', published_url(:id => disbursment.publication_id) %>
+        <% end %>
+      </td>
+      <td><%= disbursment.port.name %></td>
+      <td><%= disbursment.company.name %></td>
+      <td><%= disbursment.vessel_name %></td>
+      <td><%= number_to_currency disbursment.current_revision.amount %></td>
+      <td><%= l disbursment.current_revision.updated_at %></td>
+      <td><%= disbursment.current_revision.number %></td>
+      <td>
+        <div class="btn-group">
+          <% if disbursment.draft? %>
+          <%= link_to 'Publish', publish_disbursment_path(disbursment), :class => 'btn btn-info btn-small' %>
+          <% else %>
+          <%= link_to 'Unpublish', unpublish_disbursment_path(disbursment), :class => 'btn btn-info btn-small' %>
+          <% end %>
+          <%= link_to 'Revise', edit_disbursment_path(disbursment), :class => 'btn btn-small' %>
+          <%= link_to 'Delete', disbursment, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+        </div>
+    </tr>
+  <% end %>
+  </table>
+
+  <br />
+
+  <%= link_to 'New PFDA', new_disbursment_path, :class => 'btn btn-primary' %>
+</div>

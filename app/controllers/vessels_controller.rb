@@ -1,4 +1,6 @@
 class VesselsController < ApplicationController
+  add_breadcrumb "Vessels", :vessels_url
+
   # GET /vessels
   # GET /vessels.json
   def index
@@ -14,6 +16,7 @@ class VesselsController < ApplicationController
   # GET /vessels/1.json
   def show
     @vessel = Vessel.find(params[:id])
+    add_breadcrumb "#{@vessel.name}", vessel_url(@vessel)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +28,7 @@ class VesselsController < ApplicationController
   # GET /vessels/new.json
   def new
     @vessel = Vessel.new
+    add_breadcrumb "New Vessel", new_vessel_url
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,12 +39,14 @@ class VesselsController < ApplicationController
   # GET /vessels/1/edit
   def edit
     @vessel = Vessel.find(params[:id])
+    add_breadcrumb "Edit #{@vessel.name}", edit_vessel_url(@vessel)
   end
 
   # POST /vessels
   # POST /vessels.json
   def create
     @vessel = Vessel.new(params[:vessel])
+    add_breadcrumb "New Vessel", new_vessel_url
 
     respond_to do |format|
       if @vessel.save
@@ -57,6 +63,7 @@ class VesselsController < ApplicationController
   # PUT /vessels/1.json
   def update
     @vessel = Vessel.find(params[:id])
+    add_breadcrumb "Edit #{@vessel.name}", edit_vessel_url(@vessel)
 
     respond_to do |format|
       if @vessel.update_attributes(params[:vessel])

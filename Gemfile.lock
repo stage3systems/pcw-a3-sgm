@@ -51,6 +51,7 @@ GEM
     bcrypt-ruby (3.0.1)
     bootstrap-editable-rails (0.0.4)
       railties (~> 3.1)
+    breadcrumbs_on_rails (2.2.0)
     builder (3.0.4)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -186,6 +187,7 @@ DEPENDENCIES
   activerecord-postgres-hstore!
   anjlab-bootstrap-rails (>= 2.2)
   bootstrap-editable-rails
+  breadcrumbs_on_rails
   coffee-rails (~> 3.2.1)
   d3js-rails
   devise

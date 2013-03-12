@@ -1,0 +1,32 @@
+<%= simple_form_for(@disbursment, html: {class: "form-horizontal"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :port %>
+    <%= f.association :company, label: "Principal" %>
+    <%= f.association :vessel %>
+    <%= f.input :tbn, label: 'TBN' %>
+  </div>
+  <div class="form-inputs tbn_fields">
+    <%= f.input :grt, label: 'GRT' %>
+    <%= f.input :nrt, label: 'NRT' %>
+    <%= f.input :dwt, label: 'DWT' %>
+    <%= f.input :loa, label: 'LOA' %>
+  </div>
+  <div class="form-actions">
+    <%= f.submit 'Next' %>
+  </div>
+<% end %>
+<script type="text/javascript">
+  var updateFields = function() {
+    if ($("input#disbursment_tbn").is(':checked')) {
+     $("div.tbn_fields").show();
+     $("select#disbursment_vessel_id").attr("disabled", "disabled");
+    } else {
+     $("div.tbn_fields").hide();
+     $("select#disbursment_vessel_id").removeAttr("disabled");
+    }
+  };
+  $("input#disbursment_tbn").on("change", updateFields);
+  updateFields();
+</script>

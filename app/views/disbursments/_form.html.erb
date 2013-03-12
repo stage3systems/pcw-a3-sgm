@@ -1,4 +1,4 @@
-<%= simple_form_for(@revision, url: estimate_url(@estimate),
+<%= simple_form_for(@revision, url: disbursment_url(@disbursment),
                     method: :put, html: {class: "form-horizontal"}) do |f| %>
   <%= f.error_notification %>
 
@@ -15,28 +15,28 @@
             <td><%= @revision.data["vessel_name"] %></td>
           </tr>
           <tr>
-            <th>Vessel GRT</th>
+            <th>GRT</th>
             <td><%= @revision.data["vessel_grt"] %></td>
           </tr>
           <tr>
-            <th>Vessel NRT</th>
+            <th>NRT</th>
             <td><%= @revision.data["vessel_nrt"] %></td>
           </tr>
           <tr>
-            <th>Vessel DWT</th>
+            <th>DWT</th>
             <td><%= @revision.data["vessel_dwt"] %></td>
           </tr>
           <tr>
-            <th>Vessel LOA</th>
+            <th>LOA</th>
             <td><%= @revision.data["vessel_loa"] %></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="span4">
-    <%= f.input :cargo_qty, label: "Cargo Qty" %>
-    <%= f.input :loadtime, label: "Load Time" %>
-    <%= f.input :days_alongside %>
+    <%= f.input :cargo_qty, label: "Cargo Quantity" %>
+    <%= f.input :loadtime, label: "Load Time (Hours)" %>
+    <%= f.input :days_alongside, label: "Days Alongside" %>
     </div>
     <div class="span4">
     <%= f.input :tugs_in, label: "Tugs In" %>
@@ -46,7 +46,7 @@
     <h4>Charges</h4>
     <div class="overriden">
     </div>
-    <table class="estimate table table-bordered table-condensed">
+    <table class="disbursment table table-bordered table-condensed">
       <thead>
         <tr>
           <th>NAME</th>
@@ -74,7 +74,7 @@
     </table>
 
   <div class="form-actions">
-    <%= f.submit "Save Estimate" %>
+    <%= f.submit "Save PFDA" %>
   </div>
 <% end %>
 <script type="text/javascript">
@@ -114,11 +114,11 @@
     };
     var compute = function() {
       ctx.estimate = {
-        cargo_qty: parseInt($("input#estimate_revision_cargo_qty").val()),
-        tugs_in: parseInt($("input#estimate_revision_tugs_in").val()),
-        tugs_out: parseInt($("input#estimate_revision_tugs_out").val()),
-        loadtime: parseInt($("input#estimate_revision_loadtime").val()),
-        days_alongside: parseInt($("input#estimate_revision_days_alongside").val())
+        cargo_qty: parseInt($("input#disbursment_revision_cargo_qty").val()),
+        tugs_in: parseInt($("input#disbursment_revision_tugs_in").val()),
+        tugs_out: parseInt($("input#disbursment_revision_tugs_out").val()),
+        loadtime: parseInt($("input#disbursment_revision_loadtime").val()),
+        days_alongside: parseInt($("input#disbursment_revision_days_alongside").val())
       };
       var total = 0,
           totalTaxInc = 0;
@@ -167,11 +167,11 @@
       $("a.editable_value").removeClass("editable-unsaved");
       compute();
     };
-    $("input#estimate_revision_cargo_qty").on("change", cleanCompute);
-    $("input#estimate_revision_tugs_in").on("change", cleanCompute);
-    $("input#estimate_revision_tugs_out").on("change", cleanCompute);
-    $("input#estimate_revision_loadtime").on("change", cleanCompute);
-    $("input#estimate_revision_days_alongside").on("change", cleanCompute);
+    $("input#disbursment_revision_cargo_qty").on("change", cleanCompute);
+    $("input#disbursment_revision_tugs_in").on("change", cleanCompute);
+    $("input#disbursment_revision_tugs_out").on("change", cleanCompute);
+    $("input#disbursment_revision_loadtime").on("change", cleanCompute);
+    $("input#disbursment_revision_days_alongside").on("change", cleanCompute);
     compute();
   });
 </script>

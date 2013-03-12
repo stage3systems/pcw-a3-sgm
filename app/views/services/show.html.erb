@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <p id="notice"><%= notice %></p>
+
+  <h1>Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
+  <% ['item', 'key'].each do |k| %>
+    <p><strong><%= k.capitalize %>:</strong> <%= @service.send(k) %></p>
+  <% end %>
+  <p><strong>Code:</strong></p>
+  <div id="code">
+    <pre><%= @service.code %></pre>
+  </div>
+  <div class="btn-group">
+    <% if @terminal %>
+      <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @service), :class => "btn btn-small" %>
+      <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => "btn btn-small" %>
+    <% else %>
+      <%= link_to 'Edit', edit_port_service_path(@port, @service), :class => "btn btn-small" %>
+      <%= link_to 'Back', port_services_path(@port), :class => "btn btn-small" %>
+    <% end %>
+  </div>
+</div>

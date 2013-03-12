@@ -1,25 +1,27 @@
 <div class="container">
-  <% if @published  and @published.published? %>
+  <% if @published  %>
+    <% if @published.published? %>
     <div class="row">
+      <div class="btn-group"></div>
       <div class="span12 well well-small">
-        <h4>Estimate for <%= @published.vessel.name %> in <%= @published.port.name %>: <%= number_to_currency @revision.data["total_with_tax"] %> <%= @revision.data["currency_code"] %> Tax Inc.</h4>
-        <p><small>Revision <%= @revision.number %> | Last revised on <%= l @revision.updated_at %></small></p>
+        <h4>Proforma Disbursment for <%= @published.vessel_name %> in <%= @published.port.name %>: <%= number_to_currency @revision.data["total_with_tax"] %> <%= @revision.data["currency_code"] %> Tax Inc.</h4>
+        <p><small><%= @revision.reference %> | Revision <%= @revision.number %> | Last revised on <%= l @revision.updated_at %></small></p>
       </div>
     </div>
     <div class="row">
       <div class="span4">
         <p style="padding-left: 1em;">
-          <strong>Vessel GRT:</strong> <%= @revision.data["vessel_grt"] %><br />
-          <strong>Vessel NRT:</strong> <%= @revision.data["vessel_nrt"] %><br />
-          <strong>Vessel DWT:</strong> <%= @revision.data["vessel_dwt"] %><br />
-          <strong>Vessel LOA:</strong> <%= @revision.data["vessel_loa"] %><br />
+          <strong>GRT:</strong> <%= @revision.data["vessel_grt"] %><br />
+          <strong>NRT:</strong> <%= @revision.data["vessel_nrt"] %><br />
+          <strong>DWT:</strong> <%= @revision.data["vessel_dwt"] %><br />
+          <strong>LOA:</strong> <%= @revision.data["vessel_loa"] %><br />
         </p>
       </div>
       <div class="span4">
         <p style="padding-left: 1em;">
-          <strong>Cargo Qty:</strong> <%= @revision.cargo_qty %><br />
+          <strong>Cargo Qantity:</strong> <%= @revision.cargo_qty %><br />
           <strong>Load Time:</strong> <%= @revision.loadtime %><br />
-          <strong>Days alongside:</strong> <%= @revision.days_alongside %><br />
+          <strong>Days Alongside:</strong> <%= @revision.days_alongside %><br />
         </p>
       </div>
       <div class="span4">
@@ -34,9 +36,9 @@
         <table class="table table-condensed">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Amount <%= @revision.data["currency_code"] %></th>
-              <th>Amount <%= @revision.data["currency_code"] %> Tax Inc.</th>
+              <th>Item</th>
+              <th>Amount (<%= @revision.data["currency_code"] %>)</th>
+              <th>Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
             </tr>
           </thead>
           <tbody>
@@ -59,6 +61,11 @@
       </div>
     </div>
   <% else %>
-    <div class="well"><h3>The requested document cannot be found.</h3></div>
+    <div class="btn-group"></div>
+    <div class="well"><h3>The requested document is no more publicly accessible.</h3></div>
   <% end %>
+<% else %>
+    <div class="btn-group"></div>
+    <div class="well"><h3>The requested document cannot be found.</h3></div>
+<% end %>
 </div>

@@ -4,7 +4,8 @@
   <table class="table table-bordered">
     <tr>
       <th>Name</th>
-      <th>Charges</th>
+      <th>Services</th>
+      <th>Terminals</th>
       <th>Currency</th>
       <th>Tax</th>
       <th>Actions</th>
@@ -12,13 +13,15 @@
 
   <% @ports.each do |port| %>
     <tr>
-      <td><%= port.name %></td>
-      <td><%= link_to port.charges.count.to_s, port_charges_path(port)  %></td>
+      <td><%= link_to port.name, port_path(port) %></td>
+      <td><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
+      <td><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
       <td><%= port.currency.name  %></td>
       <td><%= port.tax.name  %></td>
       <td>
         <div class="btn-group">
-          <%= link_to 'Edit Charges', port_charges_path(port), class: 'btn btn-small'  %>
+          <%= link_to 'Edit Services', port_services_path(port), class: 'btn btn-small'  %>
+          <%= link_to 'Edit Terminals', port_terminals_path(port), class: 'btn btn-small'  %>
           <%= link_to 'Edit', edit_port_path(port), class: 'btn btn-small' %>
           <%= link_to 'Delete', port, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-small' %>
         </div>

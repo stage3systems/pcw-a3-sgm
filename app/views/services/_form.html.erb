@@ -1,8 +1,8 @@
-<%= simple_form_for([@port, @charge], html: {class: "form-horizontal"}) do |f| %>
+<%= simple_form_for(@terminal.nil? ? [@port, @service] : [@port, @terminal, @service], html: {class: "form-horizontal"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :name %>
+    <%= f.input :item %>
     <%= f.input :key %>
     <%= f.input :code, :as => :ace, ace: { ace_mode: 'javascript', ace_theme: 'clouds', ace_height: '200' } %>
   </div>

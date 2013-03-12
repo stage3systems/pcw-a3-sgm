@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
+  add_breadcrumb "Dashboard", :root_url
   def index
-    @published = Estimate.where(:status_cd => Estimate.published).order("updated_at DESC")
-    @drafts = Estimate.where(:status_cd => Estimate.draft).order("updated_at DESC")
+    @published = Disbursment.where(:status_cd => Disbursment.published).order("updated_at DESC")
+    @drafts = Disbursment.where(:status_cd => Disbursment.draft).order("updated_at DESC")
   end
 end
