@@ -1,4 +1,5 @@
 class Disbursment < ActiveRecord::Base
+  default_scope conditions: "status_cd != 2"
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt, :port_id, :publication_id,
                   :status_cd, :tbn, :terminal_id, :vessel_id
   belongs_to :port
