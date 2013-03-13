@@ -4,7 +4,7 @@
     <div class="row">
       <div class="btn-group"></div>
       <div class="span12 well well-small">
-        <h4>Proforma Disbursment for <%= @published.vessel_name %> in <%= @published.port.name %>: <%= number_to_currency @revision.data["total_with_tax"] %> <%= @revision.data["currency_code"] %> Tax Inc.</h4>
+        <h4>Proforma Disbursment for <%= @published.vessel_name %> in <%= @published.port.name %>: <%= number_to_currency @revision.amount %> (<%= @revision.data["currency_code"] %>)</h4>
         <p><small><%= @revision.reference %> | Revision <%= @revision.number %> | Last revised on <%= l @revision.updated_at %></small></p>
       </div>
     </div>
@@ -19,6 +19,7 @@
       </div>
       <div class="span4">
         <p style="padding-left: 1em;">
+          <strong>Cargo Type:</strong> <%= @revision.cargo_type.display rescue "N/A" %><br />
           <strong>Cargo Qantity:</strong> <%= @revision.cargo_qty %><br />
           <strong>Load Time:</strong> <%= @revision.loadtime %><br />
           <strong>Days Alongside:</strong> <%= @revision.days_alongside %><br />
@@ -38,7 +39,9 @@
             <tr>
               <th>Item</th>
               <th>Amount (<%= @revision.data["currency_code"] %>)</th>
+              <% unless @revision.tax_exempt? %>
               <th>Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +49,9 @@
               <tr>
                 <td><%= @revision.descriptions[f] %></td>
                 <td><%= number_to_currency @revision.values[f] %></td>
+                <% unless @revision.tax_exempt? %>
                 <td><%= number_to_currency @revision.values_with_tax[f] %></td>
+                <% end %>
               </tr>
             <% end %>
           </tbody>
@@ -54,7 +59,9 @@
             <tr>
               <th>Total</th>
               <th><%= number_to_currency @revision.data["total"] %></th>
+              <% unless @revision.tax_exempt? %>
               <th><%= number_to_currency @revision.data["total_with_tax"] %></th>
+              <% end %>
             </tr>
           </tfoot>
         </table>

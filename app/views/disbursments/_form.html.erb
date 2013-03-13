@@ -3,6 +3,7 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
+    <div class="row-fluid">
     <div class="span4">
       <table class="table table-condensed table-bordered">
         <tbody>
@@ -10,6 +11,12 @@
             <th>Port</th>
             <td><%= @revision.data["port_name"] %></td>
           </tr>
+          <% if @revision.data.has_key? 'terminal_name' %>
+          <tr>
+            <th>Terminal</th>
+            <td><%= @revision.data["terminal_name"] %></td>
+          </tr>
+          <% end %>
           <tr>
             <th>Vessel</th>
             <td><%= @revision.data["vessel_name"] %></td>
@@ -34,6 +41,7 @@
       </table>
     </div>
     <div class="span4">
+    <%= f.association :cargo_type, label: "Cargo Type", label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
     <%= f.input :days_alongside, label: "Days Alongside" %>
@@ -41,35 +49,49 @@
     <div class="span4">
     <%= f.input :tugs_in, label: "Tugs In" %>
     <%= f.input :tugs_out, label: "Tugs Out" %>
+    <%= f.input :tax_exempt, label: "Tax Exempt" %>
     </div>
     <div class="clearfix"></div>
-    <h4>Charges</h4>
+    </div>
+    <h4>Services</h4>
     <div class="overriden">
     </div>
     <table class="disbursment table table-bordered table-condensed">
       <thead>
         <tr>
-          <th>NAME</th>
-          <th class="tax">AMOUNT <%= @revision.data["currency_code"] %></th>
-          <th class="tax_inc">AMOUNT <%= @revision.data["currency_code"] %> TAX INC.</th>
+          <th>Name</th>
+          <th>Amount (<%= @revision.data["currency_code"] %>)</th>
+          <th class="tax_inc tax">Amount (<%= @revision.data["currency_code"] %>) Tax Included</th>
         </tr>
       </thead>
       <tbody>
         <% @revision.field_keys.each do |k| %>
-          <tr class="charge">
-            <th><%= @revision.descriptions[k] %></th>
-            <td id="charge_<%= k %>">
+          <tr class="service" id="service_<%= k %>">
+            <th>
+              <%= @revision.descriptions[k] %>
+              <% if k.starts_with? "EXTRAITEM" %>
+                &nbsp;<i class="icon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
+              <% end %>
+            </th>
+            <td id="service_<%= k %>">
               <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue('<%= k %>')"></i>
               <input type="hidden" name="value_<%= k %>" />
               <input  type="hidden" name="value_with_tax_<%= k %>" />
             </td>
-            <td id="charge_with_tax_<%= k %>"></td></tr>
+            <td id="service_with_tax_<%= k %>" class="tax"></td></tr>
         <% end %>
       </tbody>
       <tfoot>
-        <th>TOTAL</th>
-        <th class="total"></th>
-        <th class="total_tax_inc"></th>
+        <tr>
+          <td><input id="extra_item" />&nbsp;Tax Applies: <input type="checkbox" id="extra_tax_applies" /></td>
+          <td><a id="add_item" class="btn btn-small btn-success" href="javascript:void(0)">Add Item</a></td>
+          <td class="tax"></td>
+        </tr>
+        <tr>
+          <th>TOTAL</th>
+          <th class="total"></th>
+          <th class="total_tax_inc tax"></th>
+        </tr>
       </tfoot>
     </table>
 
@@ -79,17 +101,30 @@
 <% end %>
 <script type="text/javascript">
   $(document).ready(function() {
+    var numItems = <%= @revision.field_keys.count %>;
+    var cargoTypes = {
+    <% @cargo_types.each do |ct| %>
+      "<%= ct.id %>": <%= ct.to_json.html_safe %><%= "," unless ct == @cargo_types.last %>
+    <% end %>
+    }
     $.fn.editable.defaults.mode = 'inline';
     var convert = function(n) {
       return numberToCurrency(n, {unit: '<%= @revision.data["currency_symbol"] %>'});
     };
     var overriden = {};
+    window.removeExtra = function(key) {
+      $("tr#service_"+key).remove();
+      ctx.services = $.grep(ctx.services, function(value) {
+        return value != key;
+      });
+      compute();
+    };
     window.revertValue = function(key) {
-      $("td#charge_"+key+" a").editable('setValue', ctx.computed[key]);
+      $("td#service_"+key+" a").editable('setValue', ctx.computed[key]);
       delete ctx.values[key];
       delete overriden[key];
-      $("td#charge_"+key+" a.editable_value").removeClass("editable-unsaved");
-      $("td#charge_"+key+" i").addClass("hidden");
+      $("td#service_"+key+" a.editable_value").removeClass("editable-unsaved");
+      $("td#service_"+key+" i").addClass("hidden");
       compute();
     };
     $.fn.editable.defaults.display = function(value, sourceData) {
@@ -98,13 +133,25 @@
       $(this).html(convert(value));
       compute();
     };
+    var uuid = function() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+          return v.toString(16);
+      });
+    };
     var ctx = {
-      charges: <%= @revision.field_keys.to_json.html_safe %>,
+      services: <%= @revision.field_keys.to_json.html_safe %>,
       vessel: {
         nrt: <%= @revision.data["vessel_nrt"] %>,
         grt: <%= @revision.data["vessel_grt"] %>,
         dwt: <%= @revision.data["vessel_dwt"] %>,
         loa: <%= @revision.data["vessel_loa"] %>,
+      },
+      cargo_type: {
+        type:" <%= @revision.data["cargo_type"] %>",
+        subtype: "<%= @revision.data["cargo_subtype"] %>",
+        subsubtype: "<%= @revision.data["cargo_subsubtype"] %>",
+        subsubsubtype: "<%= @revision.data["cargo_subsubsubtype"] %>"
       },
       tax_rate: <%= @revision.data["tax_rate"] %>,
       data: <%= @revision.data.to_json.html_safe %>,
@@ -112,6 +159,7 @@
       values: <%= @revision.values.to_json.html_safe %>,
       computed: {}
     };
+    window.getCtx = function() {return ctx;}
     var compute = function() {
       ctx.estimate = {
         cargo_qty: parseInt($("input#disbursment_revision_cargo_qty").val()),
@@ -122,8 +170,8 @@
       };
       var total = 0,
           totalTaxInc = 0;
-      for (var i = 0; i < ctx.charges.length; ++i) {
-        var key = ctx.charges[i];
+      for (var i = 0; i < ctx.services.length; ++i) {
+        var key = ctx.services[i];
         var code = eval("("+ctx.codes[key]+")");
         var val = parseFloat(code.compute(ctx));
         ctx.computed[key] = val;
@@ -131,11 +179,11 @@
           var saved = parseFloat(ctx.values[key]);
           if (saved != val) {
             overriden[key] = saved;
-            $("td#charge_"+key+" a").addClass("editable-unsaved");
+            $("td#service_"+key+" a").addClass("editable-unsaved");
           }
         }
         if (overriden[key]) {
-          $("td#charge_"+key+" i").removeClass("hidden");
+          $("td#service_"+key+" i").removeClass("hidden");
           val = overriden[key];
         }
         if (!isNaN(val)) {
@@ -152,9 +200,9 @@
         if (!isNaN(valTaxInc)) {
           totalTaxInc += valTaxInc;
         }
-        $("td#charge_"+key+" a").html(convert(val));
-        $("td#charge_"+key+" a").attr("data-value", val.toFixed(2));
-        $("td#charge_with_tax_"+key).html(convert(valTaxInc));
+        $("td#service_"+key+" a").html(convert(val));
+        $("td#service_"+key+" a").attr("data-value", val.toFixed(2));
+        $("td#service_with_tax_"+key).html(convert(valTaxInc));
         $('input[name="value_'+key+'"]').val(val);
         $('input[name="value_with_tax_'+key+'"]').val(valTaxInc);
       }
@@ -172,6 +220,45 @@
     $("input#disbursment_revision_tugs_out").on("change", cleanCompute);
     $("input#disbursment_revision_loadtime").on("change", cleanCompute);
     $("input#disbursment_revision_days_alongside").on("change", cleanCompute);
-    compute();
+    var handleTaxExempt = function() {
+      var taxExempt = $("input#disbursment_revision_tax_exempt").is(':checked');
+      if (taxExempt) {
+        $(".tax").hide();
+      } else {
+        $(".tax").show();
+      }
+      compute();
+    };
+    $("input#disbursment_revision_tax_exempt").on('change', handleTaxExempt);
+    $("select#disbursment_revision_cargo_type_id").on('change', function() {
+        var ctId = $("select#disbursment_revision_cargo_type_id").val();
+        var cargoType = cargoTypes[ctId];
+        if (cargoType) {
+          ctx.cargo_type.type = cargoType.maintype;
+          ctx.cargo_type.subtype = cargoType.subtype;
+          ctx.cargo_type.subsubtype = cargoType.subsubtype;
+          ctx.cargo_type.subsubsubtype = cargoType.subsubsubtype;
+        }
+        compute();
+    });
+    $("a#add_item").on("click", function(e) {
+        var item = $("input#extra_item").val();
+        if (item) {
+          var key = 'EXTRAITEM'+uuid();
+          var taxApplies = $("input#extra_tax_applies").is(":checked");
+          ctx.services[numItems] = key;
+          ctx.codes[key] = "{compute: function(ctx) {return 0;},taxApplies: "+taxApplies+"}";
+          ctx.values[key] = 0;
+          ctx.computed[key] = 0;
+          $("table.disbursment tbody").append('<tr class="service" id="service_'+key+'"><th>'+item
+            +'&nbsp;<i class="icon-remove-circle" onclick="removeExtra(\''+key+'\')"></i>'
+            +'</th><td id="service_'+key+'"><a class="editable_value" id="field_'+key+'" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue(\''+key+'\')"></i><input type="hidden" name="value_'+key+'" /><input type="hidden" name="value_with_tax_'+key+'" value="0" /><input type="hidden" name="code_'+key+'" value="'+ctx.codes[key]+'" /><input type="hidden" name="description_'+key+'" value="'+item+'" /></td><td id="service_with_tax_'+key+'" class="tax"></td></tr>');
+          $("input#extra_item").val("");
+          $("input#extra_tax_applies").removeAttr("checked");
+          numItems += 1;
+          handleTaxExempt();
+        }
+    });
+    handleTaxExempt();
   });
 </script>

@@ -3,6 +3,7 @@
 
   <div class="form-inputs">
     <%= f.association :port %>
+    <%= f.association :terminal %>
     <%= f.association :company, label: "Principal" %>
     <%= f.association :vessel %>
     <%= f.input :tbn, label: 'TBN' %>
@@ -28,5 +29,19 @@
     }
   };
   $("input#disbursment_tbn").on("change", updateFields);
+  var updateTerminals = function() {
+    $.ajax('/ports/'+$("select#disbursment_port_id").val()+'/terminals.json', {
+      type: 'GET',
+      dataType: 'json',
+      success: function(d) {
+        $("select#disbursment_terminal_id").find("option").remove();
+        $("select#disbursment_terminal_id").append('<option value></option>');
+        $.each(d, function(i, e) {
+          $("select#disbursment_terminal_id").append('<option value="' + e.id + '">' + e.name + '</option>');
+        })
+      }
+    });
+  }
+  $("select#disbursment_port_id").on("change", updateTerminals);
   updateFields();
 </script>

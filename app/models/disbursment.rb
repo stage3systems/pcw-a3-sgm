@@ -1,6 +1,8 @@
 class Disbursment < ActiveRecord::Base
-  attr_accessible :company_id, :dwt, :grt, :loa, :nrt, :port_id, :publication_id, :status_cd, :tbn, :vessel_id
+  attr_accessible :company_id, :dwt, :grt, :loa, :nrt, :port_id, :publication_id,
+                  :status_cd, :tbn, :terminal_id, :vessel_id
   belongs_to :port
+  belongs_to :terminal
   belongs_to :vessel
   belongs_to :company
   has_many :disbursment_revisions, :dependent => :destroy, :order => 'number ASC'

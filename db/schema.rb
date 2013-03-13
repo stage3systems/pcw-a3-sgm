@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312151332) do
+ActiveRecord::Schema.define(:version => 20130313140611) do
+
+  create_table "cargo_types", :force => true do |t|
+    t.integer  "remote_id"
+    t.string   "maintype"
+    t.string   "subtype"
+    t.string   "subsubtype"
+    t.string   "subsubsubtype"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
 
   create_table "charges", :force => true do |t|
     t.integer  "port_id"
@@ -56,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20130312151332) do
     t.string   "reference"
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
+    t.integer  "cargo_type_id"
   end
 
   create_table "disbursments", :force => true do |t|
@@ -71,6 +82,7 @@ ActiveRecord::Schema.define(:version => 20130312151332) do
     t.decimal  "loa"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
+    t.integer  "terminal_id"
   end
 
   create_table "estimate_revisions", :force => true do |t|

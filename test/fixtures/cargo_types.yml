@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  remote_id: 1
+  maintype: MyString
+  subtype: MyString
+  subsubtype: MyString
+  subsubsubtype: MyString
+
+two:
+  remote_id: 1
+  maintype: MyString
+  subtype: MyString
+  subsubtype: MyString
+  subsubsubtype: MyString

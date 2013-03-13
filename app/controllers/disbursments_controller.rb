@@ -66,6 +66,7 @@ class DisbursmentsController < ApplicationController
   def edit
     @disbursment = Disbursment.find(params[:id])
     @revision = DisbursmentRevision.next_from_disbursment(@disbursment)
+    @cargo_types = CargoType.all
   end
 
   # POST /disbursments
@@ -82,6 +83,35 @@ class DisbursmentsController < ApplicationController
   end
 
   def crystalize_revision
+    # handle extra items
+    old_extras = @revision.field_keys.map {|k| k.starts_with?("EXTRAITEM") ? k : nil }.compact
+    extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
+    # remove keys that do not exist anymore
+    old_extras.each do |k|
+      if not extras.member? k
+        @revision.fields.delete(k)
+        @revision.codes.delete(k)
+        @revision.descriptions.delete(k)
+        @revision.values.delete(k)
+        @revision.values_with_tax.delete(k)
+      end
+    end
+    # reindex field_keys
+    fields = {}
+    @revision.field_keys.each_with_index do |k,i|
+      fields[k] = i
+    end
+    # add new items
+    next_val = fields.values.max+1
+    extras.each do |k|
+      if not old_extras.member? k
+        fields[k] = next_val
+        @revision.codes[k] = params["code_#{k}"]
+        @revision.descriptions[k] = params["description_#{k}"]
+        next_val += 1
+      end
+    end
+    @revision.fields = fields
     total = BigDecimal.new("0")
     total_with_tax = BigDecimal.new("0")
     @revision.field_keys.each do |k|

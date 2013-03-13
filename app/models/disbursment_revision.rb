@@ -1,7 +1,8 @@
 class DisbursmentRevision < ActiveRecord::Base
   attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
                   :disbursment_id, :fields, :loadtime, :number, :reference,
-                  :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax
+                  :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
+                  :cargo_type_id
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
@@ -9,6 +10,7 @@ class DisbursmentRevision < ActiveRecord::Base
   serialize :values, ActiveRecord::Coders::Hstore
   serialize :values_with_tax, ActiveRecord::Coders::Hstore
   belongs_to :disbursment
+  belongs_to :cargo_type
 
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}
@@ -23,13 +25,18 @@ class DisbursmentRevision < ActiveRecord::Base
     else
       rev.number = revision.number+1
       ["cargo_qty", "days_alongside", "loadtime",
-       "tugs_in", "tugs_out", "tax_exempt"].each do |k|
+       "tugs_in", "tugs_out", "tax_exempt", "cargo_type_id"].each do |k|
         rev.send("#{k}=", revision.send(k))
       end
       rev.crystalize
       total = BigDecimal.new("0")
       total_with_tax = BigDecimal.new("0")
       revision.fields.keys.each do |k|
+        if k.starts_with? "EXTRAITEM"
+          rev.fields[k] = rev.fields.values.map {|v| v.to_i}.max+1
+          rev.codes[k] = revision.codes[k]
+          rev.descriptions[k] = revision.descriptions[k]
+        end
         if rev.fields.has_key?(k) 
           value = revision.values[k]
           rev.values[k] = value
@@ -50,10 +57,12 @@ class DisbursmentRevision < ActiveRecord::Base
     p = self.disbursment.port.crystalize
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
-    self.data = v.merge(p[:data]).merge(c)
-    self.fields = p[:fields]
-    self.descriptions = p[:descriptions]
-    self.codes = p[:codes]
+    t = self.disbursment.terminal.crystalize(p[:fields].values.map{|v|v.to_i}.max+1) rescue {data: {}, fields: {}, descriptions: {}, codes: {}}
+    ct = self.cargo_type.crystalize rescue {}
+    self.data = v.merge(p[:data]).merge(c).merge(t[:data]).merge(ct)
+    self.fields = p[:fields].merge(t[:fields])
+    self.descriptions = p[:descriptions].merge(t[:descriptions])
+    self.codes = p[:codes].merge(t[:codes])
     self.values = {}
     self.values_with_tax = {}
   end
