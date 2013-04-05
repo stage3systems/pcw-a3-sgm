@@ -20,11 +20,12 @@ class DisbursmentsController < ApplicationController
     respond_to do |format|
       format.html { render layout: 'published' }
       format.pdf {
+        Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
-        #unless  File.exists? file
+        unless  File.exists? file
           format_published_pdf
           @pdf.render_file file
-        #end
+        end
         send_file(file, :type => "application/pdf")
       }
     end
