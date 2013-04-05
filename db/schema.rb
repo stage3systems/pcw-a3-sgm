@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130313193707) do
+ActiveRecord::Schema.define(:version => 20130405175028) do
 
   create_table "cargo_types", :force => true do |t|
     t.integer  "remote_id"
@@ -38,6 +38,21 @@ ActiveRecord::Schema.define(:version => 20130313193707) do
     t.string   "email"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "configurations", :force => true do |t|
+    t.string   "company_name"
+    t.string   "company_address1"
+    t.string   "company_address2"
+    t.string   "bank_name"
+    t.string   "bank_address1"
+    t.string   "bank_address2"
+    t.string   "swift_code"
+    t.string   "bsb_number"
+    t.string   "ac_number"
+    t.string   "ac_name"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "currencies", :force => true do |t|

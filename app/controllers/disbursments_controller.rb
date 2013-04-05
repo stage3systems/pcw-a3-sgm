@@ -84,7 +84,7 @@ class DisbursmentsController < ApplicationController
     end
     @pdf.grid([@gridy, 7], [@gridy+18, @ncols-1]).bounding_box do
       data = [
-        ['<b>From</b>', "<b>Monson Agencies Australia Pty Ltd</b>\n7/96 Toolooa Street\nGladstone, QLD, 4680"]
+        ['<b>From</b>', "<b>#{@revision.data['from_name']}</b>\n#{@revision.data['from_address1']}\n#{@revision.data['from_address2']}"]
       ]
       @pdf.table data,
                  cell_style: {border_widths: [0.1, 0, 0, 0], inline_format: true},
@@ -147,7 +147,7 @@ class DisbursmentsController < ApplicationController
     @pdf.table [['']],
                cell_style: {border_widths: [0.1, 0, 0, 0]},
                column_widths: [540]
-    @pdf.text "Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:\n\n<b>ANZ Bank Ltd</b>\n<b>7 Queen Street</b>\n<b>Fremantle, Western Australia</b>\n\n<b>SWIFT Code:ANZBAU3M</b>\n<b>BSB Number:016-307</b>\n<b>A/C Number:1077-33669</b>\n<b>A/C Name: Monson Agencies Australia Pty Ltd</b>\n<b>Reference: Vessel Name</b>\n\nDisclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.\n\nThis estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.\n\n", inline_format: true
+    @pdf.text "Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:\n\n<b>#{@revision.data['bank_name']}</b>\n<b>#{@revision.data['bank_address1']}</b>\n<b>#{@revision.data['bank_address2']}</b>\n\n<b>SWIFT Code: #{@revision.data['swift_code']}</b>\n<b>BSB Number: #{@revision.data['bsb_number']}</b>\n<b>A/C Number: #{@revision.data['ac_number']}</b>\n<b>A/C Name: #{@revision.data['ac_name']}</b>\n<b>Reference: Vessel Name</b>\n\nDisclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.\n\nThis estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.\n\n", inline_format: true
     if @revision.tax_exempt?
       @pdf.text "This estimate is exclusive of Australian Goods and Services Tax (GST).  The GST portion will be claimed back from the Australian Tax Office on your behalf.\n\n", inline_format: true
     else

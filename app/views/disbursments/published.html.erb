@@ -65,7 +65,7 @@
           <table class="table">
             <tr>
               <th>From</th>
-              <td><strong>Monson Agencies Australia Pty Ltd</strong><br />7/96 Toolooa Street<br />Gladstone, Qld, 4680</td>
+              <td><strong><%= @revision.data['from_name'] %></strong><br /><%= @revision.data['from_address1'] %><br /><%= @revision.data['from_address2'] %></td>
             </tr>
           </table>
         </div>
@@ -112,15 +112,15 @@
         <div class="span12">
         <p>Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:<p>
         <p><strong>
-        ANZ Bank Ltd<br />
-        7 Queen Street<br />
-        Fremantle, Western Australia<br />
+        <%= @revision.data['bank_name'] %><br />
+        <%= @revision.data['bank_address1'] %><br />
+        <%= @revision.data['bank_address2'] %><br />
         </strong></p>
         <p><strong>
-        SWIFT Code:ANZBAU3M<br />
-        BSB Number:016-307<br />
-        A/C Number:1077-33669<br />
-        A/C Name: Monson Agencies Australia Pty Ltd<br />
+        SWIFT Code: <%= @revision.data['swift_code'] %><br />
+        BSB Number: <%= @revision.data['bsb_number'] %><br />
+        A/C Number: <%= @revision.data['ac_number'] %><br />
+        A/C Name: <%= @revision.data['ac_name'] %><br />
         Reference: Vessel Name<br />
         </strong></p>
         <p>Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.</p>
