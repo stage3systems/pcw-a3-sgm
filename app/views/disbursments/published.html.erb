@@ -1,70 +1,137 @@
-<div class="container">
+<div class="container-fluid no-padding">
   <% if @published  %>
     <% if @published.published? %>
-    <div class="row">
+    <div class="pfda-header">
+      <div class="container">
+        <div class="row-fluid">
+          <span><span class="small">DUE</span>&nbsp;<%= number_to_currency @revision.amount %>&nbsp;<span class="small">(<%= (@revision.data['currency_code']) %>)</span></span>
+          <div class="btn-group pull-right hidden-print">
+            <a href="#" class="btn">PDF</a>
+            <a href="javascript:print();" class="btn"><i class="icon-print"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group"></div>
+    <div class="container pfda box-shadow">
+      <div class="row">
+        <div class="span6"><h2 style="padding-top: 1em;">PROFORMA DISBURSMENT</h2></div>
+        <div class="span6"><div class="pull-right"><%= image_tag "monson_agency.png" %></div></div>
+      </div>
       <div class="btn-group"></div>
-      <div class="span12 well well-small">
-        <h4>Proforma Disbursment for <%= @published.vessel_name %> in <%= @published.port.name %>: <%= number_to_currency @revision.amount %> (<%= @revision.data["currency_code"] %>)</h4>
-        <p><small><%= @revision.reference %> | Revision <%= @revision.number %> | Last revised on <%= l @revision.updated_at %></small></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span4">
-        <p style="padding-left: 1em;">
-          <strong>GRT:</strong> <%= @revision.data["vessel_grt"] %><br />
-          <strong>NRT:</strong> <%= @revision.data["vessel_nrt"] %><br />
-          <strong>DWT:</strong> <%= @revision.data["vessel_dwt"] %><br />
-          <strong>LOA:</strong> <%= @revision.data["vessel_loa"] %><br />
-        </p>
-      </div>
-      <div class="span4">
-        <p style="padding-left: 1em;">
-          <strong>Cargo Type:</strong> <%= @revision.cargo_type.display rescue "N/A" %><br />
-          <strong>Cargo Qantity:</strong> <%= @revision.cargo_qty %><br />
-          <strong>Load Time:</strong> <%= @revision.loadtime %><br />
-          <strong>Days Alongside:</strong> <%= @revision.days_alongside %><br />
-        </p>
-      </div>
-      <div class="span4">
-        <p style="padding-left: 1em;">
-          <strong>Tugs In:</strong> <%= @revision.tugs_in %><br />
-          <strong>Tugs Out:</strong> <%= @revision.tugs_out %><br />
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span12 well well-small">
-        <table class="table table-condensed">
-          <thead>
+      <div class="row">
+        <div class="span6">
+          <table class="table">
             <tr>
-              <th>Item</th>
-              <th>Amount (<%= @revision.data["currency_code"] %>)</th>
-              <% unless @revision.tax_exempt? %>
-              <th>Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
-              <% end %>
+              <th>To</th>
+              <td><strong><%= @revision.data['company_name'] %></strong><br /><%= @revision.data['company_email'] %></td>
             </tr>
-          </thead>
-          <tbody>
-            <% @revision.field_keys.each do |f| %>
+            <tr>
+              <th>Reference</th>
+              <td><%= @revision.reference %></td>
+            </tr>
+            <tr>
+              <th>Issued</th>
+              <td><%= l @revision.updated_at %></td>
+            </tr>
+            <tr>
+              <th>Vessel</th>
+              <td><%= @published.vessel_name %> <small>(GRT: <%= @revision.data["vessel_grt"] %> | NRT: <%= @revision.data["vessel_nrt"] %> | DWT: <%= @revision.data["vessel_dwt"] %> | LOA: <%= @revision.data["vessel_loa"] %>)</small></td>
+            </tr>
+            <tr>
+              <th>Port</th>
+              <td><%= @published.port.name %></td>
+            </tr>
+            <tr>
+              <th>Cargo Type</th>
+              <td><%= @revision.cargo_type.display rescue "N/A" %></td>
+            </tr>
+            <tr>
+              <th>Cargo Quantity</th>
+              <td><%= @revision.cargo_qty %></td>
+            </tr>
+            <tr>
+              <th>Load Time</th>
+              <td><%= @revision.loadtime %></td>
+            </tr>
+            <tr>
+              <th>Tugs</th>
+              <td><%= @revision.tugs_in %> In - <%= @revision.tugs_out %> Out</td>
+            </tr>
+          </table>
+        </div>
+        <div class="span1">&nbsp;</div>
+        <div class="span5">
+          <table class="table">
+            <tr>
+              <th>From</th>
+              <td><strong>Monson Agencies Australia Pty Ltd</strong><br />7/96 Toolooa Street<br />Gladstone, Qld, 4680</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="btn-group"></div>
+      <div class="row">
+        <div class="span12">
+          <table class="table table-condensed">
+            <thead>
               <tr>
-                <td><%= @revision.descriptions[f] %></td>
-                <td><%= number_to_currency @revision.values[f] %></td>
+                <th>Item</th>
+                <th>Amount (<%= @revision.data["currency_code"] %>)</th>
                 <% unless @revision.tax_exempt? %>
-                <td><%= number_to_currency @revision.values_with_tax[f] %></td>
+                <th>Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
                 <% end %>
               </tr>
-            <% end %>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>Total</th>
-              <th><%= number_to_currency @revision.data["total"] %></th>
-              <% unless @revision.tax_exempt? %>
-              <th><%= number_to_currency @revision.data["total_with_tax"] %></th>
+            </thead>
+            <tbody>
+              <% @revision.field_keys.each do |f| %>
+                <tr>
+                  <td><%= @revision.descriptions[f] %></td>
+                  <td><%= number_to_currency @revision.values[f] %></td>
+                  <% unless @revision.tax_exempt? %>
+                  <td><%= number_to_currency @revision.values_with_tax[f] %></td>
+                  <% end %>
+                </tr>
               <% end %>
-            </tr>
-          </tfoot>
-        </table>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th class="<%= "big" if @revision.tax_exempt? %>"><%= number_to_currency @revision.data["total"] %></th>
+                <% unless @revision.tax_exempt? %>
+                <th class="big"><%= number_to_currency @revision.data["total_with_tax"] %></th>
+                <% end %>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="btn-group"></div>
+      <hr />
+      <div class="row">
+        <div class="span12">
+        <p>Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:<p>
+        <p><strong>
+        ANZ Bank Ltd<br />
+        7 Queen Street<br />
+        Fremantle, Western Australia<br />
+        </strong></p>
+        <p><strong>
+        SWIFT Code:ANZBAU3M<br />
+        BSB Number:016-307<br />
+        A/C Number:1077-33669<br />
+        A/C Name: Monson Agencies Australia Pty Ltd<br />
+        Reference: Vessel Name<br />
+        </strong></p>
+        <p>Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.</p>
+        <p>This estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.</p>
+        <% if @revision.tax_exempt? %>
+          <p>This estimate is exclusive of Australian Goods and Services Tax (GST).  The GST portion will be claimed back from the Australian Tax Office on your behalf.</p>
+        <% else %>
+        <p>This estimate is inclusive of Australian Goods and Services Tax (GST).</p>
+        <% end %>
+        <p>Dowload the full <%= link_to "Terms and Conditions" , "/MAA Standard Terms and Conditions Sep 2012.pdf" %>.</p>
+        </div>
       </div>
     </div>
   <% else %>
@@ -76,3 +143,4 @@
     <div class="well"><h3>The requested document cannot be found.</h3></div>
 <% end %>
 </div>
+<div class="vpad"></div>
