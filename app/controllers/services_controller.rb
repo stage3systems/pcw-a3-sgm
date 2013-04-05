@@ -1,4 +1,6 @@
 class ServicesController < ApplicationController
+  #before_filter :authenticate_user!
+
   def index
     get_port_and_terminal
     port_breadcrumb

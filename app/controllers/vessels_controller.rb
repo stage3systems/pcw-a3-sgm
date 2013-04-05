@@ -1,4 +1,6 @@
 class VesselsController < ApplicationController
+  #before_filter :authenticate_user!
+
   add_breadcrumb "Vessels", :vessels_url
 
   # GET /vessels

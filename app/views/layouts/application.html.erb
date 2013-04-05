@@ -23,6 +23,16 @@
         <li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_url %>">Companies</a></li>
         <li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_url %>">Taxes</a></li>
       </ul>
+      <% if current_user %>
+      <ul class="nav pull-right">
+        <li classw="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.full_name %>&nbsp;</span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><%= link_to "Sign out", destroy_user_session_path %></li>
+          </ul>
+        </li>
+      </ul>
+      <% end %>
     </div>
   </header>
   <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>

@@ -1,4 +1,6 @@
 class CompaniesController < ApplicationController
+  #before_filter :authenticate_user!
+
   add_breadcrumb "Companies", :companies_url
   # GET /companies
   # GET /companies.json

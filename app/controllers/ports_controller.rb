@@ -1,4 +1,6 @@
 class PortsController < ApplicationController
+  #before_filter :authenticate_user!
+
   add_breadcrumb "Ports", :ports_url
 
   # GET /ports

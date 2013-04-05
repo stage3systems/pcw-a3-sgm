@@ -1,4 +1,5 @@
 class DisbursmentsController < ApplicationController
+  #before_filter :authenticate_user!, :except => :published
   add_breadcrumb "Proforma Disbursments", :disbursments_url
 
   # GET /disbursments

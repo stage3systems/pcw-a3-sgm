@@ -1,4 +1,6 @@
 class TerminalsController < ApplicationController
+  #before_filter :authenticate_user!
+
   # GET /terminals
   # GET /terminals.json
   def index

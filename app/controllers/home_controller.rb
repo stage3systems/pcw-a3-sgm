@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  #before_filter :authenticate_user!
+
   add_breadcrumb "Dashboard", :root_url
   def index
     @published = Disbursment.where(:status_cd => Disbursment.published).order("updated_at DESC")

@@ -1,19 +1,20 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
 gem 'devise'
-gem 'anjlab-bootstrap-rails', '>= 2.2', :require => 'bootstrap-rails'
+gem 'omniauth'
+gem 'omniauth-saml'
+gem 'anjlab-bootstrap-rails', '>= 2.3', :require => 'bootstrap-rails'
 gem 'bootstrap-editable-rails'
 gem 'activerecord-postgres-hstore', github: 'engageis/activerecord-postgres-hstore'
 gem 'therubyracer'
 gem 'breadcrumbs_on_rails'
 gem 'devise'
-gem 'omniauth'
 gem 'uuidtools'
 gem 'd3js-rails'
 gem 'simple_enum'
@@ -22,6 +23,7 @@ gem 'simple_form'
 gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn'
+gem 'prawn'
 
 
 # Gems used only for assets and not required
