@@ -4,6 +4,7 @@
   <table class="table table-bordered">
     <tr>
       <th>Name</th>
+      <th>Tariffs</th>
       <th>Services</th>
       <th>Actions</th>
     </tr>
@@ -11,6 +12,7 @@
   <% @terminals.each do |terminal| %>
     <tr>
       <td><%= link_to terminal.name, port_terminal_path(@port, terminal) %></td>
+      <td><%= link_to terminal.tariffs.count.to_s, port_terminal_tariffs_path(@port, terminal)  %></td>
       <td><%= link_to terminal.services.count.to_s, port_terminal_services_path(@port, terminal)  %></td>
       <td>
         <div class="btn-group">

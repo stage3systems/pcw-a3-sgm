@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130405175028) do
+ActiveRecord::Schema.define(:version => 20130412184133) do
 
   create_table "cargo_types", :force => true do |t|
     t.integer  "remote_id"
@@ -144,6 +144,18 @@ ActiveRecord::Schema.define(:version => 20130405175028) do
     t.integer  "row_order"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "tariffs", :force => true do |t|
+    t.string   "name"
+    t.string   "document"
+    t.integer  "user_id"
+    t.integer  "port_id"
+    t.integer  "terminal_id"
+    t.date     "validity_start"
+    t.date     "validity_end"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "taxes", :force => true do |t|

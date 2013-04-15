@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>Services</th>
+      <th>Tariffs</th>
       <th>Terminals</th>
       <th>Currency</th>
       <th>Tax</th>
@@ -15,6 +16,7 @@
     <tr>
       <td><%= link_to port.name, port_path(port) %></td>
       <td><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
+      <td><%= link_to port.tariffs.count.to_s, port_tariffs_path(port)  %></td>
       <td><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
       <td><%= port.currency.name  %></td>
       <td><%= port.tax.name  %></td>

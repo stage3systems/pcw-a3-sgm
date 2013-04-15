@@ -123,11 +123,19 @@ class ServicesController < ApplicationController
   end
 
   def destroy
+    get_port_and_terminal
+    @port = Port.find(params[:port_id])
     @service = Service.find(params[:id])
     @service.destroy
 
     respond_to do |format|
-      format.html { redirect_to port_services_url(@port) }
+      format.html {
+        if @terminal
+          redirect_to port_terminal_services_path(@port, @terminal)
+        else
+          redirect_to port_services_path(@port)
+        end
+      }
       format.json { head :no_content }
     end
   end

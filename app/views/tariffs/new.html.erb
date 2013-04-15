@@ -1,0 +1,13 @@
+<div class="container-fluid">
+  <h1>New tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
+
+  <%= render 'form' %>
+
+  <div class="btn-group">
+    <% if @terminal %>
+      <%= link_to 'Back', port_terminal_tariffs_path(@port, @terminal), :class => 'btn btn-small' %>
+    <% else %>
+      <%= link_to 'Back', port_tariffs_path(@port), :class => 'btn btn-small' %>
+    <% end %>
+  </div>
+</div>

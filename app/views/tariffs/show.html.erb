@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  <p id="notice"><%= notice %></p>
+
+  <h1>Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
+  <p><strong>Name:</strong> <%= @tariff.name %></p>
+  <p><strong>Document:</strong> <%= link_to File.basename(@tariff.document.url), @tariff.document.url %></p>
+  <p><strong>Valid From:</strong> <%= l @tariff.validity_start %></p>
+  <p><strong>Valid Until:</strong> <%= l @tariff.validity_end %></p>
+  <div class="btn-group">
+    <% if @terminal %>
+      <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, @tariff), :class => "btn btn-small" %>
+      <%= link_to 'Back', port_terminal_tariffs_path(@port, @terminal), :class => "btn btn-small" %>
+    <% else %>
+      <%= link_to 'Edit', edit_port_tariff_path(@port, @tariff), :class => "btn btn-small" %>
+      <%= link_to 'Back', port_tariffs_path(@port), :class => "btn btn-small" %>
+    <% end %>
+  </div>
+</div>

@@ -34,12 +34,14 @@ MonsonDisbursments::Application.routes.draw do
           post 'sort'
         end
       end
+      resources :tariffs
     end
     resources :services do
       collection do
         post 'sort'
       end
     end
+    resources :tariffs
   end
   resources :vessels
   resources :companies

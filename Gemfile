@@ -24,6 +24,7 @@ gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn'
 gem 'prawn'
+gem 'carrierwave'
 
 
 # Gems used only for assets and not required

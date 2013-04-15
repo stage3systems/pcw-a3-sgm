@@ -1,0 +1,14 @@
+<%= simple_form_for(@terminal.nil? ? [@port, @tariff] : [@port, @terminal, @tariff], html: {class: "form-horizontal"}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :document %>
+    <%= f.input :validity_start, label: 'Valid From' %>
+    <%= f.input :validity_end, label: 'Valid Until' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
