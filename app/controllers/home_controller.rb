@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user!
 
   add_breadcrumb "Dashboard", :root_url
   def index

@@ -1,5 +1,5 @@
 class DisbursmentsController < ApplicationController
-  #before_filter :authenticate_user!, :except => :published
+  before_filter :authenticate_user!, :except => :published
   add_breadcrumb "Proforma Disbursments", :disbursments_url
   include ActionView::Helpers::NumberHelper
 

@@ -15,6 +15,7 @@
   <header id="hd" class="navbar navbar-static-top">
     <div class="navbar-inner">
       <a class="brand" href="#">Monson</a>
+      <% if current_user %>
       <ul class="nav">
         <li class="<%= "active" if controller_name == 'home' %>"><a href="<%= root_url %>">Dashboard</a></li>
         <li class="<%= "active" if controller_name == 'disbursments' %>"><a href="<%= disbursments_url %>">Proforma Disbursments</a></li>
@@ -23,7 +24,6 @@
         <li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_url %>">Companies</a></li>
         <li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_url %>">Taxes</a></li>
       </ul>
-      <% if current_user %>
       <ul class="nav pull-right">
         <li classw="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.full_name %>&nbsp;</span class="caret"></span></a>
@@ -35,7 +35,9 @@
       <% end %>
     </div>
   </header>
+  <% if current_user %>
   <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
+  <% end %>
     <%= yield %>
   </div>
   <footer id="ft">

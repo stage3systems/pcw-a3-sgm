@@ -59,6 +59,6 @@ module MonsonDisbursments
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-    config.after_sign_out_path = "https://localhost:8001/admin/logout"
+    #config.after_sign_out_path = "https://localhost:8001/admin/logout"
   end
 end

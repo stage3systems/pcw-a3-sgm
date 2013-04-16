@@ -1,5 +1,5 @@
 class TaxesController < ApplicationController
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user!
 
   add_breadcrumb "Taxes", :taxes_url
 
