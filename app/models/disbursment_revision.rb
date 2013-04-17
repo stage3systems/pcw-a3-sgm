@@ -57,7 +57,7 @@ class DisbursmentRevision < ActiveRecord::Base
     p = self.disbursment.port.crystalize
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
-    conf = Configuration.last.serialize
+    conf = Configuration.last.crystalize
     t = self.disbursment.terminal.crystalize(p[:fields].values.map{|v|v.to_i}.max+1) rescue {data: {}, fields: {}, descriptions: {}, codes: {}}
     ct = self.cargo_type.crystalize rescue {}
     self.data = v.merge(p[:data]).merge(c).merge(conf).merge(t[:data]).merge(ct)
