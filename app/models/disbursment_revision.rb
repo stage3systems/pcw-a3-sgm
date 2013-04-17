@@ -40,10 +40,10 @@ class DisbursmentRevision < ActiveRecord::Base
         if rev.fields.has_key?(k) 
           value = revision.values[k]
           rev.values[k] = value
-          total += BigDecimal.new(value)
+          total += BigDecimal.new((value or "0"))
           value_with_tax = revision.values_with_tax[k]
           rev.values_with_tax[k] = value_with_tax
-          total_with_tax += BigDecimal.new(value_with_tax)
+          total_with_tax += BigDecimal.new((value_with_tax or "0"))
         end
       end
       rev.data["total"] = total.round(2).to_s
