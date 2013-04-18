@@ -5,7 +5,7 @@ class TerminalsController < ApplicationController
   # GET /terminals.json
   def index
     @port = Port.find(params[:port_id])
-    @terminals = Terminal.all
+    @terminals = @port.terminals
     port_breadcrumb
     add_breadcrumb "Terminals", port_terminals_url(@port)
 
