@@ -182,7 +182,7 @@
             $("td#service_"+key+" a").addClass("editable-unsaved");
           }
         }
-        if (overriden[key]) {
+        if (overriden[key] != undefined) {
           $("td#service_"+key+" i").removeClass("hidden");
           val = overriden[key];
         }
