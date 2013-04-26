@@ -88,7 +88,7 @@
                 <% unless @revision.disabled[f] %>
                 <tr>
                   <td><%= @revision.descriptions[f] %>
-                      <% if @revision.comments[f] and @revision.comments[f] != '' %>
+                      <% if @revision.comments and @revision.comments[f] and @revision.comments[f] != '' %>
                           &nbsp;<span class="comment"><%= @revision.comments[f] %></span>
                       <% end %>
                   </td>

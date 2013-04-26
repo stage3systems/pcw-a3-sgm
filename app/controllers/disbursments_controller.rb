@@ -114,7 +114,7 @@ class DisbursmentsController < ApplicationController
       desc = @revision.descriptions[f]
       height = 10
       space = 1
-      if @revision.comments[f] and @revision.comments[f] != ''
+      if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
         desc += " <font size=\"4.5\">#{@revision.comments[f]}</font>"
       end
       format_pdf_assert_space space
