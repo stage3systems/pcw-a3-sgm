@@ -110,20 +110,27 @@ class DisbursmentsController < ApplicationController
     end
     @gridy += 1
     @revision.field_keys.each do |f|
-      format_pdf_assert_space 1
+      next if @revision.disabled[f]
+      desc = @revision.descriptions[f]
+      height = 10
+      space = 1
+      if @revision.comments[f] and @revision.comments[f] != ''
+        desc += " <font size=\"4.5\">#{@revision.comments[f]}</font>"
+      end
+      format_pdf_assert_space space
       @pdf.grid([@gridy, 0], [@gridy+1, @ncols-1]).bounding_box do
         data = [
-          [@revision.descriptions[f], number_to_currency(@revision.values[f]), number_to_currency(@revision.values_with_tax[f])]
+          [desc, number_to_currency(@revision.values[f]), number_to_currency(@revision.values_with_tax[f])]
         ]
         if @revision.tax_exempt?
           data = data.map {|d| d.slice(0,2)}
         end
         @pdf.table data,
-                   cell_style: {border_widths: [0.1, 0, 0, 0], height: 10,
+                   cell_style: {border_widths: [0.1, 0, 0, 0], height: height,
                                 padding: 1, inline_format: true},
                    column_widths: column_widths
       end
-      @gridy += 1
+      @gridy += space
     end
     format_pdf_assert_space 2
     @pdf.grid([@gridy, 0], [@gridy+2, @ncols-1]).bounding_box do
@@ -244,20 +251,28 @@ class DisbursmentsController < ApplicationController
         fields[k] = next_val
         @revision.codes[k] = params["code_#{k}"]
         @revision.descriptions[k] = params["description_#{k}"]
+        @revision.comments[k] = params["comment_#{k}"]
         next_val += 1
       end
     end
     @revision.fields = fields
     total = BigDecimal.new("0")
     total_with_tax = BigDecimal.new("0")
+    disabled = []
     @revision.field_keys.each do |k|
       value = params["value_#{k}"]
       @revision.values[k] = value
-      total += BigDecimal.new(value)
       value_with_tax = params["value_with_tax_#{k}"]
       @revision.values_with_tax[k] = value_with_tax
-      total_with_tax += BigDecimal.new(value_with_tax)
+      @revision.comments[k] = params["comment_#{k}"]
+      if params["disabled_#{k}"] == '1'
+        disabled << k
+      else
+        total += BigDecimal.new(value)
+        total_with_tax += BigDecimal.new(value_with_tax)
+      end
     end
+    @revision.data["disabled"] = disabled.join(",")
     @revision.data["total"] = total.round(2).to_s
     @revision.data["total_with_tax"] = total_with_tax.round(2).to_s
     @revision.save

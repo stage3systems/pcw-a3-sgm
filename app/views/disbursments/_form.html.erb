@@ -62,23 +62,29 @@
           <th>Name</th>
           <th>Amount (<%= @revision.data["currency_code"] %>)</th>
           <th class="tax_inc tax">Amount (<%= @revision.data["currency_code"] %>) Tax Included</th>
+          <th>Disable</th>
         </tr>
       </thead>
       <tbody>
         <% @revision.field_keys.each do |k| %>
-          <tr class="service" id="service_<%= k %>">
+          <tr class="service<% if @revision.disabled[k] %> muted<% end %>" id="service_<%= k %>">
             <th>
               <%= @revision.descriptions[k] %>
               <% if k.starts_with? "EXTRAITEM" %>
                 &nbsp;<i class="icon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
               <% end %>
+              &nbsp;<span class="editable_value" id="comment_<%= k %>"><%= @revision.comments[k] rescue '' %></span>
             </th>
             <td id="service_<%= k %>">
               <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue('<%= k %>')"></i>
               <input type="hidden" name="value_<%= k %>" />
               <input  type="hidden" name="value_with_tax_<%= k %>" />
+              <input  type="hidden" name="comment_<%= k %>" />
+              <input  type="hidden" name="disabled_<%= k %>" value="<%= @revision.disabled[k] ? "1" : "0" %>" />
             </td>
-            <td id="service_with_tax_<%= k %>" class="tax"></td></tr>
+            <td id="service_with_tax_<%= k %>" class="tax"></td>
+            <td><input class="disable" type="checkbox" name="disable_<%= k %>" <% if @revision.disabled[k] %>checked="checked"<% end %> /></td>
+          </tr>
         <% end %>
       </tbody>
       <tfoot>
@@ -86,11 +92,13 @@
           <td><input id="extra_item" />&nbsp;Tax Applies: <input type="checkbox" id="extra_tax_applies" /></td>
           <td><a id="add_item" class="btn btn-small btn-success" href="javascript:void(0)">Add Item</a></td>
           <td class="tax"></td>
+          <td></td>
         </tr>
         <tr>
           <th>TOTAL</th>
           <th class="total"></th>
           <th class="total_tax_inc tax"></th>
+          <th></th>
         </tr>
       </tfoot>
     </table>
@@ -127,7 +135,8 @@
       $("td#service_"+key+" i").addClass("hidden");
       compute();
     };
-    $.fn.editable.defaults.display = function(value, sourceData) {
+    var valueDisplay = function(value, sourceData) {
+      console.log("value: "+value+" | sourceData: "+sourceData);
       var key = $(this).attr("id").split("_")[1];
       overriden[key] = parseFloat(value);
       $(this).html(convert(value));
@@ -157,6 +166,8 @@
       data: <%= @revision.data.to_json.html_safe %>,
       codes: <%= @revision.codes.to_json.html_safe %>,
       values: <%= @revision.values.to_json.html_safe %>,
+      comments: <%= @revision.comments.to_json.html_safe %>,
+      disabled: <%= @revision.disabled.to_json.html_safe %>,
       computed: {}
     };
     window.getCtx = function() {return ctx;}
@@ -186,7 +197,7 @@
           $("td#service_"+key+" i").removeClass("hidden");
           val = overriden[key];
         }
-        if (!isNaN(val)) {
+        if (!isNaN(val) && !ctx.disabled[key]) {
           total += val;
         }
         var valTaxInc = val;
@@ -197,7 +208,7 @@
             valTaxInc = val*parseFloat(ctx.tax_rate);
           }
         }
-        if (!isNaN(valTaxInc)) {
+        if (!isNaN(valTaxInc) && !ctx.disabled[key]) {
           totalTaxInc += valTaxInc;
         }
         $("td#service_"+key+" a").html(convert(val));
@@ -208,7 +219,17 @@
       }
       $("th.total").html(convert(total));
       $("th.total_tax_inc").html(convert(totalTaxInc));
-      $("td a.editable_value").editable();
+      $("th span.editable_value").editable({
+            display: function(value, sourceData) {
+                        var key = $(this).attr("id").split("_")[1];
+                        console.log(key);
+                        console.log($(this).attr("id"));
+                        $(this).html(value);
+                        $('input[name="comment_'+key+'"]').val(value);
+                        },
+            emptytext: 'Click to add Comment'
+      });
+      $("td a.editable_value").editable({display: valueDisplay});
     }
     var cleanCompute = function() {
       overriden = {};
@@ -252,12 +273,25 @@
           ctx.computed[key] = 0;
           $("table.disbursment tbody").append('<tr class="service" id="service_'+key+'"><th>'+item
             +'&nbsp;<i class="icon-remove-circle" onclick="removeExtra(\''+key+'\')"></i>'
-            +'</th><td id="service_'+key+'"><a class="editable_value" id="field_'+key+'" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue(\''+key+'\')"></i><input type="hidden" name="value_'+key+'" /><input type="hidden" name="value_with_tax_'+key+'" value="0" /><input type="hidden" name="code_'+key+'" value="'+ctx.codes[key]+'" /><input type="hidden" name="description_'+key+'" value="'+item+'" /></td><td id="service_with_tax_'+key+'" class="tax"></td></tr>');
+            +'&nbsp;<span class="editable_value" id="comment_'+key+'"></span></th>'
+            +'<td id="service_'+key+'"><a class="editable_value" id="field_'+key+'" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue(\''+key+'\')"></i><input type="hidden" name="value_'+key+'" /><input type="hidden" name="value_with_tax_'+key+'" value="0" /><input type="hidden" name="code_'+key+'" value="'+ctx.codes[key]+'" /><input type="hidden" name="description_'+key+'" value="'+item+'" /><input type="hidden" name="comment_'+key+'" /></td><td id="service_with_tax_'+key+'" class="tax"></td><td></td></tr>');
           $("input#extra_item").val("");
           $("input#extra_tax_applies").removeAttr("checked");
           numItems += 1;
           handleTaxExempt();
         }
+    });
+    $("input.disable").on("change", function(e) {
+        var key = $(e.target).attr("name").split('_')[1],
+            disabled = $(e.target).is(":checked");
+        if (disabled) {
+            $('tr.service#service_'+key).addClass('muted');
+        } else {
+            $('tr.service#service_'+key).removeClass('muted');
+        }
+        $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
+        ctx.disabled[key] = disabled;
+        compute();
     });
     handleTaxExempt();
   });

@@ -40,3 +40,7 @@ div.pfda-header span.small {font-size: 20px; font-weight: bold; color: #999;}
 div.no-padding { padding: 0; }
 div.vpad {padding: 2em;}
 th.big { font-size: 160%; }
+th span.editable_value { font-size: 80%; font-weight: normal; cursor: pointer;}
+tr.muted td a {color: #999999 !important;}
+tr.muted th span {color: #999999 !important;}
+span.comment {font-size: 80%; }

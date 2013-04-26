@@ -85,13 +85,19 @@
             </thead>
             <tbody>
               <% @revision.field_keys.each do |f| %>
+                <% unless @revision.disabled[f] %>
                 <tr>
-                  <td><%= @revision.descriptions[f] %></td>
+                  <td><%= @revision.descriptions[f] %>
+                      <% if @revision.comments[f] and @revision.comments[f] != '' %>
+                          &nbsp;<span class="comment"><%= @revision.comments[f] %></span>
+                      <% end %>
+                  </td>
                   <td><%= number_to_currency @revision.values[f] %></td>
                   <% unless @revision.tax_exempt? %>
                   <td><%= number_to_currency @revision.values_with_tax[f] %></td>
                   <% end %>
                 </tr>
+                <%end %>
               <% end %>
             </tbody>
             <tfoot>

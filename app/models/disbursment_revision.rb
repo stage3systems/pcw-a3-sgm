@@ -2,10 +2,11 @@ class DisbursmentRevision < ActiveRecord::Base
   attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
                   :disbursment_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
-                  :cargo_type_id
+                  :cargo_type_id, :comments
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
+  serialize :comments, ActiveRecord::Coders::Hstore
   serialize :codes, ActiveRecord::Coders::Hstore
   serialize :values, ActiveRecord::Coders::Hstore
   serialize :values_with_tax, ActiveRecord::Coders::Hstore
@@ -31,26 +32,44 @@ class DisbursmentRevision < ActiveRecord::Base
       rev.crystalize
       total = BigDecimal.new("0")
       total_with_tax = BigDecimal.new("0")
+      disabled = []
       revision.fields.keys.each do |k|
         if k.starts_with? "EXTRAITEM"
           rev.fields[k] = rev.fields.values.map {|v| v.to_i}.max+1
           rev.codes[k] = revision.codes[k]
           rev.descriptions[k] = revision.descriptions[k]
         end
-        if rev.fields.has_key?(k) 
+        if rev.fields.has_key?(k)
           value = revision.values[k]
           rev.values[k] = value
-          total += BigDecimal.new((value or "0"))
           value_with_tax = revision.values_with_tax[k]
           rev.values_with_tax[k] = value_with_tax
-          total_with_tax += BigDecimal.new((value_with_tax or "0"))
+          rev.comments[k] = revision.comments[k] if revision.comments
+          if revision.disabled[k]
+            disabled << k
+          else
+            total_with_tax += BigDecimal.new((value_with_tax or "0"))
+            total += BigDecimal.new((value or "0"))
+          end
         end
       end
+      rev.data["disabled"] = disabled.join(',')
       rev.data["total"] = total.round(2).to_s
       rev.data["total_with_tax"] = total_with_tax.round(2).to_s
     end
     rev.save
     rev
+  end
+
+  def disabled
+    @disabled ||= begin
+      disabled = self.data['disabled'].split(',') rescue []
+      hash = {}
+      self.fields.keys.each do |f|
+        hash[f] = disabled.member?(f)
+      end
+      hash
+    end
   end
 
   def crystalize
@@ -66,6 +85,7 @@ class DisbursmentRevision < ActiveRecord::Base
     self.codes = p[:codes].merge(t[:codes])
     self.values = {}
     self.values_with_tax = {}
+    self.comments = {}
   end
 
   def previous
