@@ -94,11 +94,12 @@ class TerminalsController < ApplicationController
   # DELETE /terminals/1
   # DELETE /terminals/1.json
   def destroy
+    @port = Port.find(params[:port_id])
     @terminal = Terminal.find(params[:id])
     @terminal.destroy
 
     respond_to do |format|
-      format.html { redirect_to terminals_url }
+      format.html { redirect_to port_terminals_url(@port) }
       format.json { head :no_content }
     end
   end
