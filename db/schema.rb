@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130426053551) do
+ActiveRecord::Schema.define(:version => 20130503055555) do
 
   create_table "cargo_types", :force => true do |t|
     t.integer  "remote_id"
@@ -21,16 +21,6 @@ ActiveRecord::Schema.define(:version => 20130426053551) do
     t.string   "subsubsubtype"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
-  end
-
-  create_table "charges", :force => true do |t|
-    t.integer  "port_id"
-    t.text     "code"
-    t.string   "name"
-    t.string   "key"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.integer  "row_order"
   end
 
   create_table "companies", :force => true do |t|
