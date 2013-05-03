@@ -6,6 +6,11 @@
     <tr>
       <th>Item</th>
       <th>Key</th>
+      <th>Reference Document</th>
+      <th>Created By</th>
+      <th>Last Modified</th>
+      <th>Last Modified By</th>
+      <th>Last Change</th>
       <th>Actions</th>
     </tr>
 
@@ -13,6 +18,11 @@
     <tr class="item" data-item_id="<%= service.id %>">
       <td><%= link_to service.item, @terminal.nil? ? port_service_url(@port, service) : port_terminal_service_url(@port, @terminal, service) %></td>
       <td><%= service.key %></td>
+      <td><%= link_to(File.basename(service.document.url), service.document.url) rescue '' %></td>
+      <td><%= service.user.full_name rescue 'N/A' %></td>
+      <td><%= l service.updated_at %></td>
+      <td><%= service.service_updates.last.user.full_name rescue 'N/A' %></td>
+      <td><%= service.service_updates.last.changelog rescue 'N/A' %></td>
       <td>
         <div class="btn-group">
           <% if @terminal %>

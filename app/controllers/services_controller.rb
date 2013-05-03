@@ -45,6 +45,7 @@ class ServicesController < ApplicationController
     @service.port = @port
     @service.terminal = @terminal
     @service.code = "{\n  compute: function(ctx) {\n    return 0;\n  },\n  taxApplies: false\n}\n"
+    @service.changelog = 'Initial service definition'
     port_breadcrumb
     if @terminal
       add_breadcrumb "New Service", new_port_terminal_service_url(@port, @terminal)
@@ -72,9 +73,11 @@ class ServicesController < ApplicationController
 
   def create
     get_port_and_terminal
+    changelog = params[:service].delete(:changelog)
     @service = Service.new(params[:service])
     @service.port = @port
     @service.terminal = @terminal
+    @service.user = current_user
     port_breadcrumb
     if @terminal
       add_breadcrumb "New Service", new_port_terminal_service_url(@port, @terminal)
@@ -84,6 +87,14 @@ class ServicesController < ApplicationController
 
     respond_to do |format|
       if @service.save
+        update = ServiceUpdate.new()
+        update.service = @service
+        update.user = current_user
+        update.changelog = changelog
+        update.document = @service.document
+        update.old_code = ''
+        update.new_code = @service.code
+        update.save!
         format.html {
           if @terminal
             notice = 'Service was successfully created.'
@@ -103,9 +114,20 @@ class ServicesController < ApplicationController
   def update
     get_port_and_terminal
     @service = Service.find(params[:id])
+    old_code = @service.code
+    changelog = params[:service].delete(:changelog)
+    @service.user = current_user if @service.user.nil?
 
     respond_to do |format|
       if @service.update_attributes(params[:service])
+        update = ServiceUpdate.new()
+        update.service = @service
+        update.user = current_user
+        update.changelog = changelog
+        update.document = @service.document
+        update.old_code = old_code
+        update.new_code = @service.code
+        update.save!
         format.html {
           notice = 'Service was successfully updated.'
           if @terminal

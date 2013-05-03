@@ -44,3 +44,8 @@ th span.editable_value { font-size: 80%; font-weight: normal; cursor: pointer;}
 tr.muted td a {color: #999999 !important;}
 tr.muted th span {color: #999999 !important;}
 span.comment {font-size: 80%; }
+div#code {
+    position: absolute;
+    width: 800px;
+    height: 400px;
+}
