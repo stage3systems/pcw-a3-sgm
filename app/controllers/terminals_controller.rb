@@ -82,7 +82,7 @@ class TerminalsController < ApplicationController
 
     respond_to do |format|
       if @terminal.update_attributes(params[:terminal])
-        format.html { redirect_to @terminal, notice: 'Terminal was successfully updated.' }
+        format.html { redirect_to [@port, @terminal], notice: 'Terminal was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
