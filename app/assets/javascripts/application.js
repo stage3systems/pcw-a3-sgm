@@ -34,3 +34,5 @@
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
 //= require bootstrap_init
+//= require jquery.dataTables
+//= require dataTables.bootstrap

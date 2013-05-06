@@ -1,38 +1,43 @@
 <div class="container-fluid">
   <h1>Tariffs for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %></h1>
 
-  <table class="table table-bordered">
-    <tr>
-      <th>Name</th>
-      <th>Download</th>
-      <th>Valid From</th>
-      <th>Valid Until</th>
-      <th>Actions</th>
-    </tr>
+  <div class="btn-group"></div>
+  <table class="table table-bordered datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Download</th>
+        <th>Valid From</th>
+        <th>Valid Until</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-  <% @tariffs.each do |tariff| %>
-    <tr>
-      <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
-      <td><%= link_to File.basename(tariff.document.url), tariff.document.url %></td>
-      <td><%= tariff.validity_start %></td>
-      <td><%= tariff.validity_end %></td>
-      <td>
-        <div class="btn-group">
-          <% if @terminal %>
-            <%= link_to 'Show', port_terminal_tariff_path(@port, @terminal, tariff), :class => 'btn btn-info btn-small' %>
-            <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, tariff), :class => 'btn btn-small' %>
-            <%= link_to 'Delete', port_terminal_tariff_path(@port, @terminal, tariff), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
-          <% else %>
-            <%= link_to 'Show', port_tariff_path(@port, tariff), :class => 'btn btn-info btn-small' %>
-            <%= link_to 'Edit', edit_port_tariff_path(@port, tariff), :class => 'btn btn-small' %>
-            <%= link_to 'Delete', port_tariff_path(@port, tariff), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
-          <% end %>
-        </div>
-    </tr>
-  <% end %>
+    <tbody>
+      <% @tariffs.each do |tariff| %>
+      <tr>
+        <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
+        <td><%= link_to File.basename(tariff.document.url), tariff.document.url %></td>
+        <td><%= tariff.validity_start %></td>
+        <td><%= tariff.validity_end %></td>
+        <td>
+          <div class="btn-group">
+            <% if @terminal %>
+              <%= link_to 'Show', port_terminal_tariff_path(@port, @terminal, tariff), :class => 'btn btn-info btn-small' %>
+              <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, tariff), :class => 'btn btn-small' %>
+              <%= link_to 'Delete', port_terminal_tariff_path(@port, @terminal, tariff), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+            <% else %>
+              <%= link_to 'Show', port_tariff_path(@port, tariff), :class => 'btn btn-info btn-small' %>
+              <%= link_to 'Edit', edit_port_tariff_path(@port, tariff), :class => 'btn btn-small' %>
+              <%= link_to 'Delete', port_tariff_path(@port, tariff), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+            <% end %>
+          </div>
+      </tr>
+      <% end %>
+    </tbody>
   </table>
 
-  <br />
+  <div class="clearfix"></div>
   <% if @terminal %>
     <%= link_to 'New Tariff', new_port_terminal_tariff_path(@port, @terminal), :class => 'btn btn-primary' %>
   <% else %>

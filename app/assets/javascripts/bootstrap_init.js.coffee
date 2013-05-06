@@ -19,3 +19,4 @@ jQuery ->
             data: data
          )
    )
+   $('table.datatable').dataTable(sPaginationType: "bootstrap")

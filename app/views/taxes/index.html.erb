@@ -1,30 +1,36 @@
 <div class="container-fluid">
   <h1>Taxes</h1>
 
-  <table class="table table-bordered">
-    <tr>
-      <th>Name</th>
-      <th>Code</th>
-      <th>Rate</th>
-      <th>Actions</th>
-    </tr>
+  <div class="btn-group"></div>
 
-  <% @taxes.each do |tax| %>
-    <tr>
-      <td><%= link_to tax.name, tax %></td>
-      <td><%= tax.code %></td>
-      <td><%= tax.rate %> (<%= (tax.rate-1)*100 %>%)</td>
-      <td>
-        <div class="btn-group">
-          <%= link_to 'Show', tax, :class => 'btn btn-info btn-small' %>
-          <%= link_to 'Edit', edit_tax_path(tax), :class => 'btn btn-small' %>
-          <%= link_to 'Delete', tax, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
-        </div>
-    </tr>
-  <% end %>
+  <table class="table table-bordered datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Rate</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @taxes.each do |tax| %>
+      <tr>
+        <td><%= link_to tax.name, tax %></td>
+        <td><%= tax.code %></td>
+        <td><%= tax.rate %> (<%= (tax.rate-1)*100 %>%)</td>
+        <td>
+          <div class="btn-group">
+            <%= link_to 'Show', tax, :class => 'btn btn-info btn-small' %>
+            <%= link_to 'Edit', edit_tax_path(tax), :class => 'btn btn-small' %>
+            <%= link_to 'Delete', tax, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+          </div>
+      </tr>
+      <% end %>
+    </tbody>
   </table>
 
-  <br />
+  <div class="clearfix"></div>
 
   <%= link_to 'New Tax', new_tax_path, :class => 'btn btn-primary' %>
 </div>
