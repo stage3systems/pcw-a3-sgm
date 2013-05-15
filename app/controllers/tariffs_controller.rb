@@ -56,9 +56,9 @@ class TariffsController < ApplicationController
     @tariff = Tariff.find(params[:id])
     port_breadcrumb
     if @terminal
-      add_breadcrumb "Edit #{@tariff.item}", edit_port_terminal_tariff_url(@port, @terminal, @tariff)
+      add_breadcrumb "Edit #{@tariff.name}", edit_port_terminal_tariff_url(@port, @terminal, @tariff)
     else
-      add_breadcrumb "Edit #{@tariff.item}", edit_port_tariff_url(@port, @tariff)
+      add_breadcrumb "Edit #{@tariff.name}", edit_port_tariff_url(@port, @tariff)
     end
   end
 
