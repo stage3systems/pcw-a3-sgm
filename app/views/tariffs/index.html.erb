@@ -17,7 +17,8 @@
       <% @tariffs.each do |tariff| %>
       <tr>
         <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
-        <td><%= link_to File.basename(tariff.document.url), tariff.document.url %></td>
+
+        <td><% unless tariff.document.url.nil? %><%= link_to File.basename(tariff.document.url), tariff.document.url %><% end %></td>
         <td><%= tariff.validity_start %></td>
         <td><%= tariff.validity_end %></td>
         <td>

@@ -3,7 +3,7 @@
 
   <h1>Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
   <p><strong>Name:</strong> <%= @tariff.name %></p>
-  <p><strong>Document:</strong> <%= link_to File.basename(@tariff.document.url), @tariff.document.url %></p>
+  <p><strong>Document:</strong> <% unless @tariff.document.url.nil? %><%= link_to File.basename(@tariff.document.url), @tariff.document.url %><% end %></p>
   <p><strong>Valid From:</strong> <%= l @tariff.validity_start %></p>
   <p><strong>Valid Until:</strong> <%= l @tariff.validity_end %></p>
   <div class="btn-group">
