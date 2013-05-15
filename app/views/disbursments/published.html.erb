@@ -47,6 +47,10 @@
               <td><%= @revision.cargo_type.display rescue "N/A" %></td>
             </tr>
             <tr>
+              <th>ETA</th>
+              <td><%= l(@revision.eta) rescue "N/A" %></td>
+            </tr>
+            <tr>
               <th>Cargo Quantity</th>
               <td><%= @revision.cargo_qty %></td>
             </tr>

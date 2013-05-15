@@ -2,7 +2,7 @@ class DisbursmentRevision < ActiveRecord::Base
   attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
                   :disbursment_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
-                  :cargo_type_id, :comments
+                  :cargo_type_id, :comments, :eta
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
@@ -25,7 +25,7 @@ class DisbursmentRevision < ActiveRecord::Base
       rev.crystalize
     else
       rev.number = revision.number+1
-      ["cargo_qty", "days_alongside", "loadtime",
+      ["cargo_qty", "days_alongside", "loadtime", "eta",
        "tugs_in", "tugs_out", "tax_exempt", "cargo_type_id"].each do |k|
         rev.send("#{k}=", revision.send(k))
       end

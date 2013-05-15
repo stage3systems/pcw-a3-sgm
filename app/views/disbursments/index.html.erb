@@ -8,6 +8,7 @@
       <tr>
         <th>Reference</th>
         <th>Status</th>
+        <th>ETA</th>
         <th>Port</th>
         <th>Company</th>
         <th>Vessel</th>
@@ -28,6 +29,7 @@
           <%= link_to 'Published', published_url(:id => disbursment.publication_id) %>
           <% end %>
         </td>
+        <td><%= l(disbursment.current_revision.eta) rescue "N/A" %></td>
         <td><%= disbursment.port.name %></td>
         <td><%= disbursment.company.name %></td>
         <td><%= disbursment.vessel_name %></td>

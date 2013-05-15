@@ -6,3 +6,6 @@ en:
   time:
     formats:
       default: "%a, %d %b %Y %H:%M"
+  date:
+    formats:
+      default: "%d %b %Y"

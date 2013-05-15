@@ -41,6 +41,7 @@
       </table>
     </div>
     <div class="span4">
+    <%= f.input :eta, label: 'ETA', as: :date, order: [:day, :month, :year] %>
     <%= f.association :cargo_type, label: "Cargo Type", label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
@@ -171,7 +172,12 @@
     };
     window.getCtx = function() {return ctx;}
     var compute = function() {
+      var d = $("select#disbursment_revision_eta_3i").val(),
+          m = $("select#disbursment_revision_eta_2i").val(),
+          y = $("select#disbursment_revision_eta_1i").val(),
+          eta = new Date(y+"-"+m+"-"+d);
       ctx.estimate = {
+        eta: eta,
         cargo_qty: parseInt($("input#disbursment_revision_cargo_qty").val()),
         tugs_in: parseInt($("input#disbursment_revision_tugs_in").val()),
         tugs_out: parseInt($("input#disbursment_revision_tugs_out").val()),
@@ -290,6 +296,7 @@
         ctx.disabled[key] = disabled;
         compute();
     });
+    $("select.date").on("change", compute);
     handleTaxExempt();
   });
 </script>
