@@ -3,7 +3,7 @@
 
   <div class="btn-group"></div>
 
-  <table class="table table-bordered datatable">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
@@ -34,3 +34,11 @@
 
   <%= link_to 'New Terminal', new_port_terminal_path, :class => 'btn btn-primary' %>
 </div>
+<script type="text/javascript">
+  $("table.table").dataTable({
+    sPaginationType: "bootstrap",
+    aoColumnDefs: [
+      {"sType": "num-html", "aTargets": [1,2]}
+    ]
+  });
+</script>
