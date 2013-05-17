@@ -7,17 +7,19 @@ class Terminal < ActiveRecord::Base
 
   def crystalize(offset=0)
     d = {
-      data: {
-        terminal_name: self.name,
+      "data" => {
+        "terminal_name" => self.name,
       },
-      fields: {},
-      descriptions: {},
-      codes: {}
+      "fields" => {},
+      "descriptions" => {},
+      "codes" => {},
+      "compulsory" => {}
     }
     self.services.each_with_index do |c, i|
-      d[:fields][c.key] = i+offset
-      d[:descriptions][c.key] = c.item
-      d[:codes][c.key] = c.code
+      d["fields"][c.key] = i+offset
+      d["descriptions"][c.key] = c.item
+      d["codes"][c.key] = c.code
+      d["compulsory"][c.key] = c.compulsory ? "1" : "0"
     end
     d
   end

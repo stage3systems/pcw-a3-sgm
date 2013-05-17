@@ -4,11 +4,11 @@ class Vessel < ActiveRecord::Base
 
   def crystalize
     {
-      vessel_name: self.name,
-      vessel_dwt: self.dwt.to_s,
-      vessel_grt: self.grt.to_s,
-      vessel_loa: self.loa.to_s,
-      vessel_nrt: self.nrt.to_s
+      "vessel_name" => self.name,
+      "vessel_dwt" => self.dwt.to_s,
+      "vessel_grt" => self.grt.to_s,
+      "vessel_loa" => self.loa.to_s,
+      "vessel_nrt" => self.nrt.to_s
     }
   end
 end

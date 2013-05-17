@@ -4,6 +4,7 @@
   <% ['item', 'key'].each do |k| %>
     <p><strong><%= k.capitalize %>:</strong> <%= @service.send(k) %></p>
   <% end %>
+  <p><strong>Compulsory:</strong> <%= @service.compulsory ? 'Yes' : 'No' %></p>
   <p><strong>Reference Document:</strong><%= link_to(File.basename(@service.document.url), @service.document.url) rescue 'N/A' %></p>
 
   <p><strong>Created By:</strong> <%= @service.user.full_name rescue 'N/A' %></p>

@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  name: MyString
-  code: MyString
-  symbol: MyString
+aud:
+  name: Australian Dollar
+  code: AUD
+  symbol: $
 
-two:
-  name: MyString
-  code: MyString
-  symbol: MyString
+usd:
+  name: United States Dollar
+  code: USD
+  symbol: $

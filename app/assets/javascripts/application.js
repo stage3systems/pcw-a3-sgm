@@ -37,3 +37,4 @@
 //= require jquery.dataTables
 //= require dataTables.htmlnumbers
 //= require dataTables.bootstrap
+//= require compute

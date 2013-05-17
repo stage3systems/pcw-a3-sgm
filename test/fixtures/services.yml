@@ -1,17 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  port_id: 1
-  terminal_id: 1
-  code: MyText
-  item: MyString
-  key: MyString
+marine_levy:
+  port: :brisbane
+  code: "{compute: function(ctx) {return 1000.0;},taxApplies: true}"
+  item: Marine Navigation Levy
+  key: MNL
   row_order: 1
 
-two:
-  port_id: 1
-  terminal_id: 1
-  code: MyText
-  item: MyString
-  key: MyString
-  row_order: 1
+towage:
+  port: :brisbane
+  code: "{compute: function(ctx) {return 2000.0+1000.0*parseInt(ctx.estimate.tugs_in);},taxApplies: true}"
+  item: Towage
+  key: TWG
+  row_order: 2

@@ -12,11 +12,11 @@ class CargoType < ActiveRecord::Base
   end
   def crystalize
     {
-      cargo_type: self.maintype,
-      cargo_subtype: self.subtype,
-      cargo_subsubtype: self.subsubtype,
-      cargo_subsubsubtype: self.subsubsubtype,
-      cargo_type_display: self.display
+      "cargo_type" => self.maintype,
+      "cargo_subtype" => self.subtype,
+      "cargo_subsubtype" => self.subsubtype,
+      "cargo_subsubsubtype" => self.subsubsubtype,
+      "cargo_type_display" => self.display
     }
   end
 end

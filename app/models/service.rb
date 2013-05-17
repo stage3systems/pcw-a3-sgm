@@ -2,7 +2,7 @@ class Service < ActiveRecord::Base
   include RankedModel
   attr_accessor :changelog
   attr_accessible :user_id, :code, :item, :key,
-                  :port_id, :row_order, :terminal_id, :document
+                  :port_id, :row_order, :terminal_id, :document, :compulsory
   belongs_to :port
   belongs_to :terminal
   belongs_to :user

@@ -208,7 +208,7 @@ class DisbursmentsController < ApplicationController
   # GET /disbursments/1/edit
   def edit
     @disbursment = Disbursment.find(params[:id])
-    @revision = DisbursmentRevision.next_from_disbursment(@disbursment)
+    @revision = @disbursment.current_revision
     @cargo_types = CargoType.all
   end
 
@@ -225,7 +225,10 @@ class DisbursmentsController < ApplicationController
     end
   end
 
-  def crystalize_revision
+  def save_revision
+    if not @revision.update_attributes(params[:disbursment_revision])
+      return false
+    end
     # handle extra items
     old_extras = @revision.field_keys.map {|k| k.starts_with?("EXTRAITEM") ? k : nil }.compact
     extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
@@ -246,35 +249,36 @@ class DisbursmentsController < ApplicationController
     end
     # add new items
     next_val = fields.values.max+1
+    ctx = V8::Context.new
     extras.each do |k|
       if not old_extras.member? k
         fields[k] = next_val
-        @revision.codes[k] = params["code_#{k}"]
+        @revision.compulsory[k] = "0"
+        taxApplies = "true"
+        begin
+          taxApplies = ctx.eval("("+params["code_#{k}"]+").taxApplies") ? "true" : "false"
+        rescue
+        end
+        @revision.codes[k] = "{compute: function(c) {return 0;},taxApplies: #{taxApplies}}"
         @revision.descriptions[k] = params["description_#{k}"]
-        @revision.comments[k] = params["comment_#{k}"]
         next_val += 1
       end
     end
     @revision.fields = fields
-    total = BigDecimal.new("0")
-    total_with_tax = BigDecimal.new("0")
-    disabled = []
-    @revision.field_keys.each do |k|
-      value = params["value_#{k}"]
-      @revision.values[k] = value
-      value_with_tax = params["value_with_tax_#{k}"]
-      @revision.values_with_tax[k] = value_with_tax
-      @revision.comments[k] = params["comment_#{k}"]
-      if params["disabled_#{k}"] == '1'
-        disabled << k
-      else
-        total += BigDecimal.new(value)
-        total_with_tax += BigDecimal.new(value_with_tax)
+    fields.keys.each do |k|
+      val = params["disabled_#{k}"]
+      if val and not @revision.compulsory?(k)
+        @revision.disabled[k] = (val == "1" ? "1" : "0")
       end
+      val = params["overriden_#{k}"]
+      if val and val != ""
+        @revision.overriden[k] = val
+      else
+        @revision.overriden.delete(k)
+      end
+      @revision.comments[k] = params["comment_#{k}"]
     end
-    @revision.data["disabled"] = disabled.join(",")
-    @revision.data["total"] = total.round(2).to_s
-    @revision.data["total_with_tax"] = total_with_tax.round(2).to_s
+    @revision.compute
     @revision.save
   end
 
@@ -282,10 +286,14 @@ class DisbursmentsController < ApplicationController
   # PUT /disbursments/1.json
   def update
     @disbursment = Disbursment.find(params[:id])
-    @revision = @disbursment.current_revision
+    if @disbursment.current_revision.number == 0
+      @revision = @disbursment.current_revision
+      @revision.number = 1
+    else
+      @revision = @disbursment.next_revision
+    end
     respond_to do |format|
-      if @revision.update_attributes(params[:disbursment_revision])
-        crystalize_revision
+      if save_revision
         format.html { redirect_to disbursments_url, notice: 'Disbursment was successfully updated.' }
       else
         format.html { render action: "edit" }

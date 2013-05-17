@@ -4,8 +4,8 @@ class Company < ActiveRecord::Base
 
   def crystalize
     {
-      company_name: name,
-      company_email: email
+      "company_name" => name,
+      "company_email" => email
     }
   end
 end

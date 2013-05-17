@@ -1,4 +1,4 @@
-MonsonDisbursments::Application.routes.draw do
+ProformaDA::Application.routes.draw do
   devise_for :users, controllers: {omniauth_callbacks: "users/omniauth_callbacks"}
   devise_scope :user do
     get '/users/auth/saml', :to => 'devise/sessions#new', :as => :new_user_session

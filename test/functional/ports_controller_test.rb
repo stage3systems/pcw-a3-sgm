@@ -2,7 +2,8 @@ require 'test_helper'
 
 class PortsControllerTest < ActionController::TestCase
   setup do
-    @port = ports(:one)
+    @port = ports(:newcastle)
+    log_in :one
   end
 
   test "should get index" do
@@ -18,7 +19,7 @@ class PortsControllerTest < ActionController::TestCase
 
   test "should create port" do
     assert_difference('Port.count') do
-      post :create, port: {  }
+      post :create, port: {name: 'test', currency_id: 1, tax_id: 1  }
     end
 
     assert_redirected_to port_path(assigns(:port))

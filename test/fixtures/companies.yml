@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  name: MyString
-  email: MyString
+stage3:
+  name: Stage 3 Systems Inc.
+  email: contact@stage3systems.com
 
-two:
-  name: MyString
-  email: MyString
+evax:
+  name: Evax S.A.R.L.
+  email: contact@evax.fr

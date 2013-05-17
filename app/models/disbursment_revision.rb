@@ -2,12 +2,16 @@ class DisbursmentRevision < ActiveRecord::Base
   attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
                   :disbursment_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
-                  :cargo_type_id, :comments, :eta
+                  :cargo_type_id, :comments, :eta, :compulsory, :disabled,
+                  :overriden
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
   serialize :comments, ActiveRecord::Coders::Hstore
+  serialize :compulsory, ActiveRecord::Coders::Hstore
+  serialize :disabled, ActiveRecord::Coders::Hstore
   serialize :codes, ActiveRecord::Coders::Hstore
+  serialize :overriden, ActiveRecord::Coders::Hstore
   serialize :values, ActiveRecord::Coders::Hstore
   serialize :values_with_tax, ActiveRecord::Coders::Hstore
   belongs_to :disbursment
@@ -17,59 +21,66 @@ class DisbursmentRevision < ActiveRecord::Base
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}
   end
 
-  def self.next_from_disbursment(disbursment)
-    revision = disbursment.current_revision
-    rev = new(disbursment_id: disbursment.id)
-    if revision.nil?
-      rev.number = 1
-      rev.crystalize
-    else
-      rev.number = revision.number+1
-      ["cargo_qty", "days_alongside", "loadtime", "eta",
-       "tugs_in", "tugs_out", "tax_exempt", "cargo_type_id"].each do |k|
-        rev.send("#{k}=", revision.send(k))
-      end
-      rev.crystalize
-      total = BigDecimal.new("0")
-      total_with_tax = BigDecimal.new("0")
-      disabled = []
-      revision.fields.keys.each do |k|
-        if k.starts_with? "EXTRAITEM"
-          rev.fields[k] = rev.fields.values.map {|v| v.to_i}.max+1
-          rev.codes[k] = revision.codes[k]
-          rev.descriptions[k] = revision.descriptions[k]
-        end
-        if rev.fields.has_key?(k)
-          value = revision.values[k]
-          rev.values[k] = value
-          value_with_tax = revision.values_with_tax[k]
-          rev.values_with_tax[k] = value_with_tax
-          rev.comments[k] = revision.comments[k] if revision.comments
-          if revision.disabled[k]
-            disabled << k
-          else
-            total_with_tax += BigDecimal.new((value_with_tax or "0"))
-            total += BigDecimal.new((value or "0"))
-          end
-        end
-      end
-      rev.data["disabled"] = disabled.join(',')
-      rev.data["total"] = total.round(2).to_s
-      rev.data["total_with_tax"] = total_with_tax.round(2).to_s
+  def compute
+    ctx = V8::Context.new
+    ctx.eval(self.context)
+    ctx.load(Rails::root.join("app/assets/javascripts/compute.js"))
+    ctx.eval("parseCodes(ctx)");
+    ctx.eval("compute(ctx)");
+    self.data["total"] = ctx.eval("ctx.total")
+    self.data["total_with_tax"] = ctx.eval("ctx.totalTaxInc")
+    self.fields.keys.each do |k|
+      self.values[k] = ctx.eval("ctx.values['#{k}']")
+      self.values_with_tax[k] = ctx.eval("ctx.values_with_tax['#{k}']")
     end
-    rev.save
-    rev
   end
 
-  def disabled
-    @disabled ||= begin
-      disabled = self.data['disabled'].split(',') rescue []
-      hash = {}
-      self.fields.keys.each do |f|
-        hash[f] = disabled.member?(f)
-      end
-      hash
-    end
+  def context
+    <<CTX
+    var ctx = {
+      services: #{self.field_keys.to_json},
+      vessel: {
+        nrt: #{self.data["vessel_nrt"]},
+        grt: #{self.data["vessel_grt"]},
+        dwt: #{self.data["vessel_dwt"]},
+        loa: #{self.data["vessel_loa"]}
+      },
+      estimate: {
+        eta: new Date(#{"\"" if self.eta}#{self.eta}#{"\"" if self.eta}),
+        cargo_qty: #{self.cargo_qty},
+        tugs_in: #{self.tugs_in},
+        tugs_out: #{self.tugs_out},
+        loadtime: #{self.loadtime},
+        days_alongside: #{self.days_alongside}
+      },
+      cargo_type: {
+        type: "#{self.data["cargo_type"]}",
+        subtype: "#{self.data["cargo_subtype"]}",
+        subsubtype: "#{self.data["cargo_subsubtype"]}",
+        subsubsubtype: "#{self.data["cargo_subsubsubtype"]}"
+      },
+      tax_rate: #{self.data["tax_rate"]},
+      data: #{self.data.to_json},
+      codes: #{self.codes.to_json},
+      parsed_codes: {},
+      values: #{self.values.to_json},
+      values_with_tax: #{self.values_with_tax.to_json},
+      comments: #{self.comments.to_json},
+      compulsory: #{Hash[self.compulsory.map{|k,v| [k,v=="1"]}].to_json},
+      disabled: #{Hash[self.disabled.map{|k,v| [k,v=="1"]}].to_json},
+      overriden: #{self.overriden.to_json},
+      computed: {},
+      computed_with_tax: {}
+    };
+CTX
+  end
+
+  def disabled?(k)
+    return self.disabled[k] == "1"
+  end
+
+  def compulsory?(k)
+    return self.compulsory[k] == "1"
   end
 
   def crystalize
@@ -77,12 +88,23 @@ class DisbursmentRevision < ActiveRecord::Base
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
     conf = Configuration.last.crystalize
-    t = self.disbursment.terminal.crystalize(p[:fields].values.map{|v|v.to_i}.max+1) rescue {data: {}, fields: {}, descriptions: {}, codes: {}}
+    t = self.disbursment.terminal.crystalize(
+              p["fields"].values.map{|v|v.to_i}.max+1) rescue
+        {
+          "data" => {},
+          "fields" => {},
+          "descriptions" => {},
+          "codes" => {},
+          "compulsory" => {},
+        }
     ct = self.cargo_type.crystalize rescue {}
-    self.data = v.merge(p[:data]).merge(c).merge(conf).merge(t[:data]).merge(ct)
-    self.fields = p[:fields].merge(t[:fields])
-    self.descriptions = p[:descriptions].merge(t[:descriptions])
-    self.codes = p[:codes].merge(t[:codes])
+    self.data = v.merge(p["data"]).merge(c).merge(conf).merge(t["data"]).merge(ct)
+    self.fields = p["fields"].merge(t["fields"])
+    self.descriptions = p["descriptions"].merge(t["descriptions"])
+    self.compulsory = p["compulsory"].merge(t["compulsory"])
+    self.codes = p["codes"].merge(t["codes"])
+    self.disabled = {}
+    self.overriden = {}
     self.values = {}
     self.values_with_tax = {}
     self.comments = {}
@@ -106,6 +128,5 @@ class DisbursmentRevision < ActiveRecord::Base
 
   def reference
     ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' } - #{self.updated_at.to_date} - r#{self.number}"
-    #ref.upcase.gsub(' ', '-')
   end
 end

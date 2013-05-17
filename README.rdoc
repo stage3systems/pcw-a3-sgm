@@ -1,2 +1,16 @@
-== Monson Disbursments
+= ProformaDA
 
+A flexible system for proforma disbursments estimates.
+
+== Architecture
+
+Port tariffication is implemented using javascript formulas, and can thus
+be executed both in the browser for live estimate manipulation and server-side,
+using an embedded V8 engine.
+
+Services assigned to ports and terminals are expected to change over time (new
+laws, tariff updates, etc...) so they behave like a loose and changing schema
+for disbursments.
+
+Each disbursment revision "crystalizes" the current schema using the flexibility
+of PostgreSQL's hstore extension, so that it becomes a self-contained entity.
