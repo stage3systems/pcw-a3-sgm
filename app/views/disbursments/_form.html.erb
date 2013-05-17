@@ -185,41 +185,6 @@
           $("td#service_"+key+" a").addClass("editable-unsaved");
         }
       }
-      /*
-      for (var i = 0; i < ctx.services.length; ++i) {
-        var key = ctx.services[i];
-        if (ctx.values[key]) {
-          var saved = parseFloat(ctx.values[key]);
-          if (saved != val && overriden[key] == undefined) {
-            overriden[key] = saved;
-            $("td#service_"+key+" a").addClass("editable-unsaved");
-          }
-        }
-        if (overriden[key] != undefined) {
-          $("td#service_"+key+" i").removeClass("hidden");
-          val = overriden[key];
-        }
-        if (!isNaN(val) && !ctx.disabled[key]) {
-          total += val;
-        }
-        var valTaxInc = val;
-        if (code.taxApplies) {
-          if (code.taxRate) {
-            valTaxInc = val*code.taxRate;
-          } else {
-            valTaxInc = val*parseFloat(ctx.tax_rate);
-          }
-        }
-        if (!isNaN(valTaxInc) && !ctx.disabled[key]) {
-          totalTaxInc += valTaxInc;
-        }
-        $("td#service_"+key+" a").html(convert(val));
-        $("td#service_"+key+" a").attr("data-value", val.toFixed(2));
-        $("td#service_with_tax_"+key).html(convert(valTaxInc));
-        $('input[name="value_'+key+'"]').val(val);
-        $('input[name="value_with_tax_'+key+'"]').val(valTaxInc);
-        }
-      */
       $("th.total").html(convert(ctx.total));
       $("th.total_tax_inc").html(convert(ctx.totalTaxInc));
       $("th span.editable_value").editable({
