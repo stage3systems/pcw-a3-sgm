@@ -38,7 +38,8 @@
   $("table.table").dataTable({
     sPaginationType: "bootstrap",
     aoColumnDefs: [
-      {"sType": "num-html", "aTargets": [1,2]}
+      {"sType": "num-html", "aTargets": [1,2]},
+      {"bSortable": false, "aTargets": [3]}
     ]
   });
 </script>
