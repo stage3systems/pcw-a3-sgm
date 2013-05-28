@@ -70,7 +70,7 @@ class DisbursmentsController < ApplicationController
       data = [
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
-        ['<b>Issued</b>', I18n.l(@revision.updated_at)],
+        ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
         ['<b>Vessel<b>', "#{@published.vessel_name} <font size=\"4.5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
         ['<b>Port</b>', @published.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.display rescue "N/A")],
