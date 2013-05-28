@@ -6,8 +6,7 @@
         <div class="row-fluid">
           <span><span class="small">DUE</span>&nbsp;<%= number_to_currency @revision.amount %>&nbsp;<span class="small">(<%= (@revision.data['currency_code']) %>)</span></span>
           <div class="btn-group pull-right hidden-print">
-            <a href="/proforma_disbursments/<%= @published.publication_id %>.pdf" class="btn">PDF</a>
-            <a href="javascript:print();" class="btn"><i class="icon-print"></i></a>
+            <a href="/proforma_disbursments/<%= @published.publication_id %>.pdf" class="btn"><i class="icon-print"></i></a>
           </div>
         </div>
       </div>
