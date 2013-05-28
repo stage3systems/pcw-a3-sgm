@@ -75,7 +75,7 @@ class DisbursmentsController < ApplicationController
         ['<b>Port</b>', @published.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.display rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
-        ['<b>Load Time</b>', @revision.loadtime],
+        ['<b>Load Time (Hours)</b>', @revision.loadtime],
         ['<b>Tugs</b>', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
       ]
       @pdf.table data,
