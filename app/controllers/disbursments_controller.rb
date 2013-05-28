@@ -44,7 +44,7 @@ class DisbursmentsController < ApplicationController
 
   def format_published_pdf
     @pdf = Prawn::Document.new :page_layout => :portrait
-    @pdf.font_size = 6
+    @pdf.font_size = 7
     @pdf.font_families.update(
       "DejaVuSans" => { :bold => Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
                         :normal => Rails.root.join('fonts', 'DejaVuSans.ttf').to_s })
@@ -64,25 +64,26 @@ class DisbursmentsController < ApplicationController
       @pdf.image logo_path, :width => 40, :position => :right, :vposition => :center
     end
     @gridy += 10
-    format_pdf_assert_space 18
-    @pdf.grid([@gridy, 0], [@gridy+18, 5]).bounding_box do
+    header_size = 20
+    format_pdf_assert_space header_size
+    @pdf.grid([@gridy, 0], [@gridy+header_size, 5]).bounding_box do
       @pdf.fill_color = '123123'
       data = [
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
-        ['<b>Vessel<b>', "#{@published.vessel_name} <font size=\"4.5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
+        ['<b>Vessel<b>', "#{@published.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
         ['<b>Port</b>', @published.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.display rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
-        ['<b>Load Time (Hours)</b>', @revision.loadtime],
+        ['<b>Load Time</b>', "#{@revision.loadtime} hours"],
         ['<b>Tugs</b>', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
       ]
       @pdf.table data,
                  cell_style: {border_widths: [0.1, 0, 0, 0], inline_format: true},
                  column_widths: [70, 200]
     end
-    @pdf.grid([@gridy, 7], [@gridy+18, @ncols-1]).bounding_box do
+    @pdf.grid([@gridy, 7], [@gridy+header_size, @ncols-1]).bounding_box do
       data = [
         ['<b>From</b>', "<b>#{@revision.data['from_name']}</b>\n#{@revision.data['from_address1']}\n#{@revision.data['from_address2']}"]
       ]
@@ -90,7 +91,7 @@ class DisbursmentsController < ApplicationController
                  cell_style: {border_widths: [0.1, 0, 0, 0], inline_format: true},
                  column_widths: [70, 155]
     end
-    @gridy += 18
+    @gridy += header_size
     format_pdf_assert_space 1
     column_widths = [180, 135, 225]
     if @revision.tax_exempt?
@@ -115,7 +116,7 @@ class DisbursmentsController < ApplicationController
       height = 10
       space = 1
       if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
-        desc += " <font size=\"4.5\">#{@revision.comments[f]}</font>"
+        desc += " <font size=\"5\">#{@revision.comments[f]}</font>"
       end
       format_pdf_assert_space space
       @pdf.grid([@gridy, 0], [@gridy+1, @ncols-1]).bounding_box do
@@ -136,12 +137,12 @@ class DisbursmentsController < ApplicationController
     @pdf.grid([@gridy, 0], [@gridy+2, @ncols-1]).bounding_box do
       if @revision.tax_exempt?
         data = [
-          ['<b>Total</b>', "<b><font size=\"16\">#{number_to_currency(@revision.data['total'])}</font></b>"]
+          ['<b>Total</b>', "<b><font size=\"12\">#{number_to_currency(@revision.data['total'])}</font></b>"]
         ]
       else
         data = [
           ['<b>Total</b>', "<b>#{number_to_currency(@revision.data["total"])}<b>",
-                           "<b><font size=\"14\">#{number_to_currency(@revision.data['total_with_tax'])}</font></b>"]
+                           "<b><font size=\"12\">#{number_to_currency(@revision.data['total_with_tax'])}</font></b>"]
         ]
       end
       @pdf.table data, 
