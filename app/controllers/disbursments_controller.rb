@@ -18,7 +18,7 @@ class DisbursmentsController < ApplicationController
     @published = Disbursment.find_by_publication_id(params[:id])
     @revision = @published.current_revision rescue nil
     respond_to do |format|
-      format.html { render layout: 'published' }
+      format.html
       format.pdf {
         Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"

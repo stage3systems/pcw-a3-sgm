@@ -35,7 +35,7 @@
       <% end %>
     </div>
   </header>
-  <% if current_user %>
+  <% if current_user and action_name != "published" %>
   <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
   <% end %>
     <%= yield %>
