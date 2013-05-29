@@ -7,14 +7,63 @@ html {height: 100%; font-size: 62.5%;}
 body {height: 100%; font-size: 13px; /*font-size: 1.3rem;*/ background: #eee; color: #333;}
 label {color: #aaa;}
 
-#hd .navbar-inner {border: none; background-color: #0e4079; background-image: none;}
-#hd.navbar-static-top .navbar-inner {box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;}
-#hd.navbar .brand {padding: 10px 30px; background: url(logo_monson.png) center center no-repeat; color: #fff; text-shadow: 0 -1px 0 rgba(0,0,0,0.2); text-indent: -9999px; outline: none;}
-#hd.navbar .nav > li > a {color: #afcae8; text-shadow: 0 -1px 0 rgba(0,0,0,0.2);}
-#hd.navbar .nav > li > a:focus, #hd.navbar .nav > li > a:hover {color: #fff;}
-#hd.navbar .nav > .active > a {background-color: #eee; color: #0e4079; text-shadow: 0 1px 0 rgba(255,255,255,0.5);}
-#hd .date {font-size: 15px; color: #fff; text-align: right;}
-#hd .date > label {margin: 2px 0 -4px; font-size: 11px; display: block;}
+#logo {padding: 0 30px; background: url(logo_monson.png) center center no-repeat; color: #fff; line-height: 52px; text-shadow: 0 -1px 0 rgba(0,0,0,0.2); text-indent: -9999px; float: right; outline: none;}
+#hd {height: 52px; margin-bottom: 20px; background: #216495 url(bg_hd.jpg) top left repeat-x; color: #fff;}
+#mainmenu {padding: 15px 0 0 20px; color: #fff; overflow: hidden;}
+#mainmenu .nav-tabs {border-bottom: none;}
+#mainmenu .nav-tabs > li > a {-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;}
+#mainmenu ul {margin: 0; padding: 0;}
+#mainmenu li > a {
+  margin-right: -1px;
+  padding: 8px 12px;
+  border: 1px solid #174669;
+  background: #6daedf;
+  background: -moz-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#216597),color-stop(100%,#174669));
+  background: -webkit-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -o-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -ms-linear-gradient(top,#216597 0%,#174669 100%);
+  background: linear-gradient(to bottom,#216597 0%,#174669 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#216597,endColorstr=#174669,GradientType=0);
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 -1px 0 #000;
+  display: inline-block;
+}
+#mainmenu li:first-child > a {-moz-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; border-radius: 3px 0 0 0;}
+#mainmenu li:last-child > a {-moz-border-radius: 0 3px 0 0; -webkit-border-radius: 0 3px 0 0; border-radius: 0 3px 0 0;}
+#mainmenu li.active > a {
+  margin-top: -3px;
+  padding-top: 11px;
+  background: #eeeeee;
+  border-bottom: none;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  position: relative;
+  z-index: 3;
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+}
+#mainmenu li > a > [class^="icon-"] {background-image: url(/assets/twitter/glyphicons-halflings-white.png);}
+#mainmenu li.active > a > [class^="icon-"] {background-image: url(/assets/twitter/glyphicons-halflings.png);}
+
+ul.breadcrumb { background-color: #eeeeee; padding-left: 2em;}
+ul.userbox {padding-top: 6px;}
+
+#hd { margin-bottom: 0px; }
+
+.logged-in {line-height: 52px; float: right;}
+.logged-in a {color: #fff;}
+.logged-in a:hover {color: #0099ff; text-decoration: none;}
+.logged-in .name {font-weight: bold; text-transform: capitalize;}
+.logged-in .btn-mini {
+  margin :0 0.5em;
+  @include gradient-vertical(#216597, #174669);
+  border: none;
+  color: #e1e1e1;
+  text-shadow: 0 -1px 0 #000;
+}
 
 /* sticky footer */
 .wrapper {min-height: 100%; margin-bottom: -30px;}

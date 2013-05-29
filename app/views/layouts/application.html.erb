@@ -13,27 +13,24 @@
 <body id="<%= controller_name %>">
   <div class="wrapper">
   <header id="hd" class="navbar navbar-static-top">
-    <div class="navbar-inner">
-      <a class="brand" href="#">Monson</a>
-      <% if current_user %>
-      <ul class="nav">
-        <li class="<%= "active" if controller_name == 'home' %>"><a href="<%= root_url %>">Dashboard</a></li>
-        <li class="<%= "active" if controller_name == 'disbursments' %>"><a href="<%= disbursments_url %>">Proforma Disbursments</a></li>
-        <li class="<%= "active" if ['ports','terminals','services'].member? controller_name %>"><a href="<%= ports_url %>">Ports Setup</a></li>
+    <div id="logo" class="pull-right"></a href="/">Monson</a></div>
+    <% if current_user %>
+    <div class="logged-in">
+      <b><%= current_user.full_name %></b>
+      <%= link_to "Log Out", destroy_user_session_path, class: "btn btn-mini" %>
+    </div>
+    <div id="mainmenu">
+      <ul class="nav nav-tabs">
+        <li class="<%= "active" if controller_name == 'home' %>"><a href="<%= root_url %>"><i class="icon-home"></i>&nbsp;Dashboard</a></li>
+        <li class="<%= "active" if controller_name == 'disbursments' %>"><a href="<%= disbursments_url %>"><i class="icon-list"></i>&nbsp;Proforma Disbursments</a></li>
+        <li class="<%= "active" if ['ports','terminals','services'].member? controller_name %>"><a href="<%= ports_url %>"><i class="icon-wrench"></i>&nbsp;Ports Setup</a></li>
         <li class="<%= "active" if controller_name == 'vessels' %>"><a href="<%= vessels_url %>">Vessels</a></li>
         <li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_url %>">Companies</a></li>
         <li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_url %>">Taxes</a></li>
       </ul>
-      <ul class="nav pull-right">
-        <li classw="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.full_name %>&nbsp;</span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><%= link_to "Sign out", destroy_user_session_path %></li>
-          </ul>
-        </li>
-      </ul>
-      <% end %>
     </div>
+    <% end %>
+    <div class="clearfix"></div>
   </header>
   <% if current_user and action_name != "published" %>
   <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
