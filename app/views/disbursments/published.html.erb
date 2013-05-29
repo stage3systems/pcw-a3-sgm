@@ -4,7 +4,7 @@
     <div class="pfda-header">
       <div class="container">
         <div class="row-fluid">
-          <span><span class="small">DUE</span>&nbsp;<%= number_to_currency @revision.amount %>&nbsp;<span class="small">(<%= (@revision.data['currency_code']) %>)</span></span>
+          <span><span class="small">ESTIMATED</span>&nbsp;<%= number_to_currency @revision.amount %>&nbsp;<span class="small">(<%= (@revision.data['currency_code']) %>)</span></span>
           <div class="btn-group pull-right hidden-print">
             <a href="/proforma_disbursments/<%= @published.publication_id %>.pdf" class="btn"><i class="icon-print"></i></a>
           </div>
