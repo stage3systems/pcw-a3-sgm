@@ -51,6 +51,14 @@ label {color: #aaa;}
 ul.breadcrumb { background-color: #eeeeee; padding-left: 2em;}
 ul.userbox {padding-top: 6px;}
 
+.browsers ul > li {list-style: none;}
+.browsers ul > li > a {height: 70px; min-width: 200px; padding: 30px 0 0 120px; background-image: url(logo_browsers.png); background-repeat: no-repeat; text-decoration: none; display: block;}
+.browsers ul > li > a span {font-weight: bold; display: block;}
+.browsers li.ie a {background-position: 0 0;}
+.browsers li.ff a {background-position: 0 -100px;}
+.browsers li.safari a {background-position: 0 -200px;}
+.browsers li.chrome a {background-position: 0 -300px;}
+
 #hd { margin-bottom: 0px; }
 
 .logged-in {line-height: 52px; float: right;}
