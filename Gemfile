@@ -23,7 +23,7 @@ gem 'simple_form'
 gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn'
-gem 'prawn'
+gem 'prawn', '1.0.0.rc2'
 gem 'carrierwave'
 gem 'browser'
 

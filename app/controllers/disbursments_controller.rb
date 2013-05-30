@@ -31,20 +31,16 @@ class DisbursmentsController < ApplicationController
     end
   end
 
-  def format_pdf_assert_space(n)
-    if @gridy+n >= @nrows
-      @pdf.grid([@gridy,0],[@gridy+n-1,@ncols-1]).bounding_box do
-        @pdf.cell :width => @pdf.bounds_width, :height => @pdf.bounds.height,
-                  :border_width => 0
-      end
-      @gridy = 0
-      @pdf.start_new_page
-    end
-  end
-
   def format_published_pdf
+    # default format is letter, that is 612x792 pdf points
+    # there are 72 pdf points in one inch
+    # the page has a 0.5 default margin setup
+    # the resulting usable size is 540x720
+    # the pdf coordinates origin is at the bottom right angle of the page
     @pdf = Prawn::Document.new :page_layout => :portrait
-    @pdf.font_size = 7
+
+    # setup fallback fonts for asian charsets
+    @pdf.font_size = 8
     @pdf.font_families.update(
       "DejaVuSans" => {
         :bold => Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
@@ -58,24 +54,20 @@ class DisbursmentsController < ApplicationController
           :bold_italic => kai})
     @pdf.font "DejaVuSans"
     @pdf.fallback_fonts = ["Kai"]
-    @nrows = 72
-    @ncols = 12
-    @pdf.define_grid :columns => @ncols, :rows => @nrows, :gutter => 0
-    @gridy = 0
+
+    # title and logo
     @pdf.fill_color = '000000'
-    format_pdf_assert_space 10
     logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
-    @pdf.grid([0,0], [9, 5]).bounding_box do
-      @pdf.text "PROFORMA DISBURSMENT", :size => 12, :style => :bold,
+    @pdf.bounding_box([0, 720], width: 540, height: 100) do
+      @pdf.text "PROFORMA DISBURSMENT", :size => 20, :style => :bold,
                 :align => :left, :valign => :center
+      @pdf.image logo_path, :width => 40,
+                            :position => :right,
+                            :vposition => :center
     end
-    @pdf.grid([0, 6], [9, @ncols-1]).bounding_box do
-      @pdf.image logo_path, :width => 40, :position => :right, :vposition => :center
-    end
-    @gridy += 10
-    header_size = 20
-    format_pdf_assert_space header_size
-    @pdf.grid([@gridy, 0], [@gridy+header_size, 5]).bounding_box do
+
+    # 'from' table
+    @pdf.bounding_box([0, 620], width: 270, height: 300) do
       @pdf.fill_color = '123123'
       data = [
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
@@ -89,81 +81,86 @@ class DisbursmentsController < ApplicationController
         ['<b>Tugs</b>', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
       ]
       @pdf.table data,
-                 cell_style: {border_widths: [0.1, 0, 0, 0], inline_format: true},
+                 cell_style: {border_widths: [0.1, 0, 0.1, 0],
+                              inline_format: true,
+                              border_color: 'dddddd'},
                  column_widths: [70, 200]
     end
-    @pdf.grid([@gridy, 7], [@gridy+header_size, @ncols-1]).bounding_box do
+
+    # 'to' table
+    @pdf.bounding_box([315, 620], width: 225, height: 300) do
       data = [
         ['<b>From</b>', "<b>#{@revision.data['from_name']}</b>\n#{@revision.data['from_address1']}\n#{@revision.data['from_address2']}"]
       ]
       @pdf.table data,
-                 cell_style: {border_widths: [0.1, 0, 0, 0], inline_format: true},
+                 cell_style: {border_widths: [0.1, 0, 0.1, 0],
+                              inline_format: true,
+                              border_color: 'dddddd'},
                  column_widths: [70, 155]
     end
-    @gridy += header_size
-    format_pdf_assert_space 1
-    column_widths = [180, 135, 225]
-    if @revision.tax_exempt?
-      column_widths = [315, 225]
-    end
-    @pdf.grid([@gridy, 0], [@gridy+1, @ncols-1]).bounding_box do
-      data = [
-        ['<b>Item</b>', "<b>Amount (#{@revision.data["currency_code"]})</b>", "<b>Amount (#{@revision.data["currency_code"]}) Including Taxes</b>"]
+
+
+    # build the services table data
+    services_data = [
+      # table header
+      [
+        {:content => "<b>Item</b>"},
+        {content: "<b>Amount (#{@revision.data["currency_code"]})</b>",
+         align: :right},
+        {content: "<b>Amount (#{@revision.data["currency_code"]}) Including Taxes</b>",
+         align: :right},
       ]
-      if @revision.tax_exempt?
-        data = data.map {|d| d.slice(0,2)}
-      end
-      @pdf.table data,
-                 cell_style: {border_widths: [0, 0, 0, 0], height: 10,
-                              padding: 1, inline_format: true},
-                 column_widths: column_widths
-    end
-    @gridy += 1
+    ]
+    # real service data
     @revision.field_keys.each do |f|
       next if @revision.disabled[f]
       desc = @revision.descriptions[f]
-      height = 10
-      space = 1
       if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
         desc += " <font size=\"5\">#{@revision.comments[f]}</font>"
       end
-      format_pdf_assert_space space
-      @pdf.grid([@gridy, 0], [@gridy+1, @ncols-1]).bounding_box do
-        data = [
-          [desc, number_to_currency(@revision.values[f]), number_to_currency(@revision.values_with_tax[f])]
-        ]
-        if @revision.tax_exempt?
-          data = data.map {|d| d.slice(0,2)}
-        end
-        @pdf.table data,
-                   cell_style: {border_widths: [0.1, 0, 0, 0], height: height,
-                                padding: 1, inline_format: true},
-                   column_widths: column_widths
-      end
-      @gridy += space
+      services_data <<  [
+        desc,
+        {content: number_to_currency(@revision.values[f], unit: ""),
+         align: :right},
+        {content: number_to_currency(@revision.values_with_tax[f], unit: ""),
+         align: :right}
+      ]
     end
-    format_pdf_assert_space 2
-    @pdf.grid([@gridy, 0], [@gridy+2, @ncols-1]).bounding_box do
-      if @revision.tax_exempt?
-        data = [
-          ['<b>Total</b>', "<b><font size=\"12\">#{number_to_currency(@revision.data['total'])}</font></b>"]
-        ]
-      else
-        data = [
-          ['<b>Total</b>', "<b>#{number_to_currency(@revision.data["total"])}<b>",
-                           "<b><font size=\"12\">#{number_to_currency(@revision.data['total_with_tax'])}</font></b>"]
-        ]
-      end
-      @pdf.table data, 
-                 cell_style: {border_widths: [0.1, 0, 0, 0], height: 20,
-                              padding: 1, inline_format: true},
-                 column_widths: column_widths
+    # totals
+    services_data << [
+      '<b>Total</b>',
+      {content: "<b>#{number_to_currency(@revision.data["total"])}<b>",
+       align: :right},
+      {content: "<b><font size=\"12\">#{number_to_currency(@revision.data['total_with_tax'])}</font></b>",
+       align: :right}
+    ]
+
+    # Remove tax included column if needed
+    column_widths = @revision.tax_exempt? ? [315, 225] : [180, 135, 225]
+    if @revision.tax_exempt?
+      services_data = services_data.map {|d| d.slice(0,2)}
     end
-    @gridy += 2
-    @pdf.move_down(20)
-    @pdf.table [['']],
-               cell_style: {border_widths: [0.1, 0, 0, 0]},
-               column_widths: [540]
+
+    # Draw the service table
+    @pdf.y = 400
+    table = @pdf.make_table(services_data,
+               cell_style: {border_widths: [0, 0, 0.1, 0],
+                            inline_format: true,
+                            border_color: 'bbbbbb'},
+               header: true,
+               column_widths: column_widths) do |table|
+      table.style(table.row(0),
+                  border_color: "000000",
+                  border_widths: [0, 0, 0.5, 0])
+      table.style(table.row(-1),
+                  border_color: "000000",
+                  border_widths: [0.5, 0, 0, 0])
+    end
+    table.draw
+
+    @pdf.move_down(72)
+
+    # bank information and conditions
     @pdf.text "Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:\n\n<b>#{@revision.data['bank_name']}</b>\n<b>#{@revision.data['bank_address1']}</b>\n<b>#{@revision.data['bank_address2']}</b>\n\n<b>SWIFT Code: #{@revision.data['swift_code']}</b>\n<b>BSB Number: #{@revision.data['bsb_number']}</b>\n<b>A/C Number: #{@revision.data['ac_number']}</b>\n<b>A/C Name: #{@revision.data['ac_name']}</b>\n<b>Reference: #{@published.vessel_name}</b>\n\nDisclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.\n\nThis estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.\n\n", inline_format: true
     if @revision.tax_exempt?
       @pdf.text "This estimate is exclusive of Australian Goods and Services Tax (GST).  The GST portion will be claimed back from the Australian Tax Office on your behalf.\n\n", inline_format: true

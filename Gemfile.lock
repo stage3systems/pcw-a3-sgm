@@ -115,9 +115,11 @@ GEM
     pg (0.15.1)
     pg-hstore (1.1.7)
     polyglot (0.3.3)
-    prawn (0.12.0)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.2)
+    prawn (1.0.0.rc2)
+      afm
+      pdf-reader (>= 0.9.0, < 2.0)
+      ruby-rc4
+      ttfunk (~> 1.0.3)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -209,7 +211,7 @@ DEPENDENCIES
   omniauth
   omniauth-saml
   pg
-  prawn
+  prawn (= 1.0.0.rc2)
   rails (= 3.2.13)
   ranked-model
   sass-rails (~> 3.2.3)
