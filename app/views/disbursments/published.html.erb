@@ -4,23 +4,23 @@
     <div class="pfda-header">
       <div class="container">
         <div class="row-fluid">
-          <span><span class="small">ESTIMATED</span>&nbsp;<%= number_to_currency @revision.amount %>&nbsp;<span class="small">(<%= (@revision.data['currency_code']) %>)</span></span>
+          <div class="due">ESTIMATED</div>
+          <div class="amount"><%= number_to_currency @revision.amount, unit: "" %> <em class="currency"><%= @revision.data['currency_code'] %></em></div>
           <div class="btn-group pull-right hidden-print">
             <a href="/proforma_disbursments/<%= @published.publication_id %>.pdf" class="btn"><i class="icon-print"></i></a>
           </div>
         </div>
       </div>
     </div>
-    <div class="btn-group"></div>
     <div class="container pfda box-shadow">
       <div class="row">
-        <div class="span6"><h2 style="padding-top: 1em;">PROFORMA DISBURSMENT</h2></div>
+        <div class="span6"><h3 style="padding-top: 1em;">PROFORMA DISBURSMENT</h3></div>
         <div class="span6"><div class="pull-right"><%= image_tag "monson_agency.png" %></div></div>
       </div>
       <div class="btn-group"></div>
       <div class="row">
         <div class="span6">
-          <table class="table">
+          <table class="table border-bottom">
             <tr>
               <th>To</th>
               <td><strong><%= @revision.data['company_name'] %></strong><br /><%= @revision.data['company_email'] %></td>
@@ -65,7 +65,7 @@
         </div>
         <div class="span1">&nbsp;</div>
         <div class="span5">
-          <table class="table">
+          <table class="table border-bottom">
             <tr>
               <th>From</th>
               <td><strong><%= @revision.data['from_name'] %></strong><br /><%= @revision.data['from_address1'] %><br /><%= @revision.data['from_address2'] %></td>
@@ -76,13 +76,13 @@
       <div class="btn-group"></div>
       <div class="row">
         <div class="span12">
-          <table class="table table-condensed">
+          <table class="table table-condensed header-emphasy">
             <thead>
               <tr>
                 <th>Item</th>
-                <th>Amount (<%= @revision.data["currency_code"] %>)</th>
+                <th class="right-align">Amount (<%= @revision.data["currency_code"] %>)</th>
                 <% unless @revision.tax_exempt? %>
-                <th>Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
+                <th class="right-align">Amount (<%= @revision.data["currency_code"] %>) Including Taxes</th>
                 <% end %>
               </tr>
             </thead>
@@ -95,9 +95,9 @@
                           &nbsp;<span class="comment"><%= @revision.comments[f] %></span>
                       <% end %>
                   </td>
-                  <td><%= number_to_currency @revision.values[f] %></td>
+                  <td class="right-align"><%= number_to_currency @revision.values[f], unit: "" %></td>
                   <% unless @revision.tax_exempt? %>
-                  <td><%= number_to_currency @revision.values_with_tax[f] %></td>
+                  <td class="right-align"><%= number_to_currency @revision.values_with_tax[f], unit: "" %></td>
                   <% end %>
                 </tr>
                 <%end %>
@@ -106,9 +106,9 @@
             <tfoot>
               <tr>
                 <th>Total</th>
-                <th class="<%= "big" if @revision.tax_exempt? %>"><%= number_to_currency @revision.data["total"] %></th>
+                <th class="right-align <%= "big" if @revision.tax_exempt? %>"><%= number_to_currency @revision.data["total"], unit: "" %></th>
                 <% unless @revision.tax_exempt? %>
-                <th class="big"><%= number_to_currency @revision.data["total_with_tax"] %></th>
+                <th class="right-align big"><%= number_to_currency @revision.data["total_with_tax"], unit: "" %></th>
                 <% end %>
               </tr>
             </tfoot>
@@ -116,7 +116,7 @@
         </div>
       </div>
       <div class="btn-group"></div>
-      <hr />
+      <hr class="published" />
       <div class="row">
         <div class="span12">
         <p>Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:<p>
@@ -153,7 +153,9 @@
 <% end %>
 <div class="row">
   <div style="margin: 0 auto; float: none; text-align: center; padding: 20px;">
-    <%= image_tag "stage3_logo_grey.png" %>
+    <a href="http://stage3systems.com">
+      <%= image_tag "stage3_logo_grey.png", title: "Stage 3 Systems Inc." %>
+    </a>
   </div>
 </div>
 </div>
