@@ -25,6 +25,7 @@ gem 'ranked-model'
 gem 'unicorn'
 gem 'prawn'
 gem 'carrierwave'
+gem 'browser'
 
 
 # Gems used only for assets and not required
