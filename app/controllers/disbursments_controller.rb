@@ -46,9 +46,18 @@ class DisbursmentsController < ApplicationController
     @pdf = Prawn::Document.new :page_layout => :portrait
     @pdf.font_size = 7
     @pdf.font_families.update(
-      "DejaVuSans" => { :bold => Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
-                        :normal => Rails.root.join('fonts', 'DejaVuSans.ttf').to_s })
+      "DejaVuSans" => {
+        :bold => Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
+        :normal => Rails.root.join('fonts', 'DejaVuSans.ttf').to_s })
+    kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
+    @pdf.font_families.update(
+      "Kai" => {
+          :normal => { :file => kai, :font => "Kai" },
+          :bold   => kai,
+          :italic => kai,
+          :bold_italic => kai})
     @pdf.font "DejaVuSans"
+    @pdf.fallback_fonts = ["Kai"]
     @nrows = 72
     @ncols = 12
     @pdf.define_grid :columns => @ncols, :rows => @nrows, :gutter => 0
