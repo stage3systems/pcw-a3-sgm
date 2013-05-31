@@ -2,9 +2,12 @@
   <h2 class="title">
     Services for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
     <% if @terminal %>
-      <%= link_to 'New Service', new_port_terminal_service_path(@port, @terminal), :class => 'btn btn-primary' %>
+      <%= link_to 'New Service',
+                  new_port_terminal_service_path(@port, @terminal),
+                  :class => 'btn btn-primary btn-small' %>
     <% else %>
-      <%= link_to 'New Service', new_port_service_path(@port), :class => 'btn btn-primary' %>
+      <%= link_to 'New Service', new_port_service_path(@port),
+                  :class => 'btn btn-primary btn-small' %>
     <% end %>
   </h2>
 
@@ -37,13 +40,32 @@
         <td>
           <div class="btn-group">
             <% if @terminal %>
-              <%= link_to 'Show', port_terminal_service_path(@port, @terminal, service), :class => 'btn btn-info btn-small' %>
-              <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, service), :class => 'btn btn-small' %>
-              <%= link_to 'Delete', port_terminal_service_path(@port, @terminal, service), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+              <%= link_to icon('eye-open'),
+                          port_terminal_service_path(@port, @terminal, service),
+                          class: 'btn btn-info btn-small',
+                          title: 'View' %>
+              <%= link_to icon('pencil'),
+                          edit_port_terminal_service_path(@port, @terminal, service),
+                          class: 'btn btn-small',
+                          title: 'Edit' %> %>
+              <%= link_to icon('trash'),
+                          port_terminal_service_path(@port, @terminal, service),
+                          method: :delete, data: { confirm: 'Are you sure?' },
+                          class:'btn btn-danger btn-small',
+                          title: 'Delete' %>
             <% else %>
-              <%= link_to 'Show', port_service_path(@port, service), :class => 'btn btn-info btn-small' %>
-              <%= link_to 'Edit', edit_port_service_path(@port, service), :class => 'btn btn-small' %>
-              <%= link_to 'Delete', port_service_path(@port, service), method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+              <%= link_to icon('eye-open'), port_service_path(@port, service),
+                          class: 'btn btn-info btn-small',
+                          title: 'View' %>
+              <%= link_to icon('pencil'),
+                          edit_port_service_path(@port, service),
+                          class: 'btn btn-small',
+                          title: 'Edit' %>
+              <%= link_to icon('trash'),
+                          port_service_path(@port, service), method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-small',
+                          title: 'Delete' %>
             <% end %>
           </div>
         </td>

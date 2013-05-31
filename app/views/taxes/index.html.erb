@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <h2 class="title">
     Taxes
-    <%= link_to 'New Tax', new_tax_path, :class => 'btn btn-primary' %>
+    <%= link_to 'New Tax', new_tax_path,
+                :class => 'btn btn-primary btn-small' %>
   </h2>
 
   <table class="table table-bordered">
@@ -22,10 +23,18 @@
         <td><%= tax.rate %> (<%= (tax.rate-1)*100 %>%)</td>
         <td>
           <div class="btn-group">
-            <%= link_to 'Show', tax, :class => 'btn btn-info btn-small' %>
-            <%= link_to 'Edit', edit_tax_path(tax), :class => 'btn btn-small' %>
-            <%= link_to 'Delete', tax, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+            <%= link_to icon('eye-open'), tax,
+                        :class => 'btn btn-info btn-small',
+                        :title => 'View' %>
+            <%= link_to icon('pencil'), edit_tax_path(tax),
+                        :class => 'btn btn-small',
+                        :title => 'Edit' %>
+            <%= link_to icon('trash'), tax, method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        :class => 'btn btn-danger btn-small',
+                        :title => 'Delete' %>
           </div>
+        </td>
       </tr>
       <% end %>
     </tbody>

@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <h2 class="title">
     Proforma Disbursments
-    <%= link_to 'New PFDA', new_disbursment_path, :class => 'btn btn-primary' %>
+    <%= link_to 'New PFDA', new_disbursment_path,
+                :class => 'btn btn-primary btn-small' %>
   </h2>
 
   <table class="table table-bordered">
@@ -59,8 +60,13 @@
         <td>
           <div class="btn-group">
             <%= render "common/mailto_pfda", disbursment: disbursment %>
-            <%= link_to 'Revise', edit_disbursment_path(disbursment), :class => 'btn btn-small' %>
-            <%= link_to 'Delete', disbursment, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
+            <%= link_to icon(:pencil), edit_disbursment_path(disbursment),
+                        :class => 'btn btn-small',
+                        :title => 'Revise' %>
+            <%= link_to icon(:trash), disbursment, method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        :class => 'btn btn-danger btn-small',
+                        :title => 'Delete' %>
           </div>
       </tr>
       <% end %>
