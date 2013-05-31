@@ -75,7 +75,8 @@
 </div>
 <%= render "common/data_table", column_defs: [
       {"bSortable" => false, "aTargets" => [12]},
-      {"sType" => "select", "aTargets" => [11]}
+      {"sType" => "select", "aTargets" => [11]},
+      {"sType" => "currency", "aTargets" => [5]}
     ] %>
 <script type="text/javascript">
   $("select#status").on("change", function() {
