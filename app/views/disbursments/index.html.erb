@@ -16,6 +16,8 @@
         <th>Currency</th>
         <th>Last Modified</th>
         <th>Revision</th>
+        <th>Views</th>
+        <th>Prints</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
@@ -40,6 +42,8 @@
         <td><%= disbursment.current_revision.data['currency_code'] %></td>
         <td><%= l disbursment.current_revision.updated_at %></td>
         <td class="right-align"><%= disbursment.current_revision.number %></td>
+        <td class="align-right"><%= disbursment.current_revision.anonymous_views %></td>
+        <td class="align-right"><%= disbursment.current_revision.pdf_views %></td>
         <td id="pfda_<%= disbursment.id %>">
           <%= select_tag "status",
                          ("<option value=\"publish\""+
@@ -64,8 +68,8 @@
   </table>
 </div>
 <%= render "common/data_table", column_defs: [
-      {"bSortable" => false, "aTargets" => [10]},
-      {"sType" => "select", "aTargets" => [9]}
+      {"bSortable" => false, "aTargets" => [12]},
+      {"sType" => "select", "aTargets" => [11]}
     ] %>
 <script type="text/javascript">
   $("select#status").on("change", function() {

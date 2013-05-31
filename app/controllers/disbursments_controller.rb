@@ -18,8 +18,11 @@ class DisbursmentsController < ApplicationController
     @published = Disbursment.find_by_publication_id(params[:id])
     @revision = @published.current_revision rescue nil
     respond_to do |format|
-      format.html
+      format.html {
+        @revision.increment! :anonymous_views if @revision and current_user.nil?
+      }
       format.pdf {
+        @revision.increment! :pdf_views if @revision and current_user.nil?
         Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
         unless  File.exists? file
@@ -195,7 +198,6 @@ class DisbursmentsController < ApplicationController
     @pdf = Prawn::Document.new :page_layout => :portrait
 
     font_setup
-    title_and_logo
     pdf_header
     to_table
     from_table

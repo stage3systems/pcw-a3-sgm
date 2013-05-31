@@ -211,7 +211,9 @@ CREATE TABLE disbursment_revisions (
     compulsory hstore,
     overriden hstore,
     disabled hstore,
-    user_id integer
+    user_id integer,
+    anonymous_views integer DEFAULT 0,
+    pdf_views integer DEFAULT 0
 );
 
 
@@ -999,3 +1001,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130515160944');
 INSERT INTO schema_migrations (version) VALUES ('20130517090244');
 
 INSERT INTO schema_migrations (version) VALUES ('20130531145814');
+
+INSERT INTO schema_migrations (version) VALUES ('20130531151258');
+
+INSERT INTO schema_migrations (version) VALUES ('20130531151903');
