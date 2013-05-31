@@ -115,7 +115,13 @@ div.pfda-container { background: url(published_bg.png); };
 div.pfda {background-color: #ffffff; border: 1px solid #ccc; padding: 1em; box-shadow: 0 3px 8px #aaa;}
 div.pfda-header {background-color: #eee; padding: 1em; box-shadow: 0 3px 8px #aaa; margin-bottom: 40px;}
 div.pfda-header div.due {float: left; font-size: 24px; margin-top: 12px; font-weight: bold; color: #999;}
-div.pfda-header div.amount {margin-top: 8px; float: left; padding-left: 20px; font-size: 36px; font-weight: bold;}
+div.pfda-header div.amount {
+  // IE7 workaround, replaces margin-top: 8px;
+  padding-top: 5px;
+  margin-top: 3px;
+  padding-bottom: 5px;
+  margin-bottom: -5px;
+  float: left; padding-left: 20px; font-size: 36px; font-weight: bold;}
 div.pfda-header em.currency {font-size: 20px; font-style: normal; font-weight: normal; }
 div.pfda-header span.small {font-size: 20px; font-weight: bold; color: #999;}
 div.no-padding { padding: 0; }
