@@ -69,8 +69,20 @@ class DisbursmentTest < ActiveSupport::TestCase
     r.save
     r2 = d.next_revision
     assert r2.number == 1
-    assert r.data["total"] == "14000.00"
-    assert r.data["total_with_tax"] == "15400.00"
+    assert r2.data["total"] == "14000.00"
+    assert r2.data["total_with_tax"] == "15400.00"
+    r2.fields['EXTRAITEM1'] = (r.fields.values.max.to_i+1).to_s
+    r2.codes['EXTRAITEM1'] = '{compute: function(ctx) { return 0;},taxApplies: true}'
+    r2.overriden['EXTRAITEM1'] = "1000.00"
+    r2.compulsory['EXTRAITEM1'] = "0"
+    r2.disabled['EXTRAITEM1'] = "0"
+    r2.compute
+    r2.save
+    d.reload
+    r3 = d.next_revision
+    assert r3.number == 2
+    assert r3.data["total"] == "15000.00"
+    assert r3.data["total_with_tax"] == "16500.00"
   end
 
   test "disabled fields are ignored only when not compulsory" do
