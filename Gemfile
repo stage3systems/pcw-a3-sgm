@@ -26,6 +26,7 @@ gem 'unicorn'
 gem 'prawn', '1.0.0.rc2'
 gem 'carrierwave'
 gem 'browser'
+gem 'simplecov', :require => false, :group => :test
 
 
 # Gems used only for assets and not required
