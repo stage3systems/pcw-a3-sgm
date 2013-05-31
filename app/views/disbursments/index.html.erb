@@ -1,48 +1,60 @@
 <div class="container-fluid">
-  <h1>Proforma Disbursments</h1>
+  <h2 class="title">
+    Proforma Disbursments
+    <%= link_to 'New PFDA', new_disbursment_path, :class => 'btn btn-primary' %>
+  </h2>
 
-  <div class="btn-group"></div>
-
-  <table class="table table-bordered datatable">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Reference</th>
-        <th>Status</th>
         <th>ETA</th>
         <th>Port</th>
         <th>Company</th>
         <th>Vessel</th>
         <th>Amount</th>
+        <th>Currency</th>
         <th>Last Modified</th>
         <th>Revision</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @disbursments.each do |disbursment| %>
       <tr>
-        <td><%= disbursment.current_revision.reference %></td>
         <td>
           <% if disbursment.draft? %>
-          Draft
+            <%= link_to disbursment.current_revision.reference,
+                        edit_disbursment_path(disbursment) %>
           <% else %>
-          <%= link_to 'Published', published_url(:id => disbursment.publication_id) %>
+            <%= link_to disbursment.current_revision.reference,
+                        published_url(:id => disbursment.publication_id) %>
           <% end %>
         </td>
-        <td><%= l(disbursment.current_revision.eta) rescue "N/A" %></td>
+        <td class="eta"><%= l(disbursment.current_revision.eta) rescue "N/A" %></td>
         <td><%= disbursment.port.name %></td>
         <td><%= disbursment.company.name %></td>
         <td><%= disbursment.vessel_name %></td>
-        <td><%= number_to_currency disbursment.current_revision.amount %></td>
+        <td class="right-align"><%= number_to_currency disbursment.current_revision.amount, unit: "" %></td>
+        <td><%= disbursment.current_revision.data['currency_code'] %></td>
         <td><%= l disbursment.current_revision.updated_at %></td>
-        <td><%= disbursment.current_revision.number %></td>
+        <td class="right-align"><%= disbursment.current_revision.number %></td>
+        <td id="pfda_<%= disbursment.id %>">
+          <%= select_tag "status",
+                         ("<option value=\"publish\""+
+                          "#{" selected" if disbursment.published?}"+
+                          ">Published</option>"+
+                          "<option value=\"unpublish\""+
+                          "#{" selected" if disbursment.draft?}"+
+                          " >Private</option>").html_safe,
+                        style: "width: 100px;",
+                        class: "#{ disbursment.published? ? "published" : "private" }"
+          %>
+        </td>
         <td>
           <div class="btn-group">
-            <% if disbursment.draft? %>
-            <%= link_to 'Publish', publish_disbursment_path(disbursment), :class => 'btn btn-info btn-small' %>
-            <% else %>
-            <%= link_to 'Unpublish', unpublish_disbursment_path(disbursment), :class => 'btn btn-info btn-small' %>
-            <% end %>
+            <%= render "common/mailto_pfda", disbursment: disbursment %>
             <%= link_to 'Revise', edit_disbursment_path(disbursment), :class => 'btn btn-small' %>
             <%= link_to 'Delete', disbursment, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-danger btn-small' %>
           </div>
@@ -50,8 +62,14 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="clearfix"></div>
-
-  <%= link_to 'New PFDA', new_disbursment_path, :class => 'btn btn-primary' %>
 </div>
+<%= render "common/data_table", column_defs: [
+      {"bSortable" => false, "aTargets" => [10]},
+      {"sType" => "select", "aTargets" => [9]}
+    ] %>
+<script type="text/javascript">
+  $("select#status").on("change", function() {
+    var id = $(this).parent().attr("id").split("_")[1];
+    window.location = "/disbursments/"+id+"/"+$(this).val();
+  });
+</script>

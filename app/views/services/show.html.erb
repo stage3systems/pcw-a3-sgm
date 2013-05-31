@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
-  <h1>Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
+  <h2 class="title">Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
   <% ['item', 'key'].each do |k| %>
     <p><strong><%= k.capitalize %>:</strong> <%= @service.send(k) %></p>
   <% end %>

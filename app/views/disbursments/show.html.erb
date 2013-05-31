@@ -1,10 +1,10 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
 
-  <h1>PFDA from <%= l @disbursment.updated_at %></h1>
+  <h2 class="title">PFDA from <%= l @disbursment.updated_at %></h2>
 
   <div class="btn-group">
-    <%= link_to 'Edit', edit_disbursment_path(@disbursment), :class => "btn" %>
-    <%= link_to 'Back', disbursments_path, :class => "btn" %>
+    <%= link_to 'Edit', edit_disbursment_path(@disbursment), :class => "btn btn-small" %>
+    <%= link_to 'Back', disbursments_path, :class => "btn btn-small" %>
   </div>
 </div>

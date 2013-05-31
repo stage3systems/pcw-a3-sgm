@@ -4,7 +4,8 @@
 
 /* base layout */
 html {height: 100%; font-size: 62.5%;}
-body {height: 100%; font-size: 13px; /*font-size: 1.3rem;*/ background: #eee; color: #333;}
+body {height: 100%; font-size: 13px; /*font-size: 1.3rem;*/
+      background: #eee; color: #333;}
 label {color: #aaa;}
 
 #logo {padding: 0 30px; background: url(logo_monson.png) center center no-repeat; color: #fff; line-height: 52px; text-shadow: 0 -1px 0 rgba(0,0,0,0.2); text-indent: -9999px; float: right; outline: none;}
@@ -47,8 +48,11 @@ label {color: #aaa;}
 }
 #mainmenu li > a > [class^="icon-"] {background-image: url(/assets/twitter/glyphicons-halflings-white.png);}
 #mainmenu li.active > a > [class^="icon-"] {background-image: url(/assets/twitter/glyphicons-halflings.png);}
+a.back { color: #fff; text-shadow: none; font-weight: bold; padding-top: 30px; }
 
-ul.breadcrumb { background-color: #eeeeee; padding-left: 2em;}
+
+ul.breadcrumb { background-color: #eeeeee; padding-left: 2em; margin-bottom: 0;}
+h2.title { margin-top: 0; margin-bottom: 20px; text-shadow: #fff 0px 1px 0px; color: #333;}
 ul.userbox {padding-top: 6px;}
 
 .browsers ul > li {list-style: none;}
@@ -74,11 +78,21 @@ ul.userbox {padding-top: 6px;}
 }
 
 /* sticky footer */
-.wrapper {min-height: 100%; margin-bottom: -30px;}
-.push, #ft {height: 30px; text-align: center; font-size: 10px;}
+.wrapper { min-height: 100%; position: relative; }
+div#body { padding-bottom: 40px; }
+footer#ft {
+  position: absolute;
+  min-height: 40px;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;}
 #ft {color: #999;}
 #ft a {color: #61afd6; text-decoration: none;}
 #ft a:hover {color: #1797d7;}
+#ft p {padding-top: 1em;}
 .axis text {
   font-size: 9px;
 }
@@ -89,11 +103,14 @@ table.table { background-color: #fff;}
     cursor: row-resize;
   }
 }
+select.published { background-color: #90f090; }
+select.private { background-color: #f09090; }
 hr.published { margin-top: 60px; border-top: 1px solid #999; }
 table.table { background-color: #ffffff; }
 table.table.border-bottom { border-bottom: 1px solid #ddd; }
 table.table.header-emphasy th { border-bottom: 1px solid #bbb; }
-div.pfda td.right-align, th.right-align {text-align: right;}
+td.right-align, th.right-align {text-align: right;}
+td.eta { min-width: 80px; text-transform: uppercase;}
 div.pfda-container { background: url(published_bg.png); };
 div.pfda {background-color: #ffffff; border: 1px solid #ccc; padding: 1em; box-shadow: 0 3px 8px #aaa;}
 div.pfda-header {background-color: #eee; padding: 1em; box-shadow: 0 3px 8px #aaa; margin-bottom: 40px;}

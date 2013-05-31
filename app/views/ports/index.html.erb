@@ -1,7 +1,5 @@
 <div class="container-fluid">
-  <h1>Ports</h1>
-
-  <div class="btn-group"></div>
+  <h2 class="title">Ports <%= link_to 'New Port', new_port_path, :class => 'btn btn-primary' %></h2>
 
   <table class="table table-bordered">
     <thead>
@@ -20,9 +18,9 @@
       <% @ports.each do |port| %>
       <tr>
         <td><%= link_to port.name, port_path(port) %></td>
-        <td><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
-        <td><%= link_to port.tariffs.count.to_s, port_tariffs_path(port)  %></td>
-        <td><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
+        <td class="right-align"><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
+        <td class="right-align"><%= link_to port.tariffs.count.to_s, port_tariffs_path(port)  %></td>
+        <td class="right-align"><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
         <td><%= port.currency.name  %></td>
         <td><%= port.tax.name  %></td>
         <td>
@@ -37,16 +35,8 @@
     </tbody>
   </table>
 
-  <div class="clearfix"></div>
-
-  <%= link_to 'New Port', new_port_path, :class => 'btn btn-primary' %>
 </div>
-<script type="text/javascript">
-  $("table.table").dataTable({
-    sPaginationType: "bootstrap",
-    aoColumnDefs: [
-      {"sType": "num-html", "aTargets": [1,2,3]},
-      {"bSortable": false, "aTargets": [6]}
-    ]
-  });
-</script>
+<%= render "common/data_table", column_defs: [
+      {"sType" => "num-html", "aTargets" => [1,2,3]},
+      {"bSortable" => false, "aTargets" => [6]}
+    ] %>

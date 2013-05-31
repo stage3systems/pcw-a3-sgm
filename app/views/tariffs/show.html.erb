@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
 
-  <h1>Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h1>
+  <h2 class="title">Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
   <p><strong>Name:</strong> <%= @tariff.name %></p>
   <p><strong>Document:</strong> <% unless @tariff.document.url.nil? %><%= link_to File.basename(@tariff.document.url), @tariff.document.url %><% end %></p>
   <p><strong>Valid From:</strong> <%= l @tariff.validity_start %></p>

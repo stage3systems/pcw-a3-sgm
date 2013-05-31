@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
 
-  <h1><%= @port.name %></h1>
+  <h2 class="title"><%= @port.name %></h2>
   <p>There are currently <%= link_to pluralize(@port.services.count, 'service'), port_services_path(@port) %> defined.</p>
   <p>This port has <%= link_to pluralize(@port.tariffs.count, 'tariff'), port_tariffs_path(@port) %> associated.</p>
   <p>This port has <%= link_to pluralize(@port.terminals.count, 'terminal'), port_terminals_path(@port) %>.</p>

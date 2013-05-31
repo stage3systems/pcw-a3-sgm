@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
 
-  <h1><%= @vessel.name %></h1>
+  <h2 class="title"><%= @vessel.name %></h2>
   <% ['dwt', 'grt', 'loa', 'nrt'].each do |k| %>
     <p><strong><%= k.upcase %>:</strong> <%= @vessel.send(k) %></p>
   <% end %>

@@ -1,4 +1,4 @@
-<div class="container-fluid no-padding pfda-container">
+<div class="container-fluid no-padding<%= " pfda-container" if @published and @published.published? %>">
   <% if @published  %>
     <% if @published.published? %>
     <div class="pfda-header">
@@ -143,20 +143,27 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div style="margin: 0 auto; float: none; text-align: center; padding: 20px;">
+        <a href="http://stage3systems.com">
+          <%= image_tag "stage3_logo_grey.png", title: "Stage 3 Systems Inc." %>
+        </a>
+      </div>
+    </div>
   <% else %>
-    <div class="btn-group"></div>
-    <div class="well"><h3>The requested document is no more publicly accessible.</h3></div>
+    <div class="row-fluid">
+      <div class="span8 offset2">
+        <div class="btn-group"></div>
+        <div class="well"><h3>The requested document is no more publicly accessible.</h3></div>
+      </div>
+    </div>
   <% end %>
 <% else %>
-    <div class="btn-group"></div>
-    <div class="well"><h3>The requested document cannot be found.</h3></div>
+    <div class="row-fluid">
+      <div class="span8 offset2">
+        <div class="btn-group"></div>
+        <div class="well"><h3>The requested document cannot be found.</h3></div>
+      </div>
+    </div>
 <% end %>
-<div class="row">
-  <div style="margin: 0 auto; float: none; text-align: center; padding: 20px;">
-    <a href="http://stage3systems.com">
-      <%= image_tag "stage3_logo_grey.png", title: "Stage 3 Systems Inc." %>
-    </a>
-  </div>
 </div>
-</div>
-<div class="vpad"></div>

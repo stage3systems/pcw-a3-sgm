@@ -36,5 +36,6 @@
 //= require bootstrap_init
 //= require jquery.dataTables
 //= require dataTables.htmlnumbers
+//= require dataTables.select
 //= require dataTables.bootstrap
 //= require compute

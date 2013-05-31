@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <p id="notice"><%= notice %></p>
 
-  <h1><%= @port.name %> / <%= @terminal.name %></h1>
+  <h2 class="title"><%= @port.name %> / <%= @terminal.name %></h2>
   <p>This terminal has <%= link_to pluralize(@terminal.services.count, 'service'), port_terminal_services_url(@port, @terminal) %> defined.</p>
   <p>This terminal has <%= link_to pluralize(@terminal.tariffs.count, 'tariff'), port_terminal_tariffs_url(@port, @terminal) %> associated.</p>
 

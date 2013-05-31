@@ -1,10 +1,10 @@
 <div class="container-fluid">
-  <h1>Editing Terminal</h1>
+  <h2 class="title">Editing Terminal</h2>
 
   <%= render 'form' %>
 
   <div class="btn-group">
-    <%= link_to 'Show', @port, :class => 'btn btn-small' %>
-    <%= link_to 'Back', ports_path, :class => 'btn btn-small' %>
+    <%= link_to 'Show', port_terminal_path(@port, @terminal), :class => 'btn btn-small' %>
+    <%= link_to 'Back', port_terminals_path(@port), :class => 'btn btn-small' %>
   </div>
 </div>

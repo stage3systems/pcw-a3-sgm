@@ -1,9 +1,10 @@
 <div class="container-fluid">
-  <h1>Companies</h1>
+  <h2 class="title">
+    Companies
+    <%= link_to 'New Company', new_company_path, :class => 'btn btn-primary' %>
+  </h2>
 
-  <div class="btn-group"></div>
-
-  <table class="table table-bordered datatable">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
@@ -27,8 +28,6 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="clearfix"></div>
-
-  <%= link_to 'New Company', new_company_path, :class => 'btn btn-primary' %>
 </div>
+<%= render "common/data_table",
+           column_defs: [{"bSortable" => false, "aTargets" => [2]}] %>

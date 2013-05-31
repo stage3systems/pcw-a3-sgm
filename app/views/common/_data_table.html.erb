@@ -1,0 +1,8 @@
+<script type="text/javascript">
+  $("table.table").dataTable({
+    sPaginationType: "bootstrap",
+    aoColumnDefs: [
+      <%= column_defs.map {|d| d.to_json}.join(",       \n").html_safe %>
+    ]
+  });
+</script>

@@ -1,9 +1,10 @@
 <div class="container-fluid">
-  <h1>Taxes</h1>
+  <h2 class="title">
+    Taxes
+    <%= link_to 'New Tax', new_tax_path, :class => 'btn btn-primary' %>
+  </h2>
 
-  <div class="btn-group"></div>
-
-  <table class="table table-bordered datatable">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
@@ -29,8 +30,12 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="clearfix"></div>
-
-  <%= link_to 'New Tax', new_tax_path, :class => 'btn btn-primary' %>
 </div>
+<script type="text/javascript">
+  $("table.table").dataTable({
+    sPaginationType: "bootstrap",
+    aoColumnDefs: [
+      {"bSortable": false, "aTargets": [3]}
+    ]
+  });
+</script>

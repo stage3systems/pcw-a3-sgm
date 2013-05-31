@@ -1,7 +1,12 @@
 <div class="container-fluid">
-  <h1>Services for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %></h1>
-
-  <div class="btn-group"></div>
+  <h2 class="title">
+    Services for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
+    <% if @terminal %>
+      <%= link_to 'New Service', new_port_terminal_service_path(@port, @terminal), :class => 'btn btn-primary' %>
+    <% else %>
+      <%= link_to 'New Service', new_port_service_path(@port), :class => 'btn btn-primary' %>
+    <% end %>
+  </h2>
 
   <table class="table table-bordered" id="sortable" data-update_url="<%= @terminal.nil? ? sort_port_services_path(@port) : sort_port_terminal_services_path(@port, @terminal) %>" data-object_type="service">
     <thead>
@@ -46,16 +51,6 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="clearfix"></div>
-  <div class="btn-group">
-    <% if @terminal %>
-      <%= link_to 'New Service', new_port_terminal_service_path(@port, @terminal), :class => 'btn btn-primary' %>
-    <% else %>
-      <%= link_to 'New Service', new_port_service_path(@port), :class => 'btn btn-primary' %>
-    <% end %>
-  </div>
-
 </div>
 <script type="text/javascript">
     $("table.table").dataTable({bSort: false, bPaginate: false});

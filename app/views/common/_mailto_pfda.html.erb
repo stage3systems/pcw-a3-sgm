@@ -1,0 +1,33 @@
+<a class="btn btn-small<%= " disabled" unless disbursment.published? %>"
+   <% if disbursment.published? %>
+   title="Send a Link By Email"
+   href="mailto:<%= disbursment.company.email %>?subject=<%= URI.escape("#{disbursment.vessel_name} calling at #{disbursment.port.name}") %>&body=<%= URI.escape(<<BODY
+Please find the Proforma Estimate for #{disbursment.vessel_name} calling at #{disbursment.port.name} to load #{disbursment.current_revision.cargo_qty} tonnes of #{disbursment.current_revision.cargo_type.display rescue "cargo"}:
+
+#{published_url(disbursment.publication_id)}
+
+Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:
+
+ANZ Bank Ltd
+7 Queen Street
+Fremantle, Western Australia
+
+SWIFT Code: ANZBAU3M
+BSB Number: 016-307
+A/C Number: 1077-33669
+A/C Name: Monson Agencies Australia Pty Ltd
+
+Download the full Terms and Conditions:
+#{root_url}MAA%20Standard%20Terms%20and%20Conditions%20Sep%202012.pdf
+
+For enquires relating to this Estimate please contact our local Port Office.
+
+BODY
+)
+%>"
+   <% else %>
+   href="#"
+   <% end %>
+>
+  <i class="icon-envelope"></i>
+</a>

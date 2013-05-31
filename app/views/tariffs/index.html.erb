@@ -1,8 +1,14 @@
 <div class="container-fluid">
-  <h1>Tariffs for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %></h1>
+  <h2 class="title">
+    Tariffs for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
+    <% if @terminal %>
+      <%= link_to 'New Tariff', new_port_terminal_tariff_path(@port, @terminal), :class => 'btn btn-primary' %>
+    <% else %>
+      <%= link_to 'New Tariff', new_port_tariff_path(@port), :class => 'btn btn-primary' %>
+    <% end %>
+  </h2>
 
-  <div class="btn-group"></div>
-  <table class="table table-bordered datatable">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
@@ -37,11 +43,7 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="clearfix"></div>
-  <% if @terminal %>
-    <%= link_to 'New Tariff', new_port_terminal_tariff_path(@port, @terminal), :class => 'btn btn-primary' %>
-  <% else %>
-    <%= link_to 'New Tariff', new_port_tariff_path(@port), :class => 'btn btn-primary' %>
-  <% end %>
 </div>
+<%= render "common/data_table",
+           column_defs: [{"bSortable" => false, "aTargets" => [4]}] %>
+
