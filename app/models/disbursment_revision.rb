@@ -3,7 +3,7 @@ class DisbursmentRevision < ActiveRecord::Base
                   :disbursment_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
                   :cargo_type_id, :comments, :eta, :compulsory, :disabled,
-                  :overriden
+                  :overriden, :user_id
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
@@ -16,6 +16,7 @@ class DisbursmentRevision < ActiveRecord::Base
   serialize :values_with_tax, ActiveRecord::Coders::Hstore
   belongs_to :disbursment
   belongs_to :cargo_type
+  belongs_to :user
 
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}

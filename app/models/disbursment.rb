@@ -1,13 +1,16 @@
 class Disbursment < ActiveRecord::Base
   default_scope conditions: "status_cd != 2"
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
-                  :port_id, :publication_id,
+                  :port_id, :publication_id, :user_id,
                   :status_cd, :tbn, :terminal_id, :vessel_id
   belongs_to :port
   belongs_to :terminal
   belongs_to :vessel
   belongs_to :company
-  has_many :disbursment_revisions, :dependent => :destroy, :order => 'number ASC'
+  belongs_to :user
+  has_many :disbursment_revisions,
+           :dependent => :destroy,
+           :order => 'number ASC'
   validates_presence_of :port_id
   validates_presence_of :company_id
   validates_presence_of :vessel_id, :unless => :tbn?

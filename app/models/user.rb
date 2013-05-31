@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   has_many :services
   has_many :service_updates
+  has_many :disbursments
+  has_many :disbursment_revisions
   attr_accessor :login
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me,

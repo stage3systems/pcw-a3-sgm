@@ -83,6 +83,7 @@ class DisbursmentsController < ApplicationController
   # POST /disbursments
   def create
     @disbursment = Disbursment.new(params[:disbursment])
+    @disbursment.user = current_user
 
     respond_to do |format|
       if @disbursment.save
@@ -180,6 +181,7 @@ class DisbursmentsController < ApplicationController
       @revision.comments[k] = params["comment_#{k}"]
     end
     @revision.compute
+    @revision.user = current_user
     @revision.save
   end
 
