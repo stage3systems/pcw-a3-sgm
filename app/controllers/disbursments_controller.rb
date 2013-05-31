@@ -194,7 +194,7 @@ class DisbursmentsController < ApplicationController
     # there are 72 pdf points in one inch
     # the page has a 0.5 default margin setup
     # the resulting usable size is 540x720
-    # the pdf coordinates origin is at the bottom right angle of the page
+    # the pdf coordinates origin is at the bottom left angle of the page
     @pdf = Prawn::Document.new :page_layout => :portrait
 
     font_setup
