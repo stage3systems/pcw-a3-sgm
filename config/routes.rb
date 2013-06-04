@@ -26,6 +26,7 @@ ProformaDA::Application.routes.draw do
     end
   end
   match 'proforma_disbursments/:id' => 'disbursments#published', :as => :published
+  match 'pfda/:id' => 'disbursments#published', :as => :published_short
 
   resources :ports do
     resources :terminals do

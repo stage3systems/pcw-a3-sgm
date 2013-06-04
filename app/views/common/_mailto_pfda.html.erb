@@ -4,7 +4,7 @@
    href="mailto:<%= disbursment.company.email %>?subject=<%= URI.escape("#{disbursment.vessel_name} calling at #{disbursment.port.name}") %>&body=<%= URI.escape(<<BODY
 Please find the Proforma Estimate for #{disbursment.vessel_name} calling at #{disbursment.port.name} to load #{disbursment.current_revision.cargo_qty} tonnes of #{disbursment.current_revision.cargo_type.display rescue "cargo"}:
 
-#{published_url(disbursment.publication_id)}
+#{published_short_url(disbursment.publication_id)}
 
 Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:
 
@@ -18,7 +18,7 @@ A/C Number: 1077-33669
 A/C Name: Monson Agencies Australia Pty Ltd
 
 Download the full Terms and Conditions:
-#{root_url}MAA%20Standard%20Terms%20and%20Conditions%20Sep%202012.pdf
+#{root_url}maa-terms.pdf
 
 For enquires relating to this Estimate please contact our local Port Office.
 

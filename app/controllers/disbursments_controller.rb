@@ -340,6 +340,6 @@ class DisbursmentsController < ApplicationController
     else
       @pdf.text "This estimate is inclusive of Australian Goods and Services Tax (GST).\n\n", inline_format: true
     end
-    @pdf.text "Download the full <link href=\"https://monson-disbursments.evax.fr/MAA%20Standard%20Terms%20and%20Conditions%20Sep%202012.pdf\">Terms and Conditions</link>", inline_format: true
+    @pdf.text "Download the full <link href=\"#{root_url}maa-terms.pdf\">Terms and Conditions</link>", inline_format: true
   end
 end

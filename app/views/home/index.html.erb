@@ -5,7 +5,7 @@
       <div class="well">
         <h3>Last 10 published Proforma Disbursments</h3>
         <% if @published.each do |p| %>
-          <%= link_to p.title, published_url(id: p.publication_id) %> published on <%= l p.updated_at %><br />
+          <%= link_to p.title, published_short_url(id: p.publication_id) %> published on <%= l p.updated_at %><br />
         <% end.empty? %>
           No published disbursments available.
         <% end %>

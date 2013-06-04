@@ -32,7 +32,8 @@
                         edit_disbursment_path(disbursment) %>
           <% else %>
             <%= link_to disbursment.current_revision.reference,
-                        published_url(:id => disbursment.publication_id) %>
+                        published_short_url(
+                          :id => disbursment.publication_id) %>
           <% end %>
         </td>
         <td class="eta"><%= l(disbursment.current_revision.eta) rescue "N/A" %></td>
