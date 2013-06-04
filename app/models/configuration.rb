@@ -1,5 +1,7 @@
 class Configuration < ActiveRecord::Base
-  attr_accessible :ac_name, :ac_number, :bank_address1, :bank_address2, :bank_name, :bsb_number, :company_address1, :company_address2, :company_name, :swift_code
+  attr_accessible :ac_name, :ac_number, :bank_address1, :bank_address2,
+                  :bank_name, :bsb_number, :company_address1,
+                  :company_address2, :company_name, :swift_code
 
   def crystalize
     {

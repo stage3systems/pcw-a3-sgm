@@ -1,5 +1,6 @@
 class TariffsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :ensure_admin
 
   def index
     get_port_and_terminal
