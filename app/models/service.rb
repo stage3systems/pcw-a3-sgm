@@ -33,6 +33,8 @@ class Service < ActiveRecord::Base
         subtype: "",
         subsubtype: "",
         subsubsubtype: ""
+      },
+      data: {
       }
     };
 CTX
