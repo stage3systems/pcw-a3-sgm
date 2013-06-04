@@ -197,12 +197,18 @@ class DisbursmentsController < ApplicationController
     # the pdf coordinates origin is at the bottom left angle of the page
     @pdf = Prawn::Document.new :page_layout => :portrait
 
+    @total = number_to_currency @revision.data['total'], unit: ""
+    @total_with_tax = number_to_currency @revision.data['total_with_tax'],
+                                         unit: ""
+    @currency_code = @revision.data["currency_code"]
     font_setup
     pdf_header
     to_table
     from_table
     services_table
+    final_figure
     @pdf.move_down(72)
+    @pdf.stroke_line [0,@pdf.y], [540,@pdf.y]
     bank_details_and_conditions
 
 
@@ -279,9 +285,9 @@ class DisbursmentsController < ApplicationController
       # table header
       [
         {:content => "<b>Item</b>"},
-        {content: "<b>Amount (#{@revision.data["currency_code"]})</b>",
+        {content: "<b>Amount (#{@currency_code})</b>",
          align: :right},
-        {content: "<b>Amount (#{@revision.data["currency_code"]}) Including Taxes</b>",
+        {content: "<b>Amount (#{@currency_code}) Including Taxes</b>",
          align: :right},
       ]
     ]
@@ -303,9 +309,9 @@ class DisbursmentsController < ApplicationController
     # totals
     services_data << [
       '<b>Total</b>',
-      {content: "<b>#{number_to_currency(@revision.data["total"])}<b>",
+      {content: "<b>#{@total}<b>",
        align: :right},
-      {content: "<b><font size=\"12\">#{number_to_currency(@revision.data['total_with_tax'])}</font></b>",
+      {content: "<b><font size=\"12\">#{@total_with_tax}</font></b>",
        align: :right}
     ]
 
@@ -333,8 +339,65 @@ class DisbursmentsController < ApplicationController
     table.draw
   end
 
+  def final_figure
+    column_widths = @revision.tax_exempt? ? [315, 225] : [180, 135, 225]
+    estimate_amount = {
+      content: "<b><font-size=\"14\">ESTIMATED<br />AMOUNT</font></b>",
+      align: :right
+    }
+    data = if @revision.tax_exempt?
+        [
+          estimate_amount,
+          { content: "<b><font-size=\"24\">#{@total} </font>"+
+                     "<font-size=\"12\">#{@currency_code}</font></b>",
+            align: :right,
+            valign: :center}
+        ]
+      else
+        [
+          " ",
+          estimate_amount,
+          { content: "<b><font-size=\"24\">#{@total_with_tax} </font>"+
+                     "<font-size=\"12\">#{@currency_code}</font></b>",
+            align: :right,
+            valign: :center}
+        ]
+      end
+    table = @pdf.make_table([data],
+               cell_style: {inline_format: true,
+                            border_widths: [0, 0, 0, 0],
+                            border_color: 'ffffff'},
+               header: false,
+               column_widths: column_widths) do |table|
+      table.style(table.row(0).column(-2),
+                  border_color: "ffffff",
+                  border_widths: [0, 0, 0, 0])
+      table.style(table.row(0).column(-1),
+                  border_color: "000000",
+                  border_widths: [1, 1, 1, 1])
+    end
+    table.draw
+  end
+
   def bank_details_and_conditions
-    @pdf.text "Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:\n\n<b>#{@revision.data['bank_name']}</b>\n<b>#{@revision.data['bank_address1']}</b>\n<b>#{@revision.data['bank_address2']}</b>\n\n<b>SWIFT Code: #{@revision.data['swift_code']}</b>\n<b>BSB Number: #{@revision.data['bsb_number']}</b>\n<b>A/C Number: #{@revision.data['ac_number']}</b>\n<b>A/C Name: #{@revision.data['ac_name']}</b>\n<b>Reference: #{@published.vessel_name}</b>\n\nDisclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.\n\nThis estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.\n\n", inline_format: true
+    txt = <<TXT
+Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:
+
+<b>#{@revision.data['bank_name']}</b>
+<b>#{@revision.data['bank_address1']}</b>
+<b>#{@revision.data['bank_address2']}</b>
+
+<b>BSB Number: #{@revision.data['bsb_number']}</b>
+<b>A/C Number: #{@revision.data['ac_number']}</b>
+<b>A/C Name: #{@revision.data['ac_name']}</b>
+<b>Reference: #{@published.vessel_name}</b>
+
+Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.
+
+This estimate is exclusive of Australian Freight Tax (AFT) which, if applicable, shall be paid by the freight beneficiary, ie owner/disponent owner.
+
+TXT
+    @pdf.text txt, inline_format: true
     if @revision.tax_exempt?
       @pdf.text "This estimate is exclusive of Australian Goods and Services Tax (GST).  The GST portion will be claimed back from the Australian Tax Office on your behalf.\n\n", inline_format: true
     else
