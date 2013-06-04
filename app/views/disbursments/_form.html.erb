@@ -110,7 +110,10 @@
     </table>
 
   <div class="form-actions">
-    <%= f.submit "Save PFDA" %>
+    <div class="btn-group">
+    <%= f.submit "Save PFDA", class: "btn btn-primary" %>
+    <%= link_to "Cancel", disbursments_path, class: "btn" %>
+    </div>
   </div>
 <% end %>
 <script type="text/javascript">
