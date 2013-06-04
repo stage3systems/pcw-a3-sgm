@@ -48,7 +48,7 @@
                                           'terminals',
                                           'services'].member? controller_name %>">
                 <a href="<%= ports_url %>">
-                  <i class="icon-wrench"></i>&nbsp;Ports Setup
+                  <i class="icon-wrench"></i>&nbsp;Configuration
                 </a>
               </li>
               <li class="<%= "active" if controller_name == 'vessels' %>">
@@ -66,16 +66,18 @@
       <% end %>
       <div class="clearfix"></div>
     </header>
-    <div id="body">
+    <div id="body<%= "_published" if action_name == "published" %>">
       <% if current_user and action_name != "published" %>
       <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
       <% end %>
         <%= yield %>
       <div class="clearfix"></div>
     </div>
+    <% unless action_name == "published" %>
     <footer id="ft">
       <p>&copy; Copyright 2013 <a href="http://stage3systems.com">Stage 3 Systems Inc.</a></p>
     </footer>
+    <% end %>
   </div>
 </body>
 </html>
