@@ -43,7 +43,10 @@
     <div class="span4">
     <%= f.input :eta, label: 'ETA', as: :hidden %>
     <%= f.input :eta_picker, label: 'ETA', as: :fake %>
-    <%= f.association :cargo_type, label: "Cargo Type", label_method: :display %>
+    <%= f.association :cargo_type,
+                      label: "Cargo Type",
+                      collection: @cargo_types,
+                      label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
     <%= f.input :days_alongside, label: "Days Alongside" %>
