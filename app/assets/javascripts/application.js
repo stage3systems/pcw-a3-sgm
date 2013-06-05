@@ -11,7 +11,6 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require jquery.ui.all
 //= require jquery_ujs
 //= require format-currency
 //= require ace/ace
@@ -33,6 +32,7 @@
 //= require twitter/bootstrap/affix
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
+//= require jquery.ui.all
 //= require bootstrap_init
 //= require jquery.dataTables
 //= require dataTables.htmlnumbers

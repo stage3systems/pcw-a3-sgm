@@ -27,6 +27,8 @@ gem 'prawn', '1.0.0.rc2'
 gem 'carrierwave'
 gem 'browser'
 gem 'simplecov', :require => false, :group => :test
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 
 # Gems used only for assets and not required
@@ -41,8 +43,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

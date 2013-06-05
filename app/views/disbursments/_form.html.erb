@@ -41,7 +41,8 @@
       </table>
     </div>
     <div class="span4">
-    <%= f.input :eta, label: 'ETA', as: :date, order: [:day, :month, :year] %>
+    <%= f.input :eta, label: 'ETA', as: :hidden %>
+    <%= f.input :eta_picker, label: 'ETA', as: :fake %>
     <%= f.association :cargo_type, label: "Cargo Type", label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
@@ -162,11 +163,7 @@
 <%= @revision.context.html_safe %>
     window.getCtx = function() { return ctx; };
     var update = function() {
-      var d = $("select#disbursment_revision_eta_3i").val(),
-          m = $("select#disbursment_revision_eta_2i").val(),
-          y = $("select#disbursment_revision_eta_1i").val(),
-          eta = new Date(y+"-"+m+"-"+d);
-      ctx.estimate.eta = eta;
+      ctx.estimate.eta = new Date($("input#disbursment_revision_eta").val());
       ctx.estimate.cargo_qty = parseInt($("input#disbursment_revision_cargo_qty").val());
       ctx.estimate.tugs_in = parseInt($("input#disbursment_revision_tugs_in").val()),
       ctx.estimate.tugs_out = parseInt($("input#disbursment_revision_tugs_out").val()),
@@ -293,5 +290,13 @@
     setupDisableListeners();
     $("select.date").on("change", update);
     handleTaxExempt();
+    $("input#eta_picker").datepicker({
+      dateFormat: "dd M yy",
+      altField: "input#disbursment_revision_eta",
+      altFormat: "yy-mm-dd"
+    })
+    $("input#eta_picker").datepicker(
+      "setDate", new Date($("input#disbursment_revision_eta").val()));
+    $("input#eta_picker").on("change", update);
   });
 </script>

@@ -80,6 +80,7 @@ class DisbursmentsController < ApplicationController
   def edit
     @disbursment = Disbursment.find(params[:id])
     @revision = @disbursment.current_revision
+    @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.all
   end
 
