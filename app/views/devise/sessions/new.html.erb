@@ -5,18 +5,22 @@
                browser.version.to_i < 10 and params[:force].nil?) %>
     <div id="login">
       <div class="well" style="margin: 0 auto; width: 420px;">
-        <h2 class="title">Log In</h2>
+        <h2 class="title">Proforma DA</h2>
 
         <%= simple_form_for(resource, :as => resource_name,
                             :url => session_path(resource_name),
                             :html => {:class => 'form-horizontal'}) do |f| %>
           <div class="form-inputs">
-            <%= f.input :login, :required => false, :autofocus => true %>
-            <%= f.input :password, :required => false %>
+            <%= f.input :login, label: "Username",
+                        required: false, autofocus: true %>
+            <%= f.input :password, required: false %>
             <%= f.input(:remember_me,
-                        :as => :boolean) if devise_mapping.rememberable? %>
+                        as: :boolean) if devise_mapping.rememberable? %>
+            <div class="control-group">
+              <div class="controls">
+                <a href="http://stage3systems.com/support">Trouble logging in?</a>
+              </div>
           </div>
-
           <div class="form-actions">
               <%= f.button :submit, "Log In", :class => 'btn-primary' %>
           </div>
