@@ -465,7 +465,7 @@ TXT
     sheet.row(r).push "Vessel", @published.vessel_name
     sheet.row(r).set_format(0, head_left)
     r += 1
-    sheet.row(r).push "ETA", "#{I18n.l @revision.eta}"
+    sheet.row(r).push "ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"
     sheet.row(r).set_format(0, head_left)
     r += 1
     ["grt", "nrt", "dwt", "loa"].each do |n|
