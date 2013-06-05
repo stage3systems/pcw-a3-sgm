@@ -12,7 +12,10 @@
           </div>
           <div class="btn-group pull-right hidden-print">
             <a href="/pfda/<%= @published.publication_id %>.pdf" class="btn">
-              <i class="icon-print"></i>
+              <%= image_tag "pdf.gif" %>
+            </a>
+            <a href="/pfda/<%= @published.publication_id %>.xls" class="btn">
+              <%= image_tag "excel.png" %>
             </a>
           </div>
         </div>

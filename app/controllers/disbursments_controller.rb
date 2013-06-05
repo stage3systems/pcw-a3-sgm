@@ -25,11 +25,20 @@ class DisbursmentsController < ApplicationController
         @revision.increment! :pdf_views if @revision and current_user.nil?
         Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
-        unless  File.exists? file
+        unless File.exists? file
           format_published_pdf
           @pdf.render_file file
         end
         send_file(file, :type => "application/pdf")
+      }
+      format.xls {
+        #@revision.increment! :xls_views if @revision and current_user.nil?
+        Dir.mkdir Rails.root.join('sheets') unless Dir.exists? Rails.root.join('sheets')
+        file = Rails.root.join 'sheets', "#{@revision.reference}.xls"
+        unless File.exists? file
+          format_published_xls.write file
+        end
+        send_file(file, :type => "application/ms-excel")
       }
     end
   end
@@ -189,6 +198,12 @@ class DisbursmentsController < ApplicationController
     @revision.save
   end
 
+  def shortcuts
+    @total = number_to_currency @revision.data['total'], unit: ""
+    @total_with_tax = number_to_currency @revision.data['total_with_tax'],
+                                         unit: ""
+    @currency_code = @revision.data["currency_code"]
+  end
 
   def format_published_pdf
     # default format is letter, that is 612x792 pdf points
@@ -198,10 +213,7 @@ class DisbursmentsController < ApplicationController
     # the pdf coordinates origin is at the bottom left angle of the page
     @pdf = Prawn::Document.new :page_layout => :portrait
 
-    @total = number_to_currency @revision.data['total'], unit: ""
-    @total_with_tax = number_to_currency @revision.data['total_with_tax'],
-                                         unit: ""
-    @currency_code = @revision.data["currency_code"]
+    shortcuts
     font_setup
     pdf_header
     to_table
@@ -405,5 +417,88 @@ TXT
       @pdf.text "This estimate is inclusive of Australian Goods and Services Tax (GST).\n\n", inline_format: true
     end
     @pdf.text "Download the full <link href=\"#{root_url}maa-terms.pdf\">Terms and Conditions</link>", inline_format: true
+  end
+
+  def format_published_xls
+    shortcuts
+    Spreadsheet.client_encoding = 'UTF-8'
+    book = Spreadsheet::Workbook.new
+    head_left = Spreadsheet::Format.new weight: :bold,
+                                         horizontal_align: :left
+    head_right = Spreadsheet::Format.new weight: :bold,
+                                          horizontal_align: :right
+    left = Spreadsheet::Format.new horizontal_align: :left
+    right = Spreadsheet::Format.new horizontal_align: :right
+    total = Spreadsheet::Format.new weight: :bold, size: 16,
+                                    horizontal_align: :right
+    title = Spreadsheet::Format.new weight: :bold, size: 16,
+                                    color: :red,
+                                    horizontal_align: :center
+    subtitle = Spreadsheet::Format.new weight: :bold, size: 12,
+                                       horizontal_align: :center
+    sheet = book.create_worksheet
+    sheet.name = "Proforma DA"
+    (0..3).each {|i| sheet.column(i).width = 40}
+
+    r = 0
+
+    # draw title
+    sheet.row(r).push "MONSON AGENCIES AUSTRALIA PTY LTD"
+    sheet.row(r).default_format = title
+    sheet.row(r).height = 20
+    sheet.merge_cells(r, 0, r, 3)
+    r += 2
+
+    # draw subtitle
+    sheet.row(r).push "ESTIMATED DISBURSMENTS FOR #{@published.port.name.upcase}"
+    sheet.row(r).default_format = subtitle
+    sheet.row(r).height = 18
+    sheet.merge_cells(r, 0, r, 3)
+    r += 2
+
+    # draw vessel info
+    sheet.row(r).push "Vessel", @published.vessel_name
+    sheet.row(r).set_format(0, head_left)
+    r += 1
+    sheet.row(r).push "ETA", "#{I18n.l @revision.eta}"
+    sheet.row(r).set_format(0, head_left)
+    r += 1
+    ["grt", "nrt", "dwt", "loa"].each do |n|
+      sheet.row(r).push n.upcase, @revision.data["vessel_#{n}"]
+      sheet.row(r).set_format(0, head_left)
+      r += 1
+    end
+
+    r += 1
+
+    # setup services
+    sheet.row(r).push "Item",
+                      "Comment",
+                      "Amount (#{@currency_code})"
+    sheet.row(r).push "Amount (#{@currency_code}) Including Taxes" unless @revision.tax_exempt?
+    sheet.row(r).default_format = head_right
+    (0..1).each {|i| sheet.row(r).set_format(i, head_left) }
+    r += 1
+    @revision.field_keys.each_with_index do |k, i|
+      sheet.row(r+i).push @revision.descriptions[k],
+                          @revision.comments[k],
+                          @revision.values[k]
+      unless @revision.tax_exempt?
+        sheet.row(r+i).push @revision.values_with_tax[k]
+      end
+      sheet.row(r+i).default_format = right
+      (0..1).each {|c| sheet.row(r+i).set_format(c, left) }
+    end
+    r += @revision.field_keys.length
+    sheet.row(r).push "ESTIMATED AMOUNT",
+                      "",
+                      "#{number_to_currency @total, unit: ""}"
+    unless @revision.tax_exempt?
+      sheet.row(r).push "#{number_to_currency @total_with_tax, unit: ""}"
+    end
+    sheet.row(r).default_format = total
+    sheet.row(r).height = 20
+    sheet.merge_cells(r, 0, r, @revision.tax_exempt? ? 1 : 2)
+    book
   end
 end

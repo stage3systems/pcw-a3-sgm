@@ -15,6 +15,14 @@ GIT
       rails (~> 3.1)
       simple_form (~> 2.0)
 
+GIT
+  remote: https://github.com/kachick/spreadsheet.git
+  revision: 5cb1d8091dc37d6b3a202019c5dac7b27ee2d49e
+  branch: fix-ruby2.0
+  specs:
+    spreadsheet (0.7.7)
+      ruby-ole
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -152,6 +160,7 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     ref (1.0.5)
+    ruby-ole (1.2.11.6)
     ruby-rc4 (0.1.5)
     ruby-saml (0.7.2)
       canonix (= 0.1.1)
@@ -227,6 +236,7 @@ DEPENDENCIES
   simple_enum
   simple_form
   simplecov
+  spreadsheet!
   therubyracer
   uglifier (>= 1.0.3)
   unicorn
