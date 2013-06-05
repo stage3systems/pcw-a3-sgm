@@ -43,14 +43,22 @@
                   <i class="icon-list"></i>&nbsp;Proforma Disbursments
                 </a>
               </li>
-              <% if current_user.admin? %>
-              <li class="<%= "active" if ['ports',
-                                          'tariffs',
-                                          'terminals',
-                                          'services'].member? controller_name %>">
-                <a href="<%= ports_url %>">
+              <li class="<%= "active" if configuration_tab? %>">
+                <a href="<%= configuration_url %>">
                   <i class="icon-wrench"></i>&nbsp;Configuration
                 </a>
+              </li>
+            </ul>
+          </div>
+          <% if configuration_tab? %>
+          <div id="submenu" class="container-fluid">
+            <ul class="nav nav-pills">
+              <% if current_user.admin? %>
+              <li class="<%= "active" if ports_active? %>">
+                <a href="<%= ports_url %>">Ports</a>
+              </li>
+              <li class="<%= "active" if controller_name == 'taxes' %>">
+                <a href="<%= taxes_url %>">Taxes</a>
               </li>
               <% end %>
               <li class="<%= "active" if controller_name == 'vessels' %>">
@@ -59,17 +67,13 @@
               <li class="<%= "active" if controller_name == 'companies' %>">
                 <a href="<%= companies_url %>">Companies</a>
               </li>
-              <% if current_user.admin? %>
-              <li class="<%= "active" if controller_name == 'taxes' %>">
-                <a href="<%= taxes_url %>">Taxes</a>
-              </li>
-              <% end %>
             </ul>
           </div>
+          <% end %>
         <% end %>
       <% end %>
-      <div class="clearfix"></div>
     </header>
+    <div class="clearfix"></div>
     <div id="body<%= "_published" if action_name == "published" %>">
       <% if current_user and action_name != "published" %>
       <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
@@ -79,7 +83,14 @@
     </div>
     <% unless action_name == "published" %>
     <footer id="ft">
-      <p>&copy; Copyright 2013 <a href="http://stage3systems.com">Stage 3 Systems Inc.</a></p>
+      <div>
+        &copy; 2013
+        <a href="http://stage3systems.com" target="_blank" class="company">
+          Stage 3 Systems Inc.
+        </a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+      </div>
     </footer>
     <% end %>
   </div>
