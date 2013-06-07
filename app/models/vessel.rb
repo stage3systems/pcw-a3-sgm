@@ -1,7 +1,7 @@
 class Vessel < ActiveRecord::Base
   attr_accessible :dwt, :grt, :loa, :name, :nrt
   validates_presence_of :dwt, :grt, :loa, :name, :nrt
-  after_destroy :delete_disbursments
+  has_many :disbursments
 
   def crystalize
     {
@@ -11,10 +11,6 @@ class Vessel < ActiveRecord::Base
       "vessel_loa" => self.loa.to_s,
       "vessel_nrt" => self.nrt.to_s
     }
-  end
-
-  def delete_disbursments
-    Disbursment.where(:vessel_id => self.id).each {|d| d.delete }
   end
 
 end

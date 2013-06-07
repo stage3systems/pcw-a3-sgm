@@ -49,7 +49,7 @@ class Disbursment < ActiveRecord::Base
 
   def vessel_name
     if tbn
-      "TBN-#{self.company.name}"
+      "TBN-#{self.company.name rescue "DeletedCompany"}"
     else
       self.vessel.name
     end

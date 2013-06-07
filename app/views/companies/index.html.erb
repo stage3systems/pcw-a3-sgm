@@ -27,10 +27,16 @@
             <%= link_to icon('pencil'), edit_company_path(company),
                         :class => 'btn btn-small',
                         :title => 'Edit' %>
+            <% if @can_delete[company.id] %>
             <%= link_to icon('trash'), company, method: :delete,
                         data: { confirm: 'Are you sure?' },
                         :class => 'btn btn-danger btn-small',
                         :title => 'Delete' %>
+            <% else %>
+            <%= link_to icon('trash'), "#",
+                        :class => 'btn btn-danger btn-small disabled',
+                        :title => 'Company in use, cannot be deleted' %>
+            <% end %>
           </div>
         </td>
       </tr>

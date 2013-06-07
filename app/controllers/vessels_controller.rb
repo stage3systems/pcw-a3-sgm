@@ -7,6 +7,10 @@ class VesselsController < ApplicationController
   # GET /vessels.json
   def index
     @vessels = Vessel.all
+    @can_delete = {}
+    @vessels.each do |v|
+      @can_delete[v.id] = v.disbursments.count == 0
+    end
 
     respond_to do |format|
       format.html # index.html.erb

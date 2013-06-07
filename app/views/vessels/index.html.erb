@@ -33,10 +33,16 @@
             <%= link_to icon('pencil'), edit_vessel_path(vessel),
                         :class => 'btn btn-small',
                         :title => 'Edit' %>
+            <% if @can_delete[vessel.id] %>
             <%= link_to icon('trash'), vessel, method: :delete,
                         data: { confirm: 'This will delete all related PFDAs. Are you sure?' },
                         :class => 'btn btn-danger btn-small',
                         :title => 'Delete' %>
+            <% else %>
+            <%= link_to icon('trash'), "#",
+                        :class => 'btn btn-danger btn-small disabled',
+                        :title => 'Vessel in use, cannot be deleted' %>
+            <% end %>
           </div>
         </td>
       </tr>

@@ -6,6 +6,10 @@ class CompaniesController < ApplicationController
   # GET /companies.json
   def index
     @companies = Company.all
+    @can_delete = {}
+    @companies.each do |c|
+      @can_delete[c.id] = c.disbursments.count == 0
+    end
 
     respond_to do |format|
       format.html # index.html.erb
