@@ -7,6 +7,15 @@
       <div class="well" style="margin: 0 auto; width: 420px;">
         <h2 class="title">Proforma DA</h2>
 
+        <div class="span12">
+          <% flash.each do |name, msg| %>
+            <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
+              <a hred="#" class="close" data-dismiss="alert">×</a>
+                <%= msg %>
+              </a>
+            </div>
+          <% end %>
+        </div>
         <%= simple_form_for(resource, :as => resource_name,
                             :url => session_path(resource_name),
                             :html => {:class => 'form-horizontal'}) do |f| %>

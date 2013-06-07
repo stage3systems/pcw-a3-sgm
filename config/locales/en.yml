@@ -9,3 +9,7 @@ en:
   date:
     formats:
       default: "%d %b %Y"
+  devise:
+    failure:
+      invalid: "Invalid username and/or password."
+      not_found_in_database: "Invalid username and/or password."
