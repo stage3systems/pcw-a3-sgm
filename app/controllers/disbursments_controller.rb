@@ -91,11 +91,12 @@ class DisbursmentsController < ApplicationController
     @revision = @disbursment.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.where{
-                    (subsubtype.in ['COKING COAL',
+                     subsubtype.in ['COKING COAL',
                                     'STEAMING COAL',
                                     'IRON ORE',
-                                    'ALUMINA']) |
-                    (subtype.eq 'GRAIN / FEED')}
+                                    'ALUMINA'] }
+                    # grain support disabled for now
+                    #(subtype.eq 'GRAIN / FEED')}
   end
 
   # POST /disbursments
