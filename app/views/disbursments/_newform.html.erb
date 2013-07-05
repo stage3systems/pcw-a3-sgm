@@ -9,6 +9,12 @@
     <%= f.input :tbn, label: 'TBN' %>
   </div>
   <div class="form-inputs tbn_fields">
+    <%= f.input :tbn_template,
+                label: 'Template',
+                collection: ['CAPESIZE', 'PANAMAX',
+                             'HANDYMAX', 'SUPERMAX',
+                             'HANDYSIZE'],
+                prompt: 'Select TBN template...' %>
     <%= f.input :grt, label: 'GRT' %>
     <%= f.input :nrt, label: 'NRT' %>
     <%= f.input :dwt, label: 'DWT' %>
@@ -43,5 +49,44 @@
     });
   }
   $("select#disbursment_port_id").on("change", updateTerminals);
+  var TBNTemplates = {
+    'CAPESIZE': {
+      grt: 112000,
+      nrt: 55000,
+      dwt: 228000,
+      loa: 325
+    },
+    'PANAMAX': {
+      grt: 87500,
+      nrt: 55000,
+      dwt: 175000,
+      loa: 290
+    },
+    'HANDYMAX': {
+      grt: 40600,
+      nrt: 25000,
+      dwt: 75000,
+      loa: 225
+    },
+    'SUPERMAX': {
+      grt: 33500,
+      nrt: 19000,
+      dwt: 58000,
+      loa: 194
+    },
+    'HANDYSIZE': {
+      grt: 30000,
+      nrt: 16000,
+      dwt: 45000,
+      loa: 190
+    }
+  };
+  $("select#disbursment_tbn_template").on("change", function() {
+    var template = TBNTemplates[$(this).val()];
+    if (!template) return;
+    $.each(['grt', 'nrt', 'dwt', 'loa'], function(i, e) {
+      $("input#disbursment_"+e).val(template[e]);
+    });
+  });
   updateFields();
 </script>
