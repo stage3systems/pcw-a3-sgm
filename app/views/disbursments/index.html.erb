@@ -50,11 +50,11 @@
           <%= select_tag "status",
                          ("<option value=\"publish\""+
                           "#{" selected" if disbursment.published?}"+
-                          ">Published</option>"+
+                          ">Sent (Published)</option>"+
                           "<option value=\"unpublish\""+
                           "#{" selected" if disbursment.draft?}"+
-                          " >Private</option>").html_safe,
-                        style: "width: 100px;",
+                          " >Draft</option>").html_safe,
+                        style: "width: 160px;",
                         class: "#{ disbursment.published? ? "published" : "private" }"
           %>
         </td>
