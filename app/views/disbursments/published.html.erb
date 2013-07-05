@@ -11,10 +11,12 @@
             <em class="currency"><%= @revision.data['currency_code'] %></em>
           </div>
           <div class="btn-group pull-right hidden-print">
-            <a href="/pfda/<%= @published.publication_id %>.pdf" class="btn">
+            <a href="/pfda/<%= @published.publication_id %>.pdf"
+               class="btn hint" title="Download as PDF">
               <%= image_tag "pdf.gif" %>
             </a>
-            <a href="/pfda/<%= @published.publication_id %>.xls" class="btn">
+            <a href="/pfda/<%= @published.publication_id %>.xls"
+               class="btn hint" title="Download as Excel Spreadsheet">
               <%= image_tag "excel.png" %>
             </a>
           </div>
@@ -261,10 +263,13 @@
 <% end %>
 </div>
 <script type="text/javascript">
-  function resize() {
-    $("div.final-figure-amount").width(
-      $("table.table-condensed thead tr th:last").width());
-  };
-  $(window).on("resize", resize);
-  resize();
+  $(document).ready(function() {
+    function resize() {
+      $("div.final-figure-amount").width(
+        $("table.table-condensed thead tr th:last").width());
+    };
+    $(window).on("resize", resize);
+    resize();
+    $("a.hint").tooltip({container: 'body'});
+  });
 </script>

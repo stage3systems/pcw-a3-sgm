@@ -32,7 +32,8 @@
 //= require twitter/bootstrap/affix
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
-//= require jquery.ui.all
+//= require jquery.ui.datepicker
+//= require jquery.ui.sortable
 //= require bootstrap_init
 //= require jquery.dataTables
 //= require dataTables.htmlnumbers
