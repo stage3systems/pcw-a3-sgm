@@ -3,7 +3,24 @@ require 'test_helper'
 class PortsControllerTest < ActionController::TestCase
   setup do
     @port = ports(:newcastle)
-    log_in :one
+    log_as_admin
+  end
+
+  def log_as_admin
+    log_in :admin
+  end
+
+  def log_as_operator
+    log_in :operator
+  end
+
+  test "operators cannot view ports" do
+    log_out
+    log_as_operator
+    get :index
+    assert_response :redirect
+    log_out
+    log_as_admin
   end
 
   test "should get index" do

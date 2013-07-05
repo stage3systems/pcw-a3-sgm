@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  disbursment_id: 1
+revisionone:
+  disbursment: draft
   data: 
   fields: 
   descriptions: 
@@ -15,10 +15,10 @@ one:
   loadtime: 1
   tugs_in: 1
   tugs_out: 1
-  reference: MyString
+  reference: reference1
 
-two:
-  disbursment_id: 1
+revisiontwo:
+  disbursment: published
   data: 
   fields: 
   descriptions: 
@@ -32,4 +32,4 @@ two:
   loadtime: 1
   tugs_in: 1
   tugs_out: 1
-  reference: MyString
+  reference: reference2

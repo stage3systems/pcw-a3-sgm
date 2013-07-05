@@ -1,24 +1,24 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  port_id: 1
-  vessel_id: 1
-  company_id: 1
-  status_cd: 1
-  publication_id: MyString
-  tbn: false
+draft:
+  port: :brisbane
+  vessel: :vesselone
+  company: :stage3
+  status_cd: 0
+  publication_id: id1
+  tbn: true
   grt: 9.99
   nrt: 9.99
   dwt: 9.99
   loa: 9.99
 
-two:
-  port_id: 1
-  vessel_id: 1
-  company_id: 1
+published:
+  port: :brisbane
+  vessel: :vesseltwo
+  company: :evax
   status_cd: 1
-  publication_id: MyString
-  tbn: false
+  publication_id: id2
+  tbn: true
   grt: 9.99
   nrt: 9.99
   dwt: 9.99

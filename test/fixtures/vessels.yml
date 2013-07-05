@@ -1,14 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  name: MyString
+vesselone:
+  name: vesselone
   loa: 9.99
   grt: 9.99
   nrt: 9.99
   dwt: 9.99
 
-two:
-  name: MyString
+vesseltwo:
+  name: vesseltwo
   loa: 9.99
   grt: 9.99
   nrt: 9.99

@@ -107,22 +107,4 @@ class DisbursmentTest < ActiveSupport::TestCase
     assert r.data["total"] == "4000.00"
     assert r.data["total_with_tax"] == "4400.00"
   end
-
-  test "deleting a vessel delete its disbursments" do
-    v = Vessel.new
-    v.name = "Test"
-    v.dwt = 10000.0
-    v.grt = 10000.0
-    v.loa = 200.0
-    v.nrt = 10000.0
-    assert v.save, "vessel is saved"
-    d = Disbursment.new
-    d.port = @brisbane
-    d.company = @stage3
-    d.vessel = v
-    assert d.save, "disbursment is saved"
-    assert v.destroy, "vessel deleted"
-    d.reload
-    assert d.deleted?, "disbursment is deleted"
-  end
 end
