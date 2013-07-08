@@ -60,7 +60,9 @@
         </td>
         <td>
           <div class="btn-group">
-            <%= render "common/mailto_pfda", disbursment: disbursment %>
+            <%= render "common/mailto_pfda",
+                       disbursment: disbursment,
+                       config: Configuration.last %>
             <%= link_to icon(:pencil), edit_disbursment_path(disbursment),
                         :class => 'btn btn-small',
                         :title => 'Revise' %>

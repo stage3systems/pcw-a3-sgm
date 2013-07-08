@@ -21,7 +21,12 @@ A/C Name: Monson Agencies Australia Pty Ltd
 Download the full Terms and Conditions:
 #{root_url}maa-terms.pdf
 
-For enquires relating to this Estimate please contact our local Port Office.
+For enquires relating to this Estimate please contact our local Port Office:
+
+#{disbursment.port.office.name rescue config.from_name}
+#{disbursment.port.office.address_1 rescue config.from_address1}
+#{disbursment.port.office.address_2 rescue config.from_address2}
+#{disbursment.port.office.address_3 rescue ""}
 
 BODY
 )

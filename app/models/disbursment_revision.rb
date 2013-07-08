@@ -86,6 +86,7 @@ CTX
 
   def crystalize
     p = self.disbursment.port.crystalize
+    o = self.disbursment.port.office.crystalize rescue {}
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
     conf = Configuration.last.crystalize
@@ -99,7 +100,7 @@ CTX
           "compulsory" => {},
         }
     ct = self.cargo_type.crystalize rescue {}
-    self.data = v.merge(p["data"]).merge(c).merge(conf).merge(t["data"]).merge(ct)
+    self.data = v.merge(p["data"]).merge(c).merge(o).merge(conf).merge(t["data"]).merge(ct)
     self.fields = p["fields"].merge(t["fields"])
     self.descriptions = p["descriptions"].merge(t["descriptions"])
     self.compulsory = p["compulsory"].merge(t["compulsory"])

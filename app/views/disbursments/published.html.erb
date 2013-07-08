@@ -97,9 +97,10 @@
               <tr>
                 <th>From</th>
                 <td>
-                  <strong><%= @revision.data['from_name'] %></strong><br />
-                  <%= @revision.data['from_address1'] %><br />
-                  <%= @revision.data['from_address2'] %>
+                  <strong><%= @revision.data['office_name']||@revision.data['from_name'] %></strong><br />
+                  <%= @revision.data['office_address1']||@revision.data['from_address1'] %><br />
+                  <%= @revision.data['office_address2']||@revision.data['from_address2'] %><br />
+                  <%= @revision.data['office_address3'] %>
                 </td>
               </tr>
             </table>

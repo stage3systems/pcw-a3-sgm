@@ -289,7 +289,7 @@ class DisbursmentsController < ApplicationController
   def from_table
     @pdf.bounding_box([315, 620], width: 225, height: 300) do
       data = [
-        ['<b>From</b>', "<b>#{@revision.data['from_name']}</b>\n#{@revision.data['from_address1']}\n#{@revision.data['from_address2']}"]
+        ['<b>From</b>', "<b>#{@revision.data['office_name']||@revision.data['from_name']}</b>\n#{@revision.data['office_address1']||@revision.data['from_address1']}\n#{@revision.data['office_address2']||@revision.data['from_address2']}\n#{@revision.data['office_address3']}"]
       ]
       @pdf.table data,
                  cell_style: {border_widths: [0.1, 0, 0.1, 0],

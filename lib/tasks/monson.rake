@@ -43,5 +43,42 @@ namespace :monson do
         puts "#{Port.count-port_names.length} ports imported"
       end
     end
+    desc "Import raw CSV offices"
+    task :offices => :environment do
+      file = ENV['file'] || 'monson_offices.csv'
+      if not File::exists? file
+        puts "Couldn't open #{file}"
+      else
+        office_names = Office.pluck(:name)
+        CSV.read(file).each do |r|
+          next if r[0] == 'OFFICE NAME'
+          o = Office.find_by_name(r[0])
+          if o.nil?
+            o = Office.new(name: r[0])
+            a = r[1].split("\n")
+            a = a.slice(1,3) if a.length == 4
+            a << "" if a.length == 2
+            o.address_1 = a[0]
+            o.address_2 = a[1]
+            o.address_3 = a[2]
+            o.phone = r[2]
+            o.fax = r[3]
+            o.save!
+          end
+          r[5].split(',').each do |p|
+            p = p.upcase.strip
+            puts "Looking for #{p}"
+            port = Port.find_by_name(p.upcase)
+            if port.nil?
+              puts "Unknown port #{p}"
+            else
+              puts "Associated #{p} with #{o.name}"
+              port.office = o
+              port.save!
+            end
+          end
+        end
+      end
+    end
   end
 end

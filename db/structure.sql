@@ -356,6 +356,42 @@ ALTER SEQUENCE estimates_id_seq OWNED BY estimates.id;
 
 
 --
+-- Name: offices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE offices (
+    id integer NOT NULL,
+    name character varying(255),
+    address_1 character varying(255),
+    address_2 character varying(255),
+    address_3 character varying(255),
+    phone character varying(255),
+    fax character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE offices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE offices_id_seq OWNED BY offices.id;
+
+
+--
 -- Name: ports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -365,7 +401,8 @@ CREATE TABLE ports (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     currency_id integer,
-    tax_id integer
+    tax_id integer,
+    office_id integer
 );
 
 
@@ -714,6 +751,13 @@ ALTER TABLE ONLY estimates ALTER COLUMN id SET DEFAULT nextval('estimates_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY offices ALTER COLUMN id SET DEFAULT nextval('offices_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY ports ALTER COLUMN id SET DEFAULT nextval('ports_id_seq'::regclass);
 
 
@@ -828,6 +872,14 @@ ALTER TABLE ONLY estimate_revisions
 
 ALTER TABLE ONLY estimates
     ADD CONSTRAINT estimates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: offices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY offices
+    ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
 
 
 --
@@ -1005,3 +1057,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130531145814');
 INSERT INTO schema_migrations (version) VALUES ('20130531151258');
 
 INSERT INTO schema_migrations (version) VALUES ('20130531151903');
+
+INSERT INTO schema_migrations (version) VALUES ('20130705175044');
+
+INSERT INTO schema_migrations (version) VALUES ('20130708054043');
