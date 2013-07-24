@@ -1,6 +1,6 @@
 class Company < ActiveRecord::Base
   attr_accessible :email, :name
-  validates_presence_of :email, :name
+  validates_presence_of :name
   has_many :disbursments
 
   def crystalize
