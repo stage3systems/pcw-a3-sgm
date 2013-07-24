@@ -83,8 +83,12 @@
       {"sType" => "currency", "aTargets" => [5]}
     ] %>
 <script type="text/javascript">
-  $("select#status").on("change", function() {
-    var id = $(this).parent().attr("id").split("_")[1];
-    window.location = "/disbursments/"+id+"/"+$(this).val();
-  });
+  var setupListeners = function() {
+    $("select#status").on("change", function() {
+      var id = $(this).parent().attr("id").split("_")[1];
+      window.location = "/disbursments/"+id+"/"+$(this).val();
+    });
+  };
+  $("table.table").bind('draw', setupListeners);
+  setupListeners();
 </script>
