@@ -1,6 +1,7 @@
 namespace :monson do
   namespace :import do
     require 'csv'
+    require 'json'
     desc "Import raw CSV cargo types"
     task :cargo_types => :environment do
       file = ENV['file'] || 'cargo_types.csv'
@@ -128,6 +129,24 @@ namespace :monson do
           end
         end
         puts "Users imported"
+      end
+    end
+    desc "Import json vessels"
+    task :vessels => :environment do
+      file = ENV['file'] || 'monson_vessels.json'
+      if not File::exists? file
+        puts "Couldn't open #{file}"
+      else
+        vs = File.open(file, "r") {|f| JSON.parse(f.read)}
+        fields = ['loa', 'nrt', 'dwt', 'grt']
+        vs.each do |v|
+          vessel = Vessel.find_by_name(v['name'])
+          if vessel.nil? and (fields-v.keys).empty?
+            vessel = Vessel.new(name: v['name'])
+            fields.each {|f| vessel.send("#{f}=", v[f])}
+            vessel.save!
+          end
+        end
       end
     end
   end
