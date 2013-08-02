@@ -2,7 +2,8 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.association :port, collection: current_user.authorized_ports %>
+    <%= f.association :port,
+                      collection: current_user.authorized_ports.all.to_a %>
     <%= f.association :terminal %>
     <%= f.association :company, label: "Principal" %>
     <%= f.association :vessel %>
