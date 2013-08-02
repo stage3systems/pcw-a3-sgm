@@ -6,7 +6,9 @@ class DisbursmentsController < ApplicationController
   # GET /disbursments
   # GET /disbursments.json
   def index
-    @disbursments = Disbursment.where(:status_cd => [Disbursment.published, Disbursment.draft])
+    @disbursments = Disbursment.where(
+                      :status_cd => [Disbursment.published, Disbursment.draft],
+                      :port_id => current_user.authorized_ports.pluck(:id))
 
     respond_to do |format|
       format.html # index.html.erb

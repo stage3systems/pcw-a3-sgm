@@ -633,7 +633,8 @@ CREATE TABLE users (
     provider character varying(255),
     first_name character varying(255),
     last_name character varying(255),
-    admin boolean DEFAULT false
+    admin boolean DEFAULT false,
+    office_id integer
 );
 
 
@@ -1061,3 +1062,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130531151903');
 INSERT INTO schema_migrations (version) VALUES ('20130705175044');
 
 INSERT INTO schema_migrations (version) VALUES ('20130708054043');
+
+INSERT INTO schema_migrations (version) VALUES ('20130801165242');

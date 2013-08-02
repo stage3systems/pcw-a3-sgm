@@ -2,16 +2,17 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :timeoutable, :trackable, :validatable
+  devise :database_authenticatable, :timeoutable, :trackable #:validatable
 
   has_many :services
   has_many :service_updates
   has_many :disbursments
   has_many :disbursment_revisions
+  belongs_to :office
   attr_accessor :login
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :uid, :provider, :first_name, :last_name, :admin, :login
+                  :uid, :provider, :first_name, :last_name, :admin, :login,
   # attr_accessible :title, :body
   def self.find_for_saml(auth, signed_in_resource=nil)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
@@ -34,6 +35,15 @@ class User < ActiveRecord::Base
     else
       where(conditions).first
     end
+  end
+
+  def authorized_ports
+    return Port if office.nil? or office.name == "Head Office"
+    return office.ports
+  end
+
+  def email_required?
+    false
   end
 
   def full_name

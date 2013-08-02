@@ -50,6 +50,8 @@ namespace :monson do
         puts "Couldn't open #{file}"
       else
         office_names = Office.pluck(:name)
+        aud = Currency.find_by_code 'AUD'
+        gst = Tax.find_by_code 'GST'
         CSV.read(file).each do |r|
           next if r[0] == 'OFFICE NAME'
           o = Office.find_by_name(r[0])
@@ -70,14 +72,62 @@ namespace :monson do
             puts "Looking for #{p}"
             port = Port.find_by_name(p.upcase)
             if port.nil?
-              puts "Unknown port #{p}"
-            else
-              puts "Associated #{p} with #{o.name}"
-              port.office = o
-              port.save!
+              port = Port.new(name: p.upcase)
+              port.tax = gst
+              port.currency = aud
             end
+            puts "Associated #{p} with #{o.name}"
+            port.office = o
+            port.save!
           end
         end
+      end
+    end
+    desc "Import raw CSV users"
+    task :users => :environment do
+      file = ENV['file'] || 'monson_users.csv'
+      if not File::exists? file
+        puts "Couldn't open #{file}"
+      else
+        CSV.read(file).each do |r|
+          next if r[0] == "NAME OF USER"
+          u = User.find_by_uid(r[2])
+          first_name, last_name = r[0].split(' ').map {|x| x.capitalize}
+          pw = 'monson*'
+          if u.nil?
+            u = User.new({
+              uid: r[2],
+              first_name: first_name,
+              last_name: last_name,
+              password: pw,
+              password_confirmation: pw,
+              email: ""
+            })
+            u.save!
+          end
+          offices = {
+            "ACCOUNTS" => Office.find_by_name("Head Office"),
+            "FREMANTLE" => Office.find_by_name("Head Office"),
+            "KARRATHA" => Office.find_by_name("Dampier Office"),
+            "MACKAY" => Office.find_by_name("Mackay & Abbot Point Office"),
+          }
+          ["ADELAIDE", "BRISBANE", "BUNBURY", "GERALDTON",
+           "GLADSTONE", "MELBOURNE", "NEWCASTLE", "ONSLOW",
+           "PORT HEDLAND", "PORT KEMBLA", "PORT LINCOLN",
+           "PORTLAND", "TOWNSVILLE"].each do |o|
+            n = o.split(" ").map{|w| w.capitalize}.join(" ")
+            offices[o] = Office.find_by_name("#{n} Office")
+          end
+          if u.office.nil?
+            u.office = offices[r[1]]
+            u.save!
+          end
+          if u.email != r[3]
+            u.email = r[3]
+            u.save!
+          end
+        end
+        puts "Users imported"
       end
     end
   end

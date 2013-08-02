@@ -60,5 +60,10 @@ module ProformaDA
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     #config.after_sign_out_path = "https://localhost:8001/admin/logout"
+
+    # AOS
+    config.aos_api_url = 'https://monson.agencyops.net/api'
+    config.aos_api_user = 'monson'
+    config.aos_api_password = 'Yqzz26IyfJqrN08M'
   end
 end
