@@ -9,11 +9,13 @@
 
         <div class="span12">
           <% flash.each do |name, msg| %>
+            <% unless name == :timedout %>
             <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
               <a hred="#" class="close" data-dismiss="alert">×</a>
                 <%= msg %>
               </a>
             </div>
+            <% end %>
           <% end %>
         </div>
         <%= simple_form_for(resource, :as => resource_name,
