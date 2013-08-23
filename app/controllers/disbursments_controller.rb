@@ -424,6 +424,7 @@ TXT
     else
       @pdf.text "This estimate is inclusive of Australian Goods and Services Tax (GST).\n\n", inline_format: true
     end
+    @pdf.text "Note: providers of towage services in Australia use their own amended versions of the UK Standard Conditions for Towage and other Services, copies of which are available upon request or from the towage provider’s website.\n\n", inline_format: true
     @pdf.text "Download the full <link href=\"#{root_url}maa-terms.pdf\">Terms and Conditions</link>", inline_format: true
   end
 
