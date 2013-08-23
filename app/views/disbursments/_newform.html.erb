@@ -36,7 +36,12 @@
   };
   $("input#disbursment_tbn").on("change", updateFields);
   var updateTerminals = function() {
-    $.ajax('/ports/'+$("select#disbursment_port_id").val()+'/terminals.json', {
+    var portId = $("select#disbursment_port_id").val();
+    if (portId == "") {
+      $("select#disbursment_terminal_id").find("option").remove();
+      return;
+    }
+    $.ajax('/ports/'+portId+'/terminals.json', {
       type: 'GET',
       dataType: 'json',
       success: function(d) {
@@ -95,4 +100,5 @@
     });
   });
   updateFields();
+  updateTerminals();
 </script>
