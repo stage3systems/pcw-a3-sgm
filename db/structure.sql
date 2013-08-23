@@ -198,7 +198,7 @@ CREATE TABLE disbursment_revisions (
     tax_exempt boolean DEFAULT false,
     number integer,
     cargo_qty integer DEFAULT 0,
-    days_alongside integer DEFAULT 0,
+    days_alongside numeric DEFAULT 0.0,
     loadtime integer DEFAULT 0,
     tugs_in integer DEFAULT 0,
     tugs_out integer DEFAULT 0,
@@ -1064,3 +1064,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130705175044');
 INSERT INTO schema_migrations (version) VALUES ('20130708054043');
 
 INSERT INTO schema_migrations (version) VALUES ('20130801165242');
+
+INSERT INTO schema_migrations (version) VALUES ('20130823103547');
