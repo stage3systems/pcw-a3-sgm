@@ -126,7 +126,7 @@
               </thead>
               <tbody>
                 <% @revision.field_keys.each do |f| %>
-                  <% unless @revision.disabled[f] %>
+                  <% unless @revision.disabled[f] == "1" %>
                   <tr>
                     <td>
                       <%= @revision.descriptions[f] %>
