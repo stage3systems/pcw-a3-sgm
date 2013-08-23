@@ -1,6 +1,10 @@
 <script type="text/javascript">
+  <% sorting ||= [[0, 'asc']] %>
   $("table.table").dataTable({
     sPaginationType: "bootstrap",
+    aaSorting: [
+      <%= sorting.map {|s| s.to_json}.join(",        \n").html_safe %>
+    ],
     aoColumnDefs: [
       <%= column_defs.map {|d| d.to_json}.join(",       \n").html_safe %>
     ]
