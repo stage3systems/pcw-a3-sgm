@@ -13,7 +13,7 @@
     <%= f.input :tbn_template,
                 label: 'Template',
                 collection: ['VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
-                             'HANDYMAX', 'SUPERMAX', 'HANDYSIZE'],
+                             'HANDYMAX', 'SUPRAMAX', 'HANDYSIZE'],
                 prompt: 'Select TBN template...' %>
     <%= f.input :grt, label: 'GRT' %>
     <%= f.input :nrt, label: 'NRT' %>
@@ -68,7 +68,7 @@
       dwt: 75000,
       loa: 225
     },
-    'SUPERMAX': {
+    'SUPRAMAX': {
       grt: 33500,
       nrt: 19000,
       dwt: 58000,
