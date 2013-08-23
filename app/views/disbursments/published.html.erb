@@ -1,7 +1,7 @@
-<div class="container-fluid no-padding<%= " pfda-container" if @published and
-                                            @published.published? %>">
-  <% if @published  %>
-    <% if @published.published? %>
+<div class="container-fluid no-padding<%= " pfda-container" if @disbursment and
+                                            @disbursment.published? %>">
+  <% if @disbursment  %>
+    <% if @disbursment.published? %>
     <div class="pfda-header">
       <div class="container">
         <div class="row-fluid">
@@ -11,11 +11,11 @@
             <em class="currency"><%= @revision.data['currency_code'] %></em>
           </div>
           <div class="btn-group pull-right hidden-print">
-            <a href="/pfda/<%= @published.publication_id %>.pdf"
+            <a href="/pfda/<%= @disbursment.publication_id %>.pdf"
                class="btn hint" title="Download as PDF">
               <%= image_tag "pdf.gif" %>
             </a>
-            <a href="/pfda/<%= @published.publication_id %>.xls"
+            <a href="/pfda/<%= @disbursment.publication_id %>.xls"
                class="btn hint" title="Download as Excel Spreadsheet">
               <%= image_tag "excel.png" %>
             </a>
@@ -55,7 +55,7 @@
               <tr>
                 <th>Vessel</th>
                 <td>
-                  <%= @published.vessel_name %>
+                  <%= @disbursment.vessel_name %>
                   <small>(GRT: <%= @revision.data["vessel_grt"] %> |
                           NRT: <%= @revision.data["vessel_nrt"] %> |
                           DWT: <%= @revision.data["vessel_dwt"] %> |
@@ -64,7 +64,7 @@
               </tr>
               <tr>
                 <th>Port</th>
-                <td><%= @published.port.name %></td>
+                <td><%= @disbursment.port.name %></td>
               </tr>
               <tr>
                 <th>Cargo Type</th>
@@ -206,7 +206,7 @@
           BSB Number: <%= @revision.data['bsb_number'] %><br />
           A/C Number: <%= @revision.data['ac_number'] %><br />
           A/C Name: <%= @revision.data['ac_name'] %><br />
-          Reference: <%= @published.vessel_name %><br />
+          Reference: <%= @disbursment.vessel_name %><br />
           </strong></p>
           <p>
             Disclaimer: this is only an estimate and any additional costs

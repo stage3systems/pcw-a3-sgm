@@ -23,6 +23,7 @@ ProformaDA::Application.routes.draw do
     member do
       get 'publish'
       get 'unpublish'
+      get 'print'
     end
   end
   match 'proforma_disbursments/:id' => 'disbursments#published', :as => :published

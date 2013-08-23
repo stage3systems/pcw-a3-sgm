@@ -66,6 +66,9 @@
             <%= link_to icon(:pencil), edit_disbursment_path(disbursment),
                         :class => 'btn btn-small',
                         :title => 'Revise' %>
+            <%= link_to icon(:print), print_disbursment_path(disbursment),
+                        :class => 'btn btn-small',
+                        :title => 'Print' %>
             <%= link_to icon(:trash), disbursment, method: :delete,
                         data: { confirm: 'Are you sure?' },
                         :class => 'btn btn-danger btn-small',

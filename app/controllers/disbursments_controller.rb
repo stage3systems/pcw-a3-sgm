@@ -17,8 +17,8 @@ class DisbursmentsController < ApplicationController
   end
 
   def published
-    @published = Disbursment.find_by_publication_id(params[:id])
-    @revision = @published.current_revision rescue nil
+    @disbursment = Disbursment.find_by_publication_id(params[:id])
+    @revision = @disbursment.current_revision rescue nil
     respond_to do |format|
       format.html {
         @revision.increment! :anonymous_views if @revision and current_user.nil?
@@ -28,7 +28,7 @@ class DisbursmentsController < ApplicationController
         Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
         unless File.exists? file
-          format_published_pdf
+          format_pdf
           @pdf.render_file file
         end
         send_file(file, :type => "application/pdf")
@@ -38,11 +38,21 @@ class DisbursmentsController < ApplicationController
         Dir.mkdir Rails.root.join('sheets') unless Dir.exists? Rails.root.join('sheets')
         file = Rails.root.join 'sheets', "#{@revision.reference}.xls"
         unless File.exists? file
-          format_published_xls.write file
+          format_xls.write file
         end
         send_file(file, :type => "application/ms-excel")
       }
     end
+  end
+
+  def print
+    @disbursment = Disbursment.find(params[:id])
+    @revision = @disbursment.current_revision
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    format_pdf
+    send_data @pdf.render, type: "application/pdf",
+              filename: "#{@revision.reference}#{ " - DRAFT" if @disbursment.draft? }.pdf"
   end
 
   def publish
@@ -213,7 +223,7 @@ class DisbursmentsController < ApplicationController
     @currency_code = @revision.data["currency_code"]
   end
 
-  def format_published_pdf
+  def format_pdf
     # default format is letter, that is 612x792 pdf points
     # there are 72 pdf points in one inch
     # the page has a 0.5 default margin setup
@@ -258,7 +268,8 @@ class DisbursmentsController < ApplicationController
     @pdf.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
     @pdf.bounding_box([0, 720], width: 540, height: 100) do
-      @pdf.text "PROFORMA DISBURSMENT", :size => 20, :style => :bold,
+      @pdf.text "#{ "DRAFT " if @disbursment.draft? }PROFORMA DISBURSMENT",
+                :size => 20, :style => :bold,
                 :align => :left, :valign => :center
       @pdf.image logo_path, :width => 40,
                             :position => :right,
@@ -273,8 +284,8 @@ class DisbursmentsController < ApplicationController
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
-        ['<b>Vessel<b>', "#{@published.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
-        ['<b>Port</b>', @published.port.name],
+        ['<b>Vessel<b>', "#{@disbursment.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
+        ['<b>Port</b>', @disbursment.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.display rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
         ['<b>Load Time</b>', "#{@revision.loadtime} hours"],
@@ -411,7 +422,7 @@ Please remit funds at least two (2) days prior to vessels arrival to the followi
 <b>BSB Number: #{@revision.data['bsb_number']}</b>
 <b>A/C Number: #{@revision.data['ac_number']}</b>
 <b>A/C Name: #{@revision.data['ac_name']}</b>
-<b>Reference: #{@published.vessel_name}</b>
+<b>Reference: #{@disbursment.vessel_name}</b>
 
 Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.
 
@@ -428,7 +439,7 @@ TXT
     @pdf.text "Download the full <link href=\"#{root_url}maa-terms.pdf\">Terms and Conditions</link>", inline_format: true
   end
 
-  def format_published_xls
+  def format_xls
     shortcuts
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
@@ -459,14 +470,14 @@ TXT
     r += 2
 
     # draw subtitle
-    sheet.row(r).push "ESTIMATED DISBURSMENTS FOR #{@published.port.name.upcase}"
+    sheet.row(r).push "ESTIMATED DISBURSMENTS FOR #{@disbursment.port.name.upcase}"
     sheet.row(r).default_format = subtitle
     sheet.row(r).height = 18
     sheet.merge_cells(r, 0, r, 3)
     r += 2
 
     # draw vessel info
-    sheet.row(r).push "Vessel", @published.vessel_name
+    sheet.row(r).push "Vessel", @disbursment.vessel_name
     sheet.row(r).set_format(0, head_left)
     r += 1
     sheet.row(r).push "ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"
