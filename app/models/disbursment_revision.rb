@@ -86,7 +86,10 @@ CTX
 
   def crystalize
     p = self.disbursment.port.crystalize
-    o = self.disbursment.port.office.crystalize rescue {}
+    email = self.user.email rescue ""
+    o = (self.disbursment.port.office.crystalize rescue {}).merge({
+      "office_email" => (email == "" ? "accounts.monson.com.au" : email)
+    })
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
     conf = Configuration.last.crystalize

@@ -101,6 +101,8 @@
                   <%= @revision.data['office_address1']||@revision.data['from_address1'] %><br />
                   <%= @revision.data['office_address2']||@revision.data['from_address2'] %><br />
                   <%= @revision.data['office_address3'] %>
+                  <% unless @revision.data['office_address3'].blank? %><br /><% end %>
+                  <%= @revision.data['office_email']||"accounts@monson.com.au" %>
                 </td>
               </tr>
             </table>
