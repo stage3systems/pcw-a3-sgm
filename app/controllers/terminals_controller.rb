@@ -1,6 +1,6 @@
 class TerminalsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :ensure_admin
+  before_filter :ensure_admin, :except => [:index]
 
   # GET /terminals
   # GET /terminals.json
