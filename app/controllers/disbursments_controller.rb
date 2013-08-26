@@ -325,7 +325,7 @@ class DisbursmentsController < ApplicationController
     ]
     # real service data
     @revision.field_keys.each do |f|
-      next if @revision.disabled[f]
+      next if @revision.disabled[f] == "1"
       desc = @revision.descriptions[f]
       if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
         desc += " <font size=\"5\">#{@revision.comments[f]}</font>"
