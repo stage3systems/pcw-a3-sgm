@@ -286,7 +286,7 @@ class DisbursmentsController < ApplicationController
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
         ['<b>Vessel<b>', "#{@disbursment.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
         ['<b>Port</b>', @disbursment.port.name],
-        ['<b>Cargo Type</b>', (@revision.cargo_type.display rescue "N/A")],
+        ['<b>Cargo Type</b>', (@revision.cargo_type.subsubtype rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
         ['<b>Load Time</b>', "#{@revision.loadtime} hours"],
         ['<b>Tugs</b>', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
