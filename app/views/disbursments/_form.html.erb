@@ -116,7 +116,14 @@
   <div class="form-actions">
     <div class="btn-group">
     <%= f.submit "Save PFDA", class: "btn btn-primary" %>
+    <% if @revision.number == 0 %>
+    <%= link_to "Cancel",
+                @disbursment,
+                method: :delete,
+                class: "btn" %>
+    <% else %>
     <%= link_to "Cancel", disbursments_path, class: "btn" %>
+    <% end %>
     </div>
   </div>
 <% end %>
