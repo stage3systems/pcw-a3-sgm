@@ -368,7 +368,8 @@ CREATE TABLE offices (
     phone character varying(255),
     fax character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    email character varying(255)
 );
 
 
@@ -1066,3 +1067,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130708054043');
 INSERT INTO schema_migrations (version) VALUES ('20130801165242');
 
 INSERT INTO schema_migrations (version) VALUES ('20130823103547');
+
+INSERT INTO schema_migrations (version) VALUES ('20130827065522');

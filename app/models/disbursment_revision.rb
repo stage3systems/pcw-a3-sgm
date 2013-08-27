@@ -86,10 +86,7 @@ CTX
 
   def crystalize
     p = self.disbursment.port.crystalize
-    email = self.user.email rescue ""
-    o = (self.disbursment.port.office.crystalize rescue {}).merge({
-      "office_email" => (email == "" ? "accounts.monson.com.au" : email)
-    })
+    o = self.disbursment.port.office.crystalize rescue {}
     v = self.disbursment.crystalize_vessel
     c = self.disbursment.company.crystalize
     conf = Configuration.last.crystalize
@@ -129,6 +126,14 @@ CTX
 
   def amount
     self.data[self.tax_exempt? ? 'total' : 'total_with_tax'].to_f
+  end
+
+  def email
+    e = self.data['office_email']
+    e = self.disbursment.port.office.email rescue nil if e.blank?
+    e = self.user.email rescue nil if e.blank?
+    e = "accounts@monson.com.au" if e.blank?
+    e
   end
 
   def reference

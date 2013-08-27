@@ -68,6 +68,11 @@ namespace :monson do
             o.fax = r[3]
             o.save!
           end
+          email = r[4].split(' ')[0]
+          if o.email != email
+            o.email = email
+            o.save!
+          end
           r[5].split(',').each do |p|
             p = p.upcase.strip
             puts "Looking for #{p}"
