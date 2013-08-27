@@ -1,7 +1,7 @@
 <a class="btn btn-small<%= " disabled" unless disbursment.published? %>"
    <% if disbursment.published? %>
    title="Send a Link By Email"
-   href="mailto:<%= disbursment.company.email %>?subject=<%= URI.escape("#{disbursment.vessel_name} calling at #{disbursment.port.name}") %>&body=<%= URI.escape(<<BODY
+   href="mailto:<%= disbursment.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursment.vessel_name} calling at #{disbursment.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
 Please click on the link below to view the requested Proforma Disbursment Account for #{disbursment.vessel_name} calling at #{disbursment.port.name}.
 You can download a PDF file view of the estimate from this link (no log in required).
 
