@@ -1,4 +1,10 @@
 jQuery ->
+   refreshOddEven = () ->
+      $('tbody tr').removeClass('odd')
+      $('tbody tr').removeClass('even')
+      $('tbody tr').each (i, e) ->
+         cls = if ((i&1) == 0) then 'odd' else 'even'
+         $(e).addClass(cls)
    $('#sortable').sortable(
       axis: 'y'
       items: '.item'
@@ -18,5 +24,6 @@ jQuery ->
             dataType: 'json'
             data: data
          )
+         setTimeout(refreshOddEven, 10)
    )
    $('table.datatable').dataTable(sPaginationType: "bootstrap")
