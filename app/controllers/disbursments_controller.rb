@@ -267,18 +267,18 @@ class DisbursmentsController < ApplicationController
     # title and logo
     @pdf.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
-    @pdf.bounding_box([0, 720], width: 540, height: 100) do
+    @pdf.bounding_box([0, 720], width: 540, height: 160) do
       @pdf.text "#{ "DRAFT " if @disbursment.draft? }PROFORMA DISBURSMENT",
                 :size => 20, :style => :bold,
                 :align => :left, :valign => :center
-      @pdf.image logo_path, :width => 40,
+      @pdf.image logo_path, :width => 60,
                             :position => :right,
                             :vposition => :center
     end
   end
 
   def to_table
-    @pdf.bounding_box([0, 620], width: 270, height: 300) do
+    @pdf.bounding_box([0, 560], width: 270, height: 300) do
       @pdf.fill_color = '123123'
       data = [
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
@@ -300,7 +300,7 @@ class DisbursmentsController < ApplicationController
   end
 
   def from_table
-    @pdf.bounding_box([315, 620], width: 225, height: 300) do
+    @pdf.bounding_box([315, 560], width: 225, height: 300) do
       data = [
         ['<b>From</b>', "<b>#{@revision.data['office_name']||@revision.data['from_name']}</b>\n#{@revision.data['office_address1']||@revision.data['from_address1']}\n#{@revision.data['office_address2']||@revision.data['from_address2']}\n#{@revision.data['office_address3']}#{ "\n" unless @revision.data['office_address3'].blank? }#{@revision.email}"]
       ]
@@ -354,7 +354,7 @@ class DisbursmentsController < ApplicationController
     end
 
     # Draw the service table
-    @pdf.y = 400
+    @pdf.y = 340
     table = @pdf.make_table(services_data,
                cell_style: {border_widths: [0, 0, 0.1, 0],
                             inline_format: true,
