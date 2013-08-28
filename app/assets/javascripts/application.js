@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require jquery.cookie
 //= require jquery_ujs
 //= require format-currency
 //= require ace/ace
@@ -43,3 +44,5 @@
 //= require dataTables.currency
 //= require dataTables.bootstrap
 //= require compute
+//= require jstz
+//= require timezone
