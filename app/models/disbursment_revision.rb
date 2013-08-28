@@ -91,7 +91,7 @@ CTX
     c = self.disbursment.company.crystalize
     conf = Configuration.last.crystalize
     t = self.disbursment.terminal.crystalize(
-              p["fields"].values.map{|v|v.to_i}.max+1) rescue
+              (p["fields"].values.map{|v|v.to_i}.max||0)+1) rescue
         {
           "data" => {},
           "fields" => {},
