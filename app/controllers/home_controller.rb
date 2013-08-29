@@ -6,9 +6,9 @@ class HomeController < ApplicationController
     ports_ids = current_user.authorized_ports.pluck :id
     @published = Disbursment.where(
                     :status_cd => Disbursment.published,
-                    :port_id => ports_ids).order("updated_at DESC")
+                    :port_id => ports_ids).order("updated_at DESC").limit(10)
     @drafts = Disbursment.where(
                     :status_cd => Disbursment.draft,
-                    :port_id => ports_ids).order("updated_at DESC")
+                    :port_id => ports_ids).order("updated_at DESC").limit(10)
   end
 end
