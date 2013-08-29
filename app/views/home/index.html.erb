@@ -9,7 +9,8 @@
       <div class="well">
         <h3>Last 10 published Proforma Disbursments</h3>
         <% if @published.each do |p| %>
-          <%= link_to p.title, published_short_url(id: p.publication_id) %> published on <%= l p.updated_at %><br />
+          <% publisher = p.current_revision.user %>
+          <%= link_to p.title, published_short_url(id: p.publication_id) %> published on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %><br />
         <% end.empty? %>
           No published disbursments available.
         <% end %>
@@ -19,7 +20,8 @@
       <div class="well">
         <h3>Last 10 draft Proforma Disbursments</h3>
         <% if @drafts.each do |d| %>
-          <%= link_to d.title, edit_disbursment_url(d) %> last updated on <%= l d.updated_at %><br />
+          <% editor = d.current_revision.user %>
+          <%= link_to d.title, edit_disbursment_url(d) %> last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %><br />
         <% end.empty? %>
           No draft disbursments available.
         <% end %>
