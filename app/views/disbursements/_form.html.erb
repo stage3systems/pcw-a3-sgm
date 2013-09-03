@@ -178,7 +178,7 @@
       ctx.estimate.tugs_in = parseInt($("input#disbursement_revision_tugs_in").val()),
       ctx.estimate.tugs_out = parseInt($("input#disbursement_revision_tugs_out").val()),
       ctx.estimate.loadtime = parseInt($("input#disbursement_revision_loadtime").val()),
-      ctx.estimate.days_alongside = parseInt($("input#disbursement_revision_days_alongside").val())
+      ctx.estimate.days_alongside = parseFloat($("input#disbursement_revision_days_alongside").val())
       parseCodes(ctx);
       compute(ctx);
       var n = ctx.services.length,
