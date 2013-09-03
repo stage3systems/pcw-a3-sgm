@@ -19,15 +19,15 @@ ProformaDA::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   
-  resources :disbursments do
+  resources :disbursements do
     member do
       get 'publish'
       get 'unpublish'
       get 'print'
     end
   end
-  match 'proforma_disbursments/:id' => 'disbursments#published', :as => :published
-  match 'pfda/:id' => 'disbursments#published', :as => :published_short
+  match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published
+  match 'pfda/:id' => 'disbursements#published', :as => :published_short
 
   resources :ports do
     resources :terminals do

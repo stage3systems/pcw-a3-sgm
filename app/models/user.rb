@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
 
   has_many :services
   has_many :service_updates
-  has_many :disbursments
-  has_many :disbursment_revisions
+  has_many :disbursements
+  has_many :disbursement_revisions
   belongs_to :office
   attr_accessor :login
   # Setup accessible (or protected) attributes for your model

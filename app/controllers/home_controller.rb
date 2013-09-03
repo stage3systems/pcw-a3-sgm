@@ -4,11 +4,11 @@ class HomeController < ApplicationController
   add_breadcrumb "Dashboard", :root_url
   def index
     ports_ids = current_user.authorized_ports.pluck :id
-    @published = Disbursment.where(
-                    :status_cd => Disbursment.published,
+    @published = Disbursement.where(
+                    :status_cd => Disbursement.published,
                     :port_id => ports_ids).order("updated_at DESC").limit(10)
-    @drafts = Disbursment.where(
-                    :status_cd => Disbursment.draft,
+    @drafts = Disbursement.where(
+                    :status_cd => Disbursement.draft,
                     :port_id => ports_ids).order("updated_at DESC").limit(10)
   end
 end

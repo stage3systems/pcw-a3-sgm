@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DisbursmentsControllerTest < ActionController::TestCase
+class DisbursementsControllerTest < ActionController::TestCase
   setup do
     @port = ports(:newcastle)
     @vessel = vessels(:vesselone)
@@ -12,30 +12,30 @@ class DisbursmentsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test "logged users can list disbursments" do
+  test "logged users can list disbursements" do
     log_in :admin
     get :index
     assert_response :success
-    assert_not_nil assigns(:disbursments)
+    assert_not_nil assigns(:disbursements)
     log_out
     log_in :operator
     get :index
     assert_response :success
-    assert_not_nil assigns(:disbursments)
+    assert_not_nil assigns(:disbursements)
     log_out
   end
 
-  test "new disbursment" do
+  test "new disbursement" do
     log_in :admin
     get :new
     assert_response :success
-    post :create, disbursment: {
+    post :create, disbursement: {
       vessel_id: @vessel.id
     }
     assert_select 'form  div.alert-error', 'Please review the problems below:'
     assert_response :success
-    assert_difference('Disbursment.count') do
-      post :create, disbursment: {
+    assert_difference('Disbursement.count') do
+      post :create, disbursement: {
         port_id: @port.id,
         vessel_id: @vessel.id,
         company_id: @company.id

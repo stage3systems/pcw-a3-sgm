@@ -1,24 +1,24 @@
-class DisbursmentsController < ApplicationController
+class DisbursementsController < ApplicationController
   before_filter :authenticate_user!, :except => :published
-  add_breadcrumb "Proforma Disbursments", :disbursments_url
+  add_breadcrumb "Proforma Disbursements", :disbursements_url
   include ActionView::Helpers::NumberHelper
 
-  # GET /disbursments
-  # GET /disbursments.json
+  # GET /disbursements
+  # GET /disbursements.json
   def index
-    @disbursments = Disbursment.where(
-                      :status_cd => [Disbursment.published, Disbursment.draft],
+    @disbursements = Disbursement.where(
+                      :status_cd => [Disbursement.published, Disbursement.draft],
                       :port_id => current_user.authorized_ports.pluck(:id))
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @disbursments }
+      format.json { render json: @disbursements }
     end
   end
 
   def published
-    @disbursment = Disbursment.find_by_publication_id(params[:id])
-    @revision = @disbursment.current_revision rescue nil
+    @disbursement = Disbursement.find_by_publication_id(params[:id])
+    @revision = @disbursement.current_revision rescue nil
     respond_to do |format|
       format.html {
         @revision.increment! :anonymous_views if @revision and current_user.nil?
@@ -46,61 +46,61 @@ class DisbursmentsController < ApplicationController
   end
 
   def print
-    @disbursment = Disbursment.find(params[:id])
-    @revision = @disbursment.current_revision
+    @disbursement = Disbursement.find(params[:id])
+    @revision = @disbursement.current_revision
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     format_pdf
     send_data @pdf.render, type: "application/pdf",
-              filename: "#{@revision.reference}#{ " - DRAFT" if @disbursment.draft? }.pdf"
+              filename: "#{@revision.reference}#{ " - DRAFT" if @disbursement.draft? }.pdf"
   end
 
   def publish
-    @disbursment = Disbursment.find(params[:id])
-    @disbursment.publish
+    @disbursement = Disbursement.find(params[:id])
+    @disbursement.publish
 
     respond_to do |format|
-      format.html { redirect_to disbursments_path }
-      format.json { render json: @disbursment }
+      format.html { redirect_to disbursements_path }
+      format.json { render json: @disbursement }
     end
   end
 
   def unpublish
-    @disbursment = Disbursment.find(params[:id])
-    @disbursment.unpublish
+    @disbursement = Disbursement.find(params[:id])
+    @disbursement.unpublish
 
     respond_to do |format|
-      format.html { redirect_to disbursments_path}
-      format.json { render json: @disbursment }
+      format.html { redirect_to disbursements_path}
+      format.json { render json: @disbursement }
     end
   end
 
-  # GET /disbursments/1
-  # GET /disbursments/1.json
+  # GET /disbursements/1
+  # GET /disbursements/1.json
   def show
-    @disbursment = Disbursment.find(params[:id])
+    @disbursement = Disbursement.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @disbursment }
+      format.json { render json: @disbursement }
     end
   end
 
-  # GET /disbursments/new
-  # GET /disbursments/new.json
+  # GET /disbursements/new
+  # GET /disbursements/new.json
   def new
-    @disbursment = Disbursment.new
+    @disbursement = Disbursement.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @disbursment }
+      format.json { render json: @disbursement }
     end
   end
 
-  # GET /disbursments/1/edit
+  # GET /disbursements/1/edit
   def edit
-    @disbursment = Disbursment.find(params[:id])
-    @revision = @disbursment.current_revision
+    @disbursement = Disbursement.find(params[:id])
+    @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.where{
                      subsubtype.in ['COKING COAL',
@@ -111,14 +111,14 @@ class DisbursmentsController < ApplicationController
                     #(subtype.eq 'GRAIN / FEED')}
   end
 
-  # POST /disbursments
+  # POST /disbursements
   def create
-    @disbursment = Disbursment.new(params[:disbursment])
-    @disbursment.user = current_user
+    @disbursement = Disbursement.new(params[:disbursement])
+    @disbursement.user = current_user
 
     respond_to do |format|
-      if @disbursment.save
-        format.html { redirect_to edit_disbursment_url(@disbursment) }
+      if @disbursement.save
+        format.html { redirect_to edit_disbursement_url(@disbursement) }
       else
         format.html { render action: "new" }
       end
@@ -126,40 +126,40 @@ class DisbursmentsController < ApplicationController
   end
 
 
-  # PUT /disbursments/1
-  # PUT /disbursments/1.json
+  # PUT /disbursements/1
+  # PUT /disbursements/1.json
   def update
-    @disbursment = Disbursment.find(params[:id])
-    if @disbursment.current_revision.number == 0
-      @revision = @disbursment.current_revision
+    @disbursement = Disbursement.find(params[:id])
+    if @disbursement.current_revision.number == 0
+      @revision = @disbursement.current_revision
       @revision.number = 1
     else
-      @revision = @disbursment.next_revision
+      @revision = @disbursement.next_revision
     end
     respond_to do |format|
       if save_revision
-        format.html { redirect_to disbursments_url, notice: 'Disbursment was successfully updated.' }
+        format.html { redirect_to disbursements_url, notice: 'Disbursement was successfully updated.' }
       else
         format.html { render action: "edit" }
       end
     end
   end
 
-  # DELETE /disbursments/1
-  # DELETE /disbursments/1.json
+  # DELETE /disbursements/1
+  # DELETE /disbursements/1.json
   def destroy
-    @disbursment = Disbursment.find(params[:id])
-    @disbursment.delete
+    @disbursement = Disbursement.find(params[:id])
+    @disbursement.delete
 
     respond_to do |format|
-      format.html { redirect_to disbursments_url }
+      format.html { redirect_to disbursements_url }
       format.json { head :no_content }
     end
   end
 
   private
   def save_revision
-    if not @revision.update_attributes(params[:disbursment_revision])
+    if not @revision.update_attributes(params[:disbursement_revision])
       return false
     end
     # handle extra items
@@ -268,7 +268,7 @@ class DisbursmentsController < ApplicationController
     @pdf.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
     @pdf.bounding_box([0, 720], width: 540, height: 160) do
-      @pdf.text "#{ "DRAFT " if @disbursment.draft? }PROFORMA DISBURSMENT",
+      @pdf.text "#{ "DRAFT " if @disbursement.draft? }PROFORMA DISBURSEMENT",
                 :size => 20, :style => :bold,
                 :align => :left, :valign => :center
       @pdf.image logo_path, :width => 60,
@@ -284,8 +284,8 @@ class DisbursmentsController < ApplicationController
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
-        ['<b>Vessel<b>', "#{@disbursment.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
-        ['<b>Port</b>', @disbursment.port.name],
+        ['<b>Vessel<b>', "#{@disbursement.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
+        ['<b>Port</b>', @disbursement.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.subsubtype rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
         ['<b>Load Time</b>', "#{@revision.loadtime} hours"],
@@ -422,7 +422,7 @@ Please remit funds at least two (2) days prior to vessels arrival to the followi
 <b>BSB Number: #{@revision.data['bsb_number']}</b>
 <b>A/C Number: #{@revision.data['ac_number']}</b>
 <b>A/C Name: #{@revision.data['ac_name']}</b>
-<b>Reference: #{@disbursment.vessel_name}</b>
+<b>Reference: #{@disbursement.vessel_name}</b>
 
 Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.
 
@@ -470,14 +470,14 @@ TXT
     r += 2
 
     # draw subtitle
-    sheet.row(r).push "ESTIMATED DISBURSMENTS FOR #{@disbursment.port.name.upcase}"
+    sheet.row(r).push "ESTIMATED DISBURSEMENTS FOR #{@disbursement.port.name.upcase}"
     sheet.row(r).default_format = subtitle
     sheet.row(r).height = 18
     sheet.merge_cells(r, 0, r, 3)
     r += 2
 
     # draw vessel info
-    sheet.row(r).push "Vessel", @disbursment.vessel_name
+    sheet.row(r).push "Vessel", @disbursement.vessel_name
     sheet.row(r).set_format(0, head_left)
     r += 1
     sheet.row(r).push "ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"

@@ -1,29 +1,29 @@
 <div class="container-fluid">
   <h2 class="title">
     Dashboard
-    <%= link_to 'New PFDA', new_disbursment_path,
+    <%= link_to 'New PFDA', new_disbursement_path,
                 :class => 'btn btn-primary btn-small' %>
   </h2>
   <div class="row-fluid">
     <div class="span6">
       <div class="well">
-        <h3>Last 10 published Proforma Disbursments</h3>
+        <h3>Last 10 published Proforma Disbursements</h3>
         <% if @published.each do |p| %>
           <% publisher = p.current_revision.user %>
           <%= link_to p.title, published_short_url(id: p.publication_id) %> published on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %><br />
         <% end.empty? %>
-          No published disbursments available.
+          No published disbursements available.
         <% end %>
       </div>
     </div>
     <div class="span6">
       <div class="well">
-        <h3>Last 10 draft Proforma Disbursments</h3>
+        <h3>Last 10 draft Proforma Disbursements</h3>
         <% if @drafts.each do |d| %>
           <% editor = d.current_revision.user %>
-          <%= link_to d.title, edit_disbursment_url(d) %> last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %><br />
+          <%= link_to d.title, edit_disbursement_url(d) %> last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %><br />
         <% end.empty? %>
-          No draft disbursments available.
+          No draft disbursements available.
         <% end %>
       </div>
     </div>

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DisbursmentRevisionTest < ActiveSupport::TestCase
+class DisbursementRevisionTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

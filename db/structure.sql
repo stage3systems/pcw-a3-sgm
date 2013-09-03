@@ -183,12 +183,12 @@ ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
 
 
 --
--- Name: disbursment_revisions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursement_revisions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE disbursment_revisions (
+CREATE TABLE disbursement_revisions (
     id integer NOT NULL,
-    disbursment_id integer,
+    disbursement_id integer,
     data hstore,
     fields hstore,
     descriptions hstore,
@@ -218,10 +218,10 @@ CREATE TABLE disbursment_revisions (
 
 
 --
--- Name: disbursment_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: disbursement_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE disbursment_revisions_id_seq
+CREATE SEQUENCE disbursement_revisions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -230,17 +230,17 @@ CREATE SEQUENCE disbursment_revisions_id_seq
 
 
 --
--- Name: disbursment_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: disbursement_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE disbursment_revisions_id_seq OWNED BY disbursment_revisions.id;
+ALTER SEQUENCE disbursement_revisions_id_seq OWNED BY disbursement_revisions.id;
 
 
 --
--- Name: disbursments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursements; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE disbursments (
+CREATE TABLE disbursements (
     id integer NOT NULL,
     port_id integer,
     vessel_id integer,
@@ -260,10 +260,10 @@ CREATE TABLE disbursments (
 
 
 --
--- Name: disbursments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: disbursements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE disbursments_id_seq
+CREATE SEQUENCE disbursements_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -272,10 +272,10 @@ CREATE SEQUENCE disbursments_id_seq
 
 
 --
--- Name: disbursments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: disbursements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE disbursments_id_seq OWNED BY disbursments.id;
+ALTER SEQUENCE disbursements_id_seq OWNED BY disbursements.id;
 
 
 --
@@ -725,14 +725,14 @@ ALTER TABLE ONLY currencies ALTER COLUMN id SET DEFAULT nextval('currencies_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY disbursment_revisions ALTER COLUMN id SET DEFAULT nextval('disbursment_revisions_id_seq'::regclass);
+ALTER TABLE ONLY disbursement_revisions ALTER COLUMN id SET DEFAULT nextval('disbursement_revisions_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY disbursments ALTER COLUMN id SET DEFAULT nextval('disbursments_id_seq'::regclass);
+ALTER TABLE ONLY disbursements ALTER COLUMN id SET DEFAULT nextval('disbursements_id_seq'::regclass);
 
 
 --
@@ -845,19 +845,19 @@ ALTER TABLE ONLY currencies
 
 
 --
--- Name: disbursment_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursement_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY disbursment_revisions
-    ADD CONSTRAINT disbursment_revisions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY disbursement_revisions
+    ADD CONSTRAINT disbursement_revisions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: disbursments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY disbursments
-    ADD CONSTRAINT disbursments_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY disbursements
+    ADD CONSTRAINT disbursements_pkey PRIMARY KEY (id);
 
 
 --
@@ -1069,3 +1069,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130801165242');
 INSERT INTO schema_migrations (version) VALUES ('20130823103547');
 
 INSERT INTO schema_migrations (version) VALUES ('20130827065522');
+
+INSERT INTO schema_migrations (version) VALUES ('20130903120110');

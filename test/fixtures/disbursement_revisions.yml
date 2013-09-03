@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 revisionone:
-  disbursment: draft
+  disbursement: draft
   data: 
   fields: 
   descriptions: 
@@ -18,7 +18,7 @@ revisionone:
   reference: reference1
 
 revisiontwo:
-  disbursment: published
+  disbursement: published
   data: 
   fields: 
   descriptions: 

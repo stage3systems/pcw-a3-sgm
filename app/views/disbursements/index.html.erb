@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h2 class="title">
-    Proforma Disbursments
-    <%= link_to 'New PFDA', new_disbursment_path,
+    Proforma Disbursements
+    <%= link_to 'New PFDA', new_disbursement_path,
                 :class => 'btn btn-primary btn-small' %>
   </h2>
 
@@ -24,52 +24,52 @@
       </tr>
     </thead>
     <tbody>
-      <% @disbursments.each do |disbursment| %>
+      <% @disbursements.each do |disbursement| %>
       <tr>
         <td>
-          <% if disbursment.draft? %>
-            <%= link_to disbursment.current_revision.reference,
-                        edit_disbursment_path(disbursment) %>
+          <% if disbursement.draft? %>
+            <%= link_to disbursement.current_revision.reference,
+                        edit_disbursement_path(disbursement) %>
           <% else %>
-            <%= link_to disbursment.current_revision.reference,
+            <%= link_to disbursement.current_revision.reference,
                         published_short_url(
-                          :id => disbursment.publication_id) %>
+                          :id => disbursement.publication_id) %>
           <% end %>
         </td>
-        <td class="eta"><%= l(disbursment.current_revision.eta) rescue "N/A" %></td>
-        <td><%= disbursment.port.name %></td>
-        <td><%= disbursment.company.name %></td>
-        <td><%= disbursment.vessel_name %></td>
-        <td class="right-align"><%= number_to_currency disbursment.current_revision.amount, unit: "" %></td>
-        <td><%= disbursment.current_revision.data['currency_code'] %></td>
-        <td><%= l disbursment.current_revision.updated_at %></td>
-        <td class="right-align"><%= disbursment.current_revision.number %></td>
-        <td class="align-right"><%= disbursment.current_revision.anonymous_views %></td>
-        <td class="align-right"><%= disbursment.current_revision.pdf_views %></td>
-        <td id="pfda_<%= disbursment.id %>">
+        <td class="eta"><%= l(disbursement.current_revision.eta) rescue "N/A" %></td>
+        <td><%= disbursement.port.name %></td>
+        <td><%= disbursement.company.name %></td>
+        <td><%= disbursement.vessel_name %></td>
+        <td class="right-align"><%= number_to_currency disbursement.current_revision.amount, unit: "" %></td>
+        <td><%= disbursement.current_revision.data['currency_code'] %></td>
+        <td><%= l disbursement.current_revision.updated_at %></td>
+        <td class="right-align"><%= disbursement.current_revision.number %></td>
+        <td class="align-right"><%= disbursement.current_revision.anonymous_views %></td>
+        <td class="align-right"><%= disbursement.current_revision.pdf_views %></td>
+        <td id="pfda_<%= disbursement.id %>">
           <%= select_tag "status",
                          ("<option value=\"publish\""+
-                          "#{" selected" if disbursment.published?}"+
+                          "#{" selected" if disbursement.published?}"+
                           ">Sent (Published)</option>"+
                           "<option value=\"unpublish\""+
-                          "#{" selected" if disbursment.draft?}"+
+                          "#{" selected" if disbursement.draft?}"+
                           " >Draft</option>").html_safe,
                         style: "width: 160px;",
-                        class: "#{ disbursment.published? ? "published" : "private" }"
+                        class: "#{ disbursement.published? ? "published" : "private" }"
           %>
         </td>
         <td>
           <div class="btn-group">
             <%= render "common/mailto_pfda",
-                       disbursment: disbursment,
+                       disbursement: disbursement,
                        config: Configuration.last %>
-            <%= link_to icon(:pencil), edit_disbursment_path(disbursment),
+            <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
                         :class => 'btn btn-small',
                         :title => 'Revise' %>
-            <%= link_to icon(:print), print_disbursment_path(disbursment),
+            <%= link_to icon(:print), print_disbursement_path(disbursement),
                         :class => 'btn btn-small',
                         :title => 'Print' %>
-            <%= link_to icon(:trash), disbursment, method: :delete,
+            <%= link_to icon(:trash), disbursement, method: :delete,
                         data: { confirm: 'Are you sure?' },
                         :class => 'btn btn-danger btn-small',
                         :title => 'Delete' %>
@@ -90,7 +90,7 @@
   var setupListeners = function() {
     $("select#status").on("change", function() {
       var id = $(this).parent().attr("id").split("_")[1];
-      window.location = "/disbursments/"+id+"/"+$(this).val();
+      window.location = "/disbursements/"+id+"/"+$(this).val();
     });
   };
   $("table.table").bind('draw', setupListeners);

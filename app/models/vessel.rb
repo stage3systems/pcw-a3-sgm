@@ -2,7 +2,7 @@ class Vessel < ActiveRecord::Base
   default_scope order('name ASC')
   attr_accessible :dwt, :grt, :loa, :name, :nrt
   validates_presence_of :dwt, :grt, :loa, :name, :nrt
-  has_many :disbursments
+  has_many :disbursements
 
   def crystalize
     {

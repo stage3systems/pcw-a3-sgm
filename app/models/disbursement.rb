@@ -1,4 +1,4 @@
-class Disbursment < ActiveRecord::Base
+class Disbursement < ActiveRecord::Base
   default_scope conditions: "status_cd != 2"
   attr_accessor :tbn_template
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
@@ -10,7 +10,7 @@ class Disbursment < ActiveRecord::Base
   belongs_to :vessel
   belongs_to :company
   belongs_to :user
-  has_many :disbursment_revisions,
+  has_many :disbursement_revisions,
            :dependent => :destroy,
            :order => 'number ASC'
   validates_presence_of :port_id
@@ -31,7 +31,7 @@ class Disbursment < ActiveRecord::Base
   end
 
   def current_revision
-    self.disbursment_revisions.last
+    self.disbursement_revisions.last
   end
 
   def publish
@@ -73,7 +73,7 @@ class Disbursment < ActiveRecord::Base
 
   def next_revision
     cur = self.current_revision
-    nxt = DisbursmentRevision.new(disbursment_id: self.id)
+    nxt = DisbursementRevision.new(disbursement_id: self.id)
     nxt.number = cur.number+1
     # copy the current revision parameters
     ["cargo_qty", "days_alongside", "loadtime", "eta",
@@ -108,7 +108,7 @@ class Disbursment < ActiveRecord::Base
   end
 
   def create_initial_revision
-    dr = DisbursmentRevision.new(disbursment_id: self.id)
+    dr = DisbursementRevision.new(disbursement_id: self.id)
     dr.number = 0
     dr.crystalize
     dr.compute

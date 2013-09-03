@@ -8,7 +8,7 @@ class CompaniesController < ApplicationController
     @companies = Company.all
     @can_delete = {}
     @companies.each do |c|
-      @can_delete[c.id] = c.disbursments.count == 0
+      @can_delete[c.id] = c.disbursements.count == 0
     end
 
     respond_to do |format|

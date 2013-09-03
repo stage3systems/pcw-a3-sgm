@@ -1,4 +1,4 @@
-<%= simple_form_for(@disbursment, html: {class: "form-horizontal"}) do |f| %>
+<%= simple_form_for(@disbursement, html: {class: "form-horizontal"}) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -26,34 +26,34 @@
 <% end %>
 <script type="text/javascript">
   var updateFields = function() {
-    if ($("input#disbursment_tbn").is(':checked')) {
+    if ($("input#disbursement_tbn").is(':checked')) {
      $("div.tbn_fields").show();
-     $("select#disbursment_vessel_id").attr("disabled", "disabled");
+     $("select#disbursement_vessel_id").attr("disabled", "disabled");
     } else {
      $("div.tbn_fields").hide();
-     $("select#disbursment_vessel_id").removeAttr("disabled");
+     $("select#disbursement_vessel_id").removeAttr("disabled");
     }
   };
-  $("input#disbursment_tbn").on("change", updateFields);
+  $("input#disbursement_tbn").on("change", updateFields);
   var updateTerminals = function() {
-    var portId = $("select#disbursment_port_id").val();
+    var portId = $("select#disbursement_port_id").val();
     if (portId == "") {
-      $("select#disbursment_terminal_id").find("option").remove();
+      $("select#disbursement_terminal_id").find("option").remove();
       return;
     }
     $.ajax('/ports/'+portId+'/terminals.json', {
       type: 'GET',
       dataType: 'json',
       success: function(d) {
-        $("select#disbursment_terminal_id").find("option").remove();
-        $("select#disbursment_terminal_id").append('<option value></option>');
+        $("select#disbursement_terminal_id").find("option").remove();
+        $("select#disbursement_terminal_id").append('<option value></option>');
         $.each(d, function(i, e) {
-          $("select#disbursment_terminal_id").append('<option value="' + e.id + '">' + e.name + '</option>');
+          $("select#disbursement_terminal_id").append('<option value="' + e.id + '">' + e.name + '</option>');
         })
       }
     });
   }
-  $("select#disbursment_port_id").on("change", updateTerminals);
+  $("select#disbursement_port_id").on("change", updateTerminals);
   var TBNTemplates = {
     'VLOC CAPESIZE': {
       grt: 112000,
@@ -92,11 +92,11 @@
       loa: 183
     }
   };
-  $("select#disbursment_tbn_template").on("change", function() {
+  $("select#disbursement_tbn_template").on("change", function() {
     var template = TBNTemplates[$(this).val()];
     if (!template) return;
     $.each(['grt', 'nrt', 'dwt', 'loa'], function(i, e) {
-      $("input#disbursment_"+e).val(template[e]);
+      $("input#disbursement_"+e).val(template[e]);
     });
   });
   updateFields();

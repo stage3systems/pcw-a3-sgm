@@ -1,11 +1,11 @@
-<a class="btn btn-small<%= " disabled" unless disbursment.published? %>"
-   <% if disbursment.published? %>
+<a class="btn btn-small<%= " disabled" unless disbursement.published? %>"
+   <% if disbursement.published? %>
    title="Send a Link By Email"
-   href="mailto:<%= disbursment.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursment.vessel_name} calling at #{disbursment.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
-Please click on the link below to view the requested Proforma Disbursment Account for #{disbursment.vessel_name} calling at #{disbursment.port.name}.
+   href="mailto:<%= disbursement.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursement.vessel_name} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
+Please click on the link below to view the requested Proforma Disbursement Account for #{disbursement.vessel_name} calling at #{disbursement.port.name}.
 You can download a PDF file view of the estimate from this link (no log in required).
 
-#{published_short_url(disbursment.publication_id)}
+#{published_short_url(disbursement.publication_id)}
 
 Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:
 
@@ -23,11 +23,11 @@ Download the full Terms and Conditions:
 
 For enquires relating to this Estimate please contact our local Port Office:
 
-#{disbursment.port.office.name rescue config.company_name}
-#{disbursment.port.office.address_1 rescue config.company_address1}
-#{disbursment.port.office.address_2 rescue config.company_address2}
-#{disbursment.port.office.address_3 rescue ""}
-#{disbursment.port.office.email rescue "accounts@monson.com.au"}
+#{disbursement.port.office.name rescue config.company_name}
+#{disbursement.port.office.address_1 rescue config.company_address1}
+#{disbursement.port.office.address_2 rescue config.company_address2}
+#{disbursement.port.office.address_3 rescue ""}
+#{disbursement.port.office.email rescue "accounts@monson.com.au"}
 
 BODY
 )

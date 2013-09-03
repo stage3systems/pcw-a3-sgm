@@ -1,4 +1,4 @@
-<%= simple_form_for(@revision, url: disbursment_url(@disbursment),
+<%= simple_form_for(@revision, url: disbursement_url(@disbursement),
                     method: :put, html: {class: "form-horizontal"}) do |f| %>
   <%= f.error_notification %>
 
@@ -61,7 +61,7 @@
     <h4>Services</h4>
     <div class="overriden">
     </div>
-    <table class="disbursment table table-bordered table-condensed">
+    <table class="disbursement table table-bordered table-condensed">
       <thead>
         <tr>
           <th>Name</th>
@@ -118,11 +118,11 @@
     <%= f.submit "Save PFDA", class: "btn btn-primary" %>
     <% if @revision.number == 0 %>
     <%= link_to "Cancel",
-                @disbursment,
+                @disbursement,
                 method: :delete,
                 class: "btn" %>
     <% else %>
-    <%= link_to "Cancel", disbursments_path, class: "btn" %>
+    <%= link_to "Cancel", disbursements_path, class: "btn" %>
     <% end %>
     </div>
   </div>
@@ -173,12 +173,12 @@
 <%= @revision.context.html_safe %>
     window.getCtx = function() { return ctx; };
     var update = function() {
-      ctx.estimate.eta = new Date($("input#disbursment_revision_eta").val());
-      ctx.estimate.cargo_qty = parseInt($("input#disbursment_revision_cargo_qty").val());
-      ctx.estimate.tugs_in = parseInt($("input#disbursment_revision_tugs_in").val()),
-      ctx.estimate.tugs_out = parseInt($("input#disbursment_revision_tugs_out").val()),
-      ctx.estimate.loadtime = parseInt($("input#disbursment_revision_loadtime").val()),
-      ctx.estimate.days_alongside = parseInt($("input#disbursment_revision_days_alongside").val())
+      ctx.estimate.eta = new Date($("input#disbursement_revision_eta").val());
+      ctx.estimate.cargo_qty = parseInt($("input#disbursement_revision_cargo_qty").val());
+      ctx.estimate.tugs_in = parseInt($("input#disbursement_revision_tugs_in").val()),
+      ctx.estimate.tugs_out = parseInt($("input#disbursement_revision_tugs_out").val()),
+      ctx.estimate.loadtime = parseInt($("input#disbursement_revision_loadtime").val()),
+      ctx.estimate.days_alongside = parseInt($("input#disbursement_revision_days_alongside").val())
       parseCodes(ctx);
       compute(ctx);
       var n = ctx.services.length,
@@ -211,13 +211,13 @@
       $("a.editable_value").removeClass("editable-unsaved");
       update();
     };
-    $("input#disbursment_revision_cargo_qty").on("change", cleanCompute);
-    $("input#disbursment_revision_tugs_in").on("change", cleanCompute);
-    $("input#disbursment_revision_tugs_out").on("change", cleanCompute);
-    $("input#disbursment_revision_loadtime").on("change", cleanCompute);
-    $("input#disbursment_revision_days_alongside").on("change", cleanCompute);
+    $("input#disbursement_revision_cargo_qty").on("change", cleanCompute);
+    $("input#disbursement_revision_tugs_in").on("change", cleanCompute);
+    $("input#disbursement_revision_tugs_out").on("change", cleanCompute);
+    $("input#disbursement_revision_loadtime").on("change", cleanCompute);
+    $("input#disbursement_revision_days_alongside").on("change", cleanCompute);
     var handleTaxExempt = function() {
-      var taxExempt = $("input#disbursment_revision_tax_exempt").is(':checked');
+      var taxExempt = $("input#disbursement_revision_tax_exempt").is(':checked');
       if (taxExempt) {
         $(".tax").hide();
       } else {
@@ -225,9 +225,9 @@
       }
       update();
     };
-    $("input#disbursment_revision_tax_exempt").on('change', handleTaxExempt);
-    $("select#disbursment_revision_cargo_type_id").on('change', function() {
-        var ctId = $("select#disbursment_revision_cargo_type_id").val();
+    $("input#disbursement_revision_tax_exempt").on('change', handleTaxExempt);
+    $("select#disbursement_revision_cargo_type_id").on('change', function() {
+        var ctId = $("select#disbursement_revision_cargo_type_id").val();
         var cargoType = cargoTypes[ctId];
         if (cargoType) {
           ctx.cargo_type.type = cargoType.maintype;
@@ -249,7 +249,7 @@
           ctx.compulsory[key] = false;
           ctx.computed[key] = "0";
           ctx.overriden[key] = "0";
-          $("table.disbursment tbody").append(
+          $("table.disbursement tbody").append(
               '<tr class="service" id="service_'+key+'">'
                +'<th>'+item+'&nbsp;<i class="icon-remove-circle" '
                                     +'onclick="removeExtra(\''+key+'\')"></i>'
@@ -302,11 +302,11 @@
     handleTaxExempt();
     $("input#eta_picker").datepicker({
       dateFormat: "dd M yy",
-      altField: "input#disbursment_revision_eta",
+      altField: "input#disbursement_revision_eta",
       altFormat: "yy-mm-dd"
     })
     $("input#eta_picker").datepicker(
-      "setDate", new Date($("input#disbursment_revision_eta").val()));
+      "setDate", new Date($("input#disbursement_revision_eta").val()));
     $("input#eta_picker").on("change", update);
   });
 </script>

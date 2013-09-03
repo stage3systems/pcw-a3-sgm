@@ -3,7 +3,7 @@ class Terminal < ActiveRecord::Base
   belongs_to :port
   has_many :services, :order => 'row_order ASC'
   has_many :tariffs
-  has_many :disbursments
+  has_many :disbursements
 
   def crystalize(offset=0)
     d = {

@@ -9,7 +9,7 @@ class VesselsController < ApplicationController
     @vessels = Vessel.all
     @can_delete = {}
     @vessels.each do |v|
-      @can_delete[v.id] = v.disbursments.count == 0
+      @can_delete[v.id] = v.disbursements.count == 0
     end
 
     respond_to do |format|

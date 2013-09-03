@@ -1,6 +1,6 @@
-class DisbursmentRevision < ActiveRecord::Base
+class DisbursementRevision < ActiveRecord::Base
   attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
-                  :disbursment_id, :fields, :loadtime, :number, :reference,
+                  :disbursement_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
                   :cargo_type_id, :comments, :eta, :compulsory, :disabled,
                   :overriden, :user_id, :anonymous_views, :pdf_views
@@ -14,7 +14,7 @@ class DisbursmentRevision < ActiveRecord::Base
   serialize :overriden, ActiveRecord::Coders::Hstore
   serialize :values, ActiveRecord::Coders::Hstore
   serialize :values_with_tax, ActiveRecord::Coders::Hstore
-  belongs_to :disbursment
+  belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user
 
@@ -85,12 +85,12 @@ CTX
   end
 
   def crystalize
-    p = self.disbursment.port.crystalize
-    o = self.disbursment.port.office.crystalize rescue {}
-    v = self.disbursment.crystalize_vessel
-    c = self.disbursment.company.crystalize
+    p = self.disbursement.port.crystalize
+    o = self.disbursement.port.office.crystalize rescue {}
+    v = self.disbursement.crystalize_vessel
+    c = self.disbursement.company.crystalize
     conf = Configuration.last.crystalize
-    t = self.disbursment.terminal.crystalize(
+    t = self.disbursement.terminal.crystalize(
               (p["fields"].values.map{|v|v.to_i}.max||0)+1) rescue
         {
           "data" => {},
@@ -113,11 +113,11 @@ CTX
   end
 
   def previous
-    self.disbursment.disbursment_revisions.where(:number => self.number-1).first
+    self.disbursement.disbursement_revisions.where(:number => self.number-1).first
   end
 
   def next
-    self.disbursment.disbursment_revisions.where(:number => self.number+1).first
+    self.disbursement.disbursement_revisions.where(:number => self.number+1).first
   end
 
   def currency_symbol
@@ -130,7 +130,7 @@ CTX
 
   def email
     e = self.data['office_email']
-    e = self.disbursment.port.office.email rescue nil if e.blank?
+    e = self.disbursement.port.office.email rescue nil if e.blank?
     e = self.user.email rescue nil if e.blank?
     e = "accounts@monson.com.au" if e.blank?
     e

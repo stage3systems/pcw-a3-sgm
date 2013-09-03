@@ -1,14 +1,14 @@
 require 'test_helper'
 
-class DisbursmentTest < ActiveSupport::TestCase
+class DisbursementTest < ActiveSupport::TestCase
   def setup
     @newcastle = ports(:newcastle)
     @brisbane = ports(:brisbane)
     @stage3 = companies(:stage3)
   end
 
-  def disbursment(port)
-    d = Disbursment.new
+  def disbursement(port)
+    d = Disbursement.new
     d.port = port
     d.company = @stage3
     d.tbn = true
@@ -20,7 +20,7 @@ class DisbursmentTest < ActiveSupport::TestCase
   end
 
   test "first revision is automatically created" do
-    d = self.disbursment(@newcastle)
+    d = self.disbursement(@newcastle)
     assert d.save
     assert_not_nil d.current_revision
     assert d.current_revision.number == 0
@@ -28,14 +28,14 @@ class DisbursmentTest < ActiveSupport::TestCase
   end
 
   test "the first revision totals are computed" do
-    d = self.disbursment(@brisbane)
+    d = self.disbursement(@brisbane)
     assert d.save
     assert d.current_revision.data["total"] == "3000.00"
     assert d.current_revision.data["total_with_tax"] == "3300.00"
   end
 
   test "the context is taken into account" do
-    d = self.disbursment(@brisbane)
+    d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
     r.tugs_in = 2
@@ -49,7 +49,7 @@ class DisbursmentTest < ActiveSupport::TestCase
   end
 
   test "computed values can be overriden" do
-    d = self.disbursment(@brisbane)
+    d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
     r.overriden['MNL'] = "12000.00";
@@ -59,7 +59,7 @@ class DisbursmentTest < ActiveSupport::TestCase
   end
 
   test "overriden values are persisted across revisions" do
-    d = self.disbursment(@brisbane)
+    d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
     r.overriden['MNL'] = "12000.00";
@@ -86,7 +86,7 @@ class DisbursmentTest < ActiveSupport::TestCase
   end
 
   test "disabled fields are ignored only when not compulsory" do
-    d = self.disbursment(@brisbane)
+    d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
     # add a custom field

@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def configuration_tab?
-    not ["home", "disbursments"].member? controller_name
+    not ["home", "disbursements"].member? controller_name
   end
 
   def configuration_url

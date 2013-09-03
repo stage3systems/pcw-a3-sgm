@@ -1,7 +1,7 @@
 # encoding: utf-8
 class CargoType < ActiveRecord::Base
   attr_accessible :maintype, :remote_id, :subsubsubtype, :subsubtype, :subtype
-  has_many :disbursment_revisions
+  has_many :disbursement_revisions
 
   def display
     fn = self.maintype
