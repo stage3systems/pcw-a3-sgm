@@ -106,7 +106,8 @@ class DisbursementsController < ApplicationController
                      subsubtype.in ['COKING COAL',
                                     'STEAMING COAL',
                                     'IRON ORE',
-                                    'ALUMINA'] }
+                                    'ALUMINA',
+                                    'CAUSTIC SODA'] }
                     # grain support disabled for now
                     #(subtype.eq 'GRAIN / FEED')}
   end
