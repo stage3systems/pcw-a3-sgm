@@ -3,7 +3,8 @@ class DisbursementRevision < ActiveRecord::Base
                   :disbursement_id, :fields, :loadtime, :number, :reference,
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
                   :cargo_type_id, :comments, :eta, :compulsory, :disabled,
-                  :overriden, :user_id, :anonymous_views, :pdf_views
+                  :overriden, :user_id, :anonymous_views, :pdf_views,
+                  :voyage_number
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore

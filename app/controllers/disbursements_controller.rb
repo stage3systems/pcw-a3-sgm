@@ -284,7 +284,14 @@ class DisbursementsController < ApplicationController
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
-        ['<b>Vessel<b>', "#{@disbursement.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"],
+        ['<b>Vessel<b>', "#{@disbursement.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"]
+      ]
+      unless @revision.voyage_number.empty?
+        data += [
+          ['<b>Voyage Number</b>', @revision.voyage_number]
+        ]
+      end
+      data += [
         ['<b>Port</b>', @disbursement.port.name],
         ['<b>Cargo Type</b>', (@revision.cargo_type.subsubtype rescue "N/A")],
         ['<b>Cargo Quantity</b>', @revision.cargo_qty],
@@ -480,6 +487,11 @@ TXT
     sheet.row(r).push "Vessel", @disbursement.vessel_name
     sheet.row(r).set_format(0, head_left)
     r += 1
+    unless @revision.voyage_number.empty?
+      sheet.row(r).push "Voyage Number", @revision.voyage_number
+      sheet.row(r).set_format(0, head_left)
+      r += 1
+    end
     sheet.row(r).push "ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"
     sheet.row(r).set_format(0, head_left)
     r += 1

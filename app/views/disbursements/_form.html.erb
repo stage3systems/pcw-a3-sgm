@@ -41,6 +41,7 @@
       </table>
     </div>
     <div class="span4">
+    <%= f.input :voyage_number, label: 'Voyage Number' %>
     <%= f.input :eta, label: 'ETA', as: :hidden %>
     <%= f.input :eta_picker, label: 'ETA', as: :fake %>
     <%= f.association :cargo_type,
@@ -48,10 +49,10 @@
                       collection: @cargo_types,
                       label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
-    <%= f.input :loadtime, label: "Load Time (Hours)" %>
-    <%= f.input :days_alongside, label: "Days Alongside" %>
     </div>
     <div class="span4">
+    <%= f.input :loadtime, label: "Load Time (Hours)" %>
+    <%= f.input :days_alongside, label: "Days Alongside" %>
     <%= f.input :tugs_in, label: "Tugs In" %>
     <%= f.input :tugs_out, label: "Tugs Out" %>
     <%= f.input :tax_exempt, label: "Tax Exempt" %>

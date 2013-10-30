@@ -213,7 +213,8 @@ CREATE TABLE disbursement_revisions (
     disabled hstore,
     user_id integer,
     anonymous_views integer DEFAULT 0,
-    pdf_views integer DEFAULT 0
+    pdf_views integer DEFAULT 0,
+    voyage_number character varying(255)
 );
 
 
@@ -1071,3 +1072,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130823103547');
 INSERT INTO schema_migrations (version) VALUES ('20130827065522');
 
 INSERT INTO schema_migrations (version) VALUES ('20130903120110');
+
+INSERT INTO schema_migrations (version) VALUES ('20131030073037');
