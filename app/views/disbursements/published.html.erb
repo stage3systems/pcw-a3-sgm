@@ -62,7 +62,7 @@
                           LOA: <%= @revision.data["vessel_loa"] %>)</small>
                 </td>
               </tr>
-              <% unless @revision.voyage_number.empty? %>
+              <% unless @revision.voyage_number.blank? %>
               <tr>
                 <th>Voyage Number</th>
                 <td>

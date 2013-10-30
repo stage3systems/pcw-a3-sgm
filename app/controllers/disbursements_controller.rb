@@ -287,7 +287,7 @@ class DisbursementsController < ApplicationController
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
         ['<b>Vessel<b>', "#{@disbursement.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"]
       ]
-      unless @revision.voyage_number.empty?
+      unless @revision.voyage_number.blank?
         data += [
           ['<b>Voyage Number</b>', @revision.voyage_number]
         ]
@@ -488,7 +488,7 @@ TXT
     sheet.row(r).push "Vessel", @disbursement.vessel_name
     sheet.row(r).set_format(0, head_left)
     r += 1
-    unless @revision.voyage_number.empty?
+    unless @revision.voyage_number.blank?
       sheet.row(r).push "Voyage Number", @revision.voyage_number
       sheet.row(r).set_format(0, head_left)
       r += 1
