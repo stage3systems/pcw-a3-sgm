@@ -7,7 +7,7 @@ class Port < ActiveRecord::Base
   has_many :tariffs
   belongs_to :currency
   belongs_to :tax
-  belongs_to :office
+  has_and_belongs_to_many :offices
 
 
   def crystalize

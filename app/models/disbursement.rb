@@ -7,6 +7,7 @@ class Disbursement < ActiveRecord::Base
                   :tbn_template
   belongs_to :port
   belongs_to :terminal
+  belongs_to :office
   belongs_to :vessel
   belongs_to :company
   belongs_to :user

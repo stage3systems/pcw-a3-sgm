@@ -87,7 +87,7 @@ CTX
 
   def crystalize
     p = self.disbursement.port.crystalize
-    o = self.disbursement.port.office.crystalize rescue {}
+    o = self.disbursement.office.crystalize rescue {}
     v = self.disbursement.crystalize_vessel
     c = self.disbursement.company.crystalize
     conf = Configuration.last.crystalize
@@ -131,7 +131,7 @@ CTX
 
   def email
     e = self.data['office_email']
-    e = self.disbursement.port.office.email rescue nil if e.blank?
+    e = self.disbursement.office.email rescue nil if e.blank?
     e = self.user.email rescue nil if e.blank?
     e = "accounts@monson.com.au" if e.blank?
     e

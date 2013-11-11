@@ -1,7 +1,7 @@
 class Office < ActiveRecord::Base
   attr_accessible :address_1, :address_2, :address_3,
                   :fax, :name, :phone, :email
-  has_many :ports
+  has_and_belongs_to_many :ports
 
   def crystalize
     {

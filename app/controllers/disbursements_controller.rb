@@ -127,6 +127,7 @@ class DisbursementsController < ApplicationController
   def create
     @disbursement = Disbursement.new(params[:disbursement])
     @disbursement.user = current_user
+    @disbursement.office = current_user.office || Office.find_by_name("Head Office")
 
     respond_to do |format|
       if @disbursement.save
