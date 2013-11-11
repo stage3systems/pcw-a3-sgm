@@ -107,7 +107,15 @@ class DisbursementsController < ApplicationController
                                     'STEAMING COAL',
                                     'IRON ORE',
                                     'ALUMINA',
-                                    'CAUSTIC SODA'] }
+                                    'CAUSTIC SODA',
+                                    'WHEAT',
+                                    'BARLEY',
+                                    'CANOLA',
+                                    'SORGHUM',
+                                    'SOYBEANS',
+                                    'PALM OIL',
+                                    'MALT',
+                                    'CHICK PEAS'] }
                     # grain support disabled for now
                     #(subtype.eq 'GRAIN / FEED')}
   end
