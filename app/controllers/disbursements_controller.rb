@@ -115,6 +115,9 @@ class DisbursementsController < ApplicationController
                                     'SOYBEANS',
                                     'PALM OIL',
                                     'MALT',
+                                    'MALTING BARLEY',
+                                    'FEED BARLEY',
+                                    'FABA BEANS',
                                     'CHICK PEAS'] }
                     # grain support disabled for now
                     #(subtype.eq 'GRAIN / FEED')}
