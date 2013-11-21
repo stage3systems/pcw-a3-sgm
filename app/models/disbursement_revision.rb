@@ -138,6 +138,6 @@ CTX
   end
 
   def reference
-    ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' } - #{self.updated_at.to_date.strftime('%d %b %Y').upcase} - REV. #{self.number}"
+    ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number unless self.voyage_number.blank?} - #{self.updated_at.to_date.strftime('%d %b %Y').upcase} - REV. #{self.number}"
   end
 end
