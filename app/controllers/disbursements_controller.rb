@@ -7,7 +7,8 @@ class DisbursementsController < ApplicationController
   # GET /disbursements.json
   def index
     @disbursements = Disbursement.where(
-                      :status_cd => [Disbursement.published, Disbursement.draft],
+                      :status_cd => [Disbursement.draft, Disbursement.initial,
+                                     Disbursement.final],
                       :port_id => current_user.authorized_ports.pluck(:id))
 
     respond_to do |format|
@@ -55,25 +56,20 @@ class DisbursementsController < ApplicationController
               filename: "#{@revision.reference}#{ " - DRAFT" if @disbursement.draft? }.pdf"
   end
 
-  def publish
-    @disbursement = Disbursement.find(params[:id])
-    @disbursement.publish
 
-    respond_to do |format|
-      format.html { redirect_to disbursements_path }
-      format.json { render json: @disbursement }
+  def status
+    @disbursement = Disbursement.find(params[:id])
+    if ["draft", "initial", "final"].member? params[:status]
+      @disbursement.send("#{params[:status]}!")
+      @disbursement.save
     end
-  end
-
-  def unpublish
-    @disbursement = Disbursement.find(params[:id])
-    @disbursement.unpublish
 
     respond_to do |format|
       format.html { redirect_to disbursements_path}
       format.json { render json: @disbursement }
     end
   end
+
 
   # GET /disbursements/1
   # GET /disbursements/1.json
@@ -276,14 +272,29 @@ class DisbursementsController < ApplicationController
     @pdf.fallback_fonts = ["Kai"]
   end
 
+  def pdf_title(title, subtitle)
+      @pdf.text title,
+                :size => 20, :style => :bold,
+                :align => :left, :valign => :center
+      if subtitle
+        @pdf.text "\n#{subtitle}",
+                :size => 10, :style => :bold,
+                :alight => :left, :valign => :center
+      end
+  end
+
   def pdf_header
     # title and logo
     @pdf.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
     @pdf.bounding_box([0, 720], width: 540, height: 160) do
-      @pdf.text "#{ "DRAFT " if @disbursement.draft? }PROFORMA DISBURSEMENT",
-                :size => 20, :style => :bold,
-                :align => :left, :valign => :center
+      if @disbursement.draft?
+        pdf_title("DRAFT PROFORMA DISBURSEMENT", nil)
+      elsif @disbursement.initial?
+        pdf_title("PROFORMA DISBURSEMENT", "Sent prior to vessel arrival")
+      elsif @disbursement.final?
+        pdf_title("FINAL CLOSE ESTIMATE", "Sent after vessel sailing")
+      end
       @pdf.image logo_path, :width => 60,
                             :position => :right,
                             :vposition => :center

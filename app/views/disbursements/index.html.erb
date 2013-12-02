@@ -48,14 +48,17 @@
         <td class="align-right"><%= disbursement.current_revision.pdf_views %></td>
         <td id="pfda_<%= disbursement.id %>">
           <%= select_tag "status",
-                         ("<option value=\"publish\""+
-                          "#{" selected" if disbursement.published?}"+
-                          ">Sent (Published)</option>"+
-                          "<option value=\"unpublish\""+
+                        ("<option value=\"draft\""+
                           "#{" selected" if disbursement.draft?}"+
-                          " >Draft</option>").html_safe,
+                          ">DRAFT</option>"+
+                          "<option value=\"initial\""+
+                          "#{" selected" if disbursement.initial?}"+
+                          " >INITIAL</option>"+
+                          "<option value=\"final\""+
+                          "#{" selected" if disbursement.final?}"+
+                          " >FINAL</option>").html_safe,
                         style: "width: 160px;",
-                        class: "#{ disbursement.published? ? "published" : "private" }"
+                        class: "#{ disbursement.status.to_s }"
           %>
         </td>
         <td>
@@ -90,7 +93,7 @@
   var setupListeners = function() {
     $("select#status").on("change", function() {
       var id = $(this).parent().attr("id").split("_")[1];
-      window.location = "/disbursements/"+id+"/"+$(this).val();
+      window.location = "/disbursements/"+id+"/status/"+$(this).val();
     });
   };
   $("table.table").bind('draw', setupListeners);

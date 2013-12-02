@@ -1,7 +1,8 @@
 <div class="container-fluid no-padding<%= " pfda-container" if @disbursement and
-                                            @disbursement.published? %>">
+                                          (@disbursement.initial? or
+                                           @disbursement.final?) %>">
   <% if @disbursement  %>
-    <% if @disbursement.published? %>
+    <% if @disbursement.initial? or @disbursement.final? %>
     <div class="pfda-header">
       <div class="container">
         <div class="row-fluid">
@@ -27,7 +28,13 @@
       <div class="pfda-inner">
         <div class="row-fluid">
           <div class="span6">
+            <% if @disbursement.initial? %>
             <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
+            <h4>Sent prior to vessel arrival</h4>
+            <% elsif @disbursement.final? %>
+            <h3 style="padding-top: 1em;">FINAL CLOSE ESTIMATE</h3>
+            <h4>Sent after vessel sailing</h4>
+            <% end %>
           </div>
           <div class="span6">
             <div class="pull-right"><%= image_tag "monson_agency.png" %></div>

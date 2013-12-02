@@ -25,7 +25,7 @@ class Disbursement < ActiveRecord::Base
   before_create :generate_publication_id
   after_create :create_initial_revision
 
-  as_enum :status, draft: 0, published: 1, deleted: 2
+  as_enum :status, draft: 0, initial: 1, deleted: 2, final: 3
 
   def title
     "PFDA for #{self.vessel_name} in #{self.port.name}"
@@ -33,16 +33,6 @@ class Disbursement < ActiveRecord::Base
 
   def current_revision
     self.disbursement_revisions.last
-  end
-
-  def publish
-    self.published!
-    self.save
-  end
-
-  def unpublish
-    self.draft!
-    self.save
   end
 
   def delete

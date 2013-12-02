@@ -110,8 +110,9 @@ table.table { background-color: #fff;}
     cursor: row-resize;
   }
 }
-select.published { background-color: #90f090; }
-select.private { background-color: #f09090; }
+select.draft { background-color: #f09090; }
+select.initial { background-color: #f0f090; }
+select.final { background-color: #90f090; }
 hr.published { margin-top: 60px; border-top: 1px solid #999; }
 table.table { background-color: #ffffff; }
 table.table.border-bottom { border-bottom: 1px solid #ddd; }

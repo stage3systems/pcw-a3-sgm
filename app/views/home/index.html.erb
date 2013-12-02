@@ -5,25 +5,42 @@
                 :class => 'btn btn-primary btn-small' %>
   </h2>
   <div class="row-fluid">
-    <div class="span6">
+    <div class="span4">
       <div class="well">
-        <h3>Last 10 published Proforma Disbursements</h3>
-        <% if @published.each do |p| %>
-          <% publisher = p.current_revision.user %>
-          <%= link_to p.title, published_short_url(id: p.publication_id) %> published on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %><br />
+        <h3>Last 10 DRAFT Proforma Disbursements</h3>
+        <% if @drafts.each do |d| %>
+          <% editor = d.current_revision.user %>
+          <%= link_to d.title, edit_disbursement_url(d) %><br>
+          <small>last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %></small>
+          <br>
         <% end.empty? %>
-          No published disbursements available.
+          No DRAFT disbursement available.
         <% end %>
       </div>
     </div>
-    <div class="span6">
+    <div class="span4">
       <div class="well">
-        <h3>Last 10 draft Proforma Disbursements</h3>
-        <% if @drafts.each do |d| %>
-          <% editor = d.current_revision.user %>
-          <%= link_to d.title, edit_disbursement_url(d) %> last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %><br />
+        <h3>Last 10 INITIAL Proforma Disbursements</h3>
+        <% if @initials.each do |p| %>
+          <% publisher = p.current_revision.user %>
+          <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
+          <small>last updated on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %></small>
+          <br>
         <% end.empty? %>
-          No draft disbursements available.
+          No INITIAL disbursement available.
+        <% end %>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="well">
+        <h3>Last 10 FINAL Proforma Disbursements</h3>
+        <% if @finals.each do |f| %>
+          <% editor = f.current_revision.user %>
+          <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
+          <small>last updated on <%= l f.updated_at %><%= " by #{editor.full_name}" if editor %></small>
+          <br>
+        <% end.empty? %>
+          No FINAL disbursement available.
         <% end %>
       </div>
     </div>
