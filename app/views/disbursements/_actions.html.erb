@@ -1,0 +1,15 @@
+          <div class="btn-group">
+            <%= render "common/mailto_pfda",
+                       disbursement: disbursement,
+                       config: Configuration.last %>
+            <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
+                        :class => 'btn btn-small',
+                        :title => 'Revise' %>
+            <%= link_to icon(:print), print_disbursement_path(disbursement),
+                        :class => 'btn btn-small',
+                        :title => 'Print' %>
+            <%= link_to icon(:trash), disbursement, method: :delete,
+                        data: { confirm: 'Are you sure?' },
+                        :class => 'btn btn-danger btn-small',
+                        :title => 'Delete' %>
+          </div>

@@ -33,6 +33,7 @@ gem 'jquery-ui-rails'
 gem 'spreadsheet', :git => 'https://github.com/kachick/spreadsheet.git',
                    :branch => 'fix-ruby2.0'
 gem 'squeel'
+gem 'wice_grid'
 
 
 # Gems used only for assets and not required

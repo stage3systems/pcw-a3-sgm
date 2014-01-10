@@ -46,3 +46,4 @@
 //= require compute
 //= require jstz
 //= require timezone
+//= require wice_grid

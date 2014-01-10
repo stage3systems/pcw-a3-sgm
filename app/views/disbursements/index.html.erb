@@ -5,97 +5,18 @@
                 :class => 'btn btn-primary btn-small' %>
   </h2>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Reference</th>
-        <th>ETA</th>
-        <th>Port</th>
-        <th>Company</th>
-        <th>Vessel</th>
-        <th>Amount</th>
-        <th>Currency</th>
-        <th>Last Modified</th>
-        <th>Revision</th>
-        <th>Views</th>
-        <th>Prints</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @disbursements.each do |disbursement| %>
-      <tr>
-        <td>
-          <% if disbursement.draft? %>
-            <%= link_to disbursement.current_revision.reference,
-                        edit_disbursement_path(disbursement) %>
-          <% else %>
-            <%= link_to disbursement.current_revision.reference,
-                        published_short_url(
-                          :id => disbursement.publication_id) %>
-          <% end %>
-        </td>
-        <td class="eta"><%= l(disbursement.current_revision.eta) rescue "N/A" %></td>
-        <td><%= disbursement.port.name %></td>
-        <td><%= disbursement.company.name %></td>
-        <td><%= disbursement.vessel_name %></td>
-        <td class="right-align"><%= number_to_currency disbursement.current_revision.amount, unit: "" %></td>
-        <td><%= disbursement.current_revision.data['currency_code'] %></td>
-        <td><%= l disbursement.current_revision.updated_at %></td>
-        <td class="right-align"><%= disbursement.current_revision.number %></td>
-        <td class="align-right"><%= disbursement.current_revision.anonymous_views %></td>
-        <td class="align-right"><%= disbursement.current_revision.pdf_views %></td>
-        <td id="pfda_<%= disbursement.id %>">
-          <%= select_tag "status",
-                        ("<option value=\"draft\""+
-                          "#{" selected" if disbursement.draft?}"+
-                          ">DRAFT</option>"+
-                          "<option value=\"initial\""+
-                          "#{" selected" if disbursement.initial?}"+
-                          " >INITIAL</option>"+
-                          "<option value=\"final\""+
-                          "#{" selected" if disbursement.final?}"+
-                          " >FINAL</option>").html_safe,
-                        style: "width: 160px;",
-                        class: "#{ disbursement.status.to_s }"
-          %>
-        </td>
-        <td>
-          <div class="btn-group">
-            <%= render "common/mailto_pfda",
-                       disbursement: disbursement,
-                       config: Configuration.last %>
-            <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
-                        :class => 'btn btn-small',
-                        :title => 'Revise' %>
-            <%= link_to icon(:print), print_disbursement_path(disbursement),
-                        :class => 'btn btn-small',
-                        :title => 'Print' %>
-            <%= link_to icon(:trash), disbursement, method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-small',
-                        :title => 'Delete' %>
-          </div>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= render partial: 'grid' %>
+    </div>
+  </div>
 </div>
-<%= render "common/data_table", column_defs: [
-      {"bSortable" => false, "aTargets" => [12]},
-      {"sType" => "select", "aTargets" => [11]},
-      {"sType" => "currency", "aTargets" => [5]}
-    ],
-    sorting: [[7, 'desc']] %>
 <script type="text/javascript">
   var setupListeners = function() {
-    $("select#status").on("change", function() {
-      var id = $(this).parent().attr("id").split("_")[1];
+    $("select.status").on("change", function() {
+      var id = $(this).attr("id").split("_")[1];
       window.location = "/disbursements/"+id+"/status/"+$(this).val();
     });
   };
-  $("table.table").bind('draw', setupListeners);
   setupListeners();
 </script>

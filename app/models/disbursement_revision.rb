@@ -4,7 +4,7 @@ class DisbursementRevision < ActiveRecord::Base
                   :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
                   :cargo_type_id, :comments, :eta, :compulsory, :disabled,
                   :overriden, :user_id, :anonymous_views, :pdf_views,
-                  :voyage_number
+                  :voyage_number, :amount, :currency_symbol
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :fields, ActiveRecord::Coders::Hstore
   serialize :descriptions, ActiveRecord::Coders::Hstore
@@ -35,6 +35,9 @@ class DisbursementRevision < ActiveRecord::Base
       self.values[k] = ctx.eval("ctx.values['#{k}']")
       self.values_with_tax[k] = ctx.eval("ctx.values_with_tax['#{k}']")
     end
+    self.reference = self.compute_reference
+    self.amount = self.compute_amount
+    self.currency_symbol = self.compute_currency_symbol
   end
 
   def context
@@ -121,12 +124,12 @@ CTX
     self.disbursement.disbursement_revisions.where(:number => self.number+1).first
   end
 
-  def currency_symbol
+  def compute_currency_symbol
     self.data['currency_symbol']
   end
 
-  def amount
-    self.data[self.tax_exempt? ? 'total' : 'total_with_tax'].to_f
+  def compute_amount
+    self.data[self.tax_exempt? ? 'total' : 'total_with_tax']
   end
 
   def email
@@ -137,7 +140,7 @@ CTX
     e
   end
 
-  def reference
-    ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number.gsub('/', '') unless self.voyage_number.blank?} - #{self.updated_at.to_date.strftime('%d %b %Y').upcase} - #{self.disbursement.status.upcase} - REV. #{self.number}"
+  def compute_reference
+    ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number.gsub('/', '') unless self.voyage_number.blank?} - #{(self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase} - #{self.disbursement.status.upcase rescue "DELETED"} - REV. #{self.number}"
   end
 end

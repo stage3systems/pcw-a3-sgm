@@ -6,11 +6,19 @@ class DisbursementsController < ApplicationController
   # GET /disbursements
   # GET /disbursements.json
   def index
-    @disbursements = Disbursement.where(
-                      :status_cd => [Disbursement.draft, Disbursement.initial,
-                                     Disbursement.final],
-                      :port_id => current_user.authorized_ports.pluck(:id))
-
+    @disbursements_grid = initialize_grid(Disbursement.where(
+          :port_id => current_user.authorized_ports.pluck(:id)
+        ),
+        :include => [:port, :company, :vessel, :current_revision],
+        :order => 'disbursement_revisions.updated_at',
+        :order_direction => 'desc',
+        :custom_order => {
+          'disbursements.current_revision_id' => 'current_revision.updated_at',
+          'disbursements.port_id' => 'port.name',
+          'disbursements.company_id' => 'company.name'
+        },
+        :per_page => 10)
+    @disbursements = []
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @disbursements }
@@ -223,6 +231,8 @@ class DisbursementsController < ApplicationController
     @revision.compute
     @revision.user = current_user
     @revision.save
+    @disbursement.current_revision = @revision
+    @disbursement.save
   end
 
   def shortcuts

@@ -24,7 +24,6 @@ class DisbursementTest < ActiveSupport::TestCase
     assert d.save
     assert_not_nil d.current_revision
     assert d.current_revision.number == 0
-    assert d.current_revision.amount == 0
   end
 
   test "the first revision totals are computed" do
@@ -78,9 +77,11 @@ class DisbursementTest < ActiveSupport::TestCase
     r2.disabled['EXTRAITEM1'] = "0"
     r2.compute
     r2.save
+    d.current_revision = r2
+    d.save
     d.reload
     r3 = d.next_revision
-    assert r3.number == 2
+    assert_equal(2, r3.number)
     assert r3.data["total"] == "15000.00"
     assert r3.data["total_with_tax"] == "16500.00"
   end

@@ -11,9 +11,11 @@ class Disbursement < ActiveRecord::Base
   belongs_to :vessel
   belongs_to :company
   belongs_to :user
+  belongs_to :current_revision, :class_name => DisbursementRevision
   has_many :disbursement_revisions,
            :dependent => :destroy,
            :order => 'number ASC'
+  has_one :revision, :class_name => 'DisbursementRevision', :order => "updated_at DESC"
   validates_presence_of :port_id
   validates_presence_of :company_id
   validates_presence_of :vessel_id, :unless => :tbn?
@@ -29,10 +31,6 @@ class Disbursement < ActiveRecord::Base
 
   def title
     "PFDA for #{self.vessel_name} in #{self.port.name}"
-  end
-
-  def current_revision
-    self.disbursement_revisions.last
   end
 
   def delete
@@ -104,5 +102,8 @@ class Disbursement < ActiveRecord::Base
     dr.crystalize
     dr.compute
     dr.save
+    self.current_revision_id = dr.id
+    self.save
   end
+
 end
