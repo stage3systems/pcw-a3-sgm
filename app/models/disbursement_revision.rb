@@ -53,10 +53,10 @@ class DisbursementRevision < ActiveRecord::Base
       estimate: {
         eta: new Date(#{"\"" if self.eta}#{self.eta}#{"\"" if self.eta}),
         cargo_qty: #{self.cargo_qty || 0},
-        tugs_in: #{self.tugs_in},
-        tugs_out: #{self.tugs_out},
-        loadtime: #{self.loadtime},
-        days_alongside: #{self.days_alongside}
+        tugs_in: #{self.tugs_in || 0},
+        tugs_out: #{self.tugs_out || 0},
+        loadtime: #{self.loadtime || 0},
+        days_alongside: #{self.days_alongside || 0}
       },
       cargo_type: {
         type: "#{self.data["cargo_type"]}",
