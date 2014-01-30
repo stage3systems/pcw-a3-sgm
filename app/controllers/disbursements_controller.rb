@@ -198,7 +198,7 @@ class DisbursementsController < ApplicationController
       fields[k] = i
     end
     # add new items
-    next_val = fields.values.max+1
+    next_val = fields.values.max+1 rescue 1
     ctx = V8::Context.new
     extras.each do |k|
       if not old_extras.member? k
