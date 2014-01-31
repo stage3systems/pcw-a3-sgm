@@ -115,6 +115,7 @@ GEM
     mime-types (1.23)
     mini_portile (0.5.1)
     multi_json (1.7.7)
+    newrelic_rpm (3.7.1.188)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     omniauth (1.1.4)
@@ -244,6 +245,7 @@ DEPENDENCIES
   exception_notification
   jquery-rails
   jquery-ui-rails
+  newrelic_rpm
   omniauth
   omniauth-saml
   pg
