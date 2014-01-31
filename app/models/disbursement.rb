@@ -74,7 +74,7 @@ class Disbursement < ActiveRecord::Base
     cur.fields.keys.each do |k|
       # copy custom services over
       if k.starts_with? "EXTRAITEM"
-        nxt.fields[k] = nxt.fields.values.map {|v| v.to_i}.max+1
+        nxt.fields[k] = nxt.fields.values.map {|v| v.to_i}.max+1 rescue 1
         nxt.codes[k] = cur.codes[k]
         nxt.descriptions[k] = cur.descriptions[k]
         nxt.compulsory[k] = false
