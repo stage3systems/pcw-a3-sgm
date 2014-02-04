@@ -107,7 +107,7 @@ class DisbursementsController < ApplicationController
     @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.where{
-                     subsubtype.in ['COKING COAL',
+                     (subsubtype.in ['COKING COAL',
                                     'STEAMING COAL',
                                     'IRON ORE',
                                     'ALUMINA',
@@ -122,7 +122,12 @@ class DisbursementsController < ApplicationController
                                     'MALTING BARLEY',
                                     'FEED BARLEY',
                                     'FABA BEANS',
-                                    'CHICK PEAS'] }
+                                    'CHICK PEAS',
+                                    'CEMENT',
+                                    'SALT',
+                                    'SULPHUR',
+                                    'CONCENTRATES']) |
+                      (subtype.in ['BUNKERING'])}
                     # grain support disabled for now
                     #(subtype.eq 'GRAIN / FEED')}
   end
