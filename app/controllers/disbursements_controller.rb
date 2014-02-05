@@ -127,7 +127,8 @@ class DisbursementsController < ApplicationController
                                     'SALT',
                                     'SULPHUR',
                                     'CONCENTRATES']) |
-                      (subtype.in ['BUNKERING'])}
+                      (subtype.in ['BUNKERING']) |
+                      (maintype.in ['CONTAINERS', 'PCC VEHICLES'])}.order('maintype ASC')
                     # grain support disabled for now
                     #(subtype.eq 'GRAIN / FEED')}
   end
