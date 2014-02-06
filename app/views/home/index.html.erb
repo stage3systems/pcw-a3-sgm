@@ -125,9 +125,9 @@
               nextLink = 'toPage('+(page+1)+')';
             }
             var prevNext = '<div class="btn-group">'+
-            '<button class="btn'+((page > 1) ? "" : " disabled")+
+            '<button class="btn btn-mini'+((page > 1) ? "" : " disabled")+
             '" onclick="'+prevLink+'"><i class="icon icon-chevron-left"></i></button>'+
-            '<button class="btn'+((page < maxPage) ? "" : " disabled")+
+            '<button class="btn btn-mini'+((page < maxPage) ? "" : " disabled")+
             '" onclick="'+nextLink+'"><i class="icon icon-chevron-right"></i></button></div>';
             $("div#searchresults").append(
                 '<div class="summary">'+
@@ -135,7 +135,7 @@
                   'Page '+d.page+' of '+maxPage+'\n'+
                   prevNext+
                   '</div>'+
-                  '<strong>'+d.count+' estimates found'+
+                  '<strong>'+d.count+' estimates found.'+
                 '</div>');
             var ul = '<ul>';
             $.each(d.disbursements, function(i, e) {
