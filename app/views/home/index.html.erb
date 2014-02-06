@@ -149,13 +149,13 @@
                   row += '</a>';
                   break;
                 case 1: // INITIAL
-                  row += '<a href="/disbursements/pfda/'+e.publication_id+'">';
+                  row += '<a href="/pfda/'+e.publication_id+'">';
                   row += 'INITIAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(e.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
                 case 3: // FINAL
-                  row += '<a href="/disbursements/pfda/'+e.publication_id+'">';
+                  row += '<a href="/pfda/'+e.publication_id+'">';
                   row += 'FINAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(e.updated_at).format('llll')+')';
                   row += '</a>';
