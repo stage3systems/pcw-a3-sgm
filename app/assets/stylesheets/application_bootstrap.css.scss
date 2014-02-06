@@ -177,7 +177,13 @@ div#code {
     width: 800px;
     height: 400px;
 }
-.search-form { margin-bottom: 10px; padding: 0 10px 10px; background: #fff; }
+.search-form { padding: 0 10px 10px; background: #fff; }
 .search-form form { margin: 0; }
 .search-form legend { margin-bottom: 10px; font-size: 16px; line-height: 36px; text-transform: uppercase; }
 form .date-fields { display: inline-block; } /* group date inputs together so they wrap at same time */
+
+.search-results { margin-bottom: 10px; background: #fff; border-top: 1px solid #ccc; }
+.search-results ul { margin: 0; padding: 0; }
+.search-results li { list-style: none; padding: 10px; border-top: 1px solid #eee; }
+.search-results .summary { padding: 10px; }
+.search-results .search-nav { float: right; }
