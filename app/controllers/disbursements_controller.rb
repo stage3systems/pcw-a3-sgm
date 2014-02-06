@@ -25,6 +25,35 @@ class DisbursementsController < ApplicationController
     end
   end
 
+  def search
+    port = Port.find(params[:port_id].to_i) rescue nil
+    terminal = Terminal.find(params[:terminal_id].to_i) rescue nil
+    cargo_type = CargoType.find(params[:cargo_type_id].to_i) rescue nil
+    start_date = Date.parse(params[:start_date]) rescue nil
+    end_date = Date.parse(params[:end_date]) rescue nil
+    p = {}
+    p[:port_id] = port.id if port
+    p[:terminal_id] = terminal.id if terminal
+    @disbursements = Disbursement.joins(:current_revision).where(p)
+    @disbursements = @disbursements.where('disbursements.updated_at > :start_date', start_date: start_date) if start_date
+    @disbursements = @disbursements.where('disbursements.updated_at < :end_date', end_date: end_date) if end_date
+    @disbursements = @disbursements.where("disbursement_revisions.data -> 'vessel_name' ILIKE ?", "%#{params[:vessel_name]}%") if params[:vessel_name]
+    count = @disbursements.count
+    @disbursements = @disbursements.order('updated_at DESC')
+    page = params[:page].to_i
+    @disbursements = @disbursements.offset(page*10).limit(10)
+    respond_to do |format|
+      format.json {
+        render json: {
+          :disbursements => @disbursements,
+          :count => count,
+          :page => page+1,
+          :params => params
+        }
+      }
+    end
+  end
+
   def published
     @disbursement = Disbursement.find_by_publication_id(params[:id])
     @revision = @disbursement.current_revision rescue nil
@@ -106,31 +135,7 @@ class DisbursementsController < ApplicationController
     @disbursement = Disbursement.find(params[:id])
     @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
-    @cargo_types = CargoType.where{
-                     (subsubtype.in ['COKING COAL',
-                                    'STEAMING COAL',
-                                    'IRON ORE',
-                                    'ALUMINA',
-                                    'CAUSTIC SODA',
-                                    'WHEAT',
-                                    'BARLEY',
-                                    'CANOLA',
-                                    'SORGHUM',
-                                    'SOYBEANS',
-                                    'PALM OIL',
-                                    'MALT',
-                                    'MALTING BARLEY',
-                                    'FEED BARLEY',
-                                    'FABA BEANS',
-                                    'CHICK PEAS',
-                                    'CEMENT',
-                                    'SALT',
-                                    'SULPHUR',
-                                    'CONCENTRATES']) |
-                      (subtype.in ['BUNKERING']) |
-                      (maintype.in ['CONTAINERS', 'PCC VEHICLES'])}.order('maintype ASC')
-                    # grain support disabled for now
-                    #(subtype.eq 'GRAIN / FEED')}
+    @cargo_types = CargoType.authorized
   end
 
   # POST /disbursements

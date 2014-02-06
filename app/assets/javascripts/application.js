@@ -47,3 +47,4 @@
 //= require jstz
 //= require timezone
 //= require wice_grid
+//= require moment.min

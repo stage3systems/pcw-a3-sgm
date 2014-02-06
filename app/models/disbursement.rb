@@ -91,6 +91,10 @@ class Disbursement < ActiveRecord::Base
     nxt
   end
 
+  def as_json(options={})
+    super(:include => [:disbursement_revisions, :port])
+  end
+
   private
   def generate_publication_id
     self.publication_id = UUIDTools::UUID.random_create.to_s

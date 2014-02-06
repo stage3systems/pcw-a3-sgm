@@ -45,4 +45,163 @@
       </div>
     </div>
   </div>
+  <h2>Search</h2>
+  <div class="row-fluid">
+    <%= simple_form_for :search, url: disbursements_path,
+                        html: {:class => 'form-inline'} do |f| %>
+      <%= f.input_field :port, prompt: 'Select a Port',
+                        collection: current_user.authorized_ports.all.to_a %>
+      <%= f.input_field :terminal, prompt: 'Select a Terminal',
+                        collection: [] %>
+      <%= f.input_field :vessel_name, placeholder: "Vessel Name",
+                         class: 'reset' %>
+      <%= f.input_field :cargo_type, label: "Cargo Type",
+                  prompt: 'Select a Cargo Type',
+                  collection: CargoType.authorized, label_method: :display %>
+      <%= f.input_field :start_date_picker, placeholder: "Start Date",
+                         class: 'date reset' %>
+      <%= f.input :start_date, as: :hidden %>
+      <%= f.input_field :end_date_picker, placeholder: "End Date",
+                        class: 'date reset' %>
+      <%= f.input :end_date, as: :hidden %>
+      <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
+      <%= f.submit "Reset", name: "reset", class: 'btn' %>
+    <% end %>
+  </div>
+  <div class="row-fluid" id="searchresults">
+  </div>
 </div>
+<script type="text/javascript">
+  $("input[name='reset']").on("click", function(e) {
+      e.stopPropagation();
+      cleanupTerminals();
+      $("div#searchresults").empty();
+      page = 1;
+      $("input.reset").val("");
+      $("select").val("");
+      return false;
+  });
+  var page = 1;
+  var toPage = function(p) {
+    page = parseInt(p);
+    setTimeout(doSearch, 0);
+    return false;
+  }
+  var doSearch = function() {
+      $("div#searchresults").empty();
+      $("div#searchresults").append(
+        '<div class="progress progress-striped active">'+
+        '  <div class="bar" style="width: 100%;">Loading...</div>'+
+        '</div>');
+      $.ajax('/disbursements/search', {
+        type: 'POST',
+        data: {
+          page: page-1,
+          port_id: $("select#search_port").val(),
+          terminal_id: $("select#search_terminal").val(),
+          vessel_name: $("input#search_vessel_name").val(),
+          cargo_type_id: $("select#search_cargo_type").val(),
+          start_date: $("input#search_start_date").val(),
+          end_date: $("input#search_end_date").val()
+        },
+        dataType: 'json',
+        success: function(d) {
+          $("div#searchresults").empty();
+          if (d.count == 0) {
+          $("div#searchresults").append("<p>No Results</p>"); 
+          } else {
+            $.each(d.disbursements, function(i, e) {
+              var rev = e.disbursement_revisions[0];
+              var row = '<div class="row-fluid"><div class="span12">';
+              switch (e.status_cd) {
+                case 0: // DRAFT
+                  row += '<a href="/disbursements/'+e.id+'/edit">';
+                  row += 'DRAFT PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
+                case 1: // INITIAL
+                  row += '<a href="/disbursements/pfda/'+e.publication_id+'">';
+                  row += 'INITIAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
+                case 3: // FINAL
+                  row += '<a href="/disbursements/pfda/'+e.publication_id+'">';
+                  row += 'FINAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break
+                default:
+                  row += rev.reference
+                  break
+              }
+              row += '</div></div>';
+              $("div#searchresults").append(row);
+            });
+            var prevLink = 'javascript:void(0)';
+            var maxPage = parseInt(d.count/10.0+(d.count%10 == 0 ? 0 : 1));
+            if (page > 1) {
+              prevLink = 'toPage('+(page-1)+')';
+            }
+            var nextLink = 'javascript:void(0)';
+            if (page < maxPage) {
+              nextLink = 'toPage('+(page+1)+')';
+            }
+            var prevNext = '<div class="btn-group">'+
+            '<button class="btn'+((page > 1) ? "" : " disabled")+
+            '" onclick="'+prevLink+'"><i class="icon icon-chevron-left"></i></button>'+
+            '<button class="btn'+((page < maxPage) ? "" : " disabled")+
+            '" onclick="'+nextLink+'"><i class="icon icon-chevron-right"></i></button></div>';
+            $("div#searchresults").append(
+                '<div class="row-fluid"><div class="span6">'+
+                'Page '+d.page+' of '+maxPage+
+                ' ('+d.count+' estimates found)'+
+                '</div><div class="span6">'+prevNext+'</div></div>');
+            }
+        },
+        error: function() {
+          $("div#searchresults").empty();
+          $("div#searchresults").append("<p>Backend Error, please try again later</p>");
+        }
+      });
+  }
+  $("input[name='search']").on("click", function(e) {
+      e.stopPropagation();
+      page = 1;
+      doSearch();
+      return false;
+  });
+  $("input#search_start_date_picker").datepicker({
+    dateFormat: "dd M yy",
+    altField: "input#search_start_date",
+    altFormat: "yy-mm-dd"
+  });
+  $("input#search_end_date_picker").datepicker({
+    dateFormat: "dd M yy",
+    altField: "input#search_end_date",
+    altFormat: "yy-mm-dd"
+  });
+  var cleanupTerminals = function() {
+      $("select#search_terminal").find("option").remove();
+      $("select#search_terminal").append("<option value>Select a Terminal</option>");
+  };
+  var updateTerminals = function() {
+    var portId = $("select#search_port").val();
+    if (portId == "" || typeof portId == 'undefined') {
+      cleanupTerminals();
+      return;
+    }
+    $.ajax('/ports/'+portId+'/terminals.json', {
+      type: 'GET',
+      dataType: 'json',
+      success: function(d) {
+        cleanupTerminals();
+        $.each(d, function(i, e) {
+          $("select#search_terminal").append('<option value="' + e.id + '">' + e.name + '</option>');
+        })
+      }
+    });
+  }
+  $("select#search_port").on("change", updateTerminals);
+</script>

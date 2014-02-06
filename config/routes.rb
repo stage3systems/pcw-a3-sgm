@@ -24,6 +24,9 @@ ProformaDA::Application.routes.draw do
       match 'status/:status' => 'disbursements#status'
       get 'print'
     end
+    collection do
+      match 'search' => "disbursements#search"
+    end
   end
   match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published
   match 'pfda/:id' => 'disbursements#published', :as => :published_short

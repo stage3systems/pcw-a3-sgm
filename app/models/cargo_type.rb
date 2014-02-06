@@ -2,6 +2,7 @@
 class CargoType < ActiveRecord::Base
   attr_accessible :maintype, :remote_id, :subsubsubtype, :subsubtype, :subtype
   has_many :disbursement_revisions
+  default_scope order('maintype ASC, subtype ASC, subsubtype ASC, subsubsubtype ASC')
 
   def display
     fn = self.maintype
@@ -10,6 +11,7 @@ class CargoType < ActiveRecord::Base
     fn += " » #{self.subsubsubtype}" if self.subsubsubtype
     fn
   end
+
   def crystalize
     {
       "cargo_type" => self.maintype,
@@ -18,5 +20,31 @@ class CargoType < ActiveRecord::Base
       "cargo_subsubsubtype" => self.subsubsubtype,
       "cargo_type_display" => self.display
     }
+  end
+
+  def self.authorized
+    self.where{
+                     (subsubtype.in ['COKING COAL',
+                                    'STEAMING COAL',
+                                    'IRON ORE',
+                                    'ALUMINA',
+                                    'CAUSTIC SODA',
+                                    'WHEAT',
+                                    'BARLEY',
+                                    'CANOLA',
+                                    'SORGHUM',
+                                    'SOYBEANS',
+                                    'PALM OIL',
+                                    'MALT',
+                                    'MALTING BARLEY',
+                                    'FEED BARLEY',
+                                    'FABA BEANS',
+                                    'CHICK PEAS',
+                                    'CEMENT',
+                                    'SALT',
+                                    'SULPHUR',
+                                    'CONCENTRATES']) |
+                      (subtype.in ['BUNKERING']) |
+                      (maintype.in ['CONTAINERS', 'PCC VEHICLES'])}
   end
 end
