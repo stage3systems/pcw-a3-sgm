@@ -18,6 +18,7 @@ class DisbursementRevision < ActiveRecord::Base
   belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user
+  has_many :views, class_name: PfdaView, order: 'created_at DESC'
 
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}

@@ -33,10 +33,10 @@
     d.current_revision.number
   end
   g.column name: 'Views', attribute: 'anonymous_views', model: 'DisbursementRevision' do |d|
-    d.current_revision.anonymous_views
+    link_to d.current_revision.anonymous_views, access_log_disbursement_path(d)
   end
   g.column name: 'Prints', attribute: 'pdf_views', model: 'DisbursementRevision'  do |d|
-    d.current_revision.pdf_views
+    link_to d.current_revision.pdf_views, access_log_disbursement_path(d)
   end
   g.column name: 'Status', attribute: 'status_cd' do |d|
     select_tag "status_#{d.id}",

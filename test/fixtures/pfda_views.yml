@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_agent: MyText
+  browser: MyString
+  browser_version: MyString
+  ip: MyString
+  pdf: false
+  disbursement_revision_id: 1
+
+two:
+  user_agent: MyText
+  browser: MyString
+  browser_version: MyString
+  ip: MyString
+  pdf: false
+  disbursement_revision_id: 1

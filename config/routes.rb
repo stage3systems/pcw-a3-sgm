@@ -23,6 +23,7 @@ ProformaDA::Application.routes.draw do
     member do
       match 'status/:status' => 'disbursements#status'
       get 'print'
+      get 'access_log'
     end
     collection do
       match 'search' => "disbursements#search"
