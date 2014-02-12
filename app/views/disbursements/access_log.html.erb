@@ -7,7 +7,8 @@
 <% else %>
   <div class="row-fluid">
     <div class="span3"><strong>Date</strong></div>
-    <div class="span6"><strong>Browser</strong></div>
+    <div class="span3"><strong>IP</strong></div>
+    <div class="span3"><strong>Browser</strong></div>
     <div class="span3"><strong>View Type</strong></div>
   </div>
   <% @disbursement.current_revision.views.each do |v| %>
@@ -15,7 +16,10 @@
       <div class="span3">
         <%= l v.created_at %>
       </div>
-      <div class="span6">
+      <div class="span3">
+        <%= v.ip %>
+      </div>
+      <div class="span3">
         <span title="<%= v.user_agent %>"><%= v.browser %> <%= v.browser_version %></span>
       </div>
       <div class="span3">
