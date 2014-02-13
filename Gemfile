@@ -35,6 +35,8 @@ gem 'spreadsheet', :git => 'https://github.com/kachick/spreadsheet.git',
 gem 'squeel'
 gem 'wice_grid'
 gem 'newrelic_rpm'
+gem 'io-extra', :require => 'io/extra'
+gem 'geoip'
 
 
 # Gems used only for assets and not required

@@ -202,6 +202,7 @@ class DisbursementsController < ApplicationController
   end
 
   def access_log
+    @geoip = GeoIP.new('GeoLiteCity.dat')
     @disbursement = Disbursement.find(params[:id])
     add_breadcrumb "Access log for #{@disbursement.current_revision.reference}"
   end
