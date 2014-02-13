@@ -18,7 +18,7 @@
       </div>
       <div class="span3">
         <% geo = @geoip.country(v.ip) %>
-        <%= v.ip %> <% if geo %>(<%= "#{geo.city_name}, " unless geo.city_name.blank? %><%=  "#{@geo.region_name}, " unless geo.region_name.blank? %><%= geo.country_name %>)<% end %>
+        <%= v.ip %> <% if geo %>(<%= "#{geo.city_name}, " unless geo.city_name.blank? %><%=  "#{geo.region_name}, " unless geo.region_name.blank? %><%= geo.country_name %>)<% end %>
       </div>
       <div class="span3">
         <span title="<%= v.user_agent %>"><%= v.browser %> <%= v.browser_version %></span>
