@@ -4,6 +4,7 @@
     <%= link_to 'New PFDA', new_disbursement_path,
                 :class => 'btn btn-primary btn-small' %>
   </h2>
+  <% if false %>
   <div class="row-fluid">
     <div class="search-form">
         <%= simple_form_for :search, url: disbursements_path do |f| %>
@@ -34,6 +35,7 @@
     <div class="search-results" id="searchresults">
     </div>
   </div>
+  <% end %>
   <div class="row-fluid">
     <div class="span4">
       <div class="well">
