@@ -122,8 +122,10 @@ td.right-align, th.right-align {text-align: right;}
 td.eta { min-width: 80px; text-transform: uppercase;}
 
 .table th { font-size: 11px; line-height: normal; text-transform: uppercase; }
-.table .wg-filter-row th { vertical-align: top; }
+.table .wg-filter-row th { font-weight: normal; vertical-align: top; }
 .table .wg-filter-row input[type="text"] { margin-bottom: 0; }
+.table .wg-filter-row .date-filter > span { padding-bottom: 2px; display: inline-block; white-space: nowrap; }
+.table .da-actions { margin-bottom: 5px; } /* temp classes to add spacing below buttons */
 
 div.pfda-container { background: url(published_bg.png); };
 div.pfda-inner {padding: 5em;}

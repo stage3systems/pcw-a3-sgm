@@ -8,7 +8,7 @@
               published_short_url(:id => d.publication_id)
     end
   end
-  g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision' do |d|
+  g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision', html: {style: 'white-space: nowrap;'} do |d|
     l(d.current_revision.eta) rescue "N/A"
   end
   g.column name: 'Port', attribute: 'name', model: 'Port' do |d|
@@ -29,7 +29,7 @@
   g.column name: 'Last Modified', attribute: 'updated_at', model: 'DisbursementRevision', filter: false  do |d|
     l(d.current_revision.updated_at)
   end
-  g.column name: 'Revision', attribute: 'number', model: 'DisbursementRevision', filter: false do |d|
+  g.column name: 'Rev.', attribute: 'number', model: 'DisbursementRevision', filter: false do |d|
     d.current_revision.number
   end
   g.column name: 'Views', attribute: 'anonymous_views', model: 'DisbursementRevision', filter: false do |d|
@@ -49,7 +49,7 @@
                 "<option value=\"final\""+
                 "#{" selected" if d.final?}"+
                 " >FINAL</option>").html_safe,
-                style: "width: 160px;",
+                style: "width: auto;",
                 class: "status #{ d.status.to_s }"
   end
   g.column do |d|
