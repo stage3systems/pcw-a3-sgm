@@ -58,12 +58,27 @@ class DisbursementsController < ApplicationController
   def published
     @disbursement = Disbursement.find_by_publication_id(params[:id])
     @revision = @disbursement.current_revision rescue nil
+    pfda_view = PfdaView.new
+    pfda_view.disbursement_revision_id = @revision.id
+    pfda_view.ip = request.remote_ip
+    pfda_view.browser = browser.name
+    pfda_view.browser_version = browser.version
+    pfda_view.user_agent = request.env['HTTP_USER_AGENT']
+    pfda_view.pdf = false
+
     respond_to do |format|
       format.html {
-        @revision.increment! :anonymous_views if @revision and current_user.nil?
+        if @revision and current_user.nil?
+          pfda_view.save
+          DisbursementRevision.increment_counter :anonymous_views, @revision.id
+        end
       }
       format.pdf {
-        @revision.increment! :pdf_views if @revision and current_user.nil?
+        if @revision and current_user.nil?
+          pfda_view.pdf = true
+          pfda_view.save
+          DisbursementRevision.increment_counter :pdf_views, @revision.id
+        end
         Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
         file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
         unless File.exists? file
@@ -184,6 +199,12 @@ class DisbursementsController < ApplicationController
       format.html { redirect_to disbursements_url }
       format.json { head :no_content }
     end
+  end
+
+  def access_log
+    @geoip = GeoIP.new(Rails.root.join('GeoLiteCity.dat').to_s)
+    @disbursement = Disbursement.find(params[:id])
+    add_breadcrumb "Access log for #{@disbursement.current_revision.reference}"
   end
 
   private

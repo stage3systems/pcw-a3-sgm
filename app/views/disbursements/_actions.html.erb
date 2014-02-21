@@ -2,6 +2,9 @@
             <%= render "common/mailto_pfda",
                        disbursement: disbursement,
                        config: Configuration.last %>
+            <%= link_to icon(:list), access_log_disbursement_path(disbursement),
+                        :class => 'btn btn-small',
+                        :title => 'Access Log' %>
             <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
                         :class => 'btn btn-small',
                         :title => 'Revise' %>

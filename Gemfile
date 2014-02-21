@@ -33,6 +33,8 @@ gem 'spreadsheet'
 gem 'squeel'
 gem 'wice_grid'
 gem 'newrelic_rpm'
+gem 'io-extra', :require => 'io/extra'
+gem 'geoip'
 
 
 # Gems used only for assets and not required
