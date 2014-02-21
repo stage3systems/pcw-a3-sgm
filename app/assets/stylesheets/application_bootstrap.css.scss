@@ -187,3 +187,7 @@ form .date-fields { display: inline-block; } /* group date inputs together so th
 .search-results li { list-style: none; padding: 10px; border-top: 1px solid #eee; }
 .search-results .summary { padding: 10px; }
 .search-results .search-nav { float: right; }
+.wice-grid .wg-show-filter.clickable, .wice-grid .wg-hide-filter.clickable {
+  background-image: url(/assets/twitter/glyphicons-halflings.png);
+  background-position: -48px 0;
+}
