@@ -1,27 +1,10 @@
 GIT
-  remote: git://github.com/engageis/activerecord-postgres-hstore.git
-  revision: 385085f3d661a19e4b38fa3a2630746390cfa131
-  specs:
-    activerecord-postgres-hstore (0.7.6)
-      activerecord (>= 3.1)
-      pg-hstore (>= 1.1.5)
-      rake
-
-GIT
   remote: git://github.com/gfi/simple_ace_input.git
   revision: 6d2b692cd434f191d918c0de3b708de9640fd833
   specs:
     simple_ace_input (0.0.1)
       rails (~> 3.1)
       simple_form (~> 2.0)
-
-GIT
-  remote: https://github.com/kachick/spreadsheet.git
-  revision: 5cb1d8091dc37d6b3a202019c5dac7b27ee2d49e
-  branch: fix-ruby2.0
-  specs:
-    spreadsheet (0.7.7)
-      ruby-ole
 
 GEM
   remote: https://rubygems.org/
@@ -48,6 +31,10 @@ GEM
       activesupport (= 3.2.17)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-postgres-hstore (0.7.7)
+      activerecord (>= 3.1)
+      pg-hstore (>= 1.1.5)
+      rake
     activeresource (3.2.17)
       activemodel (= 3.2.17)
       activesupport (= 3.2.17)
@@ -132,7 +119,7 @@ GEM
       ruby-rc4
       ttfunk
     pg (0.16.0)
-    pg-hstore (1.1.7)
+    pg-hstore (1.2.0)
     piwik_analytics (1.0.2)
       actionpack
       activesupport
@@ -194,6 +181,8 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    spreadsheet (0.9.7)
+      ruby-ole (>= 1.0)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -233,7 +222,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-postgres-hstore!
+  activerecord-postgres-hstore
   anjlab-bootstrap-rails (>= 2.3)
   bootstrap-editable-rails
   breadcrumbs_on_rails
@@ -258,7 +247,7 @@ DEPENDENCIES
   simple_enum
   simple_form
   simplecov
-  spreadsheet!
+  spreadsheet
   squeel
   therubyracer
   uglifier (>= 1.0.3)
