@@ -4,7 +4,6 @@
     <%= link_to 'New PFDA', new_disbursement_path,
                 :class => 'btn btn-primary btn-small' %>
   </h2>
-  <% if false %>
   <div class="row-fluid">
     <div class="search-form">
         <%= simple_form_for :search, url: disbursements_path do |f| %>
@@ -35,7 +34,6 @@
     <div class="search-results" id="searchresults">
     </div>
   </div>
-  <% end %>
   <div class="row-fluid">
     <div class="span4">
       <div class="well">
@@ -115,7 +113,7 @@
         success: function(d) {
           $("div#searchresults").empty();
           if (d.count == 0) {
-            $("div#searchresults").append("<p>No Results</p>"); 
+            $("div#searchresults").append('<div class="container-fluid"><p>No Results</p></div>'); 
           } else {
             var prevLink = 'javascript:void(0)';
             var maxPage = parseInt(d.count/10.0+(d.count%10 == 0 ? 0 : 1));
@@ -175,7 +173,7 @@
         },
         error: function() {
           $("div#searchresults").empty();
-          $("div#searchresults").append("<p>Backend Error, please try again later</p>");
+          $("div#searchresults").append('<div class="container-fluid"><p>Backend Error, please try again later</p></div>');
         }
       });
   }
