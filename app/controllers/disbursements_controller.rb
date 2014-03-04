@@ -56,7 +56,7 @@ class DisbursementsController < ApplicationController
   end
 
   def published
-    @disbursement = Disbursement.find_by_publication_id(params[:id])
+    @disbursement = Disbursement.find_by_publication_id!(params[:id])
     @revision = @disbursement.current_revision rescue nil
     pfda_view = PfdaView.new
     pfda_view.disbursement_revision_id = @revision.id
