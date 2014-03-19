@@ -493,6 +493,7 @@ Please remit funds at least two (2) days prior to vessels arrival to the followi
 <b>#{@revision.data['bank_address1']}</b>
 <b>#{@revision.data['bank_address2']}</b>
 
+<b>SWIFT Code: #{@revision.data['swift_code']}</b>
 <b>BSB Number: #{@revision.data['bsb_number']}</b>
 <b>A/C Number: #{@revision.data['ac_number']}</b>
 <b>A/C Name: #{@revision.data['ac_name']}</b>
