@@ -36,13 +36,15 @@ class JsonrpcController < ApplicationController
     das = das.select('disbursements.id,
                       disbursement_revisions.reference,
                       disbursements.publication_id,
+                      disbursement_revisions.amount,
                       disbursements.status_cd')
     das = das.map do |d|
       {
         "id" => d.id,
         "reference" => d.reference,
         "uuid" => d.publication_id,
-        "status" => ["draft", "initial", "deleted", "final"][d.status_cd]
+        "status" => ["draft", "initial", "deleted", "final"][d.status_cd],
+        "amount" => d.amount
       }
     end
     success({
