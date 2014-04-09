@@ -65,5 +65,6 @@ module ProformaDA
     config.aos_api_url = 'https://monson.agencyops.net/api'
     config.aos_api_user = 'monson'
     config.aos_api_password = 'Yqzz26IyfJqrN08M'
+    config.aos_api_psk = 'gAaCKy1WubtCom7f'
   end
 end

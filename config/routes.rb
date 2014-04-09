@@ -19,6 +19,7 @@ ProformaDA::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
+
   resources :disbursements do
     member do
       match 'status/:status' => 'disbursements#status'
@@ -84,6 +85,8 @@ ProformaDA::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  post 'jsonrpc' => 'jsonrpc#index'
 
   get "home/index"
   # You can have the root of your site routed with "root"
