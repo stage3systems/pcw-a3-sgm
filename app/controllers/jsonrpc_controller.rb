@@ -24,6 +24,7 @@ class JsonrpcController < ApplicationController
                                     name:"%#{query[:terminal]}%")
       p[:terminal_id] = terminal_ids unless terminal_ids.empty?
     end
+    p[:aos_id] = nil unless query[:showRegistered]
     eta = Date.parse(query[:eta]) rescue nil
     das = Disbursement.joins(:current_revision).where(p)
     das = das.where('disbursement_revisions.eta = :eta', eta: eta) if eta
@@ -56,7 +57,19 @@ class JsonrpcController < ApplicationController
 
   def register(id, aos_id)
     da = Disbursement.find(id)
-    da.aos_id = aos_id
+    if da.aos_id
+      error(-32602, "Already registered")
+    else
+      da.aos_id = aos_id
+      da.save!
+      success("ok")
+    end
+  end
+
+  def unregister(aos_id)
+    da = Disbursement.find_by_aos_id(aos_id)
+    error(-32602, "Registered DA not found") if da.nil?
+    da.aos_id = nil
     da.save!
     success("ok")
   end
@@ -71,7 +84,7 @@ class JsonrpcController < ApplicationController
   end
 
   def check_method
-    return true if ["search", "register"].include? params[:method]
+    return true if ["search", "register", "unregister"].include? params[:method]
     render json: error(-32601, "Method not found")
     false
   end

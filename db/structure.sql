@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -54,7 +55,8 @@ CREATE TABLE cargo_types (
     subsubtype character varying(255),
     subsubsubtype character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    enabled boolean DEFAULT false
 );
 
 
@@ -214,7 +216,9 @@ CREATE TABLE disbursement_revisions (
     user_id integer,
     anonymous_views integer DEFAULT 0,
     pdf_views integer DEFAULT 0,
-    voyage_number character varying(255)
+    voyage_number character varying(255),
+    amount numeric,
+    currency_symbol character varying(255)
 );
 
 
@@ -256,7 +260,10 @@ CREATE TABLE disbursements (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     terminal_id integer,
-    user_id integer
+    user_id integer,
+    office_id integer,
+    current_revision_id integer,
+    aos_id integer
 );
 
 
@@ -391,6 +398,72 @@ CREATE SEQUENCE offices_id_seq
 --
 
 ALTER SEQUENCE offices_id_seq OWNED BY offices.id;
+
+
+--
+-- Name: offices_ports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE offices_ports (
+    id integer NOT NULL,
+    office_id integer,
+    port_id integer
+);
+
+
+--
+-- Name: offices_ports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE offices_ports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: offices_ports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE offices_ports_id_seq OWNED BY offices_ports.id;
+
+
+--
+-- Name: pfda_views; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pfda_views (
+    id integer NOT NULL,
+    user_agent text,
+    browser character varying(255),
+    browser_version character varying(255),
+    ip character varying(255),
+    pdf boolean,
+    disbursement_revision_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: pfda_views_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pfda_views_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pfda_views_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pfda_views_id_seq OWNED BY pfda_views.id;
 
 
 --
@@ -761,6 +834,20 @@ ALTER TABLE ONLY offices ALTER COLUMN id SET DEFAULT nextval('offices_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY offices_ports ALTER COLUMN id SET DEFAULT nextval('offices_ports_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfda_views ALTER COLUMN id SET DEFAULT nextval('pfda_views_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY ports ALTER COLUMN id SET DEFAULT nextval('ports_id_seq'::regclass);
 
 
@@ -886,6 +973,22 @@ ALTER TABLE ONLY offices
 
 
 --
+-- Name: offices_ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY offices_ports
+    ADD CONSTRAINT offices_ports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pfda_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pfda_views
+    ADD CONSTRAINT pfda_views_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -966,6 +1069,8 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 --
 -- PostgreSQL database dump complete
 --
+
+SET search_path TO "$user",public;
 
 INSERT INTO schema_migrations (version) VALUES ('20130116125348');
 
@@ -1074,3 +1179,15 @@ INSERT INTO schema_migrations (version) VALUES ('20130827065522');
 INSERT INTO schema_migrations (version) VALUES ('20130903120110');
 
 INSERT INTO schema_migrations (version) VALUES ('20131030073037');
+
+INSERT INTO schema_migrations (version) VALUES ('20131111084720');
+
+INSERT INTO schema_migrations (version) VALUES ('20140110104908');
+
+INSERT INTO schema_migrations (version) VALUES ('20140110105938');
+
+INSERT INTO schema_migrations (version) VALUES ('20140212021230');
+
+INSERT INTO schema_migrations (version) VALUES ('20140409074222');
+
+INSERT INTO schema_migrations (version) VALUES ('20140429082631');
