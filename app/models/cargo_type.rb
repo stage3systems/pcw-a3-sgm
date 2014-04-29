@@ -23,28 +23,6 @@ class CargoType < ActiveRecord::Base
   end
 
   def self.authorized
-    self.where{
-                     (subsubtype.in ['COKING COAL',
-                                    'STEAMING COAL',
-                                    'IRON ORE',
-                                    'ALUMINA',
-                                    'CAUSTIC SODA',
-                                    'WHEAT',
-                                    'BARLEY',
-                                    'CANOLA',
-                                    'SORGHUM',
-                                    'SOYBEANS',
-                                    'PALM OIL',
-                                    'MALT',
-                                    'MALTING BARLEY',
-                                    'FEED BARLEY',
-                                    'FABA BEANS',
-                                    'CHICK PEAS',
-                                    'CEMENT',
-                                    'SALT',
-                                    'SULPHUR',
-                                    'CONCENTRATES']) |
-                      (subtype.in ['BUNKERING']) |
-                      (maintype.in ['CONTAINERS', 'PCC VEHICLES'])}
+    self.where(enabled: true)
   end
 end

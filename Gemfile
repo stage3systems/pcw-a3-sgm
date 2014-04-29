@@ -35,6 +35,7 @@ gem 'wice_grid'
 gem 'newrelic_rpm'
 gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
+gem 'httparty'
 
 
 # Gems used only for assets and not required

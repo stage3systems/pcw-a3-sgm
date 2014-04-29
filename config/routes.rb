@@ -52,6 +52,11 @@ ProformaDA::Application.routes.draw do
   resources :vessels
   resources :companies
   resources :taxes
+  resources :cargo_types do
+    collection do
+      post 'enabled'
+    end
+  end
 
   # Sample resource route with options:
   #   resources :products do

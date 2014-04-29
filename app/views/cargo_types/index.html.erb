@@ -1,0 +1,67 @@
+<div class="container-fluid">
+  <h2 class="title">
+    Cargo Types
+  </h2>
+  <div id="tree"></div>
+</div>
+<script type="text/javascript">
+  var rawTypes = <%= @cts.to_json.html_safe %>;
+  var cargoTypes = [];
+  var map = {children: []};
+  rawTypes.forEach(function(c) {
+      parseCargoType(map, c.id, c.maintype, c.subtype,
+                     c.subsubtype, c.subsubsubtype, c.enabled);
+  });
+  function findOrCreateChild(ctx, name) {
+    var n = ctx.children.length,
+        i = -1;
+    while (++i < n) {
+      if (ctx.children[i].title == name) {
+        return ctx.children[i];
+      }
+    }
+    var c = {
+      title: name,
+      children: []
+    };
+    ctx.children.push(c);
+    return c;
+  }
+  function parseCargoType(ctx, id, mt, st, sst, ssst, enabled) { 
+    var mtCtx = findOrCreateChild(ctx, mt);
+    if (!st || st.trim() == '') {
+      mtCtx.id = id;
+      mtCtx.select = enabled;
+      return
+    }
+    var stCtx = findOrCreateChild(mtCtx, st);
+    if (!sst || sst.trim() == '') {
+      stCtx.id = id;
+      stCtx.select = enabled;
+      return;
+    }
+    var sstCtx = findOrCreateChild(stCtx, sst);
+    if (!ssst || ssst.trim() == '') {
+      sstCtx.id = id;
+      sstCtx.select = enabled;
+      return;
+    }
+    var ssstCtx = findOrCreateChild(sstCtx, ssst);
+    ssstCtx.id = id;
+    ssstCtx.select = enabled;
+  }
+  $('div#tree').dynatree({
+    checkbox: true,
+    selectMode: 3,
+    children: map.children,
+    onSelect: function(select, node) {
+      var ids = node.tree.getSelectedNodes()
+                  .map(function(n) { return n.data.id })
+                  .filter(function(n) { return typeof n != 'undefined'; });
+      $.post('/cargo_types/enabled', {ids: ids},
+             function(data, textStatus, jqXHR) {
+      });
+    }
+  });
+</script>
+

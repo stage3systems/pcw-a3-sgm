@@ -1,4 +1,25 @@
 namespace :monson do
+  namespace :aos_sync do
+    desc "Import Cargo Types from AOS"
+    task :cargo_types => :environment do
+      api = AosApi.new
+      JSON.parse(api.query('cargoType'))['data'].each do |t|
+        existing = CargoType.where(remote_id: t['id']).first
+        existing = CargoType.where(
+          maintype: t['type'],
+          subtype: t['subtype'],
+          subsubtype: t['subsubtype'],
+          subsubsubtype: t['subsubsubtype']).first unless existing
+        if existing
+          existing.maintype = t['type']
+          existing.subtype = t['subtype']
+          existing.subsubtype = t['subsubtype']
+          existing.subsubsubtype = t['subsubsubtype']
+          existing.save!
+        end
+      end
+    end
+  end
   namespace :import do
     require 'csv'
     require 'json'

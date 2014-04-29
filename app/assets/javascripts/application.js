@@ -48,3 +48,4 @@
 //= require timezone
 //= require wice_grid
 //= require moment.min
+//= require jquery.dynatree
