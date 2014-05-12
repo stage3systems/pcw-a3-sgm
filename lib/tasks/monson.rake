@@ -4,19 +4,19 @@ namespace :monson do
     task :cargo_types => :environment do
       api = AosApi.new
       JSON.parse(api.query('cargoType', {limit: 1000}).body)['data']['cargoTypes'].each do |t|
-        existing = CargoType.where(remote_id: t['id']).first
-        existing = CargoType.where(
+        ct = CargoType.where(remote_id: t['id']).first
+        ct = CargoType.where(
           maintype: t['type'],
           subtype: t['subtype'],
           subsubtype: t['subsubtype'],
-          subsubsubtype: t['subsubsubtype']).first unless existing
-        if existing
-          existing.maintype = t['type']
-          existing.subtype = t['subtype']
-          existing.subsubtype = t['subsubtype']
-          existing.subsubsubtype = t['subsubsubtype']
-          existing.save!
-        end
+          subsubsubtype: t['subsubsubtype']).first unless ct
+        ct = CargoType.new unless ct
+        ct.remote_id = t['id']
+        ct.maintype = t['type']
+        ct.subtype = t['subtype']
+        ct.subsubtype = t['subsubtype']
+        ct.subsubsubtype = t['subsubsubtype']
+        ct.save!
       end
     end
   end
