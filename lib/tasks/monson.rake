@@ -3,7 +3,7 @@ namespace :monson do
     desc "Import Cargo Types from AOS"
     task :cargo_types => :environment do
       api = AosApi.new
-      JSON.parse(api.query('cargoType'))['data'].each do |t|
+      JSON.parse(api.query('cargoType', {limit: 1000}).body)['data']['cargoTypes'].each do |t|
         existing = CargoType.where(remote_id: t['id']).first
         existing = CargoType.where(
           maintype: t['type'],
