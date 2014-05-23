@@ -288,12 +288,6 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function() {
-    function resize() {
-      $("div.final-figure-amount").width(
-        $("table.table-condensed thead tr th:last").width());
-    };
-    $(window).on("resize", resize);
-    resize();
     $("a.hint").tooltip({container: 'body'});
   });
 </script>
