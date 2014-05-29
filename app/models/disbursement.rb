@@ -79,7 +79,7 @@ class Disbursement < ActiveRecord::Base
         nxt.descriptions[k] = cur.descriptions[k]
         nxt.compulsory[k] = false
       end
-      # merge leagacy data
+      # merge legacy data
       if nxt.fields.has_key?(k)
         nxt.comments[k] = cur.comments[k] if cur.comments
         nxt.disabled[k] = cur.disabled[k]
