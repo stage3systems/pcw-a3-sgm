@@ -10,15 +10,15 @@ class CreateServices < ActiveRecord::Migration
 
       t.timestamps
     end
-    Charge.all.each do |c|
-      s = Service.new
-      s.code = c.code
-      s.key = c.key
-      s.item = c.name
-      s.row_order = c.row_order
-      s.port_id = c.port_id
-      s.save
-    end
+    #Charge.all.each do |c|
+      #s = Service.new
+      #s.code = c.code
+      #s.key = c.key
+      #s.item = c.name
+      #s.row_order = c.row_order
+      #s.port_id = c.port_id
+      #s.save
+    #end
   end
 
   def down
