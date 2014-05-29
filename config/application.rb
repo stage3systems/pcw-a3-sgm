@@ -62,9 +62,24 @@ module ProformaDA
     #config.after_sign_out_path = "https://localhost:8001/admin/logout"
 
     # AOS
-    config.aos_api_url = 'https://monson.agencyops.net/api'
-    config.aos_api_user = 'monson'
-    config.aos_api_password = 'Yqzz26IyfJqrN08M'
-    config.aos_api_psk = 'gAaCKy1WubtCom7f'
+    config.aos_api_url = ''
+    config.aos_api_user = ''
+    config.aos_api_password = ''
+    config.aos_api_psk = 'changeme'
+
+    # multi tenancy tenant
+    config.tenant = 'monson'
+    config.tenant_name = 'Monson'
+    config.tenant_full_name = 'Monson Agencies Australia Pty Ltd'
+    config.tenant_favicon = 'favicon_monson.png'
+    config.tenant_default_email = 'accounts@monson.com.au'
+    config.tenant_da_logo = 'monson_agency.png'
+
+    #config.tenant = 'da_desk'
+    #config.tenant_name = 'DA-Desk'
+    #config.tenant_full_name = "DA-Desk FZ-LLC"
+    #config.tenant_favicon = 'favicon_da_desk.ico'
+    #config.tenant_default_email = 'info@da-desk.com'
+    #config.tenant_da_logo = 'da_desk.png'
   end
 end

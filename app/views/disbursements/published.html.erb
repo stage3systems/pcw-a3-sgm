@@ -37,7 +37,7 @@
             <% end %>
           </div>
           <div class="span6">
-            <div class="pull-right"><%= image_tag "monson_agency.png" %></div>
+            <div class="pull-right"><%= image_tag ProformaDA::Application.config.tenant_da_logo %></div>
           </div>
         </div>
         <div class="btn-group"></div>
@@ -117,7 +117,7 @@
                   <%= @revision.data['office_address2']||@revision.data['from_address2'] %><br />
                   <%= @revision.data['office_address3'] %>
                   <% unless @revision.data['office_address3'].blank? %><br /><% end %>
-                  <%= @revision.data['office_email']||"accounts@monson.com.au" %>
+                  <%= @revision.data['office_email']||ProformaDA::Application.config.tenant_default_email %>
                 </td>
               </tr>
             </table>

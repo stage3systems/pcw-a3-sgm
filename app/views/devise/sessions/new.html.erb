@@ -5,7 +5,7 @@
                browser.version.to_i < 10 and params[:force].nil?) %>
     <div id="login">
       <div class="well" style="margin: 0 auto; width: 420px;">
-        <h2 class="title">Monson Estimates</h2>
+        <h2 class="title"><%= ProformaDA::Application.config.tenant_name %> Estimates</h2>
 
         <div class="span12">
           <% flash.each do |name, msg| %>

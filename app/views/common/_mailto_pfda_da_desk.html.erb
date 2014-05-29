@@ -1,0 +1,36 @@
+<a class="btn btn-small<%= " disabled" if disbursement.draft? %>"
+   <% unless disbursement.draft? %>
+   title="Send a Link By Email"
+   href="mailto:<%= disbursement.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursement.vessel_name} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
+Please click on the link below to view the requested Proforma Disbursement Account for #{disbursement.vessel_name} calling at #{disbursement.port.name}.
+You can download a PDF file view of the estimate from this link (no log in required).
+
+#{published_short_url(disbursement.publication_id)}
+
+Please remit funds at least two (2) days prior to vessels arrival to the following Bank Account:
+
+Bank Name
+1 Bank Street
+Dubai
+
+SWIFT Code: XXXXXX
+A/C Number: 00000000
+A/C Name: DA-Desk FZ-LLC
+
+For enquires relating to this Estimate please contact our local Port Office:
+
+#{disbursement.office.name rescue config.company_name}
+#{disbursement.office.address_1 rescue config.company_address1}
+#{disbursement.office.address_2 rescue config.company_address2}
+#{disbursement.office.address_3 rescue ""}
+#{disbursement.office.email rescue ProformaDA::Application.config.tenant_default_email}
+
+BODY
+)
+%>"
+   <% else %>
+   href="#"
+   <% end %>
+>
+  <i class="icon-envelope"></i>
+</a>

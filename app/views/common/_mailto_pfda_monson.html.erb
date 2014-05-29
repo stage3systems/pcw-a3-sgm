@@ -19,7 +19,7 @@ A/C Number: 1077-33669
 A/C Name: Monson Agencies Australia Pty Ltd
 
 Download the full Terms and Conditions:
-#{root_url}maa-terms.pdf
+#{root_url}#{ProformaDA::Application.config.tenant_terms}
 
 For enquires relating to this Estimate please contact our local Port Office:
 
@@ -27,7 +27,7 @@ For enquires relating to this Estimate please contact our local Port Office:
 #{disbursement.office.address_1 rescue config.company_address1}
 #{disbursement.office.address_2 rescue config.company_address2}
 #{disbursement.office.address_3 rescue ""}
-#{disbursement.office.email rescue "accounts@monson.com.au"}
+#{disbursement.office.email rescue ProformaDA::Application.config.tenant_default_email}
 
 BODY
 )

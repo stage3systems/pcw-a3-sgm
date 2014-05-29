@@ -329,7 +329,8 @@ class DisbursementsController < ApplicationController
   def pdf_header
     # title and logo
     @pdf.fill_color = '000000'
-    logo_path = Rails.root.join('app', 'assets', 'images', 'monson_agency.png')
+    logo_path = Rails.root.join('app', 'assets', 'images',
+                                ProformaDA::Application.config.tenant_da_logo)
     @pdf.bounding_box([0, 720], width: 540, height: 160) do
       if @disbursement.draft?
         pdf_title("DRAFT PROFORMA DISBURSEMENT", nil)
@@ -538,7 +539,7 @@ TXT
     r = 0
 
     # draw title
-    sheet.row(r).push "MONSON AGENCIES AUSTRALIA PTY LTD"
+    sheet.row(r).push ProformaDA::Application.config.tenant_full_name.upcase
     sheet.row(r).default_format = title
     sheet.row(r).height = 20
     sheet.merge_cells(r, 0, r, 3)

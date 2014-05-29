@@ -14,3 +14,29 @@ for disbursments.
 
 Each disbursment revision "crystalizes" the current schema using the flexibility
 of PostgreSQL's hstore extension, so that it becomes a self-contained entity.
+
+
+== Multitenancy
+
+Tenants are configure application wide, sot here should be one instance
+per tenant.
+
+Required config values:
+
+ - config.tenant (e.g. 'monson')
+ - config.tenant_name (.e.g 'Monson')
+ - config.tenant_full_name (e.g. 'Monson Agency Australia Pty Ltd')
+ - config.tenant_favicon (e.g. 'favicon_monson.png')
+ - config.tenant_default_email (e.g. 'accounts@monson.com.au')
+ - config.tenant_da_logo (e.g. 'monson_agency.png')
+
+Required files:
+
+ - app/views/common/_mailto_pfda_<tenant>.html.erb
+ - app/assets/images/<config.tenant_favicon>
+ - app/assets/images/logo_<config.tenant>.png
+ - app/assets/images/<config.tenant_da_logo>
+ - app/assets/stylesheets/<config.tenant>.css
+
+After the db setup, the Configuration object has to be edited to reflect
+the tenant.

@@ -137,7 +137,7 @@ CTX
     e = self.data['office_email']
     e = self.disbursement.office.email rescue nil if e.blank?
     e = self.user.email rescue nil if e.blank?
-    e = "accounts@monson.com.au" if e.blank?
+    e = ProformaDA::Application.config.tenant_default_email if e.blank?
     e
   end
 

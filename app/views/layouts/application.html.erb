@@ -4,19 +4,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monson Estimates</title>
+  <title><%= ProformaDA::Application.config.tenant_name %> Estimates</title>
   <!--[if lt IE 9]>
   <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= stylesheet_link_tag ProformaDA::Application.config.tenant, media: "all" %>
   <%= javascript_include_tag "application" %>
-  <%= favicon_link_tag "favicon.png", :rel => 'shortcut icon' %>
+  <%= favicon_link_tag ProformaDA::Application.config.tenant_favicon, :rel => 'shortcut icon' %>
   <%= csrf_meta_tags %>
 </head>
 <body id="<%= controller_name %>">
   <div class="wrapper">
     <header id="hd" class="navbar navbar-static-top">
-      <div id="logo" class="pull-right"><a href="/">Monson</a></div>
+      <div id="logo" class="pull-right"><a href="/"><%= ProformaDA::Application.config.tenant_name %></a></div>
       <% if current_user %>
         <% if action_name == "published" %>
           <div class="container">
@@ -93,7 +94,9 @@
         </a>
         <a href="#">Terms of Service</a>
         <a href="#">Privacy Policy</a>
-        <a href="/userManual_v1.2.pdf">User Manual</a>
+        <% if ProformaDA::Application.config.tenant == 'monson' %>
+          <a href="/userManual_v1.2.pdf">User Manual</a>
+        <% end %>
       </div>
     </footer>
     <% end %>
