@@ -13,7 +13,7 @@ class AddDefaultConfiguration < ActiveRecord::Migration
     c.ac_name = 'Monson Agencies Australia Pty Ltd'
     c.save!
     data = c.crystalize
-    DisbursmentRevision.all.each do |r|
+    DisbursementRevision.all.each do |r|
       r.data = r.data.merge(data)
       r.save!
     end
