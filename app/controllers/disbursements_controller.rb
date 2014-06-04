@@ -3,6 +3,7 @@ class DisbursementsController < ApplicationController
   before_filter :authenticate_user!, :except => :published
   add_breadcrumb "Proforma Disbursements", :disbursements_url
   include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
 
   # GET /disbursements
   # GET /disbursements.json
@@ -407,9 +408,9 @@ class DisbursementsController < ApplicationController
       end
       services_data <<  [
         desc,
-        {content: number_to_currency(@revision.values[f], unit: ""),
+        {content: number_to_currency(nan_to_zero(@revision.values[f]), unit: ""),
          align: :right},
-        {content: number_to_currency(@revision.values_with_tax[f], unit: ""),
+        {content: number_to_currency(nan_to_zero(@revision.values_with_tax[f]), unit: ""),
          align: :right}
       ]
     end
@@ -583,9 +584,9 @@ TXT
     @revision.field_keys.each_with_index do |k, i|
       sheet.row(r+i).push @revision.descriptions[k],
                           @revision.comments[k],
-                          @revision.values[k]
+                          nan_to_zero(@revision.values[k])
       unless @revision.tax_exempt?
-        sheet.row(r+i).push @revision.values_with_tax[k]
+        sheet.row(r+i).push nan_to_zero(@revision.values_with_tax[k])
       end
       sheet.row(r+i).default_format = right
       (0..1).each {|c| sheet.row(r+i).set_format(c, left) }

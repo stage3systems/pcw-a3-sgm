@@ -12,6 +12,11 @@ module ApplicationHelper
     vessels_url
   end
 
+  def nan_to_zero(n)
+    return 0 if n == 'NaN'
+    return n
+  end
+
   def ports_active?
     ['ports', 'tariffs', 'services', 'terminals'].member? controller_name
   end

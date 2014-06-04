@@ -157,11 +157,11 @@
                       <% end %>
                     </td>
                     <td class="right-align">
-                      <%= number_to_currency @revision.values[f], unit: "" %>
+                      <%= number_to_currency nan_to_zero(@revision.values[f]), unit: "" %>
                     </td>
                     <% unless @revision.tax_exempt? %>
                     <td class="right-align">
-                      <%= number_to_currency @revision.values_with_tax[f],
+                      <%= number_to_currency nan_to_zero(@revision.values_with_tax[f]),
                                              unit: "" %>
                     </td>
                     <% end %>
