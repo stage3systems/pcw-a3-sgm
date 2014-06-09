@@ -5,20 +5,12 @@ class DisbursementRevision < ActiveRecord::Base
                   :cargo_type_id, :comments, :eta, :compulsory, :disabled,
                   :overriden, :user_id, :anonymous_views, :pdf_views,
                   :voyage_number, :amount, :currency_symbol
-  serialize :data, ActiveRecord::Coders::Hstore
-  serialize :fields, ActiveRecord::Coders::Hstore
-  serialize :descriptions, ActiveRecord::Coders::Hstore
-  serialize :comments, ActiveRecord::Coders::Hstore
-  serialize :compulsory, ActiveRecord::Coders::Hstore
-  serialize :disabled, ActiveRecord::Coders::Hstore
-  serialize :codes, ActiveRecord::Coders::Hstore
-  serialize :overriden, ActiveRecord::Coders::Hstore
-  serialize :values, ActiveRecord::Coders::Hstore
-  serialize :values_with_tax, ActiveRecord::Coders::Hstore
   belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user
-  has_many :views, class_name: PfdaView, order: 'created_at DESC'
+  has_many :views,
+           -> {order 'created_at DESC'},
+           class_name: "PfdaView"
 
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}

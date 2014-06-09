@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="">
   <p id="notice"><%= notice %></p>
   <h2 class="title">Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
   <% ['item', 'key'].each do |k| %>
@@ -35,11 +35,11 @@
   </table>
   <div class="btn-group">
     <% if @terminal %>
-      <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @service), :class => "btn btn-small" %>
-      <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => "btn btn-small" %>
+      <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @service), :class => "btn btn-default btn-sm" %>
+      <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => "btn btn-default btn-sm" %>
     <% else %>
-      <%= link_to 'Edit', edit_port_service_path(@port, @service), :class => "btn btn-small" %>
-      <%= link_to 'Back', port_services_path(@port), :class => "btn btn-small" %>
+      <%= link_to 'Edit', edit_port_service_path(@port, @service), :class => "btn btn-default btn-sm" %>
+      <%= link_to 'Back', port_services_path(@port), :class => "btn btn-default btn-sm" %>
     <% end %>
   </div>
 </div>

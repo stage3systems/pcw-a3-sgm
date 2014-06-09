@@ -7,7 +7,10 @@ class PortsController < ApplicationController
   # GET /ports
   # GET /ports.json
   def index
-    @ports = Port.all
+    @ports = Port.order(:name)
+    @search_port_name = params[:port][:port_name] rescue nil
+    @ports = @ports.where('name ILIKE ?', "%#{@search_port_name}%") if @search_port_name
+    @ports = @ports.page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb

@@ -14,93 +14,88 @@
   <%= favicon_link_tag ProformaDA::Application.config.tenant_favicon, :rel => 'shortcut icon' %>
   <%= csrf_meta_tags %>
 </head>
-<body id="<%= controller_name %>">
-  <div class="wrapper">
-    <header id="hd" class="navbar navbar-static-top">
-      <div id="logo" class="pull-right"><a href="/"><%= ProformaDA::Application.config.tenant_name %></a></div>
-      <% if current_user %>
-        <% if action_name == "published" %>
-          <div class="container">
-            <div class="row-fluid" style="padding-top: 16px;">
-              <i class="icon-chevron-left icon-white"></i>
-              <%= link_to "Back to the Dashboard", root_path, class: "back" %>
-            </div>
-          </div>
-        <% else %>
-          <div class="logged-in">
-            <b><%= current_user.full_name %><%= " | #{current_user.office.name}" if current_user.office %></b>
-            <%= link_to "Log Out", destroy_user_session_path,
-                        class: "btn btn-mini" %>
-          </div>
-          <div id="mainmenu">
-            <ul class="nav nav-tabs">
-              <li class="<%= "active" if controller_name == 'home' %>">
-                <a href="<%= root_url %>">
-                  <i class="icon-home"></i>&nbsp;Dashboard
-                </a>
-              </li>
-              <li class="<%= "active" if controller_name == 'disbursements' %>">
-                <a href="<%= disbursements_url %>">
-                  <i class="icon-list"></i>&nbsp;Proforma Disbursements
-                </a>
-              </li>
-              <li class="<%= "active" if configuration_tab? %>">
-                <a href="<%= configuration_url %>">
-                  <i class="icon-wrench"></i>&nbsp;Configuration
-                </a>
-              </li>
-            </ul>
-          </div>
-          <% if configuration_tab? %>
-          <div id="submenu" class="container-fluid">
-            <ul class="nav nav-pills">
-              <% if current_user.admin? %>
-              <li class="<%= "active" if ports_active? %>">
-                <a href="<%= ports_url %>">Ports</a>
-              </li>
-              <li class="<%= "active" if controller_name == 'taxes' %>">
-                <a href="<%= taxes_url %>">Taxes</a>
-              </li>
-              <% end %>
-              <li class="<%= "active" if controller_name == 'vessels' %>">
-                <a href="<%= vessels_url %>">Vessels</a>
-              </li>
-              <li class="<%= "active" if controller_name == 'companies' %>">
-                <a href="<%= companies_url %>">Companies</a>
-              </li>
-              <li class="<%= "active" if controller_name == 'cargo_types' %>">
-                <a href="<%= cargo_types_url %>">Cargo Types</a>
-              </li>
-            </ul>
-          </div>
-          <% end %>
-        <% end %>
-      <% end %>
-    </header>
-    <div class="clearfix"></div>
-    <div id="body<%= "_published" if action_name == "published" %>">
-      <% if current_user and action_name != "published" %>
-      <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
-      <% end %>
-        <%= yield %>
-      <div class="clearfix"></div>
-    </div>
-    <% unless action_name == "published" %>
-    <footer id="ft">
-      <div>
-        &copy; 2013-2014
-        <a href="http://stage3systems.com" target="_blank" class="company">
-          Stage 3 Systems Inc.
-        </a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Privacy Policy</a>
-        <% if ProformaDA::Application.config.tenant == 'monson' %>
-          <a href="/userManual_v1.2.pdf">User Manual</a>
-        <% end %>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#pfda-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">PROFORMA DA</a>
       </div>
-    </footer>
+      <div class="collapse navbar-collapse" id="pfda-navbar-collapse">
+        <div class="btn-group nav-buttons">
+          <%= yield :navbar_buttons %>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#"><%= icon('user') %> Hello <%= current_user.first_name %></a></li>
+          <li><%= link_to icon('log-out'), destroy_user_session_path,
+                          method: :delete,
+                          class: "btn btn-xs" %></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="sidebar">
+        <ul class="nav nav-sidebar"><!--
+        --><li class="<%= "active" if controller_name == 'home' %>"><!--
+          --><a href="<%= root_path %>">
+              <p class="nav-item">
+                <span class="logo"><%= icon('dashboard') %></span>
+                <br />
+                DASHBOARD
+              </p>
+            </a><!--
+        --></li><!--
+        --><li class="<%= "active" if controller_name == 'disbursements' %>"><!--
+          --><a href="<%= disbursements_path %>">
+              <p class="nav-item">
+                <span class="logo"><i class="fa fa-money"></i></span>
+                <br />
+                DISBURSEMENTS
+              </p>
+            </a></li><!--
+        --><li class="<%= "active" unless ['home', 'disbursements'].member? controller_name %>"><!--
+          --><a href="<%= ports_path %>">
+              <p class="nav-item">
+                <span class="logo"><%= icon('wrench') %></span>
+                <br />
+                CONFIGURATIONS
+              </p>
+            </a><!--
+        --></li><!--
+      --></ul></div>
+      <div class="main">
+        <% unless ['home', 'disbursements'].member? controller_name %>
+          <ul class="nav nav-tabs"><!--
+            --><li class="<%= "active" if controller_name == 'ports' %>"><a href="<%= ports_path %>">PORTS</a></li><!--
+            --><li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_path %>">TAXES</a></li><!--
+            --><li class="<%= "active" if controller_name == 'vessels' %>"><a href="<%= vessels_path %>">VESSELS</a></li><!--
+            --><li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_path %>">COMPANIES</a></li><!--
+            --><li class="<%= "active" if controller_name == 'cargo_types' %>"><a href="<%= cargo_types_path %>">CARGO TYPES</a></li><!--
+          --></ul>
+        <% end %>
+        <div class="container-fluid">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <a href="http://stage3systems.com" target="_blank" class="company">
+      &copy;2013-2014 Stage 3 Systems Inc.
+    </a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Privacy Policy</a>
+    <% if ProformaDA::Application.config.tenant == 'monson' %>
+      <a href="/userManual_v1.2.pdf">User Manual</a>
     <% end %>
   </div>
-  <%= piwik_tracking_tag %>
 </body>
 </html>

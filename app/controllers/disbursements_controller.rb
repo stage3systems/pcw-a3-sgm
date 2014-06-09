@@ -9,12 +9,12 @@ class DisbursementsController < ApplicationController
   # GET /disbursements.json
   def index
     @disbursements_grid = initialize_grid(Disbursement.where(
-          :port_id => current_user.authorized_ports.pluck(:id)
+          port_id: current_user.authorized_ports.pluck(:id)
         ),
-        :include => [:port, :company, :vessel, :current_revision],
-        :order => 'disbursement_revisions.updated_at',
-        :order_direction => 'desc',
-        :custom_order => {
+        joins: [:port, :company, :vessel, :current_revision],
+        order: 'disbursement_revisions.updated_at',
+        order_direction: 'desc',
+        custom_order: {
           'disbursements.current_revision_id' => 'current_revision.updated_at',
           'disbursements.port_id' => 'port.name',
           'disbursements.company_id' => 'company.name'
@@ -73,6 +73,7 @@ class DisbursementsController < ApplicationController
           pfda_view.save
           DisbursementRevision.increment_counter :anonymous_views, @revision.id
         end
+        render layout: "published"
       }
       format.pdf {
         if @revision and current_user.nil?

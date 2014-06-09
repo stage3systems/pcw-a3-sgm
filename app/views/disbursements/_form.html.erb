@@ -1,10 +1,11 @@
 <%= simple_form_for(@revision, url: disbursement_url(@disbursement),
-                    method: :put, html: {class: "form-horizontal"}) do |f| %>
+                    method: :put, html: {class: "form-horizontal"},
+                   wrapper: :horizontal_form) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <div class="row-fluid">
-    <div class="span4">
+    <div class="row">
+    <div class="col-md-4">
       <table class="table table-condensed table-bordered">
         <tbody>
           <tr>
@@ -40,7 +41,7 @@
         </tbody>
       </table>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
     <%= f.input :voyage_number, label: 'Voyage Number' %>
     <%= f.input :eta, label: 'ETA', as: :hidden %>
     <%= f.input :eta_picker, label: 'ETA', as: :fake %>
@@ -50,7 +51,7 @@
                       label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
     <%= f.input :days_alongside, label: "Days Alongside" %>
     <%= f.input :tugs_in, label: "Tugs In" %>
@@ -77,12 +78,12 @@
             <th>
               <%= @revision.descriptions[k] %>
               <% if k.starts_with? "EXTRAITEM" %>
-                &nbsp;<i class="icon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
+                &nbsp;<i class="glyphicon glyphicon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
               <% end %>
               &nbsp;<span class="editable_value" id="comment_<%= k %>"><%= @revision.comments[k] rescue '' %></span>
             </th>
             <td id="service_<%= k %>">
-              <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden icon-remove-circle" onclick="revertValue('<%= k %>')"></i>
+              <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden glyphicon glyphicon-remove-circle" onclick="revertValue('<%= k %>')"></i>
               <input type="hidden" name="overriden_<%= k %>"
               <% if @revision.overriden.has_key?(k) %>
                      value="<%= @revision.overriden[k] %>"
@@ -101,7 +102,7 @@
       <tfoot>
         <tr>
           <td><input id="extra_item" />&nbsp;Tax Applies: <input type="checkbox" id="extra_tax_applies" /></td>
-          <td><a id="add_item" class="btn btn-small btn-success" href="javascript:void(0)">Add Item</a></td>
+          <td><a id="add_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
           <td class="tax"></td>
           <td></td>
         </tr>
@@ -121,9 +122,9 @@
     <%= link_to "Cancel",
                 @disbursement,
                 method: :delete,
-                class: "btn" %>
+                class: "btn btn-default" %>
     <% else %>
-    <%= link_to "Cancel", disbursements_path, class: "btn" %>
+    <%= link_to "Cancel", disbursements_path, class: "btn btn-default" %>
     <% end %>
     </div>
   </div>
@@ -146,6 +147,7 @@
       ctx.services = $.grep(ctx.services, function(value) {
         return value != key;
       });
+      console.log("from remove extra");
       update();
     };
     window.revertValue = function(key) {
@@ -155,6 +157,7 @@
       $('input[name="overriden_'+key+'"]').val('');
       $("td#service_"+key+" a.editable_value").removeClass("editable-unsaved");
       $("td#service_"+key+" i").addClass("hidden");
+      console.log("from revert value");
       update();
     };
     var valueDisplay = function(value, sourceData) {
@@ -163,7 +166,8 @@
       ctx.overriden[key] = val;
       $('input[name="overriden_'+key+'"]').val(val);
       $(this).html(convert(val));
-      update();
+      console.log("from value display");
+      //update();
     };
     var uuid = function() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -210,6 +214,7 @@
     }
     var cleanCompute = function() {
       $("a.editable_value").removeClass("editable-unsaved");
+      console.log("from clean compute");
       update();
     };
     $("input#disbursement_revision_cargo_qty").on("change", cleanCompute);
@@ -224,6 +229,7 @@
       } else {
         $(".tax").show();
       }
+      console.log("from handle tax exempt");
       update();
     };
     $("input#disbursement_revision_tax_exempt").on('change', handleTaxExempt);
@@ -236,6 +242,7 @@
           ctx.cargo_type.subsubtype = cargoType.subsubtype;
           ctx.cargo_type.subsubsubtype = cargoType.subsubsubtype;
         }
+        console.log("from cargo type on change");
         update();
     });
     $("a#add_item").on("click", function(e) {
@@ -252,7 +259,7 @@
           ctx.overriden[key] = "0";
           $("table.disbursement tbody").append(
               '<tr class="service" id="service_'+key+'">'
-               +'<th>'+item+'&nbsp;<i class="icon-remove-circle" '
+               +'<th>'+item+'&nbsp;<i class="glyphicon glyphicon-remove-circle" '
                                     +'onclick="removeExtra(\''+key+'\')"></i>'
                     +'&nbsp;<span class="editable_value" '
                                 +'id="comment_'+key+'"></span>'
@@ -260,7 +267,7 @@
                +'<td id="service_'+key+'">'
                  +'<a class="editable_value" id="field_'+key+'" '
                     +'title="Click to override" href="#"></a>&nbsp;'
-                 +'<i class="hidden icon-remove-circle" '
+                 +'<i class="hidden glyphicon glyphicon-remove-circle" '
                     +'onclick="revertValue(\''+key+'\')"></i>'
                  +'<input type="hidden" name="overriden_'+key+'" />'
                  +'<input type="hidden" name="value_'+key+'" />'
@@ -295,6 +302,7 @@
             }
             $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
             ctx.disabled[key] = disabled;
+            console.log("from input disable on change");
             update();
         });
     };

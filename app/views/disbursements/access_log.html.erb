@@ -1,29 +1,29 @@
-<div class="container-fluid">
+<div class="">
   <h2>Access Log</h2>
 <% if @disbursement.current_revision.views.empty? %>
   <div class="alert">
     No View Details Available
   </div>
 <% else %>
-  <div class="row-fluid">
-    <div class="span3"><strong>Date</strong></div>
-    <div class="span3"><strong>IP</strong></div>
-    <div class="span3"><strong>Browser</strong></div>
-    <div class="span3"><strong>View Type</strong></div>
+  <div class="row">
+    <div class="col-md-3"><strong>Date</strong></div>
+    <div class="col-md-3"><strong>IP</strong></div>
+    <div class="col-md-3"><strong>Browser</strong></div>
+    <div class="col-md-3"><strong>View Type</strong></div>
   </div>
   <% @disbursement.current_revision.views.each do |v| %>
-    <div class="row-fluid">
-      <div class="span3">
+    <div class="row">
+      <div class="col-md-3">
         <%= l v.created_at %>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <% geo = @geoip.country(v.ip) %>
         <%= v.ip %> <% if geo %>(<%= "#{geo.city_name}, " unless geo.city_name.blank? %><%=  "#{geo.region_name}, " unless geo.region_name.blank? %><%= geo.country_name %>)<% end %>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <span title="<%= v.user_agent %>"><%= v.browser %> <%= v.browser_version %></span>
       </div>
-      <div class="span3">
+      <div class="col-md-3">
         <%= v.pdf? ? "Print" : "View" %>
       </div>
     </div>

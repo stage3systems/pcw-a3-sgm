@@ -1,13 +1,13 @@
-<div class="container-fluid">
+<div class="">
   <h2 class="title">
     Services for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
     <% if @terminal %>
       <%= link_to 'New Service',
                   new_port_terminal_service_path(@port, @terminal),
-                  :class => 'btn btn-primary btn-small' %>
+                  :class => 'btn btn-primary btn-sm' %>
     <% else %>
       <%= link_to 'New Service', new_port_service_path(@port),
-                  :class => 'btn btn-primary btn-small' %>
+                  :class => 'btn btn-primary btn-sm' %>
     <% end %>
   </h2>
 
@@ -42,29 +42,29 @@
             <% if @terminal %>
               <%= link_to icon('eye-open'),
                           port_terminal_service_path(@port, @terminal, service),
-                          class: 'btn btn-info btn-small',
+                          class: 'btn btn-info btn-sm',
                           title: 'View' %>
               <%= link_to icon('pencil'),
                           edit_port_terminal_service_path(@port, @terminal, service),
-                          class: 'btn btn-small',
+                          class: 'btn btn-default btn-sm',
                           title: 'Edit' %> %>
               <%= link_to icon('trash'),
                           port_terminal_service_path(@port, @terminal, service),
                           method: :delete, data: { confirm: 'Are you sure?' },
-                          class:'btn btn-danger btn-small',
+                          class:'btn btn-danger btn-sm',
                           title: 'Delete' %>
             <% else %>
               <%= link_to icon('eye-open'), port_service_path(@port, service),
-                          class: 'btn btn-info btn-small',
+                          class: 'btn btn-info btn-sm',
                           title: 'View' %>
               <%= link_to icon('pencil'),
                           edit_port_service_path(@port, service),
-                          class: 'btn btn-small',
+                          class: 'btn btn-default btn-sm',
                           title: 'Edit' %>
               <%= link_to icon('trash'),
                           port_service_path(@port, service), method: :delete,
                           data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-small',
+                          class: 'btn btn-danger btn-sm',
                           title: 'Delete' %>
             <% end %>
           </div>

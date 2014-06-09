@@ -1,79 +1,84 @@
-<div class="container-fluid">
-  <h2 class="title">
-    Dashboard
-    <%= link_to 'New PFDA', new_disbursement_path,
-                :class => 'btn btn-primary btn-small' %>
-  </h2>
-  <div class="row-fluid">
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New PFDA', new_disbursement_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row" style="padding-top: 2em;">
+  <div class="col-md-12">
+    <h4>Search</h4>
     <div class="search-form">
-        <%= simple_form_for :search, url: disbursements_path do |f| %>
-          <legend>Search</legend>
-          <%= f.input_field :port, prompt: 'Select a Port',
-                            collection: current_user.authorized_ports.all.to_a %>
-          <%= f.input_field :terminal, prompt: 'Select a Terminal',
-                            collection: [] %>
-          <%= f.input_field :vessel_name, placeholder: "Vessel Name",
-                             class: 'reset' %>
-          <%= f.input_field :cargo_type, label: "Cargo Type",
-                      prompt: 'Select a Cargo Type',
-                      collection: CargoType.authorized, label_method: :display %>
-          <div class="date-fields">
-              <%= f.input_field :start_date_picker, placeholder: "Start Date",
-                                 class: 'date reset input-small' %>
-              <%= f.input :start_date, as: :hidden %>
-              <%= f.input_field :end_date_picker, placeholder: "End Date",
-                                class: 'date reset input-small' %>
-              <%= f.input :end_date, as: :hidden %>
-          </div>
-          <div class="controls">
-            <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
-            <%= f.submit "Reset", name: "reset", class: 'btn' %>
-          </div>
-        <% end %>
+      <%= simple_form_for :search, url: disbursements_path,
+                          html: {class: 'form-inline'}  do |f| %>
+        <%= f.input :port, prompt: 'Select a Port',
+                    label: false,
+                    collection: current_user.authorized_ports.all.to_a %>
+        <%= f.input :terminal, prompt: 'Select a Terminal',
+                    label: false, collection: [] %>
+        <%= f.input :vessel_name, placeholder: "Vessel Name",
+                    label: false, class: 'reset' %>
+        <%= f.input :cargo_type, label: "Cargo Type",
+                    prompt: 'Select a Cargo Type', label: false,
+                    class: 'cargo-type',
+                    collection: CargoType.authorized, label_method: :display %>
+        <div class="form-group">
+            <%= f.input_field :start_date_picker, placeholder: "Start Date",
+                               class: 'form-control date reset' %>
+            <%= f.input :start_date, as: :hidden %>
+            <%= f.input_field :end_date_picker, placeholder: "End Date",
+                              class: 'form-control date reset' %>
+            <%= f.input :end_date, as: :hidden %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
+          <%= f.submit "Reset", name: "reset", class: 'btn' %>
+        </div>
+      <% end %>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
     <div class="search-results" id="searchresults">
     </div>
   </div>
-  <div class="row-fluid">
-    <div class="span4">
-      <div class="well">
-        <h3>Last 10 DRAFT Proforma Disbursements</h3>
-        <% if @drafts.each do |d| %>
-          <% editor = d.current_revision.user %>
-          <%= link_to d.title, edit_disbursement_url(d) %><br>
-          <small>last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %></small>
-          <br>
-        <% end.empty? %>
-          No DRAFT disbursement available.
-        <% end %>
-      </div>
-    </div>
-    <div class="span4">
-      <div class="well">
-        <h3>Last 10 INITIAL Proforma Disbursements</h3>
-        <% if @initials.each do |p| %>
-          <% publisher = p.current_revision.user %>
-          <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
-          <small>last updated on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %></small>
-          <br>
-        <% end.empty? %>
-          No INITIAL disbursement available.
-        <% end %>
-      </div>
-    </div>
-    <div class="span4">
-      <div class="well">
-        <h3>Last 10 FINAL Proforma Disbursements</h3>
-        <% if @finals.each do |f| %>
-          <% editor = f.current_revision.user %>
-          <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
-          <small>last updated on <%= l f.updated_at %><%= " by #{editor.full_name}" if editor %></small>
-          <br>
-        <% end.empty? %>
-          No FINAL disbursement available.
-        <% end %>
-      </div>
-    </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h4>Last Updated 10 Disbursements</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <h4><b>Draft</b></h4>
+    <% if @drafts.each do |d| %>
+      <% editor = d.current_revision.user %>
+      <%= link_to d.title, edit_disbursement_url(d) %><br>
+      <small>last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %></small>
+      <br>
+    <% end.empty? %>
+      No DRAFT disbursement available.
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <h4><b>Initial</b></h4>
+    <% if @initials.each do |p| %>
+      <% publisher = p.current_revision.user %>
+      <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
+      <small>last updated on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %></small>
+      <br>
+    <% end.empty? %>
+      No INITIAL disbursement available.
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <h4><b>Final</b></h4>
+    <% if @finals.each do |f| %>
+      <% editor = f.current_revision.user %>
+      <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
+      <small>last updated on <%= l f.updated_at %><%= " by #{editor.full_name}" if editor %></small>
+      <br>
+    <% end.empty? %>
+      No FINAL disbursement available.
+    <% end %>
   </div>
 </div>
 <script type="text/javascript">
@@ -113,7 +118,7 @@
         success: function(d) {
           $("div#searchresults").empty();
           if (d.count == 0) {
-            $("div#searchresults").append('<div class="container-fluid"><p>No Results</p></div>'); 
+            $("div#searchresults").append('<div class=""><p>No Results</p></div>'); 
           } else {
             var prevLink = 'javascript:void(0)';
             var maxPage = parseInt(d.count/10.0+(d.count%10 == 0 ? 0 : 1));
@@ -125,10 +130,10 @@
               nextLink = 'toPage('+(page+1)+')';
             }
             var prevNext = '<div class="btn-group">'+
-            '<button class="btn btn-mini'+((page > 1) ? "" : " disabled")+
-            '" onclick="'+prevLink+'"><i class="icon icon-chevron-left"></i></button>'+
-            '<button class="btn btn-mini'+((page < maxPage) ? "" : " disabled")+
-            '" onclick="'+nextLink+'"><i class="icon icon-chevron-right"></i></button></div>';
+            '<button class="btn btn-default btn-xs'+((page > 1) ? "" : " disabled")+
+            '" onclick="'+prevLink+'"><i class="glyphicon glyphicon-chevron-left"></i></button>'+
+            '<button class="btn btn-default btn-xs'+((page < maxPage) ? "" : " disabled")+
+            '" onclick="'+nextLink+'"><i class="glyphicon glyphicon-chevron-right"></i></button></div>';
             $("div#searchresults").append(
                 '<div class="summary">'+
                   '<div class="search-nav">'+
@@ -173,7 +178,7 @@
         },
         error: function() {
           $("div#searchresults").empty();
-          $("div#searchresults").append('<div class="container-fluid"><p>Backend Error, please try again later</p></div>');
+          $("div#searchresults").append('<div class=""><p>Backend Error, please try again later</p></div>');
         }
       });
   }

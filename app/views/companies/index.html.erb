@@ -1,8 +1,8 @@
-<div class="container-fluid">
+<div class="">
   <h2 class="title">
     Companies
     <%= link_to 'New Company', new_company_path,
-                :class => 'btn btn-primary btn-small' %>
+                :class => 'btn btn-primary btn-sm' %>
   </h2>
 
   <table class="table table-bordered">
@@ -22,19 +22,19 @@
         <td>
           <div class="btn-group">
             <%= link_to icon('eye-open'), company,
-                        :class => 'btn btn-info btn-small',
+                        :class => 'btn btn-info btn-sm',
                         :title => 'View' %>
             <%= link_to icon('pencil'), edit_company_path(company),
-                        :class => 'btn btn-small',
+                        :class => 'btn btn-default btn-sm',
                         :title => 'Edit' %>
             <% if @can_delete[company.id] %>
             <%= link_to icon('trash'), company, method: :delete,
                         data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-small',
+                        :class => 'btn btn-danger btn-sm',
                         :title => 'Delete' %>
             <% else %>
             <%= link_to icon('trash'), "#",
-                        :class => 'btn btn-danger btn-small disabled',
+                        :class => 'btn btn-danger btn-sm disabled',
                         :title => 'Company in use, cannot be deleted' %>
             <% end %>
           </div>

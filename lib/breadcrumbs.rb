@@ -1,10 +1,12 @@
 module Breadcrumbs
   class Builder < BreadcrumbsOnRails::Breadcrumbs::Builder
     def render
-      @context.content_tag(:ul, :class => 'breadcrumb') do
-        @elements.collect do |element|
-          render_element(element)
-        end.join.html_safe
+      @context.content_tag(:div, :class => 'row') do
+        @context.content_tag(:ul, :class => 'breadcrumb') do
+          @elements.collect do |element|
+            render_element(element)
+          end.join.html_safe
+        end
       end
     end
 

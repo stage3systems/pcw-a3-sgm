@@ -1,11 +1,9 @@
-<div class="container-fluid">
-  <h2 class="title">
-    Taxes
-    <%= link_to 'New Tax', new_tax_path,
-                :class => 'btn btn-primary btn-small' %>
-  </h2>
-
-  <table class="table table-bordered">
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Tax', new_tax_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <table class="table table-bordered table-condensed table-responsive">
     <thead>
       <tr>
         <th>Name</th>
@@ -24,14 +22,14 @@
         <td>
           <div class="btn-group">
             <%= link_to icon('eye-open'), tax,
-                        :class => 'btn btn-info btn-small',
+                        :class => 'btn btn-info btn-sm',
                         :title => 'View' %>
             <%= link_to icon('pencil'), edit_tax_path(tax),
-                        :class => 'btn btn-small',
+                        :class => 'btn btn-default btn-sm',
                         :title => 'Edit' %>
             <%= link_to icon('trash'), tax, method: :delete,
                         data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-small',
+                        :class => 'btn btn-danger btn-sm',
                         :title => 'Delete' %>
           </div>
         </td>
@@ -40,11 +38,3 @@
     </tbody>
   </table>
 </div>
-<script type="text/javascript">
-  $("table.table").dataTable({
-    sPaginationType: "bootstrap",
-    aoColumnDefs: [
-      {"bSortable": false, "aTargets": [3]}
-    ]
-  });
-</script>

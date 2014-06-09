@@ -1,9 +1,10 @@
 class Port < ActiveRecord::Base
-  default_scope order('name ASC')
+  default_scope -> {order('name ASC') }
+  paginates_per 10
   attr_accessible :name, :tax_id, :currency_id
   validates_presence_of :name, :tax_id, :currency_id
-  has_many :services, :order => 'row_order ASC', conditions: {:terminal_id => nil}
-  has_many :terminals, :order => 'name ASC'
+  has_many :services, -> { where(terminal_id: nil).order('row_order ASC') }
+  has_many :terminals, -> {order 'name ASC'}
   has_many :tariffs
   belongs_to :currency
   belongs_to :tax

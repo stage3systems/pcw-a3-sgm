@@ -1,10 +1,11 @@
 ProformaDA::Application.routes.draw do
   #devise_for :users, controllers: {omniauth_callbacks: "users/omniauth_callbacks"}
-  devise_for :users
-  devise_scope :user do
-    get '/users/auth/saml', :to => 'devise/sessions#new', :as => :new_user_session
-    get '/sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
-  end
+  devise_for :users, path: '', path_names: {sign_in: 'users/auth/saml', sign_out: 'sign_out'}
+
+  #devise_scope :user do
+    #get '/users/auth/saml', :to => 'devise/sessions#new', :as => :new_user_session
+    #get '/sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
+  #end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -23,16 +24,16 @@ ProformaDA::Application.routes.draw do
 
   resources :disbursements do
     member do
-      match 'status/:status' => 'disbursements#status'
+      match 'status/:status' => 'disbursements#status', via: [:get, :post]
       get 'print'
       get 'access_log'
     end
     collection do
-      match 'search' => "disbursements#search"
+      match 'search' => "disbursements#search", via: [:get, :post]
     end
   end
-  match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published
-  match 'pfda/:id' => 'disbursements#published', :as => :published_short
+  match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published, via: [:get, :post]
+  match 'pfda/:id' => 'disbursements#published', :as => :published_short, via: [:get, :post]
 
   resources :ports do
     resources :terminals do

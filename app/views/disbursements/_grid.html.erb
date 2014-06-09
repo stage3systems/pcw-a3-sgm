@@ -8,7 +8,7 @@
               published_short_url(:id => d.publication_id)
     end
   end
-  g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision', html: {style: 'white-space: nowrap;'} do |d|
+  g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision' do |d|
     l(d.current_revision.eta) rescue "N/A"
   end
   g.column name: 'Port', attribute: 'name', model: 'Port' do |d|

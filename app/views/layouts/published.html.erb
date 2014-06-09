@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= ProformaDA::Application.config.tenant_name %> Estimates</title>
+  <!--[if lt IE 9]>
+  <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= stylesheet_link_tag ProformaDA::Application.config.tenant, media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= favicon_link_tag ProformaDA::Application.config.tenant_favicon, :rel => 'shortcut icon' %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#pfda-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">PROFORMA DA</a>
+      </div>
+      <div class="collapse navbar-collapse" id="pfda-navbar-collapse">
+        <div class="btn-group nav-buttons">
+          <%= yield :navbar_buttons %>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <%= yield %>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 revisionone:
   disbursement: draft
-  data: 
+  data: {} 
   fields: 
   descriptions: 
   values: 
@@ -19,7 +19,7 @@ revisionone:
 
 revisiontwo:
   disbursement: published
-  data: 
+  data: {}
   fields: 
   descriptions: 
   values: 

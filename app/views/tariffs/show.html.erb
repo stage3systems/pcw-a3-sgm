@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="">
   <p id="notice"><%= notice %></p>
 
   <h2 class="title">Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
@@ -8,11 +8,11 @@
   <p><strong>Valid Until:</strong> <%= l @tariff.validity_end %></p>
   <div class="btn-group">
     <% if @terminal %>
-      <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, @tariff), :class => "btn btn-small" %>
-      <%= link_to 'Back', port_terminal_tariffs_path(@port, @terminal), :class => "btn btn-small" %>
+      <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, @tariff), :class => "btn btn-default btn-sm" %>
+      <%= link_to 'Back', port_terminal_tariffs_path(@port, @terminal), :class => "btn btn-default btn-sm" %>
     <% else %>
-      <%= link_to 'Edit', edit_port_tariff_path(@port, @tariff), :class => "btn btn-small" %>
-      <%= link_to 'Back', port_tariffs_path(@port), :class => "btn btn-small" %>
+      <%= link_to 'Edit', edit_port_tariff_path(@port, @tariff), :class => "btn btn-default btn-sm" %>
+      <%= link_to 'Back', port_tariffs_path(@port), :class => "btn btn-default btn-sm" %>
     <% end %>
   </div>
 </div>

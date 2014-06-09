@@ -1,8 +1,8 @@
-<div class="container-fluid">
+<div class="">
   <h2 class="title">
     Terminals for <%= @port.name %>
     <%= link_to 'New Terminal', new_port_terminal_path,
-                :class => 'btn btn-primary btn-small' %>
+                :class => 'btn btn-primary btn-sm' %>
   </h2>
 
   <table class="table table-bordered">
@@ -25,13 +25,13 @@
           <div class="btn-group">
             <%= link_to 'Edit Services',
                         port_terminal_services_path(@port, terminal),
-                        class: 'btn btn-small'  %>
+                        class: 'btn btn-default btn-sm'  %>
             <%= link_to icon(:pencil),
                         edit_port_terminal_path(@port, terminal),
-                        class: 'btn btn-small', title: 'Edit' %>
+                        class: 'btn btn-default btn-sm', title: 'Edit' %>
             <%= link_to icon(:trash), port_terminal_path(@port, terminal),
                         method: :delete, data: { confirm: 'Are you sure?' },
-                        class: 'btn btn-danger btn-small', title: 'Delete' %>
+                        class: 'btn btn-danger btn-sm', title: 'Delete' %>
           </div>
       </tr>
       <% end %>

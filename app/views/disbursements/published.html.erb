@@ -1,11 +1,11 @@
-<div class="container-fluid no-padding<%= " pfda-container" if @disbursement and
+<div class=" no-padding<%= " pfda-container" if @disbursement and
                                           (@disbursement.initial? or
                                            @disbursement.final?) %>">
   <% if @disbursement  %>
     <% if @disbursement.initial? or @disbursement.final? %>
     <div class="pfda-header">
       <div class="container">
-        <div class="row-fluid">
+        <div class="row">
           <div class="due">ESTIMATED</div>
           <div class="amount">
             <%= number_to_currency @revision.amount, unit: "" %>
@@ -13,11 +13,11 @@
           </div>
           <div class="btn-group pull-right hidden-print">
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
-               class="btn hint" title="Printable PDF version">
+               class="btn btn-default hint" title="Printable PDF version">
               <%= image_tag "print.png" %>
             </a>
             <a href="/pfda/<%= @disbursement.publication_id %>.xls"
-               class="btn hint" title="Download as Excel Spreadsheet">
+               class="btn btn-default hint" title="Download as Excel Spreadsheet">
               <%= image_tag "excel.png" %>
             </a>
           </div>
@@ -26,8 +26,8 @@
     </div>
     <div class="container pfda box-shadow">
       <div class="pfda-inner">
-        <div class="row-fluid">
-          <div class="span6">
+        <div class="row">
+          <div class="col-md-6">
             <% if @disbursement.initial? %>
             <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
             <h4>Sent prior to vessel arrival</h4>
@@ -36,13 +36,13 @@
             <h4>Sent after vessel sailing</h4>
             <% end %>
           </div>
-          <div class="span6">
+          <div class="col-md-6">
             <div class="pull-right"><%= image_tag ProformaDA::Application.config.tenant_da_logo %></div>
           </div>
         </div>
         <div class="btn-group"></div>
-        <div class="row-fluid">
-          <div class="span6">
+        <div class="row">
+          <div class="col-md-6">
             <table class="table border-bottom">
               <tr>
                 <th>To</th>
@@ -106,8 +106,8 @@
               </tr>
             </table>
           </div>
-          <div class="span1">&nbsp;</div>
-          <div class="span5">
+          <div class="col-md-1">&nbsp;</div>
+          <div class="col-md-5">
             <table class="table border-bottom">
               <tr>
                 <th>From</th>
@@ -124,8 +124,8 @@
           </div>
         </div>
         <div class="btn-group"></div>
-        <div class="row-fluid">
-          <div class="span12">
+        <div class="row">
+          <div class="col-md-12">
             <table class="table table-condensed header-emphasy">
               <thead>
                 <tr>
@@ -205,8 +205,8 @@
         </div>
         <div class="btn-group"></div>
         <hr class="published" />
-        <div class="row-fluid">
-          <div class="span12">
+        <div class="row">
+          <div class="col-md-12">
           <p>Please remit funds at least two (2) days prior to vessels arrival
              to the following Bank Account:<p>
           <p>
@@ -266,8 +266,8 @@
       </div>
     </div>
   <% else %>
-    <div class="row-fluid">
-      <div class="span8 offset2">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
         <div class="btn-group"></div>
         <div class="well">
           <h3>The requested document is no longer publicly accessible.</h3>
@@ -276,8 +276,8 @@
     </div>
   <% end %>
 <% else %>
-    <div class="row-fluid">
-      <div class="span8 offset2">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
         <div class="btn-group"></div>
         <div class="well">
           <h3>The requested document cannot be found.</h3>

@@ -1,5 +1,5 @@
 class Disbursement < ActiveRecord::Base
-  default_scope conditions: "status_cd != 2"
+  default_scope -> {where("status_cd != 2 AND status_cd != 6")}
   attr_accessor :tbn_template
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
                   :port_id, :publication_id, :user_id,
@@ -11,11 +11,13 @@ class Disbursement < ActiveRecord::Base
   belongs_to :vessel
   belongs_to :company
   belongs_to :user
-  belongs_to :current_revision, :class_name => DisbursementRevision
+  belongs_to :current_revision, class_name: "DisbursementRevision"
   has_many :disbursement_revisions,
-           :dependent => :destroy,
-           :order => 'number ASC'
-  has_one :revision, :class_name => 'DisbursementRevision', :order => "updated_at DESC"
+           -> {order 'updated_at DESC'},
+           dependent: :destroy
+  has_one :revision,
+          -> { order 'updated_at DESC'},
+          class_name: 'DisbursementRevision'
   validates_presence_of :port_id
   validates_presence_of :company_id
   validates_presence_of :vessel_id, :unless => :tbn?
@@ -27,10 +29,11 @@ class Disbursement < ActiveRecord::Base
   before_create :generate_publication_id
   after_create :create_initial_revision
 
-  as_enum :status, draft: 0, initial: 1, deleted: 2, final: 3
+  as_enum :status, draft: 0, initial: 1, deleted: 2, final: 3,
+                   inquiry: 4, close: 5, archived: 6
 
   def title
-    "PFDA for #{self.vessel_name} in #{self.port.name}"
+    "#{self.vessel_name} in #{self.port.name}"
   end
 
   def delete

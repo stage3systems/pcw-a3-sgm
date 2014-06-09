@@ -1,8 +1,8 @@
-<div class="container-fluid">
-  <h2 class="title">
-    Cargo Types
-  </h2>
-  <div id="tree"></div>
+<div class="row" style="margin-top: 2em;">
+  <div class="container-fluid">
+    <h4>Select Available Cargo Types</h4>
+    <div id="tree"></div>
+  </div>
 </div>
 <script type="text/javascript">
   var rawTypes = <%= @cts.to_json.html_safe %>;

@@ -1,33 +1,30 @@
 <div class="btn-group"></div>
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
     <% unless (browser.ie? and
                browser.version.to_i < 10 and params[:force].nil?) %>
-    <div id="login">
+    <div id="login" class="container">
       <div class="well" style="margin: 0 auto; width: 420px;">
         <h2 class="title"><%= ProformaDA::Application.config.tenant_name %> Estimates</h2>
 
-        <div class="span12">
-          <% flash.each do |name, msg| %>
-            <% unless name == :timedout %>
-            <div class="alert alert-<%= name == :notice ? "success" : "error" %>">
-              <a hred="#" class="close" data-dismiss="alert">×</a>
-                <%= msg %>
-              </a>
-            </div>
-            <% end %>
+        <% flash.each do |name, msg| %>
+          <% unless name == :timedout or msg.class != String %>
+          <div class="alert alert-<%= name == :notice ? "success" : "danger" %>">
+            <a hred="#" class="close" data-dismiss="alert">×</a>
+              <%= msg %>
+            </a>
+          </div>
           <% end %>
-        </div>
+        <% end %>
         <%= simple_form_for(resource, :as => resource_name,
-                            :url => session_path(resource_name),
-                            :html => {:class => 'form-horizontal'}) do |f| %>
+                            :url => session_path(resource_name)) do |f| %>
           <div class="form-inputs">
             <%= f.input :login, label: "Username",
                         required: false, autofocus: true %>
             <%= f.input :password, required: false %>
             <%= f.input(:remember_me,
                         as: :boolean) if devise_mapping.rememberable? %>
-            <div class="control-group">
+            <div class="form-group">
               <div class="controls">
                 <a href="http://stage3systems.com/support">Trouble logging in?</a>
               </div>
@@ -41,7 +38,7 @@
       </div>
     </div>
     <% else %>
-    <div class="span10 offset1 well browsers">
+    <div class="col-md-10 col-md-offset-1 well browsers">
       <h2 class="title">Please Upgrade Your Browser</h2>
       <p>This service uses the latest web technologies to make it faster
          and easier to use.
@@ -49,28 +46,28 @@
          <p>Please download or upgrade to one of the following browsers and
             you will be on your way.</p>
 
-      <ul class="row-fluid">
-        <li class="span6 ff">
+      <ul class="row">
+        <li class="col-md-6 ff">
           <a href="http://www.mozilla.org/en-US/firefox/new/"
              target="_blank">
             <span>Mozilla Firefox</span> Version 4 or higher
           </a>
         </li>
-        <li class="span6 safari">
+        <li class="col-md-6 safari">
           <a href="http://support.apple.com/kb/dl1531"
              target="_blank">
             <span>Apple Safari</span> Version 5 or higher
           </a>
         </li>
       </ul>
-      <ul class="row-fluid">
-        <li class="span6 chrome">
+      <ul class="row">
+        <li class="col-md-6 chrome">
           <a href="https://www.google.com/intl/en/chrome/browser/"
              target="_blank">
             <span>Google Chrome</span> Version 4 or higher
         </a>
         </li>
-        <li class="span6 ie">
+        <li class="col-md-6 ie">
           <a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie"
              target="_blank">
             <span>Internet Explorer</span> Version 10 or higher

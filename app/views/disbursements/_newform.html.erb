@@ -1,7 +1,13 @@
-<%= simple_form_for(@disbursement, html: {class: "form-horizontal"}) do |f| %>
+<div class="col-md-4">
+<%= simple_form_for(@disbursement,
+                    html: {class: 'form-horizontal'},
+                    wrapper: :horizontal_form,
+                    wrapper_mappings: {
+                      boolean: :horizontal_boolean
+                    }) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
+  <div class="form-group">
     <%= f.association :port,
                       collection: current_user.authorized_ports.all.to_a %>
     <%= f.association :terminal %>
@@ -9,7 +15,7 @@
     <%= f.association :vessel %>
     <%= f.input :tbn, label: 'TBN' %>
   </div>
-  <div class="form-inputs tbn_fields">
+  <div class="form-group tbn_fields">
     <%= f.input :tbn_template,
                 label: 'Template',
                 collection: ['VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
@@ -20,10 +26,9 @@
     <%= f.input :dwt, label: 'DWT' %>
     <%= f.input :loa, label: 'LOA' %>
   </div>
-  <div class="form-actions">
-    <%= f.submit 'Next' %>
-  </div>
+  <%= f.button :submit, 'Next' %>
 <% end %>
+</div>
 <script type="text/javascript">
   var updateFields = function() {
     if ($("input#disbursement_tbn").is(':checked')) {

@@ -1,18 +1,22 @@
-          <div class="btn-group da-actions">
-            <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
-                       disbursement: disbursement,
-                       config: Configuration.last %>
-            <%= link_to icon(:list), access_log_disbursement_path(disbursement),
-                        :class => 'btn btn-small',
-                        :title => 'Access Log' %>
-            <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
-                        :class => 'btn btn-small',
-                        :title => 'Revise' %>
+<div class="btn-toolbar da-actions">
+          <div class="btn-group btn-group-sm">
+                    <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
+                              disbursement: disbursement,
+                              config: Configuration.last %>
+                    <%= link_to icon(:list), access_log_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Access Log' %>
+                    <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Revise' %>
           </div>
-            <%= link_to icon(:print), print_disbursement_path(disbursement),
-                        :class => 'btn btn-small',
-                        :title => 'Print' %>
-            <%= link_to icon(:trash), disbursement, method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-small',
-                        :title => 'Delete' %>
+          <div class="btn-group btn-group-sm">
+                    <%= link_to icon(:print), print_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Print' %>
+                    <%= link_to icon(:trash), disbursement, method: :delete,
+                              data: { confirm: 'Are you sure?' },
+                              :class => 'btn btn-danger btn-sm',
+                              :title => 'Delete' %>
+          </div>
+</div>

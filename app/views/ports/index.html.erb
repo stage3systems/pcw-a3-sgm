@@ -1,52 +1,63 @@
-<div class="container-fluid">
-  <h2 class="title">
-    Ports
-    <%= link_to 'New Port', new_port_path,
-                :class => 'btn btn-primary btn-small' %>
-  </h2>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Services</th>
-        <th>Tariffs</th>
-        <th>Terminals</th>
-        <th>Currency</th>
-        <th>Tax</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @ports.each do |port| %>
-      <tr>
-        <td><%= link_to port.name, port_path(port) %></td>
-        <td class="right-align"><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
-        <td class="right-align"><%= link_to port.tariffs.count.to_s, port_tariffs_path(port)  %></td>
-        <td class="right-align"><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
-        <td><%= port.currency.name  %></td>
-        <td><%= port.tax.name  %></td>
-        <td>
-          <div class="btn-group">
-            <%= link_to 'View Services', port_services_path(port), class: 'btn btn-small'  %>
-            <%= link_to 'View Terminals', port_terminals_path(port), class: 'btn btn-small'  %>
-            <%= link_to icon(:pencil), edit_port_path(port),
-                        class: 'btn btn-small',
-                        title: 'Edit' %>
-            <%= link_to icon(:trash), port, method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        class: 'btn btn-danger btn-small',
-                        title: 'Delete' %>
-          </div>
-        </td>
-      </tr>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Port', new_port_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row" style="margin-top: 1em;">
+  <div class="container-fluid">
+    <div class="pull-left">
+      <%= simple_form_for :port, url: ports_path,
+                          method: 'get',
+                          html: {class: 'horizontal-form'},
+                          wrapper: :horizontal_form do |f| %>
+        <%= f.input :port_name, as: :string, placeholder: "Port Name",
+                    label: "Search", required: false,
+                    input_html: {value: @search_port_name} %>
       <% end %>
-    </tbody>
-  </table>
+    </div>
+    <div class="pull-right">
+      <%= paginate @ports %>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="container-fluid">
+    <table class="table table-bordered table-condensed table-responsive">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Services</th>
+          <th>Tariffs</th>
+          <th>Terminals</th>
+          <th>Currency</th>
+          <th>Tax</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
+      <tbody>
+        <% @ports.each do |port| %>
+        <tr>
+          <td><%= link_to port.name, port_path(port) %></td>
+          <td class="right-align"><%= link_to port.services.count.to_s, port_services_path(port)  %></td>
+          <td class="right-align"><%= link_to port.tariffs.count.to_s, port_tariffs_path(port)  %></td>
+          <td class="right-align"><%= link_to port.terminals.count.to_s, port_terminals_path(port)  %></td>
+          <td><%= port.currency.name  %></td>
+          <td><%= port.tax.name  %></td>
+          <td>
+            <div class="btn-group">
+              <%= link_to 'View Services', port_services_path(port), class: 'btn btn-default btn-sm'  %>
+              <%= link_to 'View Terminals', port_terminals_path(port), class: 'btn btn-default btn-sm'  %>
+              <%= link_to icon(:pencil), edit_port_path(port),
+                          class: 'btn btn-default btn-sm',
+                          title: 'Edit' %>
+              <%= link_to icon(:trash), port, method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm',
+                          title: 'Delete' %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
-<%= render "common/data_table", column_defs: [
-      {"sType" => "num-html", "aTargets" => [1,2,3]},
-      {"bSortable" => false, "aTargets" => [6]}
-    ] %>

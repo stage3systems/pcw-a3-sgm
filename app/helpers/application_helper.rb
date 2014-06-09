@@ -1,6 +1,6 @@
 module ApplicationHelper
   def icon(name)
-    "<i class=\"icon-#{name}\"></i>".html_safe
+    "<i class=\"glyphicon glyphicon-#{name}\"></i>".html_safe
   end
 
   def configuration_tab?

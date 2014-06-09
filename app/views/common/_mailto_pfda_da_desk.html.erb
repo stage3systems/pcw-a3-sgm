@@ -1,4 +1,4 @@
-<a class="btn btn-small<%= " disabled" if disbursement.draft? %>"
+<a class="btn btn-default btn-sm<%= " disabled" if disbursement.draft? %>"
    <% unless disbursement.draft? %>
    title="Send a Link By Email"
    href="mailto:<%= disbursement.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursement.vessel_name} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
@@ -32,5 +32,5 @@ BODY
    href="#"
    <% end %>
 >
-  <i class="icon-envelope"></i>
+  <%= icon('envlope') %>
 </a>

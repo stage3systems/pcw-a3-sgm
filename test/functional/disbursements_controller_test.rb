@@ -32,7 +32,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     post :create, disbursement: {
       vessel_id: @vessel.id
     }
-    assert_select 'form  div.alert-error', 'Please review the problems below:'
+    assert_select 'form  div.alert-danger', 'Please review the problems below:'
     assert_response :success
     assert_difference('Disbursement.count') do
       post :create, disbursement: {
