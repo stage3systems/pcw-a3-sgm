@@ -40,3 +40,8 @@ Required files:
 
 After the db setup, the Configuration object has to be edited to reflect
 the tenant.
+
+== Requirements
+
+buildessentials git-core libpq-dev libssl-dev libncursesw5-dev
+libreadline-dev libxml2-dev libxslt-dev
