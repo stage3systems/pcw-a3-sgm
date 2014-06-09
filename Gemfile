@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.18'
+gem 'rails', '4.1.1'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -9,46 +9,44 @@ gem 'pg'
 gem 'omniauth'
 gem 'omniauth-saml'
 gem 'piwik_analytics', '~> 1.0.0'
-gem 'anjlab-bootstrap-rails', '2.3.1.2', :require => 'bootstrap-rails'
+gem 'bootstrap-sass'
 gem 'bootstrap-editable-rails'
-gem 'activerecord-postgres-hstore'
+gem 'font-awesome-sass'
 gem 'therubyracer', :require => 'v8'
 gem 'breadcrumbs_on_rails'
 gem 'devise'
 gem 'uuidtools'
 gem 'd3js-rails'
 gem 'simple_enum'
-gem 'simple_ace_input', github: 'gfi/simple_ace_input'
-gem 'simple_form'
+gem 'ace-rails-ap'
+gem 'simple_form', '>= 3.1.0.rc1'
 gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn'
-gem 'prawn', '1.0.0.rc2'
+gem 'prawn', '>= 1.0.0'
 gem 'carrierwave'
 gem 'browser'
 gem 'simplecov', :require => false, :group => :test
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'spreadsheet'
-gem 'squeel'
 gem 'wice_grid'
+gem 'kaminari', github: 'amatsuda/kaminari'
 gem 'newrelic_rpm'
 gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
 gem 'httparty'
+gem 'protected_attributes'
 
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+gem 'sass-rails', '>= 4.0.0'
+gem 'sprockets-rails'
+gem 'coffee-rails'
+gem 'uglifier'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
 
-  gem 'uglifier', '>= 1.0.3'
-end
 
 
 # To use ActiveModel has_secure_password
