@@ -19,7 +19,7 @@ class DisbursementsController < ApplicationController
           'disbursements.port_id' => 'port.name',
           'disbursements.company_id' => 'company.name'
         },
-        :per_page => 10)
+        per_page: 10)
     @disbursements = []
     respond_to do |format|
       format.html # index.html.erb

@@ -55,21 +55,41 @@
     text-decoration:none;
   }
 
-  .desc {
-    background: transparent url(/assets/icons/grid/arrow_down.gif) right no-repeat
+  .desc:after {
+    //background: transparent url(/assets/icons/grid/arrow_down.gif) right no-repeat
+    content:" \f0dd";
+    font-family: FontAwesome;
+    display: inline;
+    text-decoration: inherit;
   }
-  .asc  {
-    background: transparent url(/assets/icons/grid/arrow_up.gif)   right no-repeat
+  .asc:after  {
+    //background: transparent url(/assets/icons/grid/arrow_up.gif)   right no-repeat
+    content:" \f0de";
+    font-family: FontAwesome;
+    display: inline;
+    text-decoration: inherit;
   }
 
   .submit.clickable{
-    background: transparent url(/assets/icons/grid/table_refresh.png) no-repeat;
+    //background: transparent url(/assets/icons/grid/table_refresh.png) no-repeat;
     @include icon-dimensions;
+  }
+  .submit.clickable:after {
+    content:" \f0b0";
+    font-family: FontAwesome;
+    display: inline;
+    text-decoration: inherit;
   }
 
   .reset.clickable{
-    background: transparent url(/assets/icons/grid/table.png) no-repeat;
+    //background: transparent url(/assets/icons/grid/table.png) no-repeat;
     @include icon-dimensions;
+  }
+  .reset.clickable:after {
+    content:" \f0e2";
+    font-family: FontAwesome;
+    display: inline;
+    text-decoration: inherit;
   }
 
 

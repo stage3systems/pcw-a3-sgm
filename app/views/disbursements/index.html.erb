@@ -1,14 +1,10 @@
-<div class="">
-  <h2 class="title">
-    Proforma Disbursements
-    <%= link_to 'New PFDA', new_disbursement_path,
-                :class => 'btn btn-primary btn-sm' %>
-  </h2>
-
-  <div class="row">
-    <div class="col-md-12">
-      <%= render partial: 'grid' %>
-    </div>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New PFDA', new_disbursement_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row top-pad">
+  <div class="col-md-12">
+    <%= render partial: 'grid' %>
   </div>
 </div>
 <script type="text/javascript">
