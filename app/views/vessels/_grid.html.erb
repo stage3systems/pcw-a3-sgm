@@ -1,0 +1,20 @@
+<%= grid(@vessels_grid) do |g|
+  g.column name: 'Name', attribute: 'name', model: 'Vessel' do |v|
+    link_to v.name, vessel_path(v)
+  end
+  g.column name: 'LOA', attribute: 'loa', model: 'Vessel' do |v|
+    [v.loa, class: 'text-right']
+  end
+  g.column name: 'GRT', attribute: 'grt', model: 'Vessel' do |v|
+    [v.grt, class: 'text-right']
+  end
+  g.column name: 'NRT', attribute: 'nrt', model: 'Vessel' do |v|
+    [v.nrt, class: 'text-right']
+  end
+  g.column name: 'DWT', attribute: 'dwt', model: 'Vessel' do |v|
+    [v.dwt, class: 'text-right']
+  end
+  g.column do |v|
+    render partial: 'actions', locals: {vessel: v}
+  end
+end %>

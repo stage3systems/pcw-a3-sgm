@@ -1,11 +1,12 @@
-<div class="">
-  <p id="notice"><%= notice %></p>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Edit', edit_tax_path(@tax), class: "btn btn-primary btn-sm" %>
+  <%= link_to 'Back', taxes_path, class: "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <p id="notice"><%= notice %></p>
 
-  <h2 class="title"><%= @tax.name %></h2>
-  <p>Code: <%= @tax.code %><br />Rate: <%= @tax.rate %> (<%= (@tax.rate-1)*100 %>%)</p>
-
-  <div class="btn-group">
-    <%= link_to 'Edit', edit_tax_path(@tax), :class => "btn btn-default btn-sm" %>
-    <%= link_to 'Back', taxes_path, :class => "btn btn-default btn-sm" %>
+    <h2 class="title"><%= @tax.name %></h2>
+    <p>Code: <%= @tax.code %><br />Rate: <%= @tax.rate %> (<%= (@tax.rate-1)*100 %>%)</p>
   </div>
 </div>

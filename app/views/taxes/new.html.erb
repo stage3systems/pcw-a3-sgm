@@ -1,9 +1,10 @@
-<div class="">
-  <h2 class="title">New tax</h2>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Cancel', taxes_path, class: 'btn btn-default btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">New Tax</h2>
 
-  <%= render 'form' %>
-
-  <div class="btn-group">
-    <%= link_to 'Back', taxes_path, :class => 'btn btn-default btn-sm' %>
+    <%= render 'form' %>
   </div>
 </div>

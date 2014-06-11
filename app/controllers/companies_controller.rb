@@ -5,15 +5,12 @@ class CompaniesController < ApplicationController
   # GET /companies
   # GET /companies.json
   def index
-    @companies = Company.all
-    @can_delete = {}
-    @companies.each do |c|
-      @can_delete[c.id] = c.disbursements.count == 0
-    end
+    @companies_grid = initialize_grid(Company,
+                        order: 'companies.name',
+                        order_direction: 'asc')
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @companies }
     end
   end
 

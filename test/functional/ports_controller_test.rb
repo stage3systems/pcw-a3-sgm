@@ -26,7 +26,7 @@ class PortsControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:ports)
+    assert_not_nil assigns(:ports_grid)
   end
 
   test "should get new" do

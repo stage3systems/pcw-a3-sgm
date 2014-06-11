@@ -1,4 +1,4 @@
-<%= simple_form_for(@terminal.nil? ? [@port, @service] : [@port, @terminal, @service], html: {class: "form-horizontal"}) do |f| %>
+<%= simple_form_for(@terminal.nil? ? [@port, @service] : [@port, @terminal, @service]) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -11,6 +11,6 @@
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, class: 'btn btn-primary' %>
   </div>
 <% end %>

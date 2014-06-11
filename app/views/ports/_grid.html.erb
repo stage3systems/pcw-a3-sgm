@@ -1,0 +1,23 @@
+<%= grid(@ports_grid) do |g|
+  g.column name: 'Name', attribute: 'name', model: 'Port' do |p|
+    link_to p.name, port_path(p)
+  end
+  g.column name: 'Services', attribute: 'services_count', model: 'Port' do |p|
+    link_to p.services_count.to_s, port_services_path(p), class: 'text-right'
+  end
+  g.column name: 'Terminals', attribute: 'terminals_count', model: 'Port' do |p|
+    link_to p.terminals_count.to_s, port_terminals_path(p), class: 'text-right'
+  end
+  g.column name: 'Port Documents', attribute: 'tariffs_count', model: 'Port' do |p|
+    link_to p.tariffs_count.to_s, port_tariffs_path(p), class: 'text-right'
+  end
+  g.column name: 'Currency', attribute: 'name', model: 'Currency' do |p|
+    p.currency.name
+  end
+  g.column name: 'Tax', attribute: 'name', model: 'Tax' do |p|
+    p.tax.name
+  end
+  g.column do |p|
+    render partial: 'actions', locals: {port: p}
+  end
+end %>

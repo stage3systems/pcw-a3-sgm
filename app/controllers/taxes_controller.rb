@@ -7,11 +7,12 @@ class TaxesController < ApplicationController
   # GET /taxes
   # GET /taxes.json
   def index
-    @taxes = Tax.all
+    @taxes_grid = initialize_grid(Tax,
+                      order: 'taxes.name',
+                      order_direction: 'asc')
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @taxes }
     end
   end
 

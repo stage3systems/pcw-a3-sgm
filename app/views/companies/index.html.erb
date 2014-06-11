@@ -1,48 +1,9 @@
-<div class="">
-  <h2 class="title">
-    Companies
-    <%= link_to 'New Company', new_company_path,
-                :class => 'btn btn-primary btn-sm' %>
-  </h2>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @companies.each do |company| %>
-      <tr>
-        <td><%= link_to company.name, company %></td>
-        <td><%= company.email %></td>
-        <td>
-          <div class="btn-group">
-            <%= link_to icon('eye-open'), company,
-                        :class => 'btn btn-info btn-sm',
-                        :title => 'View' %>
-            <%= link_to icon('pencil'), edit_company_path(company),
-                        :class => 'btn btn-default btn-sm',
-                        :title => 'Edit' %>
-            <% if @can_delete[company.id] %>
-            <%= link_to icon('trash'), company, method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-sm',
-                        :title => 'Delete' %>
-            <% else %>
-            <%= link_to icon('trash'), "#",
-                        :class => 'btn btn-danger btn-sm disabled',
-                        :title => 'Company in use, cannot be deleted' %>
-            <% end %>
-          </div>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Company', new_company_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'grid' %>
+  </div>
 </div>
-<%= render "common/data_table",
-           column_defs: [{"bSortable" => false, "aTargets" => [2]}] %>

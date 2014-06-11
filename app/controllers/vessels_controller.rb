@@ -6,15 +6,12 @@ class VesselsController < ApplicationController
   # GET /vessels
   # GET /vessels.json
   def index
-    @vessels = Vessel.all
-    @can_delete = {}
-    @vessels.each do |v|
-      @can_delete[v.id] = v.disbursements.count == 0
-    end
+    @vessels_grid = initialize_grid(Vessel,
+                      order: 'vessels.name',
+                      order_direction: 'asc')
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @vessels }
     end
   end
 

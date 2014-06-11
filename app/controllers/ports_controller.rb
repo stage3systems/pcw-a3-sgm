@@ -7,14 +7,14 @@ class PortsController < ApplicationController
   # GET /ports
   # GET /ports.json
   def index
-    @ports = Port.order(:name)
-    @search_port_name = params[:port][:port_name] rescue nil
-    @ports = @ports.where('name ILIKE ?', "%#{@search_port_name}%") if @search_port_name
-    @ports = @ports.page params[:page]
+    @ports_grid = initialize_grid(
+                    current_user.authorized_ports,
+                    joins: [:tax, :currency],
+                    order: 'ports.name',
+                    order_direction: 'asc')
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @ports }
     end
   end
 

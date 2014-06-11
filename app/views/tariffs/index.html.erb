@@ -1,70 +1,74 @@
-<div class="">
-  <h2 class="title">
-    Tariffs for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
-    <% if @terminal %>
-      <%= link_to 'New Tariff', new_port_terminal_tariff_path(@port, @terminal),
-                  :class => 'btn btn-primary btn-sm' %>
-    <% else %>
-      <%= link_to 'New Tariff', new_port_tariff_path(@port),
-                  :class => 'btn btn-primary btn-sm' %>
-    <% end %>
-  </h2>
+<% content_for :navbar_buttons do %>
+  <% if @terminal %>
+    <%= link_to 'New Tariff', new_port_terminal_tariff_path(@port, @terminal),
+                :class => 'btn btn-primary btn-sm' %>
+  <% else %>
+    <%= link_to 'New Tariff', new_port_tariff_path(@port),
+                :class => 'btn btn-primary btn-sm' %>
+  <% end %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">
+      Tariffs for <%= @port.name %> <%= " / #{@terminal.name}" if @terminal %>
+    </h2>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Download</th>
-        <th>Valid From</th>
-        <th>Valid Until</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Download</th>
+          <th>Valid From</th>
+          <th>Valid Until</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <% @tariffs.each do |tariff| %>
-      <tr>
-        <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
+      <tbody>
+        <% @tariffs.each do |tariff| %>
+        <tr>
+          <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
 
-        <td><% unless tariff.document.url.nil? %><%= link_to File.basename(tariff.document.url), tariff.document.url %><% end %></td>
-        <td><%= tariff.validity_start %></td>
-        <td><%= tariff.validity_end %></td>
-        <td>
-          <div class="btn-group">
-            <% if @terminal %>
-              <%= link_to icon('eye-open'),
-                          port_terminal_tariff_path(@port, @terminal, tariff),
-                          class: 'btn btn-info btn-sm',
-                          title: 'View' %>
-              <%= link_to icon('pencil'),
-                          edit_port_terminal_tariff_path(@port, @terminal, tariff),
-                          class: 'btn btn-default btn-sm',
-                          title: 'Edit' %> %>
-              <%= link_to icon('trash'),
-                          port_terminal_tariff_path(@port, @terminal, tariff),
-                          method: :delete, data: { confirm: 'Are you sure?' },
-                          class:'btn btn-danger btn-sm',
-                          title: 'Delete' %>
-            <% else %>
-              <%= link_to icon('eye-open'), port_tariff_path(@port, tariff),
-                          class: 'btn btn-info btn-sm',
-                          title: 'View' %>
-              <%= link_to icon('pencil'),
-                          edit_port_tariff_path(@port, tariff),
-                          class: 'btn btn-default btn-sm',
-                          title: 'Edit' %>
-              <%= link_to icon('trash'),
-                          port_tariff_path(@port, tariff), method: :delete,
-                          data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-danger btn-sm',
-                          title: 'Delete' %>
-            <% end %>
-          </div>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+          <td><% unless tariff.document.url.nil? %><%= link_to File.basename(tariff.document.url), tariff.document.url %><% end %></td>
+          <td><%= tariff.validity_start %></td>
+          <td><%= tariff.validity_end %></td>
+          <td>
+            <div class="btn-group">
+              <% if @terminal %>
+                <%= link_to icon('eye-open'),
+                            port_terminal_tariff_path(@port, @terminal, tariff),
+                            class: 'btn btn-info btn-sm',
+                            title: 'View' %>
+                <%= link_to icon('pencil'),
+                            edit_port_terminal_tariff_path(@port, @terminal, tariff),
+                            class: 'btn btn-default btn-sm',
+                            title: 'Edit' %> %>
+                <%= link_to icon('trash'),
+                            port_terminal_tariff_path(@port, @terminal, tariff),
+                            method: :delete, data: { confirm: 'Are you sure?' },
+                            class:'btn btn-danger btn-sm',
+                            title: 'Delete' %>
+              <% else %>
+                <%= link_to icon('eye-open'), port_tariff_path(@port, tariff),
+                            class: 'btn btn-info btn-sm',
+                            title: 'View' %>
+                <%= link_to icon('pencil'),
+                            edit_port_tariff_path(@port, tariff),
+                            class: 'btn btn-default btn-sm',
+                            title: 'Edit' %>
+                <%= link_to icon('trash'),
+                            port_tariff_path(@port, tariff), method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm',
+                            title: 'Delete' %>
+              <% end %>
+            </div>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
-<%= render "common/data_table",
-           column_defs: [{"bSortable" => false, "aTargets" => [4]}] %>
-
+<script type="text/javascript">
+    $("table.table").dataTable({bSort: false, bPaginate: false});
+</script>

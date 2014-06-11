@@ -4,7 +4,7 @@ class Service < ActiveRecord::Base
   attr_accessible :user_id, :code, :item, :key,
                   :port_id, :row_order, :terminal_id, :document, :compulsory
   validate :code_checks
-  belongs_to :port
+  belongs_to :port, counter_cache: true
   belongs_to :terminal
   belongs_to :user
   has_many :service_updates

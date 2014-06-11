@@ -1,0 +1,14 @@
+<%= grid(@taxes_grid) do |g|
+  g.column name: 'Name', attribute: 'name', model: 'Tax' do |t|
+    link_to t.name, tax_path(t)
+  end
+  g.column name: 'Code', attribute: 'code', model: 'Tax' do |t|
+    t.code
+  end
+  g.column name: 'Rate', attribute: 'rate', model: 'Tax' do |t|
+    [t.rate, class: 'text-right']
+  end
+  g.column do |t|
+    render partial: 'actions', locals: {tax: t}
+  end
+end %>

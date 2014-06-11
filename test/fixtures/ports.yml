@@ -4,8 +4,14 @@ newcastle:
   tax: :gst
   currency: :aud
   name: Newcastle
+  services_count: 0
+  tariffs_count: 0
+  terminals_count: 2
 
 brisbane:
   tax: :gst
   currency: :aud
   name: Brisbane
+  services_count: 2
+  tariffs_count: 0
+  terminals_count: 0

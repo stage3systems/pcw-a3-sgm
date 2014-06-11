@@ -1,13 +1,14 @@
-<div class="">
-  <h2 class="title">New service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
+<% content_for :navbar_buttons do %>
+  <% if @terminal %>
+    <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => 'btn btn-default btn-sm' %>
+  <% else %>
+    <%= link_to 'Back', port_services_path(@port), :class => 'btn btn-default btn-sm' %>
+  <% end %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+  <h2 class="title">New Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
 
   <%= render 'form' %>
-
-  <div class="btn-group">
-    <% if @terminal %>
-      <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => 'btn btn-default btn-sm' %>
-    <% else %>
-      <%= link_to 'Back', port_services_path(@port), :class => 'btn btn-default btn-sm' %>
-    <% end %>
   </div>
 </div>

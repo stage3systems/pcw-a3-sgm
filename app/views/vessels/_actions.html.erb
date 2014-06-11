@@ -1,0 +1,11 @@
+<div class="btn-toolbar da-actions">
+  <div class="btn-group btn-group-sm">
+    <%= link_to icon(:pencil), edit_vessel_path(vessel),
+      :class => 'btn btn-default btn-sm',
+      :title => 'Edit' %>
+    <%= link_to icon(:trash), vessel, method: :delete,
+              data: { confirm: 'Are you sure?' },
+              :class => "btn btn-danger btn-sm#{" disabled" if vessel.disbursements.count > 0}",
+              :title => 'Delete' %>
+  </div>
+</div>

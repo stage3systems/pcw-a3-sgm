@@ -1,11 +1,13 @@
-<div class="">
-  <p id="notice"><%= notice %></p>
-
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Edit', edit_company_path(@company), :class => "btn btn-primary btn-sm" %>
+  <%= link_to 'Back', companies_path, :class => "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
   <h2 class="title"><%= @company.name %></h2>
   <p>Email: <%= @company.email %></p>
 
   <div class="btn-group">
-    <%= link_to 'Edit', edit_company_path(@company), :class => "btn btn-default btn-sm" %>
-    <%= link_to 'Back', companies_path, :class => "btn btn-default btn-sm" %>
+  </div>
   </div>
 </div>

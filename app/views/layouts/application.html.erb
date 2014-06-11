@@ -35,8 +35,11 @@
           <li><a href="#"><%= icon('user') %> Hello <%= current_user.first_name %></a></li>
           <li><%= link_to icon('log-out'), destroy_user_session_path,
                           method: :delete,
-                          class: "btn btn-xs" %></li>
+                          class: "btn btn-xs logout" %></li>
         </ul>
+        <div class="pull-right notice">
+          <span class="label label-info"><%= notice %></span>
+        </div>
       </div>
     </div>
   </nav>
@@ -74,12 +77,19 @@
       <div class="main">
         <% unless ['home', 'disbursements'].member? controller_name %>
           <ul class="nav nav-tabs"><!--
-            --><li class="<%= "active" if controller_name == 'ports' %>"><a href="<%= ports_path %>">PORTS</a></li><!--
+            --><li class="<%= "active" if ['ports', 'terminals', 'tariffs'].member? controller_name %>"><a href="<%= ports_path %>">PORTS</a></li><!--
             --><li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_path %>">TAXES</a></li><!--
             --><li class="<%= "active" if controller_name == 'vessels' %>"><a href="<%= vessels_path %>">VESSELS</a></li><!--
             --><li class="<%= "active" if controller_name == 'companies' %>"><a href="<%= companies_path %>">COMPANIES</a></li><!--
             --><li class="<%= "active" if controller_name == 'cargo_types' %>"><a href="<%= cargo_types_path %>">CARGO TYPES</a></li><!--
           --></ul>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <%= render_breadcrumbs :builder => Breadcrumbs::Builder %>
+                </div>
+              </div>
+            </div>
         <% end %>
         <div class="container-fluid">
           <%= yield %>

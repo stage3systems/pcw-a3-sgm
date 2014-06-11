@@ -3,38 +3,7 @@
               :class => 'btn btn-primary btn-sm' %>
 <% end %>
 <div class="row">
-  <table class="table table-bordered table-condensed table-responsive">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Code</th>
-        <th>Rate</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @taxes.each do |tax| %>
-      <tr>
-        <td><%= link_to tax.name, tax %></td>
-        <td><%= tax.code %></td>
-        <td><%= tax.rate %> (<%= (tax.rate-1)*100 %>%)</td>
-        <td>
-          <div class="btn-group">
-            <%= link_to icon('eye-open'), tax,
-                        :class => 'btn btn-info btn-sm',
-                        :title => 'View' %>
-            <%= link_to icon('pencil'), edit_tax_path(tax),
-                        :class => 'btn btn-default btn-sm',
-                        :title => 'Edit' %>
-            <%= link_to icon('trash'), tax, method: :delete,
-                        data: { confirm: 'Are you sure?' },
-                        :class => 'btn btn-danger btn-sm',
-                        :title => 'Delete' %>
-          </div>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <div class="col-md-12">
+    <%= render partial: 'grid' %>
+  </div>
 </div>

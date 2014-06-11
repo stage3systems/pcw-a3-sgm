@@ -37,6 +37,8 @@ gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
 gem 'httparty'
 gem 'protected_attributes'
+gem 'turbolinks'
+gem 'nprogress-rails'
 
 
 gem 'sass-rails', '>= 4.0.0'

@@ -1,55 +1,9 @@
-<div class="">
-  <h2 class="title">
-    Vessels
-    <%= link_to 'New Vessel', new_vessel_path,
-                :class => 'btn btn-primary btn-sm' %>
-  </h2>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>LOA</th>
-        <th>GRT</th>
-        <th>NRT</th>
-        <th>GWT</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @vessels.each do |vessel| %>
-      <tr>
-        <td><%= link_to vessel.name, vessel %></td>
-        <td class="right-align"><%= "%0.2f" % vessel.loa %></td>
-        <td class="right-align"><%= "%0.2f" % vessel.grt %></td>
-        <td class="right-align"><%= "%0.2f" % vessel.nrt %></td>
-        <td class="right-align"><%= "%0.2f" % vessel.dwt %></td>
-        <td>
-          <div class="btn-group">
-            <%= link_to icon('eye-open'), vessel,
-                        :class => 'btn btn-info btn-sm',
-                        :title => 'View' %>
-            <%= link_to icon('pencil'), edit_vessel_path(vessel),
-                        :class => 'btn btn-default btn-sm',
-                        :title => 'Edit' %>
-            <% if @can_delete[vessel.id] %>
-            <%= link_to icon('trash'), vessel, method: :delete,
-                        data: { confirm: 'This will delete all related PFDAs. Are you sure?' },
-                        :class => 'btn btn-danger btn-sm',
-                        :title => 'Delete' %>
-            <% else %>
-            <%= link_to icon('trash'), "#",
-                        :class => 'btn btn-danger btn-sm disabled',
-                        :title => 'Vessel in use, cannot be deleted' %>
-            <% end %>
-          </div>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Vessel', new_vessel_path,
+              class: 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'grid' %>
+  </div>
 </div>
-<%= render "common/data_table",
-           column_defs: [{"bSortable" => false, "aTargets" => [5]}] %>

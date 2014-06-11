@@ -1,9 +1,10 @@
-<div class="">
-  <h2 class="title">New company</h2>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Cancel', companies_path, :class => 'btn btn-default btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">New Company</h2>
 
-  <%= render 'form' %>
-
-  <div class="btn-group">
-    <%= link_to 'Back', companies_path, :class => 'btn btn-default btn-sm' %>
+    <%= render 'form' %>
   </div>
 </div>

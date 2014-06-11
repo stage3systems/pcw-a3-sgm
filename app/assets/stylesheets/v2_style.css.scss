@@ -1,10 +1,11 @@
 /* v2 style */
+$brand-primary: #52c7e6;
+
 $navbar-inverse-bg: #303a43;
 $navbar-inverse-link-color: #fff;
-$navbar-inverse-brand-color: #52c7e6;
+$navbar-inverse-brand-color: $brand-primary;
 $navbar-margin-bottom: 0px;
-// $brand-primary: darken(#52c7e6, 10%);
-$brand-primary: #52c7e6;
+
 $sidebar-bg: #cfd8df;
 $sidebar-active-bg: #b2c3cd;
 $main-bg: #f2f3f5;
@@ -19,6 +20,9 @@ $well-border: darken($well-bg, 20%);
 
 /* tables */
 $table-bg: white;
+
+/* nprogress */
+$nprogress-color: $brand-primary;
 
 body {
   padding-top: 50px;
@@ -61,6 +65,7 @@ p.nav-item {
   margin-bottom: 80px;
 }
 .footer {
+  z-index: 1000;
   border-top: 1px solid #ddd;
   line-height: 40px;
   background-color: #fff;
@@ -178,4 +183,12 @@ select.initial { background-color: #f0f090; }
 select.final { background-color: #90f090; }
 div.top-pad {
   padding-top: 20px;
+}
+a.btn.logout {
+  margin-right: 40px;
+}
+div#code {
+    position: absolute;
+    width: 800px;
+    height: 400px;
 }

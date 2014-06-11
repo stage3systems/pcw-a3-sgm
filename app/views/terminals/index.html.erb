@@ -1,9 +1,10 @@
-<div class="">
-  <h2 class="title">
-    Terminals for <%= @port.name %>
-    <%= link_to 'New Terminal', new_port_terminal_path,
-                :class => 'btn btn-primary btn-sm' %>
-  </h2>
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Terminal', new_port_terminal_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+  <h2 class="title">Terminals for <%= @port.name %></h2>
 
   <table class="table table-bordered">
     <thead>
@@ -38,7 +39,6 @@
     </tbody>
   </table>
 </div>
-<%= render "common/data_table", column_defs: [
-      {"sType" => "num-html", "aTargets" => [1,2]},
-      {"bSortable" => false, "aTargets" => [3]}
-    ] %>
+<script type="text/javascript">
+    $("table.table").dataTable({bSort: false, bPaginate: false});
+</script>

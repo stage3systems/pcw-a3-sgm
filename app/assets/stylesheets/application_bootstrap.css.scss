@@ -3,3 +3,30 @@
 @import "bootstrap-editable";
 @import "wice_grid";
 @import "published";
+@import "nprogress";
+@import "nprogress-bootstrap";
+#nprogress .spinner {
+  top: 18px;
+}
+select.status {
+  @include border-top-radius($border-radius-small);
+  @include border-right-radius($border-radius-small);
+  @include border-bottom-radius($border-radius-small);
+  @include border-left-radius($border-radius-small);
+  height: 30px;
+}
+.breadcrumb {
+  background-color: $main-bg;
+  color: #999;
+  margin-bottom: 0;
+}
+/* BS3ize dataTables */
+table.dataTable tr.odd { background-color: $table-bg-accent; }
+form.simple_form {
+  div.ace-editor-wrapper {
+    div { display: block; }
+  }
+}
+div.notice {
+  padding-top: 1em;
+}

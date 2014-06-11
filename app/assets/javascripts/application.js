@@ -47,3 +47,6 @@
 //= require ace/ace
 //= require ace/theme-clouds
 //= require ace/mode-javascript
+//= require turbolinks
+//= require nprogress
+//= require nprogress-turbolinks
