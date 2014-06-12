@@ -76,7 +76,7 @@
       --></ul></div>
       <div class="main">
         <% unless ['home', 'disbursements'].member? controller_name %>
-          <ul class="nav nav-tabs"><!--
+          <ul class="nav nav-tabs sub-tabs"><!--
             --><li class="<%= "active" if ['ports', 'terminals', 'tariffs'].member? controller_name %>"><a href="<%= ports_path %>">PORTS</a></li><!--
             --><li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_path %>">TAXES</a></li><!--
             --><li class="<%= "active" if controller_name == 'vessels' %>"><a href="<%= vessels_path %>">VESSELS</a></li><!--

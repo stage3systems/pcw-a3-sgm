@@ -41,15 +41,15 @@ html {
   left: 0;
   right: 0;
   bottom: auto;
-  height: 90px;
+  height: 70px;
 }
 .sidebar ul {
-  height: 90px;
+  height: 70px;
   padding: 0;
   margin: 0;
 }
 p.nav-item {
-  height: 90px;
+  height: 70px;
 }
 .sidebar ul li {
   margin: 0;
@@ -60,20 +60,21 @@ p.nav-item {
 }
 .main {
   background-color: $main-bg;
-  margin-top: 90px;
+  margin-top: 70px;
   margin-left: 0;
   margin-bottom: 80px;
 }
 .footer {
   z-index: 1000;
   border-top: 1px solid #ddd;
-  line-height: 40px;
+  font-size: 11px;
+  line-height: 30px;
   background-color: #fff;
   position: fixed;
   bottom: 0;
   right: 0;
   left: 0;
-  height: 40px;
+  height: 30px;
   a {
     margin: 0 1em;
   }
@@ -90,9 +91,24 @@ p.nav-item {
 .nav-tabs li a {
   border: none;
   color: #999;
-  line-height: 50px !important;
-  min-height: 50px;
+  line-height: 24px !important;
+  min-height: 24px;
 }
+p.nav-item {
+  margin: 0;
+  padding: 1em 0;
+  font-size: 10px;
+  text-align: center;
+  font-weight: bold;
+  .logo {
+    font-size: 30px;
+    line-height: 30px;
+  }
+  &:hover {
+    background-color: $sidebar-active-bg;
+  }
+}
+
 @media (min-width: 768px) {
   .sidebar {
     width: 120px;
@@ -105,6 +121,14 @@ p.nav-item {
     display: block;
     width: auto;
   }
+  .sidebar ul {
+    height: 90px;
+  }
+  p.nav-item {
+    height: 90px;
+    padding: 1.5em 0 1em;
+  }
+
   .main {
     margin-top: 0;
     margin-left: 120px;
@@ -112,20 +136,16 @@ p.nav-item {
   .footer {
     left: 120px;
   }
-}
-p.nav-item {
-  margin: 0;
-  padding: 1em 0;
-  font-size: 10px;
-  text-align: center;
-  font-weight: bold;
-  .logo {
+  .nav-tabs li a {
+    line-height: 50px !important;
+    min-height: 50px;
+  }
+  p.nav-item .logo {
     font-size: 36px;
-  }
-  &:hover {
-    background-color: $sidebar-active-bg;
+    line-height: normal;
   }
 }
+
 li.active p.nav-item {
   background-color: $sidebar-active-bg;
   border-bottom: 1px solid #aaa;
@@ -159,7 +179,6 @@ input.date {
 div.search-form div.form-group {
   margin-bottom: 1em;
 }
-.search-form { padding: 0 10px 10px;}
 .search-form form { margin: 0; }
 .search-form legend { font-size: 16px; line-height: 36px; text-transform: uppercase; }
 

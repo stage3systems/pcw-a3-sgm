@@ -6,11 +6,6 @@
     <div class="pfda-header">
       <div class="container">
         <div class="row">
-          <div class="due">ESTIMATED</div>
-          <div class="amount">
-            <%= number_to_currency @revision.amount, unit: "" %>
-            <em class="currency"><%= @revision.data['currency_code'] %></em>
-          </div>
           <div class="btn-group pull-right hidden-print">
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
                class="btn btn-default hint" title="Printable PDF version">
@@ -20,6 +15,11 @@
                class="btn btn-default hint" title="Download as Excel Spreadsheet">
               <%= image_tag "excel.png" %>
             </a>
+          </div>
+          <div class="amount">
+            <span class="due">ESTIMATED</span>
+            <%= number_to_currency @revision.amount, unit: "" %>
+            <em class="currency"><%= @revision.data['currency_code'] %></em>
           </div>
         </div>
       </div>
@@ -186,7 +186,10 @@
               </tfoot>
             </table>
             <div class="final-figure">
-              <div class="pull-right final-figure-amount">
+              <div class="final-figure-title">
+                <p>ESTIMATED AMOUNT</p>
+              </div>
+              <div class="final-figure-amount">
                 <span class="amount">
                   <%= number_to_currency(
                         @revision.data[
@@ -196,9 +199,6 @@
                 <span class="currency">
                   <%= @revision.data["currency_code"] %>
                 </span>
-              </div>
-              <div class="pull-right final-figure-title">
-                <p>ESTIMATED<br/>AMOUNT</p>
               </div>
             </div>
           </div>
