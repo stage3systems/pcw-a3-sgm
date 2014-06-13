@@ -11,11 +11,7 @@ namespace :monson do
           subsubtype: t['subsubtype'],
           subsubsubtype: t['subsubsubtype']).first unless ct
         ct = CargoType.new unless ct
-        ct.remote_id = t['id']
-        ct.maintype = t['type']
-        ct.subtype = t['subtype']
-        ct.subsubtype = t['subsubtype']
-        ct.subsubsubtype = t['subsubsubtype']
+        ct.update_from_json(t)
         ct.save!
       end
     end

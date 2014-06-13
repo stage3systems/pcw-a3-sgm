@@ -25,4 +25,31 @@ class CargoType < ActiveRecord::Base
   def self.authorized
     self.where(enabled: true)
   end
+
+  def update_from_json(data)
+    remote_id = data['id']
+    maintype = data['type']
+    subtype = data['subtype']
+    subsubtype = data['subsubtype']
+    subsubsubtype = data['subsubsubtype']
+  end
+
+  def self.aos_create(t)
+    ct = CargoType.new
+    ct.update_from_json(t)
+    ct.save
+  end
+
+  def self.aos_modify(t)
+    ct = CargoType.where(remote_id: t['id']).first
+    return false if ct.nil?
+    ct.update_from_json(t)
+    ct.save
+  end
+
+  def self.aos_delete(t)
+    CargoType.where(remote_id: t['id']).delete_all
+    true
+  end
+
 end

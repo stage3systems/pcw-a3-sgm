@@ -13,6 +13,19 @@ class JsonrpcController < ApplicationController
     end
   end
 
+  def sync(action, entity, data)
+    return error(-32000, "Unsupported action") unless ['CREATE', 'MODIFY', 'DELETE'].member? action
+    return error(-32001, "Unsupported entity") unless ['cargoType'].member? data["entity"]
+    classes = {'cargoType' => CargoType}
+    k = classes[entity]
+    return error(-32001, "Unuspported entity") if k.nil?
+    if k.send("aos_#{action.downcase}", data)
+      success("ok")
+    else
+      error(-32002, "Failed to apply action to entity")
+    end
+  end
+
   def search(query)
     p = {}
     if query[:port]
@@ -84,7 +97,8 @@ class JsonrpcController < ApplicationController
   end
 
   def check_method
-    return true if ["search", "register", "unregister"].include? params[:method]
+    return true if ["sync", "search",
+                    "register", "unregister"].include? params[:method]
     render json: error(-32601, "Method not found")
     false
   end
