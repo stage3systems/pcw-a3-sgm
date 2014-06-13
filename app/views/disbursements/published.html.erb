@@ -130,11 +130,11 @@
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th class="right-align">
+                  <th class="text-right">
                     Amount (<%= @revision.data["currency_code"] %>)
                   </th>
                   <% unless @revision.tax_exempt? %>
-                  <th class="right-align">
+                  <th class="text-right">
                     Amount (<%= @revision.data["currency_code"] %>)
                     Including Taxes
                   </th>
@@ -156,11 +156,11 @@
                         </span>
                       <% end %>
                     </td>
-                    <td class="right-align">
+                    <td class="text-right">
                       <%= number_to_currency nan_to_zero(@revision.values[f]), unit: "" %>
                     </td>
                     <% unless @revision.tax_exempt? %>
-                    <td class="right-align">
+                    <td class="text-right">
                       <%= number_to_currency nan_to_zero(@revision.values_with_tax[f]),
                                              unit: "" %>
                     </td>
@@ -172,12 +172,12 @@
               <tfoot>
                 <tr>
                   <th>Total</th>
-                  <th class="right-align">
+                  <th class="text-right">
                     <%= number_to_currency @revision.data["total"],
                                            unit: "" %>
                   </th>
                   <% unless @revision.tax_exempt? %>
-                  <th class="right-align">
+                  <th class="text-right">
                     <%= number_to_currency @revision.data["total_with_tax"],
                                            unit: "" %>
                   </th>
