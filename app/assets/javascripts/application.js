@@ -39,6 +39,7 @@
 //= require dataTables.currency
 //= require dataTables.bootstrap
 //= require compute
+//= require pfda
 //= require jstz
 //= require timezone
 //= require wice_grid

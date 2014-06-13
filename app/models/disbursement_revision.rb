@@ -28,6 +28,9 @@ class DisbursementRevision < ActiveRecord::Base
       self.values[k] = ctx.eval("ctx.values['#{k}']")
       self.values_with_tax[k] = ctx.eval("ctx.values_with_tax['#{k}']")
     end
+    self.data_will_change!
+    self.values_will_change!
+    self.values_with_tax_will_change!
     self.reference = self.compute_reference
     self.amount = self.compute_amount
     self.currency_symbol = self.compute_currency_symbol
@@ -135,5 +138,10 @@ CTX
 
   def compute_reference
     ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number.gsub('/', '') unless self.voyage_number.blank?} - #{(self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase} - #{self.disbursement.status.upcase rescue "DELETED"} - REV. #{self.number}"
+  end
+
+  def self.hstore_fields
+    [:data, :fields, :descriptions, :comments, :compulsory,
+     :disabled, :codes, :overriden, :values, :values_with_tax]
   end
 end

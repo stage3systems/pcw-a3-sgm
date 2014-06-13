@@ -265,6 +265,9 @@ class DisbursementsController < ApplicationController
     end
     @revision.compute
     @revision.user = current_user
+    DisbursementRevision.hstore_fields.each do |f|
+      @revision.send("#{f}_will_change!")
+    end
     @revision.save
     @disbursement.current_revision = @revision
     @disbursement.save
