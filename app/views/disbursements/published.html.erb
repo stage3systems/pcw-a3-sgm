@@ -1,9 +1,9 @@
-<div class=" no-padding<%= " pfda-container" if @disbursement and
+<div class="container-fluid <%= "pfda-container" if @disbursement and
                                           (@disbursement.initial? or
                                            @disbursement.final?) %>">
   <% if @disbursement  %>
     <% if @disbursement.initial? or @disbursement.final? %>
-    <div class="pfda-header">
+    <div class="row pfda-header">
       <div class="container">
         <div class="row">
           <div class="btn-group pull-right hidden-print">
