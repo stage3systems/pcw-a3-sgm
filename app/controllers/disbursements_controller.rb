@@ -306,7 +306,7 @@ class DisbursementsController < ApplicationController
       "DejaVuSans" => {
         :bold => Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
         :normal => Rails.root.join('fonts', 'DejaVuSans.ttf').to_s })
-    kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
+    kai = Rails.root.join('fonts', 'gkai00mp.ttf').to_s
     @pdf.font_families.update(
       "Kai" => {
           :normal => { :file => kai, :font => "Kai" },
