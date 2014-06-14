@@ -1,11 +1,47 @@
+<!--
+<style>
+html, body { background: #56c48d; }
+.login-form-bg { background: rgba(0,0,0,0.2); }
+.login-form { width: 300px; margin: 0 auto; padding: 20px 0 40px; color: #fff; }
+.login-form .title { font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 300; font-size: 48px; color: #56c48d; text-align: center; }
+
+.login-field { margin-bottom: 1px; clear: both; }
+.login-field label { height: 32px; width: 32px; margin: 0; background: #666; line-height: 32px; text-align: center; display: block; float: left; }
+.login-field input { width: 268px; height: 32px; padding: 5px; background: #fff; border: none; color: #fff; }
+
+.login-form .login-submit { margin-top: 10px; clear: both; }
+.login-form input[type='submit'] { height: 32px; padding: 5px 20px; background: #3aceff; border: none; color: #fff; text-align: center; }
+.login-form .support { line-height: 32px; float: right; }
+.login-form .support a { color: #fff; }
+
+</style>
+-->
+
 <div class="btn-group"></div>
-<div class="row">
+<div class="row login-form-bg">
   <div class="col-md-12">
     <% unless (browser.ie? and
                browser.version.to_i < 10 and params[:force].nil?) %>
     <div id="login" class="container">
-      <div class="well" style="margin: 0 auto; width: 420px;">
+      <div class="login-form">
+
         <h2 class="title"><%= ProformaDA::Application.config.tenant_name %> Estimates</h2>
+<!--
+        <div class="login-field">
+          <label><i class="fa fa-user"></i></label>
+          <input type="text" placeholder="Username">
+        </div>
+        <div class="login-field">
+          <label><i class="fa fa-lock"></i></label>
+          <input type="text" placeholder="Password">
+        </div>
+        <div class="login-submit">
+          <div class="support">
+            <a href="https://stage3systems.zendesk.com/home">Trouble logging in?</a>
+          </div>
+          <input type="submit" value="Log In">
+        </div>
+-->
 
         <% flash.each do |name, msg| %>
           <% unless name == :timedout or msg.class != String %>
