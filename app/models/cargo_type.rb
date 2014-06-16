@@ -27,11 +27,11 @@ class CargoType < ActiveRecord::Base
   end
 
   def update_from_json(data)
-    remote_id = data['id']
-    maintype = data['type']
-    subtype = data['subtype']
-    subsubtype = data['subsubtype']
-    subsubsubtype = data['subsubsubtype']
+    self.remote_id = data['id']
+    self.maintype = data['type']
+    self.subtype = data['subtype']
+    self.subsubtype = data['subsubtype']
+    self.subsubsubtype = data['subsubsubtype']
   end
 
   def self.aos_create(t)
