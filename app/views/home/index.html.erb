@@ -27,10 +27,8 @@
                               class: 'form-control date reset' %>
             <%= f.input :end_date, as: :hidden %>
         </div>
-        <div class="form-group">
-          <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
-          <%= f.submit "Reset", name: "reset", class: 'btn' %>
-        </div>
+        <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
+        <%= f.submit "Reset", name: "reset", class: 'btn' %>
       <% end %>
     </div>
   </div>
@@ -41,6 +39,7 @@
     </div>
   </div>
 </div>
+<hr class="dashboard">
 <div class="row">
   <div class="col-md-12">
     <h4>Last Updated 10 Disbursements</h4>
@@ -48,37 +47,46 @@
 </div>
 <div class="row">
   <div class="col-md-4">
-    <h4><b>Draft</b></h4>
+    <h4>Draft</h4>
+    <ul class="list-unstyled list-last-updated">
     <% if @drafts.each do |d| %>
-      <% editor = d.current_revision.user %>
-      <%= link_to d.title, edit_disbursement_url(d) %><br>
-      <small>last updated on <%= l d.updated_at %><%= " by #{editor.full_name}" if editor %></small>
-      <br>
+      <li>
+        <% editor = d.current_revision.user %>
+        <%= link_to d.title, edit_disbursement_url(d) %><br>
+        <small>Updated on <strong><%= l d.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+      </li>
     <% end.empty? %>
-      No DRAFT disbursement available.
+      <li> No DRAFT disbursement available.</li>
     <% end %>
+    </ul>
   </div>
   <div class="col-md-4">
-    <h4><b>Initial</b></h4>
+    <h4>Initial</h4>
+    <ul class="list-unstyled list-last-updated">
     <% if @initials.each do |p| %>
-      <% publisher = p.current_revision.user %>
-      <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
-      <small>last updated on <%= l p.updated_at %><%= " by #{publisher.full_name}" if publisher %></small>
-      <br>
+      <li>
+        <% publisher = p.current_revision.user %>
+        <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
+        <small>Updated on <strong><%= l p.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
+      </li>
     <% end.empty? %>
-      No INITIAL disbursement available.
+      <li>No INITIAL disbursement available.</li>
     <% end %>
+    </ul>
   </div>
   <div class="col-md-4">
-    <h4><b>Final</b></h4>
+    <h4>Final</h4>
+    <ul class="list-unstyled list-last-updated">
     <% if @finals.each do |f| %>
-      <% editor = f.current_revision.user %>
-      <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
-      <small>last updated on <%= l f.updated_at %><%= " by #{editor.full_name}" if editor %></small>
-      <br>
+      <li>
+        <% editor = f.current_revision.user %>
+        <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
+        <small>Updated on <strong><%= l f.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+      </li>
     <% end.empty? %>
-      No FINAL disbursement available.
+      <li>No FINAL disbursement available.</li>
     <% end %>
+    </ul>
   </div>
 </div>
 <script type="text/javascript">
