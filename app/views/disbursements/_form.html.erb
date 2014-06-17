@@ -1,10 +1,10 @@
 <%= simple_form_for(@revision, url: disbursement_url(@disbursement),
-                    method: :put, html: {class: "form-horizontal"},
+                    method: :put,
                    wrapper: :horizontal_form) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <div class="row">
+    <div class="row form-horizontal">
     <div class="col-md-4">
       <table class="table table-condensed table-bordered">
         <tbody>
@@ -63,6 +63,8 @@
     <h4>Services</h4>
     <div class="overriden">
     </div>
+
+    <div class="table-responsive">
     <table class="disbursement table table-bordered table-condensed">
       <thead>
         <tr>
@@ -101,7 +103,16 @@
       </tbody>
       <tfoot>
         <tr>
-          <td><input id="extra_item" />&nbsp;Tax Applies: <input type="checkbox" id="extra_tax_applies" /></td>
+          <td class="form-inline">
+            <div class="form-group">
+              <input id="extra_item" class="form-control" />
+            </div>
+            <div class="checkbox">
+              <label>
+                Tax Applies: <input type="checkbox" id="extra_tax_applies" />
+              </label>
+            </div>
+          </td>
           <td><a id="add_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
           <td class="tax"></td>
           <td></td>
@@ -114,9 +125,9 @@
         </tr>
       </tfoot>
     </table>
+    </div>
 
   <div class="form-actions">
-    <div class="btn-group">
     <%= f.submit "Save PFDA", class: "btn btn-primary" %>
     <% if @revision.number == 0 %>
     <%= link_to "Cancel",
@@ -126,7 +137,6 @@
     <% else %>
     <%= link_to "Cancel", disbursements_path, class: "btn btn-default" %>
     <% end %>
-    </div>
   </div>
 <% end %>
 <script type="text/javascript">
