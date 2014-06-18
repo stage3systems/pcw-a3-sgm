@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
     self.remote_id = data['id']
     self.uid = data['loginName']
     self.first_name = data['firstName']
-    self.last_name = data['firstName']
+    self.last_name = data['lastName']
     o = Office.find_by(remote_id: data['officeId'])
     self.office_id = o.id if o
     if data['password']
