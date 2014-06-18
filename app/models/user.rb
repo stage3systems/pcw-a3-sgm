@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :timeoutable, :trackable #:validatable
 
+  extend Syncable
+
   has_many :services
   has_many :service_updates
   has_many :disbursements
@@ -28,6 +30,10 @@ class User < ActiveRecord::Base
     user
   end
 
+  def active_for_authentication?
+    super && !deleted
+  end
+
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login).downcase
@@ -48,5 +54,27 @@ class User < ActiveRecord::Base
 
   def full_name
     "#{self.first_name} #{self.last_name}"
+  end
+
+  def update_from_json(data)
+    self.remote_id = data['id']
+    self.uid = data['loginName']
+    self.first_name = data['firstName']
+    self.last_name = data['firstName']
+    o = Office.find_by(remote_id: data['officeId'])
+    self.office_id = o.id if o
+    if data['password']
+      self.encrypted_password = data['password']
+    else
+      self.password = 'monson*'
+    end
+    self.admin = is_admin_type(data['personType'])
+    self.deleted = (data['personType'] == '(DELETED)')
+  end
+
+  def is_admin_type(t)
+    ['MANAGER/USER',
+     'SYSTEM ADMINISTRATOR',
+     'NAVARIK HIDDEN SUPERUSER'].member? t
   end
 end

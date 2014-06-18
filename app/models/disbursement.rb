@@ -4,7 +4,7 @@ class Disbursement < ActiveRecord::Base
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
                   :port_id, :publication_id, :user_id,
                   :status_cd, :tbn, :terminal_id, :vessel_id,
-                  :tbn_template
+                  :tbn_template, :type_cd
   belongs_to :port
   belongs_to :terminal
   belongs_to :office
@@ -18,8 +18,9 @@ class Disbursement < ActiveRecord::Base
   has_one :revision,
           -> { order 'updated_at DESC'},
           class_name: 'DisbursementRevision'
+  validates_presence_of :type_cd
   validates_presence_of :port_id
-  validates_presence_of :company_id
+  validates_presence_of :company_id, unless: :inquiry?
   validates_presence_of :vessel_id, :unless => :tbn?
   validates_presence_of :dwt, :grt, :loa, :nrt, :if => :tbn?
   validate :dwt, :numericality => true
@@ -31,6 +32,9 @@ class Disbursement < ActiveRecord::Base
 
   as_enum :status, draft: 0, initial: 1, deleted: 2, final: 3,
                    inquiry: 4, close: 5, archived: 6
+
+  as_enum :type, standard: 0, owners_husbandry: 1, bunker_call: 2,
+                 cleaning: 3, spare_parts: 4, other: 5
 
   def title
     "#{self.vessel_name} in #{self.port.name}"

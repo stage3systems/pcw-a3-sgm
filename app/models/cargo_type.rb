@@ -4,6 +4,8 @@ class CargoType < ActiveRecord::Base
   has_many :disbursement_revisions
   default_scope -> {order('maintype ASC, subtype ASC, subsubtype ASC, subsubsubtype ASC')}
 
+  extend Syncable
+
   def display
     fn = self.maintype
     fn += " » #{self.subtype}" if self.subtype
@@ -32,24 +34,6 @@ class CargoType < ActiveRecord::Base
     self.subtype = data['subtype']
     self.subsubtype = data['subsubtype']
     self.subsubsubtype = data['subsubsubtype']
-  end
-
-  def self.aos_create(t)
-    ct = CargoType.new
-    ct.update_from_json(t)
-    ct.save
-  end
-
-  def self.aos_modify(t)
-    ct = CargoType.where(remote_id: t['id']).first
-    return false if ct.nil?
-    ct.update_from_json(t)
-    ct.save
-  end
-
-  def self.aos_delete(t)
-    CargoType.where(remote_id: t['id']).delete_all
-    true
   end
 
 end

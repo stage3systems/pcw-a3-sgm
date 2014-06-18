@@ -3,7 +3,7 @@ namespace :monson do
     desc "Import Cargo Types from AOS"
     task :cargo_types => :environment do
       api = AosApi.new
-      JSON.parse(api.query('cargoType', {limit: 1000}).body)['data']['cargoTypes'].each do |t|
+      api.each('cargoType') do |t|
         ct = CargoType.where(remote_id: t['id']).first
         ct = CargoType.where(
           maintype: t['type'],
@@ -14,6 +14,69 @@ namespace :monson do
         ct.update_from_json(t)
         ct.save!
       end
+    end
+    desc "Import Offices from AOS"
+    task :offices => :environment do
+      api = AosApi.new
+      api.each('office', {agencyCompany: 1}) do |o|
+        office = Office.where('remote_id = :id OR name ilike :name',
+                              id: o['id'], name: "%#{o["name"]}%").first
+        office = Office.new unless office
+        office.update_from_json(o)
+        office.save!
+      end
+    end
+    desc "Import Companies from AOS"
+    task :companies => :environment do
+      api = AosApi.new
+      api.companies.each do |c|
+        company = Company.where('remote_id = :id OR name ilike :name',
+                                id: c['id'], name: "%#{c["name"]}%").first
+        company = Company.new unless company
+        company.update_from_json(c)
+        company.save!
+      end
+    end
+    desc "Import Users from AOS"
+    task :users => :environment do
+      api = AosApi.new
+      api.users.each do |u|
+        user = User.where('remote_id = :id OR uid = :uid',
+                          id: u['id'], uid: u['loginName']).first
+        user = User.new unless user
+        user.update_from_json(u)
+        user.save!
+      end
+    end
+    desc "Import Ports from AOS"
+    task :ports => :environment do
+      currency = Currency.find_by(code: 'AUD')
+      tax = Tax.find_by(code: 'GST')
+      api = AosApi.new
+      api.each('officePort') do |op|
+        aos_port = api.find("port", op['portId'])
+        aos_office = api.find("office", op['officeId'])
+        port = Port.where('remote_id = :id OR name ilike :name',
+                          id: op['portId'],
+                          name: "%#{aos_port['name']}%").first
+        unless port
+          port = Port.new
+          port.remote_id = aos_port['id']
+          port.name = aos_port['name']
+          port.currency = currency
+          port.tax= tax
+          port.save!
+        end
+        office = Office.where('remote_id = :id OR name ilike :name',
+                              id: op['officeId'],
+                              name: "%#{aos_office['name']}%").first
+        unless office.port_ids.member? port.id
+          office.ports << port
+        end
+      end
+    end
+    desc "Sync all common data with AOS"
+    task :all => [:cargo_types, :companies, :offices, :users, :ports] do
     end
   end
   namespace :import do
