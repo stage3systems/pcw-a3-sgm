@@ -50,6 +50,13 @@
                       collection: @cargo_types,
                       label_method: :display %>
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
+    <%= f.input :company_name, label: "Principal", placeholder: "Search Principal",
+                required: (not @disbursement.inquiry?),
+                as: :fake, input_html: {value: (@disbursement.company.name rescue nil)} %>
+    <input type="hidden"
+           id="disbursement_company_id"
+           name="disbursement[company_id]"
+           value="<%= @disbursement.company_id %>"></input>
     </div>
     <div class="col-md-4">
     <%= f.input :loadtime, label: "Load Time (Hours)" %>
@@ -117,7 +124,7 @@
 
   <div class="form-actions">
     <div class="btn-group">
-    <%= f.submit "Save PFDA", class: "btn btn-primary" %>
+    <%= f.submit "Save PDA", class: "btn btn-primary" %>
     <% if @revision.number == 0 %>
     <%= link_to "Cancel",
                 @disbursement,
@@ -148,4 +155,11 @@
   }
   $(document).ready(setup);
   $(document).on('page:load', setup);
+  $("#company_name").typeahead(null, {
+    name: 'principal',
+    displayKey: 'name',
+    source: getPrincipalsBH().ttAdapter()
+    }).on('typeahead:selected', function(e, datum) {
+      $("#disbursement_company_id").val(datum.id);
+    });
 </script>
