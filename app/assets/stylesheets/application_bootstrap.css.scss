@@ -31,3 +31,48 @@ form.simple_form {
 div.notice {
   padding-top: 1em;
 }
+.login-form-bg { background: rgba(0,0,0,0.25); }
+.login-form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+}
+.login-form .title {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  font-size: 48px;
+  color: /*#56c48d*/ #fff;
+  text-align: center;
+}
+
+.user_login, .user_password { margin-bottom: 1px; clear: both; }
+.user_login label, .user_password label {
+  height: 32px; width: 32px;
+  margin: 0;
+  background: #666;
+  color: #fff;
+  line-height: 32px;
+  text-align: center;
+  display: block; float: left;
+}
+input#user_login, input#user_password {
+  width: 268px;
+  height: 32px;
+  padding: 5px;
+  background: #fff;
+  @include border-top-radius(0);
+  @include border-right-radius(0);
+  @include border-bottom-radius(0);
+  @include border-left-radius(0);
+}
+.login-form .login-submit { margin-top: 10px; clear: both; }
+.login-form input[type='submit'] {
+  height: 32px;
+  padding: 5px 20px;
+  background: #3aceff;
+  border: none;
+  color: #fff;
+  text-align: center;
+}
+.login-form .support { line-height: 32px; float: right; }
+.login-form .support a { color: #fff; }

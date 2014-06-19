@@ -14,6 +14,13 @@
   <%= favicon_link_tag ProformaDA::Application.config.tenant_favicon, :rel => 'shortcut icon' %>
   <%= csrf_meta_tags %>
   <%= render partial: 'common/piwik' %>
+  <style>
+    html, body {
+      height: 100%;
+      background: #56c48d url(<%= image_path('bg_login.jpg') %>) center center no-repeat;
+      background-size: cover;
+    }
+  </style>
 </head>
 <body>
 <div class="container-fluid">

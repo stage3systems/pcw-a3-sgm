@@ -3,6 +3,10 @@ module ApplicationHelper
     "<i class=\"glyphicon glyphicon-#{name}\"></i>".html_safe
   end
 
+  def fa_icon(name)
+    "<i class=\"fa fa-#{name}\"></i>".html_safe
+  end
+
   def configuration_tab?
     not ["home", "disbursements"].member? controller_name
   end
