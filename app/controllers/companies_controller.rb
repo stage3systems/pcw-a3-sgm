@@ -5,6 +5,7 @@ class CompaniesController < ApplicationController
   # GET /companies
   # GET /companies.json
   def index
+    @title = "Companies"
     @companies_grid = initialize_grid(Company,
                         order: 'companies.name',
                         order_direction: 'asc')
@@ -14,9 +15,18 @@ class CompaniesController < ApplicationController
     end
   end
 
+  def search
+    companies = Company.where('name ilike :name',
+                              name: "%#{params[:name]}%").map do |c|
+      {id: c.id, name: c.name}
+    end
+    render json: companies
+  end
+
   # GET /companies/1
   # GET /companies/1.json
   def show
+    @title = "View Company"
     @company = Company.find(params[:id])
     add_breadcrumb "#{@company.name}", company_url(@company)
 
@@ -29,6 +39,7 @@ class CompaniesController < ApplicationController
   # GET /companies/new
   # GET /companies/new.json
   def new
+    @title = "New Company"
     @company = Company.new
     add_breadcrumb "New Company", new_company_url
 
@@ -40,6 +51,7 @@ class CompaniesController < ApplicationController
 
   # GET /companies/1/edit
   def edit
+    @title = "Edit Company"
     @company = Company.find(params[:id])
     add_breadcrumb "Edit #{@company.name}", edit_company_url(@company)
   end
@@ -47,6 +59,7 @@ class CompaniesController < ApplicationController
   # POST /companies
   # POST /companies.json
   def create
+    @title = "New Company"
     @company = Company.new(params[:company])
     add_breadcrumb "New Company", new_company_url
 
@@ -64,6 +77,7 @@ class CompaniesController < ApplicationController
   # PUT /companies/1
   # PUT /companies/1.json
   def update
+    @title = "Edit Company"
     @company = Company.find(params[:id])
     add_breadcrumb "Edit #{@company.name}", edit_company_url(@company)
 

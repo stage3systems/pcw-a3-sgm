@@ -8,6 +8,7 @@ class DisbursementsController < ApplicationController
   # GET /disbursements
   # GET /disbursements.json
   def index
+    @title = "Disbursements"
     @disbursements_grid = initialize_grid(Disbursement.where(
           port_id: current_user.authorized_ports.pluck(:id)
         ),
@@ -57,6 +58,7 @@ class DisbursementsController < ApplicationController
   end
 
   def published
+    @title = "Proforma DA"
     @disbursement = Disbursement.find_by_publication_id(params[:id])
     @revision = @disbursement.current_revision rescue nil
     pfda_view = PfdaView.new
@@ -140,7 +142,10 @@ class DisbursementsController < ApplicationController
   # GET /disbursements/new
   # GET /disbursements/new.json
   def new
+    @title = "New PDA"
     @disbursement = Disbursement.new
+    @disbursement.status_cd = params[:status_cd]
+    @disbursement.tbn = @disbursement.inquiry?
 
     respond_to do |format|
       format.html # new.html.erb
@@ -148,8 +153,10 @@ class DisbursementsController < ApplicationController
     end
   end
 
+
   # GET /disbursements/1/edit
   def edit
+    @title = "Edit PDA"
     @disbursement = Disbursement.find(params[:id])
     @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
@@ -158,6 +165,7 @@ class DisbursementsController < ApplicationController
 
   # POST /disbursements
   def create
+    @title = "New PDA"
     @disbursement = Disbursement.new(params[:disbursement])
     @disbursement.user = current_user
     @disbursement.office = current_user.office || Office.find_by_name("Head Office")
@@ -166,6 +174,7 @@ class DisbursementsController < ApplicationController
       if @disbursement.save
         format.html { redirect_to edit_disbursement_url(@disbursement) }
       else
+        @disbursement.errors['company_name'] = @disbursement.errors['company_id'][0]
         format.html { render action: "new" }
       end
     end
@@ -175,6 +184,7 @@ class DisbursementsController < ApplicationController
   # PUT /disbursements/1
   # PUT /disbursements/1.json
   def update
+    @title = "Edit PDA"
     @disbursement = Disbursement.find(params[:id])
     if @disbursement.current_revision.number == 0
       @revision = @disbursement.current_revision
@@ -184,7 +194,8 @@ class DisbursementsController < ApplicationController
     end
     respond_to do |format|
       if save_revision
-        format.html { redirect_to disbursements_url, notice: 'Disbursement was successfully updated.' }
+        format.html { redirect_to disbursements_url,
+                      notice: 'Disbursement was successfully updated.' }
       else
         format.html { render action: "edit" }
       end
@@ -204,6 +215,7 @@ class DisbursementsController < ApplicationController
   end
 
   def access_log
+    @title = "Published PDA Access Log"
     @geoip = GeoIP.new(Rails.root.join('GeoLiteCity.dat').to_s)
     @disbursement = Disbursement.find(params[:id])
     add_breadcrumb "Access log for #{@disbursement.current_revision.reference}"

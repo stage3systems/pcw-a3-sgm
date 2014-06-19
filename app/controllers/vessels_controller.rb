@@ -6,6 +6,7 @@ class VesselsController < ApplicationController
   # GET /vessels
   # GET /vessels.json
   def index
+    @title = "Vessels"
     @vessels_grid = initialize_grid(Vessel,
                       order: 'vessels.name',
                       order_direction: 'asc')
@@ -18,6 +19,7 @@ class VesselsController < ApplicationController
   # GET /vessels/1
   # GET /vessels/1.json
   def show
+    @title = "View Vessel"
     @vessel = Vessel.find(params[:id])
     add_breadcrumb "#{@vessel.name}", vessel_url(@vessel)
 
@@ -30,6 +32,7 @@ class VesselsController < ApplicationController
   # GET /vessels/new
   # GET /vessels/new.json
   def new
+    @title = "New Vessel"
     @vessel = Vessel.new
     add_breadcrumb "New Vessel", new_vessel_url
 
@@ -41,6 +44,7 @@ class VesselsController < ApplicationController
 
   # GET /vessels/1/edit
   def edit
+    @title = "Edit Vessel"
     @vessel = Vessel.find(params[:id])
     add_breadcrumb "Edit #{@vessel.name}", edit_vessel_url(@vessel)
   end
@@ -48,6 +52,7 @@ class VesselsController < ApplicationController
   # POST /vessels
   # POST /vessels.json
   def create
+    @title = "New Vessel"
     @vessel = Vessel.new(params[:vessel])
     add_breadcrumb "New Vessel", new_vessel_url
 
@@ -65,6 +70,7 @@ class VesselsController < ApplicationController
   # PUT /vessels/1
   # PUT /vessels/1.json
   def update
+    @title = "Edit Vessel"
     @vessel = Vessel.find(params[:id])
     add_breadcrumb "Edit #{@vessel.name}", edit_vessel_url(@vessel)
 

@@ -4,6 +4,7 @@ class CargoTypesController < ApplicationController
   add_breadcrumb "Cargo Types", :cargo_types_url
 
   def index
+    @title = "Cargo Types"
     @cts = CargoType.all
   end
 

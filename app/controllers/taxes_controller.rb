@@ -7,6 +7,7 @@ class TaxesController < ApplicationController
   # GET /taxes
   # GET /taxes.json
   def index
+    @title = "Taxes"
     @taxes_grid = initialize_grid(Tax,
                       order: 'taxes.name',
                       order_direction: 'asc')
@@ -19,6 +20,7 @@ class TaxesController < ApplicationController
   # GET /taxes/1
   # GET /taxes/1.json
   def show
+    @title = "View Tax"
     @tax = Tax.find(params[:id])
     add_breadcrumb "#{@tax.code}", tax_url(@tax)
 
@@ -31,6 +33,7 @@ class TaxesController < ApplicationController
   # GET /taxes/new
   # GET /taxes/new.json
   def new
+    @title = "New Tax"
     @tax = Tax.new
     add_breadcrumb "New", new_tax_url
 
@@ -42,6 +45,7 @@ class TaxesController < ApplicationController
 
   # GET /taxes/1/edit
   def edit
+    @title = "Edit Tax"
     @tax = Tax.find(params[:id])
     add_breadcrumb "Edit #{@tax.code}", edit_tax_url(@tax)
   end
@@ -49,6 +53,7 @@ class TaxesController < ApplicationController
   # POST /taxes
   # POST /taxes.json
   def create
+    @title = "New Tax"
     @tax = Tax.new(params[:tax])
     add_breadcrumb "New", new_tax_url
 
@@ -66,6 +71,7 @@ class TaxesController < ApplicationController
   # PUT /taxes/1
   # PUT /taxes/1.json
   def update
+    @title = "Edit Tax"
     @tax = Tax.find(params[:id])
     add_breadcrumb "Edit #{@tax.code}", edit_tax_url(@tax)
 

@@ -63,3 +63,18 @@ var ready = function() {
 };
 $(document).ready(ready);
 $(document).on('page:load', ready);
+$(document).on('page:change', function() {
+  if (window._paq) {
+    _paq.push(['setDocumentTitle', document.title]);
+    _paq.push(['trackPageView']);
+  }
+});
+var getPrincipalsBH = function() {
+  var p = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: '/companies/search/%QUERY.json'
+  });
+  p.initialize();
+  return p;
+}

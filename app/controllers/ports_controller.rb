@@ -7,6 +7,7 @@ class PortsController < ApplicationController
   # GET /ports
   # GET /ports.json
   def index
+    @title = "Ports"
     @ports_grid = initialize_grid(
                     current_user.authorized_ports,
                     joins: [:tax, :currency],
@@ -21,6 +22,7 @@ class PortsController < ApplicationController
   # GET /ports/1
   # GET /ports/1.json
   def show
+    @title = "View Port"
     @port = Port.find(params[:id])
     add_breadcrumb "#{@port.name}", port_url(@port)
 
@@ -33,6 +35,7 @@ class PortsController < ApplicationController
   # GET /ports/new
   # GET /ports/new.json
   def new
+    @title = "New Port"
     @port = Port.new
     add_breadcrumb "New Port", new_port_url
 
@@ -44,6 +47,7 @@ class PortsController < ApplicationController
 
   # GET /ports/1/edit
   def edit
+    @title = "Edit Port"
     @port = Port.find(params[:id])
     add_breadcrumb "Edit #{@port.name}", edit_port_url(@port)
   end
@@ -51,6 +55,7 @@ class PortsController < ApplicationController
   # POST /ports
   # POST /ports.json
   def create
+    @title = "New Port"
     @port = Port.new(params[:port])
     add_breadcrumb "New Port", new_port_url
 
@@ -68,6 +73,7 @@ class PortsController < ApplicationController
   # PUT /ports/1
   # PUT /ports/1.json
   def update
+    @title = "Edit Port"
     @port = Port.find(params[:id])
     add_breadcrumb "Edit #{@port.name}", edit_port_url(@port)
 

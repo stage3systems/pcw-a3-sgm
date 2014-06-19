@@ -52,7 +52,11 @@ ProformaDA::Application.routes.draw do
     resources :tariffs
   end
   resources :vessels
-  resources :companies
+  resources :companies do
+    collection do
+      get 'search/:name', to: "companies#search"
+    end
+  end
   resources :taxes
   resources :cargo_types do
     collection do

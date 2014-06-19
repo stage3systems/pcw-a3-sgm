@@ -75,6 +75,7 @@ module ProformaDA
     config.tenant_default_email = 'accounts@monson.com.au'
     config.tenant_da_logo = 'monson_agency.png'
     config.tenant_terms = 'maa-terms.pdf'
+    config.tenant_piwik_id = 2
 
     #config.tenant = 'da_desk'
     #config.tenant_name = 'DA-Desk'
@@ -83,5 +84,6 @@ module ProformaDA
     #config.tenant_default_email = 'info@da-desk.com'
     #config.tenant_da_logo = 'da-desk.png'
     #config.tenant_terms = 'da-desk.pdf'
+    #config.tenant_piwik_id = 8
   end
 end
