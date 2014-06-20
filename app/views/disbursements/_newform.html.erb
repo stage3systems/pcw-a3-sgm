@@ -8,11 +8,32 @@
   <%= f.error_notification %>
 
   <div class="form-group">
+    <%= f.input :type_cd,
+                label: 'Type',
+                collection: {
+                  "Standard" => 0,
+                  "Owners Husbandry" => 1,
+                  "Bunker Call" => 2,
+                  "Cleaning" => 3,
+                  "Spare Parts" => 4,
+                  "Other" => 5
+                }
+    %>
     <%= f.association :port,
                       collection: current_user.authorized_ports.all.to_a %>
-    <%= f.association :terminal %>
-    <%= f.association :company, label: "Principal" %>
-    <%= f.association :vessel %>
+    <%= f.association :terminal,
+                      label: '<i class="fa terminal-spinner fa-spinner fa-spin"></i> Terminal'.html_safe %>
+    <%= f.input :company_name, label: "Principal", placeholder: "Search Principal",
+                required: (not @disbursement.inquiry?),
+                as: :fake,
+                input_html: {value: params[:company_name]} %>
+    <%= f.input :company_id, as: :hidden %>
+    <%= f.input :status_cd, as: :hidden %>
+    <%= f.input :vessel_name, label: "Vessel", placeholder: "Search for Vessel",
+                required: (not @disbursement.tbn?),
+                as: :fake,
+                input_html: {value: params[:vessel_name]} %>
+    <%= f.input :vessel_id, as: :hidden %>
     <%= f.input :tbn, label: 'TBN' %>
   </div>
   <div class="form-group tbn_fields">
@@ -26,10 +47,55 @@
     <%= f.input :dwt, label: 'DWT' %>
     <%= f.input :loa, label: 'LOA' %>
   </div>
+  <div class="form-group">
+    <div class="form-group select optional">
+      <label class="select optional col-sm-3 control-label"
+             for="disbursement_nomination_id">
+        <i class="fa nomination-spinner fa-spinner fa-spin"></i> Nomination
+      </label>
+      <div class="col-sm-9">
+        <select class="select optional form-control"
+                id="disbursement_nomination_id"
+                name="disbursement[nomination_id]">
+          <option value=""></option>
+        </select>
+      </div>
+    </div>
+  </div>
   <%= f.button :submit, 'Next' %>
 <% end %>
 </div>
 <script type="text/javascript">
+  var nominations = {};
+  var updateNominations = function() {
+    $("i.nomination-spinner").fadeIn();
+    var port = $("select#disbursement_port_id").find("option:selected").html();
+    var principal = $("input#company_name").val();
+    var vessel = $("input#vessel_name").val();
+    $.ajax('/disbursements/nominations.json', {
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        port: port,
+        vessel: vessel,
+        company: principal
+      },
+      success: function(d) {
+        nominations = {};
+        $("i.fa-spinner").fadeOut();
+        $("select#disbursement_nomination_id").find("option").remove();
+        $("select#disbursement_nomination_id").append('<option value></option>');
+        $.each(d.data.nomination, function(i, e) {
+          nominations[e.id] = e;
+          $("select#disbursement_nomination_id").append(
+            '<option value="' + e.id + '">' + e.text + '</option>');
+        });
+      }
+    });
+  };
+  $("select#disbursement_nomination_id").on('change', function() {
+      console.log("nomination", nominations[$(this).val()]);
+  });
   var updateFields = function() {
     if ($("input#disbursement_tbn").is(':checked')) {
      $("div.tbn_fields").show();
@@ -41,24 +107,31 @@
   };
   $("input#disbursement_tbn").on("change", updateFields);
   var updateTerminals = function() {
+    $("i.terminal-spinner").fadeIn();
     var portId = $("select#disbursement_port_id").val();
     if (portId == "") {
       $("select#disbursement_terminal_id").find("option").remove();
+      $("i.terminal-spinner").fadeOut();
       return;
     }
     $.ajax('/ports/'+portId+'/terminals.json', {
       type: 'GET',
       dataType: 'json',
       success: function(d) {
+        $("i.terminal-spinner").fadeOut();
         $("select#disbursement_terminal_id").find("option").remove();
         $("select#disbursement_terminal_id").append('<option value></option>');
         $.each(d, function(i, e) {
-          $("select#disbursement_terminal_id").append('<option value="' + e.id + '">' + e.name + '</option>');
+          $("select#disbursement_terminal_id").append(
+            '<option value="' + e.id + '">' + e.name + '</option>');
         })
       }
     });
   }
-  $("select#disbursement_port_id").on("change", updateTerminals);
+  $("select#disbursement_port_id").on("change", function() {
+    updateTerminals();
+    updateNominations();
+  });
   var TBNTemplates = {
     'VLOC CAPESIZE': {
       grt: 112000,
@@ -97,6 +170,7 @@
       loa: 183
     }
   };
+  $("select#disbursement_vessel_id").on("change", updateNominations);
   $("select#disbursement_tbn_template").on("change", function() {
     var template = TBNTemplates[$(this).val()];
     if (!template) return;
@@ -106,4 +180,21 @@
   });
   updateFields();
   updateTerminals();
+  updateNominations();
+  $("#company_name").typeahead(null, {
+    name: 'principal',
+    displayKey: 'name',
+    source: getBloodhoundFor('companies').ttAdapter()
+  }).on('typeahead:selected', function(e, datum) {
+    $("#disbursement_company_id").val(datum.id);
+    updateNominations();
+  });
+  $("#vessel_name").typeahead(null, {
+    name: 'vessel',
+    displayKey: 'name',
+    source: getBloodhoundFor('vessels').ttAdapter()
+  }).on('typeahead:selected', function(e, datum) {
+    $("#disbursement_vessel_id").val(datum.id);
+    updateNominations();
+  });
 </script>

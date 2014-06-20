@@ -1,0 +1,17 @@
+<div class="btn-group status">
+  <button type="button" class="btn btn-status btn-<%= disbursement.status %> btn-sm" data-toggle="dropdown"><%= disbursement.status.upcase %></button>
+  <button type="button" class="btn btn-<%= disbursement.status %> btn-sm dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <% (Disbursement.statuses.keys-[:deleted]).each do |s| %>
+    <li>
+      <a href="/disbursements/<%= disbursement.id %>/status/<%= s %>"
+         class="hover-<%= s %>">
+      <%= s.upcase %>
+      </a>
+    </li>
+    <% end %>
+  </ul>
+</div>

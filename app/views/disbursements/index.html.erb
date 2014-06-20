@@ -1,18 +1,8 @@
 <% content_for :navbar_buttons do %>
-  <%= link_to 'New PFDA', new_disbursement_path,
-              :class => 'btn btn-primary btn-sm' %>
+  <%= render partial: 'common/new_pfda' %>
 <% end %>
 <div class="row top-pad">
   <div class="col-md-12">
     <%= render partial: 'grid' %>
   </div>
 </div>
-<script type="text/javascript">
-  var setupListeners = function() {
-    $("select.status").on("change", function() {
-      var id = $(this).attr("id").split("_")[1];
-      window.location = "/disbursements/"+id+"/status/"+$(this).val();
-    });
-  };
-  setupListeners();
-</script>

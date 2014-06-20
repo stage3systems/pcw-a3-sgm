@@ -1,5 +1,5 @@
 class Disbursement < ActiveRecord::Base
-  default_scope -> {where("status_cd != 2 AND status_cd != 6")}
+  default_scope -> {where("status_cd != 2")}
   attr_accessor :tbn_template
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
                   :port_id, :publication_id, :user_id,
@@ -47,7 +47,7 @@ class Disbursement < ActiveRecord::Base
 
   def vessel_name
     if tbn
-      "TBN-#{self.company.name rescue "DeletedCompany"}"
+      "TBN-#{self.company.name rescue "NoPrincipal"}"
     else
       self.vessel.name
     end
@@ -65,6 +65,10 @@ class Disbursement < ActiveRecord::Base
     else
       self.vessel.crystalize
     end
+  end
+
+  def visible
+    [:inquiry, :initial, :close].member? self.status
   end
 
   def next_revision

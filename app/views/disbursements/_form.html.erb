@@ -135,7 +135,6 @@
     </div>
 
   <div class="form-actions">
-    <div class="btn-group">
     <%= f.submit "Save PDA", class: "btn btn-primary" %>
     <% if @revision.number == 0 %>
     <%= link_to "Cancel",
@@ -145,7 +144,6 @@
     <% else %>
     <%= link_to "Cancel", disbursements_path, class: "btn btn-default" %>
     <% end %>
-    </div>
   </div>
 <% end %>
 <script type="text/javascript">

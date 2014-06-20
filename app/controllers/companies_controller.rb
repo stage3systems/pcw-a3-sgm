@@ -18,7 +18,7 @@ class CompaniesController < ApplicationController
   def search
     companies = Company.where('name ilike :name',
                               name: "%#{params[:name]}%").map do |c|
-      {id: c.id, name: c.name}
+      {id: c.id, remote_id: c.remote_id, name: c.name}
     end
     render json: companies
   end

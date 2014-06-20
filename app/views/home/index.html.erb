@@ -1,6 +1,5 @@
 <% content_for :navbar_buttons do %>
-  <%= link_to 'New PFDA', new_disbursement_path,
-              :class => 'btn btn-primary btn-sm' %>
+  <%= render partial: 'common/new_pfda' %>
 <% end %>
 <div class="row top-pad">
   <div class="col-md-12">
@@ -47,7 +46,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <h4>Draft</h4>
       <ul class="list-unstyled list-last-updated">
       <% if @drafts.each do |d| %>
@@ -61,7 +60,21 @@
       <% end %>
       </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+      <h4>Inquiry</h4>
+      <ul class="list-unstyled list-last-updated">
+      <% if @inquiries.each do |d| %>
+        <li>
+          <% editor = d.current_revision.user %>
+          <%= link_to d.title, edit_disbursement_url(d) %><br>
+          <small>Updated on <strong><%= l d.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+        </li>
+      <% end.empty? %>
+        <li> No DRAFT disbursement available.</li>
+      <% end %>
+      </ul>
+    </div>
+    <div class="col-md-3">
       <h4>Initial</h4>
       <ul class="list-unstyled list-last-updated">
       <% if @initials.each do |p| %>
@@ -75,7 +88,7 @@
       <% end %>
       </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <h4>Final</h4>
       <ul class="list-unstyled list-last-updated">
       <% if @finals.each do |f| %>
@@ -159,19 +172,19 @@
               switch (e.status_cd) {
                 case 0: // DRAFT
                   row += '<a href="/disbursements/'+e.id+'/edit">';
-                  row += 'DRAFT PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += 'DRAFT PDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(e.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
                 case 1: // INITIAL
                   row += '<a href="/pfda/'+e.publication_id+'">';
-                  row += 'INITIAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += 'INITIAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(e.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
                 case 3: // FINAL
                   row += '<a href="/pfda/'+e.publication_id+'">';
-                  row += 'FINAL PFDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += 'FINAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(e.updated_at).format('llll')+')';
                   row += '</a>';
                   break

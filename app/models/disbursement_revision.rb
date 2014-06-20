@@ -88,7 +88,7 @@ CTX
     p = self.disbursement.port.crystalize
     o = self.disbursement.office.crystalize rescue {}
     v = self.disbursement.crystalize_vessel
-    c = self.disbursement.company.crystalize
+    c = self.disbursement.company.crystalize rescue {}
     conf = Configuration.last.crystalize
     t = self.disbursement.terminal.crystalize(
               (p["fields"].values.map{|v|v.to_i}.max||0)+1) rescue

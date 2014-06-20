@@ -16,6 +16,14 @@ class VesselsController < ApplicationController
     end
   end
 
+  def search
+    vessels = Vessel.where('name ilike :name',
+                            name: "%#{params[:name]}%").map do |v|
+      {id: v.id, name: v.name}
+    end
+    render json: vessels
+  end
+
   # GET /vessels/1
   # GET /vessels/1.json
   def show

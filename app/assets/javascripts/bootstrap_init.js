@@ -69,12 +69,12 @@ $(document).on('page:change', function() {
     _paq.push(['trackPageView']);
   }
 });
-var getPrincipalsBH = function() {
-  var p = new Bloodhound({
+var getBloodhoundFor = function(entities) {
+  var b = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: '/companies/search/%QUERY.json'
+    remote: '/'+entities+'/search/%QUERY.json'
   });
-  p.initialize();
-  return p;
+  b.initialize();
+  return b;
 }

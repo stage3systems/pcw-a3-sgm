@@ -30,10 +30,12 @@ ProformaDA::Application.routes.draw do
     end
     collection do
       match 'search' => "disbursements#search", via: [:get, :post]
+      match 'nominations' => "disbursements#nominations", via: [:get, :post]
     end
   end
   match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published, via: [:get, :post]
   match 'pfda/:id' => 'disbursements#published', :as => :published_short, via: [:get, :post]
+  match 'pda/:id' => 'disbursements#published', :as => :published_short_2, via: [:get, :post]
 
   resources :ports do
     resources :terminals do
@@ -51,7 +53,11 @@ ProformaDA::Application.routes.draw do
     end
     resources :tariffs
   end
-  resources :vessels
+  resources :vessels do
+    collection do
+      get 'search/:name', to: "vessels#search"
+    end
+  end
   resources :companies do
     collection do
       get 'search/:name', to: "companies#search"

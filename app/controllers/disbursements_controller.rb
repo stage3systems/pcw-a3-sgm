@@ -116,7 +116,7 @@ class DisbursementsController < ApplicationController
 
   def status
     @disbursement = Disbursement.find(params[:id])
-    if ["draft", "initial", "final"].member? params[:status]
+    if ["draft", "initial", "final", "close", "archived"].member? params[:status]
       @disbursement.send("#{params[:status]}!")
       @disbursement.save
     end
@@ -127,6 +127,10 @@ class DisbursementsController < ApplicationController
     end
   end
 
+  def nominations
+    api = AosApi.new
+    render json: api.search('nomination', params).body
+  end
 
   # GET /disbursements/1
   # GET /disbursements/1.json
