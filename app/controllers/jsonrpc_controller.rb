@@ -15,8 +15,13 @@ class JsonrpcController < ApplicationController
 
   def sync(action, entity, data)
     return error(-32000, "Unsupported action") unless ['CREATE', 'MODIFY', 'DELETE'].member? action
-    return error(-32001, "Unsupported entity") unless ['cargoType'].member? entity
-    classes = {'cargoType' => CargoType}
+    classes = {
+      'cargoType' => CargoType,
+      'port' => Port,
+      'person' => User,
+      'company' => Company,
+      'office' => Office
+    }
     k = classes[entity]
     return error(-32001, "Unsupported entity") if k.nil?
     if k.send("aos_#{action.downcase}", data)
