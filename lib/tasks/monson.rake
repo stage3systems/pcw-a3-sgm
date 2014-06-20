@@ -26,6 +26,22 @@ namespace :monson do
         office.save!
       end
     end
+    desc "Import Vessels from AOS"
+    task :vessels => :environment do
+      api = AosApi.new
+      api.each('vessel') do |v|
+        next if v['name'] == 'TBN'
+        next unless v['loa']
+        next unless v['intlGrossRegisteredTonnage']
+        next unless v['intlNetRegisteredTonnage']
+        next unless v['fullSummerDeadweight']
+        vessel = Vessel.where('remote_id = :id OR name ilike :name',
+                              id: v['id'], name: "%#{v["name"]}%").first
+        vessel = Vessel.new unless vessel
+        vessel.update_from_json(v)
+        vessel.save!
+      end
+    end
     desc "Import Companies from AOS"
     task :companies => :environment do
       api = AosApi.new
@@ -76,7 +92,7 @@ namespace :monson do
       end
     end
     desc "Sync all common data with AOS"
-    task :all => [:cargo_types, :companies, :offices, :users, :ports] do
+    task :all => [:cargo_types, :vessels, :companies, :offices, :users, :ports] do
     end
   end
   namespace :import do
