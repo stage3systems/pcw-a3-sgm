@@ -67,6 +67,7 @@
 </div>
 <script type="text/javascript">
   var nominations = {};
+  var nominationId = <%= @disbursement.nomination_id.to_json %>;
   var updateNominations = function() {
     $("i.nomination-spinner").fadeIn();
     var port = $("select#disbursement_port_id").find("option:selected").html();
@@ -87,8 +88,9 @@
         $("select#disbursement_nomination_id").append('<option value></option>');
         $.each(d.data.nomination, function(i, e) {
           nominations[e.id] = e;
+          var selected = e.id == nominationId ? 'selected ' : '';
           $("select#disbursement_nomination_id").append(
-            '<option value="' + e.id + '">' + e.text + '</option>');
+            '<option '+selected+'value="' + e.id + '">' + e.text + '</option>');
         });
       }
     });

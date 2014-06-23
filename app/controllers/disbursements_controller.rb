@@ -148,6 +148,19 @@ class DisbursementsController < ApplicationController
   def new
     @title = "New PDA"
     @disbursement = Disbursement.new
+    if params[:nomination_id]
+      api = AosApi.new
+      n = api.find('nomination', params[:nomination_id])
+      v = Vessel.where(remote_id: n['vesselId']).first rescue nil
+      params[:vessel_name] = v.name if v
+      @disbursement.vessel = v
+      c = Company.where(remote_id: n['nominatingPartyId']).first rescue nil
+      params[:company_name] = c.name if c
+      @disbursement.company = c
+      p = Port.where(remote_id: n['portId']).first rescue nil
+      @disbursement.port = p
+      @disbursement.nomination_id = params[:nomination_id]
+    end
     @disbursement.status_cd = params[:status_cd]
     @disbursement.tbn = @disbursement.inquiry?
 
