@@ -1,3 +1,10 @@
+<% unless @disbursement.appointment_id.nil? %>
+  <% content_for :navbar_buttons do %>
+    <a href="<%= @disbursement.appointment_url %>"
+       class="btn btn-primary"
+       target="_blank">Open Appointment</a>
+  <% end %>
+<% end %>
 <%= simple_form_for(@revision, url: disbursement_url(@disbursement),
                     method: :put,
                    wrapper: :horizontal_form) do |f| %>

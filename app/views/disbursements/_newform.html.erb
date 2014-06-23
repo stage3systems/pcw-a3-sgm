@@ -59,6 +59,7 @@
                 name="disbursement[nomination_id]">
           <option value=""></option>
         </select>
+        <input type="hidden" id="disbursement_appointment_id" name="disbursement[appointment_id]" value="<%= @disbursement.appointment_id %>"></input>
       </div>
     </div>
   </div>
@@ -99,6 +100,7 @@
   };
   $("select#disbursement_nomination_id").on('change', function() {
     nominationId = $(this).val();
+    $("input#disbursement_appointment_id").val(nominations[$(this).val()].appointmentId);
   });
   var updateFields = function() {
     if ($("input#disbursement_tbn").is(':checked')) {

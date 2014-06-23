@@ -4,7 +4,8 @@ class Disbursement < ActiveRecord::Base
   attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
                   :port_id, :publication_id, :user_id,
                   :status_cd, :tbn, :terminal_id, :vessel_id,
-                  :tbn_template, :type_cd
+                  :tbn_template, :type_cd,
+                  :appointment_id, :nomination_id
   belongs_to :port
   belongs_to :terminal
   belongs_to :office
@@ -15,9 +16,6 @@ class Disbursement < ActiveRecord::Base
   has_many :disbursement_revisions,
            -> {order 'updated_at DESC'},
            dependent: :destroy
-  has_one :revision,
-          -> { order 'updated_at DESC'},
-          class_name: 'DisbursementRevision'
   validates_presence_of :type_cd
   validates_presence_of :port_id
   validates_presence_of :company_id, unless: :inquiry?
@@ -43,6 +41,10 @@ class Disbursement < ActiveRecord::Base
   def delete
     self.deleted!
     self.save
+  end
+
+  def appointment_url
+    ProformaDA::Application.config.aos_api_url.sub('/api', '/appointment/view?id=')+self.appointment_id.to_s
   end
 
   def vessel_name
@@ -112,7 +114,8 @@ class Disbursement < ActiveRecord::Base
   end
 
   def create_initial_revision
-    dr = DisbursementRevision.new(disbursement_id: self.id)
+    dr = DisbursementRevision.new
+    dr.disbursement = self
     dr.number = 0
     dr.crystalize
     dr.compute

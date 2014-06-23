@@ -162,8 +162,9 @@ class DisbursementsController < ApplicationController
       p = Port.where(remote_id: n['portId']).first rescue nil
       @disbursement.port = p
       @disbursement.nomination_id = params[:nomination_id]
+      @disbursement.appointment_id = n['appointmentId']
     end
-    @disbursement.status_cd = params[:status_cd]
+    @disbursement.status_cd = params[:status_cd].to_i
     @disbursement.tbn = @disbursement.inquiry?
 
     respond_to do |format|
