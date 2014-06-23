@@ -77,12 +77,12 @@ namespace :monson do
                           name: "%#{aos_port['name']}%").first
         unless port
           port = Port.new
-          port.remote_id = aos_port['id']
-          port.name = aos_port['name']
           port.currency = currency
           port.tax= tax
-          port.save!
         end
+        port.remote_id = aos_port['id']
+        port.name = aos_port['name']
+        port.save!
         office = Office.where('remote_id = :id OR name ilike :name',
                               id: op['officeId'],
                               name: "%#{aos_office['name']}%").first
