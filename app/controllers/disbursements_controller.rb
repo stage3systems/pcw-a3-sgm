@@ -154,9 +154,11 @@ class DisbursementsController < ApplicationController
       v = Vessel.where(remote_id: n['vesselId']).first rescue nil
       params[:vessel_name] = v.name if v
       @disbursement.vessel = v
-      c = Company.where(remote_id: n['nominatingPartyId']).first rescue nil
-      params[:company_name] = c.name if c
-      @disbursement.company = c
+      if n['principalId']
+        c = Company.where(remote_id: n['principalId']).first rescue nil
+        params[:company_name] = c.name if c
+        @disbursement.company = c
+      end
       p = Port.where(remote_id: n['portId']).first rescue nil
       @disbursement.port = p
       @disbursement.nomination_id = params[:nomination_id]
