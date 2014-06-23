@@ -1,12 +1,12 @@
 <div class="btn-group"></div>
-<div class="row login-form-bg">
+<div class="row">
   <div class="col-md-12">
     <% unless (browser.ie? and
                browser.version.to_i < 10 and params[:force].nil?) %>
     <div id="login" class="container">
       <div class="login-form">
 
-        <h2 class="title"><%= ProformaDA::Application.config.tenant_name %> Estimates</h2>
+        <p class="title">Welcome to <strong><%= ProformaDA::Application.config.tenant_name %> Estimates</strong></p>
 
         <% flash.each do |name, msg| %>
           <% unless name == :timedout or msg.class != String %>
