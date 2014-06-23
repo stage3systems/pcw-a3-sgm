@@ -70,6 +70,7 @@
   var nominationId = <%= @disbursement.nomination_id.to_json %>;
   var updateNominations = function() {
     $("i.nomination-spinner").fadeIn();
+    $("select#disbursement_nomination_id").attr('disabled', true);
     var port = $("select#disbursement_port_id").find("option:selected").html();
     var principal = $("input#company_name").val();
     var vessel = $("input#vessel_name").val();
@@ -92,11 +93,12 @@
           $("select#disbursement_nomination_id").append(
             '<option '+selected+'value="' + e.id + '">' + e.text + '</option>');
         });
+        $("select#disbursement_nomination_id").removeAttr('disabled');
       }
     });
   };
   $("select#disbursement_nomination_id").on('change', function() {
-      console.log("nomination", nominations[$(this).val()]);
+    nominationId = $(this).val();
   });
   var updateFields = function() {
     if ($("input#disbursement_tbn").is(':checked')) {
