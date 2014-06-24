@@ -11,6 +11,7 @@ class DisbursementRevision < ActiveRecord::Base
   has_many :views,
            -> {order 'created_at DESC'},
            class_name: "PfdaView"
+  after_save :schedule_sync
 
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}
@@ -144,4 +145,44 @@ CTX
     [:data, :fields, :descriptions, :comments, :compulsory,
      :disabled, :codes, :overriden, :values, :values_with_tax]
   end
+
+  def sync_with_aos
+    return unless self.disbursement.nomination_id
+    api = AosApi.new
+    charges = {}
+    api.each('disbursement',
+             {nominationId: self.disbursement.nomination_id}) do |c|
+      charges[c['code']] = c
+    end
+    self.fields.keys.each do |k|
+      c = charges[k]
+      j = self.charge_to_json(k)
+      api.save('disbursement', c ? c.merge(j) : j)
+    end
+    #charges.keys.to_set.subtract(self.field.keys).each do |k|
+    #end
+  end
+
+  def charge_to_json(k)
+    {
+      "appointmentId" => self.disbursement.appointment_id,
+      "nominationId" => self.disbursement.nomination_id,
+      "payeeId" => self.disbursement.company.remote_id,
+      "creatorId" => self.disbursement.user.remote_id,
+      "modifierId" => self.user.remote_id,
+      "grossAmount" => self.values_with_tax[k],
+      "netAmount" => self.values[k],
+      "estimateId" => self.disbursement_id,
+      "estimatePdfUuid" => self.disbursement.publication_id,
+      "description" => self.descriptions[k],
+      "status" => self.disbursement.status.to_s.upcase,
+      "code" => k,
+      "reference" => self.reference
+    }
+  end
+
+  def schedule_sync
+    self.delay.sync_with_aos
+  end
+
 end

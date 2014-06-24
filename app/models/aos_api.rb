@@ -16,6 +16,15 @@ class AosApi
     self.class.get("/port", query: query)
   end
 
+  def save(entity, body)
+    r = JSON.parse(
+          self.class.post("/save/#{entity}",
+                          body: body.to_json,
+                          headers: {'Content-Type' => 'application/json'}).body)
+    return nil if r["status"] != "success"
+    return r["data"][entity][0]
+  end
+
   def query(entity, query={})
     self.class.get("/#{entity}", query: query)
   end
