@@ -34,9 +34,9 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#"><%= icon('user') %> Hello <%= current_user.first_name %></a></li>
-          <li><%= link_to icon('log-out'), destroy_user_session_path,
+          <li><%= link_to "#{icon('log-out')} Log Out".html_safe, destroy_user_session_path,
                           method: :delete,
-                          class: "btn btn-xs logout" %></li>
+                          class: "logout" %></li>
         </ul>
         <div class="pull-right notice">
           <span class="label label-info"><%= notice %></span>
@@ -103,7 +103,6 @@
       &copy;2013-2014 Stage 3 Systems Inc.
     </a>
     <a href="#">Terms of Service</a>
-    <a href="#">Privacy Policy</a>
     <% if ProformaDA::Application.config.tenant == 'monson' %>
       <a href="/userManual_v1.2.pdf">User Manual</a>
     <% end %>

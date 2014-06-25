@@ -1,4 +1,4 @@
-<div class="col-md-4">
+<div class="col-md-6">
 <%= simple_form_for(@disbursement,
                     html: {class: 'form-horizontal'},
                     wrapper: :horizontal_form,
@@ -63,7 +63,11 @@
       </div>
     </div>
   </div>
-  <%= f.button :submit, 'Next' %>
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <%= f.button :submit, 'Next' %>
+    </div>
+  </div>
 <% end %>
 </div>
 <script type="text/javascript">
