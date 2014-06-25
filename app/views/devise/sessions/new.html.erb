@@ -6,7 +6,7 @@
     <div id="login" class="container">
       <div class="login-form">
 
-        <p class="title">Welcome to <strong><%= ProformaDA::Application.config.tenant_name %> Estimates</strong></p>
+        <p class="title">Welcome to <strong><%= ProformaDA::Application.config.tenant_name %> PDA Estimator</strong></p>
 
         <% flash.each do |name, msg| %>
           <% unless name == :timedout or msg.class != String %>

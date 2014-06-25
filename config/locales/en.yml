@@ -3,6 +3,9 @@
 
 en:
   hello: "Hello world"
+  errors:
+    messages:
+      blank: 'Please enter a value'
   time:
     formats:
       default: "%a, %d %b %Y %H:%M"
