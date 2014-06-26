@@ -8,7 +8,8 @@
 @import "typeaheadjs";
 
 #nprogress .spinner {
-  top: 18px;
+  top: 16px;
+  right: 4px;
 }
 .btn-draft, li > a.hover-draft:hover { background-color: lighten($brand-danger, 20%); }
 .btn-initial, li > a.hover-initial:hover { background-color: lighten($brand-warning, 20%); }
