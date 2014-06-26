@@ -177,7 +177,8 @@ CTX
       "description" => self.descriptions[k],
       "status" => self.disbursement.status.to_s.upcase,
       "code" => k,
-      "reference" => self.reference
+      "reference" => self.reference,
+      "sort" => self.fields[k].to_i
     }
   end
 
