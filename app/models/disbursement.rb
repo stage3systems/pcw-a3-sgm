@@ -46,7 +46,7 @@ class Disbursement < ActiveRecord::Base
   def aos_url
     ProformaDA::Application.config.aos_api_url.sub(
       '/api',
-      '/disbursement/'+self.appointment_id.to_s
+      '/disbursement/'+self.appointment_id.to_s)
   end
 
   def vessel_name
