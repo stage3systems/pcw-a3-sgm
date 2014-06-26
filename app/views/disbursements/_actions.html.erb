@@ -9,6 +9,7 @@
                     <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
                               :class => 'btn btn-default btn-sm',
                               :title => 'Revise' %>
+                    <%= render partial: "aos_link", locals: {disbursement: disbursement} %>
           </div>
           <div class="btn-group btn-group-sm">
                     <%= link_to icon(:print), print_disbursement_path(disbursement),

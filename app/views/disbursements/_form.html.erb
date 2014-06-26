@@ -1,8 +1,8 @@
 <% unless @disbursement.appointment_id.nil? %>
   <% content_for :navbar_buttons do %>
-    <a href="<%= @disbursement.appointment_url %>"
+    <a href="<%= @disbursement.aos_url %>"
        class="btn btn-primary"
-       target="_blank">Open Appointment</a>
+       target="_blank">Open in AOS</a>
   <% end %>
 <% end %>
 <%= simple_form_for(@revision, url: disbursement_url(@disbursement),
