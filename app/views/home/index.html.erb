@@ -5,32 +5,32 @@
   <div class="col-md-12">
     <h4>Search</h4>
     <div class="search-form">
-      <%= simple_form_for :search, url: disbursements_path,
-                          html: {class: 'form-inline'}  do |f| %>
-        <%= f.input :port, prompt: 'Select a Port',
-                    label: false,
-                    collection: current_user.authorized_ports.all.to_a %>
-        <%= f.input :terminal, prompt: 'Select a Terminal',
-                    label: false, collection: [] %>
-        <%= f.input :vessel_name, placeholder: "Vessel Name",
-                    label: false, class: 'reset' %>
-        <%= f.input :cargo_type, label: "Cargo Type",
-                    prompt: 'Select a Cargo Type', label: false,
-                    class: 'cargo-type',
-                    collection: CargoType.authorized, label_method: :display %>
-        <div class="form-group">
-            <%= f.input_field :start_date_picker, placeholder: "Start Date",
-                               class: 'form-control date reset' %>
-            <%= f.input :start_date, as: :hidden %>
-            <%= f.input_field :end_date_picker, placeholder: "End Date",
-                              class: 'form-control date reset' %>
-            <%= f.input :end_date, as: :hidden %>
-        </div>
-        <div class="form-group">
-          <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
-          <%= f.submit "Reset", name: "reset", class: 'btn' %>
-        </ div>
-      <% end %>
+    <%= simple_form_for :search, url: disbursements_path,
+                        html: {class: 'form-inline'}  do |f| %>
+      <%= f.input :port, prompt: 'Select a Port',
+                  label: false,
+                  collection: current_user.authorized_ports.all.to_a %>
+      <%= f.input :terminal, prompt: 'Select a Terminal',
+                  label: false, collection: [] %>
+      <%= f.input :vessel_name, placeholder: "Vessel Name",
+                  label: false, class: 'reset' %>
+      <%= f.input :cargo_type, label: "Cargo Type",
+                  prompt: 'Select a Cargo Type', label: false,
+                  class: 'cargo-type',
+                  collection: CargoType.authorized, label_method: :display %>
+      <div class="form-group">
+          <%= f.input_field :start_date_picker, placeholder: "Start Date",
+                             class: 'form-control date reset' %>
+          <%= f.input :start_date, as: :hidden %>
+          <%= f.input_field :end_date_picker, placeholder: "End Date",
+                            class: 'form-control date reset' %>
+          <%= f.input :end_date, as: :hidden %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
+        <%= f.submit "Reset", name: "reset", class: 'btn' %>
+      </div>
+    <% end %>
     </div>
   </div>
   <div class="row">
@@ -163,7 +163,7 @@
                   'Page '+d.page+' of '+maxPage+'\n'+
                   prevNext+
                   '</div>'+
-                  '<strong>'+d.count+' estimates found.'+
+                  '<strong>'+d.count+' estimates found.</strong>'+
                 '</div>');
             var ul = '<ul>';
             $.each(d.disbursements, function(i, e) {
