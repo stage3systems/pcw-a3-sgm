@@ -8,14 +8,6 @@ class AosApi
   def initialize()
   end
 
-  def cargoType(query={})
-    self.class.get("/cargoType", query: query)
-  end
-
-  def port(query={})
-    self.class.get("/port", query: query)
-  end
-
   def save(entity, body)
     r = JSON.parse(
           self.class.post("/save/#{entity}",
@@ -59,7 +51,7 @@ class AosApi
       end
       page += 1
       query["page"] = page
-      resp = JSON.parse(self.class.get("/#{entity}", query: query).body)
+      resp = JSON.parse(self.class.get("/#{entity}", query: query).body) if count < total
     end
   end
 
