@@ -75,25 +75,6 @@ class JsonrpcController < ApplicationController
     })
   end
 
-  def register(id, aos_id)
-    da = Disbursement.find(id)
-    if da.aos_id
-      error(-32602, "Already registered")
-    else
-      da.aos_id = aos_id
-      da.save!
-      success("ok")
-    end
-  end
-
-  def unregister(aos_id)
-    da = Disbursement.find_by_aos_id(aos_id)
-    error(-32602, "Registered DA not found") if da.nil?
-    da.aos_id = nil
-    da.save!
-    success("ok")
-  end
-
   private
   def check_params
     if params[:method].nil? or params[:params].nil? or params[:id].nil?
@@ -104,8 +85,7 @@ class JsonrpcController < ApplicationController
   end
 
   def check_method
-    return true if ["sync", "search",
-                    "register", "unregister"].include? params[:method]
+    return true if ["sync", "search"].include? params[:method]
     render json: error(-32601, "Method not found")
     false
   end
