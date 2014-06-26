@@ -159,8 +159,9 @@ CTX
       j = self.charge_to_json(k)
       api.save('disbursement', c ? c.merge(j) : j)
     end
-    #charges.keys.to_set.subtract(self.field.keys).each do |k|
-    #end
+    (charges.keys-self.fields.keys).each do |k|
+      api.delete('disbursement', charges[k]['id'])
+    end
   end
 
   def charge_to_json(k)

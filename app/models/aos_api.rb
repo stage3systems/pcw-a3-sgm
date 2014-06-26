@@ -25,6 +25,10 @@ class AosApi
     return r["data"][entity][0]
   end
 
+  def delete(entity, id)
+    self.class.get("/delete/#{entity}/#{id}")
+  end
+
   def query(entity, query={})
     self.class.get("/#{entity}", query: query)
   end
