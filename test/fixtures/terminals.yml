@@ -7,3 +7,7 @@ one:
 two:
   port_id: 1
   name: MyString
+
+coal:
+  port: brisbane
+  name: 'Brisbane Coal Terminal'

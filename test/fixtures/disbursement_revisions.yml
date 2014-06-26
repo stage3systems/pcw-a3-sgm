@@ -1,5 +1,4 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
 revisionone:
   disbursement: draft
   data: {} 
@@ -19,12 +18,17 @@ revisionone:
 
 revisiontwo:
   disbursement: published
+  user: admin
   data: {}
-  fields: 
-  descriptions: 
-  values: 
-  values_with_tax: 
-  codes: 
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  comments: {}
+  compulsory: {}
+  overriden: {}
   tax_exempt: false
   number: 1
   cargo_qty: 1
@@ -33,3 +37,4 @@ revisiontwo:
   tugs_in: 1
   tugs_out: 1
   reference: reference2
+  cargo_type: one

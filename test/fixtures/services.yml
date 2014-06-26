@@ -13,3 +13,11 @@ towage:
   item: Towage
   key: TWG
   row_order: 2
+
+coal:
+  port: brisbane
+  terminal: coal
+  code: "{compute: function(ctx) {return 0;},taxApplies: true}"
+  item: Coal Fee
+  key: CF
+  row_order: 3

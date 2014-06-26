@@ -71,9 +71,9 @@ class Disbursement < ActiveRecord::Base
     end
   end
 
-  def visible
-    [:inquiry, :initial, :close].member? self.status
-  end
+  #def visible
+    #[:inquiry, :initial, :close].member? self.status
+  #end
 
   def next_revision
     cur = self.current_revision

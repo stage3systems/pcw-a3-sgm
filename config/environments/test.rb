@@ -35,4 +35,8 @@ ProformaDA::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.aos_api_url = 'https://test.agencyops.net/api'
+  config.aos_api_user = 'test'
+  config.aos_api_password = 'test'
 end

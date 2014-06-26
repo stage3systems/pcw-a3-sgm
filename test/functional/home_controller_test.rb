@@ -16,4 +16,15 @@ class HomeControllerTest < ActionController::TestCase
     assert_response :success
     log_out
   end
+
+  test "only admins can see the configurations section" do
+    log_in :admin
+    get :index
+    assert_select 'a[href="/ports"]', 1
+    log_out
+    log_in :operator
+    get :index
+    assert_select 'a[href="/port"]', 0
+    log_out
+  end
 end

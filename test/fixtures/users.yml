@@ -6,6 +6,7 @@
 #
 admin:
   uid: admin
+  remote_id: 1
   first_name: Admin
   last_name: Admin
   admin: true
@@ -15,9 +16,19 @@ admin:
 
 operator:
   uid: operator
-  first_name: Operator
+  first_name: Head
   last_name: Operator
   admin: false
   provider: test
   email: operator@test.com
   deleted: false
+
+office_operator:
+  uid: officeop
+  first_name: Office
+  last_name: Operator
+  admin: false
+  provider: test
+  email: officeop@test.com
+  deleted: false
+  office: one

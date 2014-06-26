@@ -2,13 +2,15 @@
 
 one:
   remote_id: 1
+  enabled: false
   maintype: MyString
   subtype: MyString
   subsubtype: MyString
   subsubsubtype: MyString
 
 two:
-  remote_id: 1
+  remote_id: 2
+  enabled: true
   maintype: MyString
   subtype: MyString
   subsubtype: MyString
