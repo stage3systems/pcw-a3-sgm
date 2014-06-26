@@ -119,6 +119,7 @@ class DisbursementsController < ApplicationController
     if ["draft", "initial", "final", "close", "archived"].member? params[:status]
       @disbursement.send("#{params[:status]}!")
       @disbursement.save
+      @disbursement.current_revision.schedule_sync
     end
 
     respond_to do |format|
