@@ -130,7 +130,7 @@ class DisbursementsController < ApplicationController
 
   def nominations
     api = AosApi.new
-    render json: api.search('nomination', params).body
+    render json: api.search('nomination', params.merge({'limit' => 10})).body
   end
 
   # GET /disbursements/1

@@ -71,7 +71,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "get nominations" do
     log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/search/nomination?action=nominations&controller=disbursements").
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/search/nomination?action=nominations&controller=disbursements&limit=10").
         to_return(:status => 200, :body => "", :headers => {})
     get :nominations
     assert_response :success
