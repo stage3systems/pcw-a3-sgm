@@ -33,48 +33,6 @@ class JsonrpcController < ApplicationController
     end
   end
 
-  def search(query)
-    p = {}
-    if query[:port]
-      port_ids = Port.where('name ILIKE :name', name: "%#{query[:port]}%")
-      p[:port_id] = port_ids unless port_ids.empty?
-    end
-    if query[:terminal]
-      terminal_ids = Terminal.where('name ILIKE :name',
-                                    name:"%#{query[:terminal]}%")
-      p[:terminal_id] = terminal_ids unless terminal_ids.empty?
-    end
-    p[:aos_id] = nil unless query[:showRegistered]
-    eta = Date.parse(query[:eta]) rescue nil
-    das = Disbursement.joins(:current_revision).where(p)
-    das = das.where('disbursement_revisions.eta = :eta', eta: eta) if eta
-    das = das.where("disbursement_revisions.data -> 'vessel_name' ILIKE ?",
-                    "%#{query[:vessel]}%") if query[:vessel]
-    count = das.count
-    das = das.order('disbursement_revisions.updated_at DESC')
-    page = query[:page].to_i
-    das = das.offset(page*10).limit(10)
-    das = das.select('disbursements.id,
-                      disbursement_revisions.reference,
-                      disbursements.publication_id,
-                      disbursement_revisions.amount,
-                      disbursements.status_cd')
-    das = das.map do |d|
-      {
-        "id" => d.id,
-        "reference" => d.reference,
-        "uuid" => d.publication_id,
-        "status" => ["draft", "initial", "deleted", "final"][d.status_cd],
-        "amount" => d.amount
-      }
-    end
-    success({
-      "disbursements" => das,
-      "count" => count,
-      "page" => page,
-    })
-  end
-
   private
   def check_params
     if params[:method].nil? or params[:params].nil? or params[:id].nil?
@@ -85,7 +43,7 @@ class JsonrpcController < ApplicationController
   end
 
   def check_method
-    return true if ["sync", "search"].include? params[:method]
+    return true if ["sync"].include? params[:method]
     render json: error(-32601, "Method not found")
     false
   end

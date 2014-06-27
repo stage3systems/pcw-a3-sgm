@@ -23,14 +23,6 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert body['error']['code'] == -32000
   end
 
-  test "search api" do
-    post :index, {format: :json, id: 1, method: 'search',
-                  "params" => ['changeme', {port: "test", terminal: "test"}]}
-    assert_response :success
-    body = JSON.parse(response.body)
-    assert body['result']['page'] == 0
-  end
-
   test "sync invalid action" do
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => ['changeme', "NOOP", "none", nil]}
