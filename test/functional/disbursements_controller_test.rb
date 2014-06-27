@@ -78,6 +78,24 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_out
   end
 
+  test "get nomination details" do
+    log_in :operator
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
+        to_return(:status => 200, :body => {
+          data: {
+            count: 1,
+            page: 0,
+            nomination: [{
+              portId: 1,
+              vesselId: 1,
+              principalId: 1
+            }]
+          }
+        }.to_json, :headers => {})
+    post :nomination_details, {format: :json, nomination_id: 123}
+    assert_response :success
+    log_out
+  end
   test "search disbursements" do
     log_in :admin
     post :search, {format: :json, port_id: 1}

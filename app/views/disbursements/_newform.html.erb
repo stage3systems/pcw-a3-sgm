@@ -1,4 +1,5 @@
 <div class="col-md-6">
+<h2 class="title">PDA Parameters</h2>
 <%= simple_form_for(@disbursement,
                     html: {class: 'form-horizontal'},
                     wrapper: :horizontal_form,
@@ -20,16 +21,18 @@
                 }
     %>
     <%= f.association :port,
+                      prompt: 'Please select a Port',
                       collection: current_user.authorized_ports.all.to_a %>
     <%= f.association :terminal,
+                      prompt: 'Please select a Terminal',
                       label: '<i class="fa terminal-spinner fa-spinner fa-spin"></i> Terminal'.html_safe %>
-    <%= f.input :company_name, label: "Principal", placeholder: "Search Principal",
+    <%= f.input :company_name, label: "Principal", placeholder: "Type to search for Principal",
                 required: (not @disbursement.inquiry?),
                 as: :fake,
                 input_html: {value: params[:company_name]} %>
     <%= f.input :company_id, as: :hidden %>
     <%= f.input :status_cd, as: :hidden %>
-    <%= f.input :vessel_name, label: "Vessel", placeholder: "Search for Vessel",
+    <%= f.input :vessel_name, label: "Vessel", placeholder: "Type to search for Vessel",
                 required: (not @disbursement.tbn?),
                 as: :fake,
                 input_html: {value: params[:vessel_name]} %>
@@ -47,22 +50,12 @@
     <%= f.input :dwt, label: 'DWT' %>
     <%= f.input :loa, label: 'LOA' %>
   </div>
-  <div class="form-group">
-    <div class="form-group select optional">
-      <label class="select optional col-sm-3 control-label"
-             for="disbursement_nomination_id">
-        <i class="fa nomination-spinner fa-spinner fa-spin"></i> Nomination
-      </label>
-      <div class="col-sm-9">
-        <select class="select optional form-control"
-                id="disbursement_nomination_id"
-                name="disbursement[nomination_id]">
-          <option value=""></option>
-        </select>
-        <input type="hidden" id="disbursement_appointment_id" name="disbursement[appointment_id]" value="<%= @disbursement.appointment_id %>" />
-      </div>
-    </div>
-  </div>
+  <input type="hidden" id="disbursement_nomination_id"
+         name="disbursement[nomination_id]"
+         value="<%= @disbursement.nomination_id %>" />
+  <input type="hidden" id="disbursement_appointment_id"
+         name="disbursement[appointment_id]"
+         value="<%= @disbursement.appointment_id %>" />
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
       <%= f.button :submit, 'Next' %>
@@ -70,57 +63,137 @@
   </div>
 <% end %>
 </div>
+<div class="col-md-6">
+  <h2>Matching Nominations <i class="fa nomination-spinner fa-spinner fa-spin"></i></h2>
+  <div class="nominations">Refreshing data, please wait...</div>
+</div>
 <script type="text/javascript">
   var nominations = {};
   var nominationId = <%= @disbursement.nomination_id.to_json %>;
+  var page = 1;
+  var toPage = function(p) {
+    page = parseInt(p);
+    setTimeout(updateNominations, 0);
+    return false;
+  };
+  var foundNominations = function(n) {
+    if (n == 0) {
+      return "No nomination found.";
+    } else if (n == 1) {
+      return "1 nomination found.";
+    }
+    return n+" nominations found.";
+  };
+  var selectNomination = function(id) {
+    $(".nominations li").removeClass("selected");
+    $("li#nom_"+id).addClass("selected");
+    nominationId = id;
+    $("input#disbursement_appointment_id").val(nominations[id].appointmentId);
+    $("input#disbursement_nomination_id").val(id);
+    setTimeout(function() {nominationDetails(id);}, 0);
+  };
+  var nominationDetails = function(id) {
+    $.ajax('/disbursements/nomination_details.json', {
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        nomination_id: nominationId
+      },
+      success: function(d) {
+        if (d.port_id) {
+          $("select#disbursement_port_id").val(d.port_id);
+        }
+        if (d.vessel_id) {
+          $("input#disbursement_vessel_id").val(d.vessel_id);
+          $("input#vessel_name").val(d.vessel_name);
+        } else {
+          $("input#disbursement_vessel_id").val(null);
+          $("input#vessel_name").val("");
+        }
+        if (d.company_id) {
+          $("input#disbursement_company_id").val(d.company_id);
+          $("input#company_name").val(d.company_name);
+        } else {
+          $("input#disbursement_company_id").val(null);
+          $("input#company_name").val("");
+        }
+      }
+    });
+  };
   var updateNominations = function() {
     $("i.nomination-spinner").fadeIn();
-    $("select#disbursement_nomination_id").attr('disabled', true);
     var port = $("select#disbursement_port_id").find("option:selected").html();
+    if (port == "Please select a Port") port = "";
     var principal = $("input#company_name").val();
     var vessel = $("input#vessel_name").val();
     $.ajax('/disbursements/nominations.json', {
       type: 'POST',
       dataType: 'json',
       data: {
+        page: page-1,
         port: port,
         vessel: vessel,
         company: principal
       },
       success: function(d) {
+        page = d.data.page+1;
+        $("div.nominations").empty()
+        if (d.data.count == 0) {
+          $("div.nominations").append("<p>No matching Nomination</p>");
+        } else {
+          var prevLink = 'javascript:void(0)';
+          var maxPage = parseInt(d.data.count/10.0+(d.data.count%10 == 0 ? 0 : 1));
+          if (page > 1) {
+            prevLink = 'toPage('+(page-1)+')';
+          }
+          var nextLink = 'javascript:void(0)';
+          if (page < maxPage) {
+            nextLink = 'toPage('+(page+1)+')';
+          }
+          var prevNext = '<div class="btn-group">'+
+            '<button type="button"class="btn btn-default btn-xs'+((page > 1) ? "" : " disabled")+
+            '" onclick="'+prevLink+'"><i class="glyphicon glyphicon-chevron-left"></i></button>'+
+            '<button type="button" class="btn btn-default btn-xs'+((page < maxPage) ? "" : " disabled")+
+            '" onclick="'+nextLink+'"><i class="glyphicon glyphicon-chevron-right"></i></button></div>';
+          $("div.nominations").append(
+            '<div class="summary">'+
+              '<div class="pull-right">'+
+              'Page '+(page)+' of '+maxPage+'\n'+
+              prevNext+
+              '</div>'+
+              '<strong>'+foundNominations(d.data.count)+'</strong>'+
+            '</div><div class="clearfix"></div>');
+        }
         nominations = {};
         $("i.fa-spinner").fadeOut();
-        $("select#disbursement_nomination_id").find("option").remove();
-        $("select#disbursement_nomination_id").append('<option value></option>');
+        var pane = '<ul>';
         $.each(d.data.nomination, function(i, e) {
           nominations[e.id] = e;
-          var selected = e.id == nominationId ? 'selected ' : '';
-          $("select#disbursement_nomination_id").append(
-            '<option '+selected+'value="' + e.id + '">' + e.text + '</option>');
+          pane += '<li class="nomination'+(e.id == nominationId ? ' selected' : '')+'" id="nom_'+e.id+
+                    '" onclick="selectNomination('+e.id+')">'+e.text+'</li>'
         });
-        $("select#disbursement_nomination_id").removeAttr('disabled');
+        pane += '</ul>';
+        $("div.nominations").append(pane);
       }
     });
   };
-  $("select#disbursement_nomination_id").on('change', function() {
-    nominationId = $(this).val();
-    $("input#disbursement_appointment_id").val(nominations[$(this).val()].appointmentId);
-  });
   var updateFields = function() {
     if ($("input#disbursement_tbn").is(':checked')) {
      $("div.tbn_fields").show();
-     $("select#disbursement_vessel_id").attr("disabled", "disabled");
+     $("input#disbursement_vessel_id").attr("disabled", "disabled");
     } else {
      $("div.tbn_fields").hide();
-     $("select#disbursement_vessel_id").removeAttr("disabled");
+     $("input#disbursement_vessel_id").removeAttr("disabled");
     }
   };
   $("input#disbursement_tbn").on("change", updateFields);
   var updateTerminals = function() {
     $("i.terminal-spinner").fadeIn();
+    $("select#disbursement_terminal_id").attr("disabled", "disabled");
+    $("select#disbursement_terminal_id").find("option").remove();
+    $("select#disbursement_terminal_id").append('<option value>Please select a Terminal</option>');
     var portId = $("select#disbursement_port_id").val();
     if (portId == "") {
-      $("select#disbursement_terminal_id").find("option").remove();
       $("i.terminal-spinner").fadeOut();
       return;
     }
@@ -129,17 +202,19 @@
       dataType: 'json',
       success: function(d) {
         $("i.terminal-spinner").fadeOut();
-        $("select#disbursement_terminal_id").find("option").remove();
-        $("select#disbursement_terminal_id").append('<option value></option>');
         $.each(d, function(i, e) {
           $("select#disbursement_terminal_id").append(
             '<option value="' + e.id + '">' + e.name + '</option>');
         })
+        if (d.length > 0) {
+          $("select#disbursement_terminal_id").removeAttr("disabled");
+        }
       }
     });
   }
   $("select#disbursement_port_id").on("change", function() {
     updateTerminals();
+    page = 1;
     updateNominations();
   });
   var TBNTemplates = {
@@ -180,7 +255,10 @@
       loa: 183
     }
   };
-  $("select#disbursement_vessel_id").on("change", updateNominations);
+  $("select#disbursement_vessel_id").on("change", function() {
+    page = 1;
+    updateNominations();
+  });
   $("select#disbursement_tbn_template").on("change", function() {
     var template = TBNTemplates[$(this).val()];
     if (!template) return;
@@ -197,6 +275,7 @@
     source: getBloodhoundFor('companies').ttAdapter()
   }).on('typeahead:selected', function(e, datum) {
     $("#disbursement_company_id").val(datum.id);
+    page = 1;
     updateNominations();
   });
   $("#vessel_name").typeahead(null, {
@@ -205,6 +284,7 @@
     source: getBloodhoundFor('vessels').ttAdapter()
   }).on('typeahead:selected', function(e, datum) {
     $("#disbursement_vessel_id").val(datum.id);
+    page = 1;
     updateNominations();
   });
 </script>

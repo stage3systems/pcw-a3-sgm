@@ -133,6 +133,19 @@ class DisbursementsController < ApplicationController
     render json: api.search('nomination', params.merge({'limit' => 10})).body
   end
 
+  def nomination_details
+    api = AosApi.new
+    n = api.find('nomination', params[:nomination_id])
+    p = Port.where(remote_id: n['portId']).first if n['portId']
+    c = Company.where(remote_id: n['principalId']).first if n['principalId']
+    v = Vessel.where(remote_id: n['vesselId']).first if n['vesselId']
+    r = {}
+    r.merge!({port_id: p.id, port_name: p.name}) if p
+    r.merge!({company_id: c.id, company_name: c.name}) if c
+    r.merge!({vessel_id: v.id, vessel_name: v.name}) if v
+    render json: r
+  end
+
   # GET /disbursements/1
   # GET /disbursements/1.json
   def show
