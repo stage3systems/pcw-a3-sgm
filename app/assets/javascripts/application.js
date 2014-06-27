@@ -11,21 +11,10 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require bootstrap-sprockets
 //= require jquery.cookie
 //= require jquery_ujs
 //= require format-currency
-//= require bootstrap/transition
-//= require bootstrap/alert
-//= require bootstrap/modal
-//= require bootstrap/dropdown
-//= require bootstrap/scrollspy
-//= require bootstrap/tab
-//= require bootstrap/tooltip
-//= require bootstrap/popover
-//= require bootstrap/button
-//= require bootstrap/collapse
-//= require bootstrap/carousel
-//= require bootstrap/affix
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
 //= require jquery.ui.datepicker
