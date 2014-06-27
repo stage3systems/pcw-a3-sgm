@@ -1,4 +1,29 @@
 namespace :monson do
+  namespace :migrate do
+    desc "Migrate old style AOS mappings"
+    task :aos_mappings => :environment do
+      file = ENV['file'] || 'mappings.txt'
+      if not File::exists? file
+        puts "Couldn't open #{file}"
+        return
+      end
+      api = AosApi.new
+      File.readlines(file).each do |l|
+        eId, nId = l.split('|').map &:strip
+        d = Disbursement.find(eId) rescue nil
+        if d
+          n = api.find('nomination', nId.to_i)
+          if n['appointmentId']
+            d.appointment_id = n['appointmentId'].to_i
+            d.nomination_id = nId.to_i
+            d.save
+          end
+        else
+          puts "DA not found: #{eId}"
+        end
+      end
+    end
+  end
   namespace :aos_sync do
     desc "Import Cargo Types from AOS"
     task :cargo_types => :environment do
