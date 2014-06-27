@@ -1,6 +1,7 @@
 = ProformaDA
 
-A flexible system for proforma disbursments estimates.
+A flexible system for proforma disbursements estimates.
+
 
 == Architecture
 
@@ -10,9 +11,9 @@ using an embedded V8 engine.
 
 Services assigned to ports and terminals are expected to change over time (new
 laws, tariff updates, etc...) so they behave like a loose and changing schema
-for disbursments.
+for disbursements.
 
-Each disbursment revision "crystalizes" the current schema using the flexibility
+Each disbursement revision "crystalizes" the current schema using the flexibility
 of PostgreSQL's hstore extension, so that it becomes a self-contained entity.
 
 
@@ -41,7 +42,15 @@ Required files:
 After the db setup, the Configuration object has to be edited to reflect
 the tenant.
 
+
 == Requirements
 
 buildessentials git-core libpq-dev libssl-dev libncursesw5-dev
 libreadline-dev libxml2-dev libxslt-dev
+
+
+== Development Setup
+
+Use the [pfda-test](https://git.evax.fr/stage-3-systems/pfda-test) project to
+easily setup a development environment.
+
