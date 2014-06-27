@@ -31,12 +31,12 @@ namespace :monson do
       api = AosApi.new
       api.each('vessel') do |v|
         next if v['name'] == 'TBN'
-        next unless v['loa']
-        next unless v['intlGrossRegisteredTonnage']
-        next unless v['intlNetRegisteredTonnage']
-        next unless v['fullSummerDeadweight']
         vessel = Vessel.where('remote_id = :id OR name ilike :name',
                               id: v['id'], name: "%#{v["name"]}%").first
+        next unless v['loa'] or (vessel and vessel.loa)
+        next unless v['intlGrossRegisteredTonnage'] or (vessel and vessel.grt)
+        next unless v['intlNetRegisteredTonnage'] or (vessel and vessel.nrt)
+        next unless v['fullSummerDeadweight'] or (vessel and vessel.dwt)
         vessel = Vessel.new unless vessel
         vessel.update_from_json(v)
         vessel.save!
