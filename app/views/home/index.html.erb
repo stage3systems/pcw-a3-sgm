@@ -54,7 +54,7 @@
           <li>
             <% editor = d.current_revision.user %>
             <%= link_to d.title, edit_disbursement_url(d) %><br>
-            <small>Updated on <strong><%= l d.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
           </li>
         <% end.empty? %>
           <li> No DRAFT disbursement available.</li>
@@ -68,7 +68,7 @@
           <li>
             <% editor = d.current_revision.user %>
             <%= link_to d.title, edit_disbursement_url(d) %><br>
-            <small>Updated on <strong><%= l d.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
           </li>
         <% end.empty? %>
           <li> No DRAFT disbursement available.</li>
@@ -82,7 +82,7 @@
           <li>
             <% publisher = p.current_revision.user %>
             <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
-            <small>Updated on <strong><%= l p.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
+            <small>Updated on <strong><%= l p.current_revision.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
           </li>
         <% end.empty? %>
           <li>No INITIAL disbursement available.</li>
@@ -96,7 +96,7 @@
           <li>
             <% editor = f.current_revision.user %>
             <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
-            <small>Updated on <strong><%= l f.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <small>Updated on <strong><%= l f.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
           </li>
         <% end.empty? %>
           <li>No FINAL disbursement available.</li>
@@ -175,19 +175,19 @@
                 case 0: // DRAFT
                   row += '<a href="/disbursements/'+e.id+'/edit">';
                   row += 'DRAFT PDA for '+rev.data.vessel_name+' in '+e.port.name;
-                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
                 case 1: // INITIAL
                   row += '<a href="/pfda/'+e.publication_id+'">';
                   row += 'INITIAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
-                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
                 case 3: // FINAL
                   row += '<a href="/pfda/'+e.publication_id+'">';
                   row += 'FINAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
-                  row += ' ('+moment(e.updated_at).format('llll')+')';
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
                   row += '</a>';
                   break
                 default:
