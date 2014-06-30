@@ -88,7 +88,8 @@ CREATE TABLE companies (
     name character varying(255),
     email character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    remote_id integer
 );
 
 
@@ -185,6 +186,45 @@ ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
 
 
 --
+-- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE delayed_jobs (
+    id integer NOT NULL,
+    priority integer DEFAULT 0 NOT NULL,
+    attempts integer DEFAULT 0 NOT NULL,
+    handler text NOT NULL,
+    last_error text,
+    run_at timestamp without time zone,
+    locked_at timestamp without time zone,
+    failed_at timestamp without time zone,
+    locked_by character varying(255),
+    queue character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: delayed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE delayed_jobs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delayed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
+
+
+--
 -- Name: disbursement_revisions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -263,7 +303,10 @@ CREATE TABLE disbursements (
     user_id integer,
     office_id integer,
     current_revision_id integer,
-    aos_id integer
+    aos_id integer,
+    type_cd integer DEFAULT 0,
+    nomination_id integer,
+    appointment_id integer
 );
 
 
@@ -377,7 +420,8 @@ CREATE TABLE offices (
     fax character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    email character varying(255)
+    email character varying(255),
+    remote_id integer
 );
 
 
@@ -477,7 +521,11 @@ CREATE TABLE ports (
     updated_at timestamp without time zone NOT NULL,
     currency_id integer,
     tax_id integer,
-    office_id integer
+    office_id integer,
+    services_count integer DEFAULT 0,
+    terminals_count integer DEFAULT 0,
+    tariffs_count integer DEFAULT 0,
+    remote_id integer
 );
 
 
@@ -663,7 +711,8 @@ CREATE TABLE terminals (
     port_id integer,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    remote_id integer
 );
 
 
@@ -709,7 +758,9 @@ CREATE TABLE users (
     first_name character varying(255),
     last_name character varying(255),
     admin boolean DEFAULT false,
-    office_id integer
+    office_id integer,
+    remote_id integer,
+    deleted boolean DEFAULT false
 );
 
 
@@ -744,7 +795,8 @@ CREATE TABLE vessels (
     nrt numeric,
     dwt numeric,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    remote_id integer
 );
 
 
@@ -793,6 +845,13 @@ ALTER TABLE ONLY configurations ALTER COLUMN id SET DEFAULT nextval('configurati
 --
 
 ALTER TABLE ONLY currencies ALTER COLUMN id SET DEFAULT nextval('currencies_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_id_seq'::regclass);
 
 
 --
@@ -933,6 +992,14 @@ ALTER TABLE ONLY currencies
 
 
 --
+-- Name: delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY delayed_jobs
+    ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: disbursement_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1050,6 +1117,13 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY vessels
     ADD CONSTRAINT vessels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at);
 
 
 --
@@ -1191,3 +1265,32 @@ INSERT INTO schema_migrations (version) VALUES ('20140212021230');
 INSERT INTO schema_migrations (version) VALUES ('20140409074222');
 
 INSERT INTO schema_migrations (version) VALUES ('20140429082631');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610094951');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610170112');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610170508');
+
+INSERT INTO schema_migrations (version) VALUES ('20140616144704');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617074721');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617152058');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617152120');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617153800');
+
+INSERT INTO schema_migrations (version) VALUES ('20140618052754');
+
+INSERT INTO schema_migrations (version) VALUES ('20140618052939');
+
+INSERT INTO schema_migrations (version) VALUES ('20140620154312');
+
+INSERT INTO schema_migrations (version) VALUES ('20140620154753');
+
+INSERT INTO schema_migrations (version) VALUES ('20140623131845');
+
+INSERT INTO schema_migrations (version) VALUES ('20140624100705');
+
