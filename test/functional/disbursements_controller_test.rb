@@ -64,7 +64,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "set status" do
     log_in :operator
-    post :status, {id: @published.id, status: "final"}
+    post :status, {id: @published.id, status: "close"}
     assert_response :redirect
     log_out
   end
