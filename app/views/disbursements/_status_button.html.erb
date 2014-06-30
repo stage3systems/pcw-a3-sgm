@@ -5,7 +5,7 @@
     <span class="sr-only">Toggle Dropdown</span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <% [:inquiry, :draft, :initial, :final, :close, :archived].each do |s| %>
+    <% [:inquiry, :draft, :initial, :close, :archived].each do |s| %>
     <li>
       <a href="/disbursements/<%= disbursement.id %>/status/<%= s %>"
          class="hover-<%= s %>">

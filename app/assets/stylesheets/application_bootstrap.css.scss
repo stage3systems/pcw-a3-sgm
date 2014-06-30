@@ -14,8 +14,7 @@
 }
 .btn-draft, li > a.hover-draft:hover { background-color: lighten($brand-danger, 20%); }
 .btn-initial, li > a.hover-initial:hover { background-color: lighten($brand-warning, 20%); }
-.btn-final, li > a.hover-final:hover { background-color: lighten($brand-success, 20%); }
-.btn-close, li > a.hover-close:hover { background-color: lighten($brand-primary, 20%); }
+.btn-close, li > a.hover-close:hover { background-color: lighten($brand-success, 20%); }
 .btn-archived, li > a.hover-archived:hover { background-color: $gray-light; }
 button.btn-status { min-width: 85px; }
 div.btn-group.status {min-width: 110px; }

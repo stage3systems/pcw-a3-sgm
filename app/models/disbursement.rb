@@ -28,8 +28,8 @@ class Disbursement < ActiveRecord::Base
   before_create :generate_publication_id
   after_create :create_initial_revision
 
-  as_enum :status, draft: 0, initial: 1, deleted: 2, final: 3,
-                   inquiry: 4, close: 5, archived: 6
+  as_enum :status, draft: 0, initial: 1, deleted: 2, close: 3,
+                   inquiry: 4, final: 5, archived: 6
 
   as_enum :type, standard: 0, owners_husbandry: 1, bunker_call: 2,
                  cleaning: 3, spare_parts: 4, other: 5

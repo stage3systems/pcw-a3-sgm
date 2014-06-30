@@ -1,8 +1,8 @@
 <div class="container-fluid <%= "pfda-container" if @disbursement and
                                           (@disbursement.initial? or
-                                           @disbursement.final?) %>">
+                                           @disbursement.close?) %>">
   <% if @disbursement  %>
-    <% if @disbursement.initial? or @disbursement.final? %>
+    <% if @disbursement.initial? or @disbursement.close? %>
     <div class="row pfda-header">
       <div class="container">
         <div class="row">
@@ -31,7 +31,7 @@
             <% if @disbursement.initial? %>
             <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
             <h4>Sent prior to vessel arrival</h4>
-            <% elsif @disbursement.final? %>
+            <% elsif @disbursement.close? %>
             <h3 style="padding-top: 1em;">FINAL CLOSE ESTIMATE</h3>
             <h4>Sent after vessel sailing</h4>
             <% end %>

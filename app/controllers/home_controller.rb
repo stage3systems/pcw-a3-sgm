@@ -14,8 +14,8 @@ class HomeController < ApplicationController
     @initials = Disbursement.where(
                     status_cd: Disbursement.statuses[:initial],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
-    @finals = Disbursement.where(
-                    status_cd: Disbursement.statuses[:final],
+    @closes = Disbursement.where(
+                    status_cd: Disbursement.statuses[:close],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
   end
 end

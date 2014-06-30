@@ -90,16 +90,16 @@
         </ul>
       </div>
       <div class="col-md-3">
-        <h4>Final</h4>
+        <h4>Close</h4>
         <ul class="list-unstyled list-last-updated">
-        <% if @finals.each do |f| %>
+        <% if @closes.each do |f| %>
           <li>
             <% editor = f.current_revision.user %>
             <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
             <small>Updated on <strong><%= l f.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
           </li>
         <% end.empty? %>
-          <li>No FINAL disbursement available.</li>
+          <li>No CLOSE disbursement available.</li>
         <% end %>
         </ul>
       </div>
@@ -184,12 +184,18 @@
                   row += ' ('+moment(rev.updated_at).format('llll')+')';
                   row += '</a>';
                   break;
-                case 3: // FINAL
+                case 3: // CLOSE
                   row += '<a href="/pfda/'+e.publication_id+'">';
-                  row += 'FINAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += 'CLOSE PDA for '+rev.data.vessel_name+' in '+e.port.name;
                   row += ' ('+moment(rev.updated_at).format('llll')+')';
                   row += '</a>';
                   break
+                case 4: // INQUIRY
+                  row += '<a href="/disbursements/'+e.id+'/edit">';
+                  row += 'INQUIRY PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
                 default:
                   row += rev.reference
                   break

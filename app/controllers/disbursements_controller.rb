@@ -116,7 +116,7 @@ class DisbursementsController < ApplicationController
 
   def status
     @disbursement = Disbursement.find(params[:id])
-    if ["draft", "initial", "final", "close", "archived"].member? params[:status]
+    if ["draft", "initial", "close", "archived"].member? params[:status]
       @disbursement.send("#{params[:status]}!")
       @disbursement.save
       @disbursement.current_revision.schedule_sync
@@ -387,7 +387,7 @@ class DisbursementsController < ApplicationController
         pdf_title("DRAFT PROFORMA DISBURSEMENT", nil)
       elsif @disbursement.initial?
         pdf_title("PROFORMA DISBURSEMENT", "Sent prior to vessel arrival")
-      elsif @disbursement.final?
+      elsif @disbursement.close?
         pdf_title("FINAL CLOSE ESTIMATE", "Sent after vessel sailing")
       end
       @pdf.image logo_path, :width => 60,
