@@ -17,7 +17,7 @@ class CompaniesController < ApplicationController
   end
 
   def search
-    companies = Company.where('name ilike :name',
+    companies = Company.where('remote_id is not null and name ilike :name',
                               name: "%#{params[:name]}%").map do |c|
       {id: c.id, remote_id: c.remote_id, name: c.name}
     end
