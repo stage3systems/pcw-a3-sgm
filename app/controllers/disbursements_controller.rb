@@ -332,6 +332,7 @@ class DisbursementsController < ApplicationController
   end
 
   def format_pdf
+    require "prawn/table"
     # default format is letter, that is 612x792 pdf points
     # there are 72 pdf points in one inch
     # the page has a 0.5 default margin setup
