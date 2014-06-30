@@ -30,6 +30,10 @@
             <td><%= @revision.data["vessel_name"] %></td>
           </tr>
           <tr>
+            <th>NOMINATION</th>
+            <td class="nomination">N/A</td>
+          </tr>
+          <tr>
             <th>GRT</th>
             <td><%= @revision.data["vessel_grt"] %></td>
           </tr>
@@ -170,6 +174,18 @@
   };
   var setup = function() {
     setupDA(pfda, ctx);
+    <% if @disbursement.nomination_id %>
+    $.ajax('/disbursements/nomination_code', {
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        nomination_id: <%= @disbursement.nomination_id %>
+      },
+      success: function(d) {
+        $("td.nomination").html('<a href="<%= @disbursement.aos_url %>" target="_blank">'+d.code+'</a>');
+      }
+    });
+    <% end %>
   }
   $(document).ready(setup);
   $(document).on('page:load', setup);

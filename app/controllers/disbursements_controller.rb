@@ -133,6 +133,13 @@ class DisbursementsController < ApplicationController
     end
   end
 
+  def nomination_code
+    api = AosApi.new
+    n = api.find('nomination', params[:nomination_id])
+    a = api.find('appointment', n['appointmentId'])
+    render json: {code: "#{a['fileNumber']}-#{n['nominationNumber']}"}
+  end
+
   def nominations
     api = AosApi.new
     render json: api.search('nomination', params.merge({'limit' => 10})).body
