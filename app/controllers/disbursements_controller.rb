@@ -9,10 +9,15 @@ class DisbursementsController < ApplicationController
   # GET /disbursements.json
   def index
     @title = "Disbursements"
+    includes = []
+    joins = [:port, :current_revision]
+    ((params["grid"]["f"]["companies.name"] rescue false) ? joins : includes) << :company
+    ((params["grid"]["f"]["vessels.name"] rescue false) ? joins : includes) << :vessel
     @disbursements_grid = initialize_grid(Disbursement.where(
           port_id: current_user.authorized_ports.pluck(:id)
         ),
-        joins: [:port, :company, :vessel, :current_revision],
+        joins: joins,
+        include: includes,
         order: 'disbursement_revisions.updated_at',
         order_direction: 'desc',
         custom_order: {
