@@ -176,7 +176,7 @@
   $("#company_name").typeahead(null, {
     name: 'principal',
     displayKey: 'name',
-    source: getPrincipalsBH().ttAdapter()
+    source: getBloodhoundFor('companies').ttAdapter()
     }).on('typeahead:selected', function(e, datum) {
       $("#disbursement_company_id").val(datum.id);
     });
