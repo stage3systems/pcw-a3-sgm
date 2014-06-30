@@ -59,6 +59,7 @@
     <%= f.input :cargo_qty, label: "Cargo Quantity" %>
     <%= f.input :company_name, label: "Principal", placeholder: "Search Principal",
                 required: (not @disbursement.inquiry?),
+                disabled: (not @disbursement.nomination_id.nil?),
                 as: :fake, input_html: {value: (@disbursement.company.name rescue nil)} %>
     <input type="hidden"
            id="disbursement_company_id"
