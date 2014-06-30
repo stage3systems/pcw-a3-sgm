@@ -90,6 +90,7 @@
     nominationId = id;
     $("input#disbursement_appointment_id").val(nominations[id].appointmentId);
     $("input#disbursement_nomination_id").val(id);
+    $('input[type="submit"]').removeAttr('disabled');
     setTimeout(function() {nominationDetails(id);}, 0);
   };
   var nominationDetails = function(id) {
@@ -121,6 +122,9 @@
     });
   };
   var updateNominations = function() {
+    <% unless @disbursement.inquiry? %>
+    $('input[type="submit"]').attr('disabled', true);
+    <% end %>
     $("i.nomination-spinner").fadeIn();
     var port = $("select#disbursement_port_id").find("option:selected").html();
     if (port == "Please select a Port") port = "";
@@ -174,6 +178,9 @@
         });
         pane += '</ul>';
         $("div.nominations").append(pane);
+        if (nominationId) {
+          $('input[type="submit"]').removeAttr('disabled');
+        }
       }
     });
   };
