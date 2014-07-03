@@ -154,12 +154,13 @@ CTX
              {nominationId: self.disbursement.nomination_id}) do |c|
       charges[c['code']] = c
     end
-    self.fields.keys.each do |k|
+    keys = self.fields.keys.select {|k| !self.disabled?(k) }
+    keys.each do |k|
       c = charges[k]
       j = self.charge_to_json(k)
       api.save('disbursement', c ? c.merge(j) : j)
     end
-    (charges.keys-self.fields.keys).each do |k|
+    (charges.keys-keys).each do |k|
       api.delete('disbursement', charges[k]['id'])
     end
   end
