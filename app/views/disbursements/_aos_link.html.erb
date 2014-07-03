@@ -3,4 +3,4 @@
             target: '_blank',
             class: "btn btn-default btn-sm#{
                     disbursement.nomination_id ? '' : ' disabled'}",
-            title: 'Open in AOS' %>
+            title: "Open in #{ProformaDA::Application.config.tenant_aos_name}" %>

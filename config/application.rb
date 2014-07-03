@@ -70,6 +70,7 @@ module ProformaDA
     # multi tenancy tenant
     config.tenant = 'monson'
     config.tenant_name = 'Monson'
+    config.tenant_aos_name = 'Bridge'
     config.tenant_full_name = 'Monson Agencies Australia Pty Ltd'
     config.tenant_favicon = 'favicon_monson.png'
     config.tenant_default_email = 'accounts@monson.com.au'
