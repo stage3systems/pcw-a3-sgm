@@ -2,7 +2,7 @@
                                           (@disbursement.initial? or
                                            @disbursement.close?) %>">
   <% if @disbursement  %>
-    <% if @disbursement.initial? or @disbursement.close? %>
+    <% if @disbursement.initial? or @disbursement.close? or @disbursement.inquiry? %>
     <div class="row pfda-header">
       <div class="container">
         <div class="row">
@@ -28,7 +28,7 @@
       <div class="pfda-inner">
         <div class="row">
           <div class="col-md-6">
-            <% if @disbursement.initial? %>
+            <% if @disbursement.initial? or @disbursement.inquiry? %>
             <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
             <h4>Sent prior to vessel arrival</h4>
             <% elsif @disbursement.close? %>
