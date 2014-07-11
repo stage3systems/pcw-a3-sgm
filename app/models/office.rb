@@ -19,10 +19,12 @@ class Office < ActiveRecord::Base
   def update_from_json(data)
     self.remote_id = data["id"]
     self.name = data["name"]
-    address_lines = data["address"].split("\r\n").map &:strip
-    self.address_1 = address_lines.shift
-    self.address_2 = address_lines.shift
-    self.address_3 = address_lines.shift
+    if data["address"]
+      address_lines = data["address"].split("\r\n").map &:strip
+      self.address_1 = address_lines.shift
+      self.address_2 = address_lines.shift
+      self.address_3 = address_lines.shift
+    end
     self.email = data["email"] if data["email"]
   end
 end
