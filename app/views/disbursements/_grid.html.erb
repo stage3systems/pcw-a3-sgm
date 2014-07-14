@@ -30,7 +30,7 @@
     l(d.current_revision.updated_at)
   end
   g.column name: 'Rev.', attribute: 'number', model: 'DisbursementRevision', filter: false do |d|
-    d.current_revision.number
+    link_to d.current_revision.number, "/disbursements/#{d.id}/revisions"
   end
   g.column name: 'Views', attribute: 'anonymous_views', model: 'DisbursementRevision', filter: false do |d|
     link_to d.current_revision.anonymous_views, access_log_disbursement_path(d)

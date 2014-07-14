@@ -27,6 +27,7 @@ ProformaDA::Application.routes.draw do
       match 'status/:status' => 'disbursements#status', via: [:get, :post]
       get 'print'
       get 'access_log'
+      match 'revisions(/:number)' => 'disbursements#revisions', via: [:get, :post]
     end
     collection do
       match 'search' => "disbursements#search", via: [:get, :post]
@@ -35,9 +36,9 @@ ProformaDA::Application.routes.draw do
       match 'nomination_details' => "disbursements#nomination_details", via: [:get, :post]
     end
   end
-  match 'proforma_disbursements/:id' => 'disbursements#published', :as => :published, via: [:get, :post]
-  match 'pfda/:id' => 'disbursements#published', :as => :published_short, via: [:get, :post]
-  match 'pda/:id' => 'disbursements#published', :as => :published_short_2, via: [:get, :post]
+  match 'proforma_disbursements/:id(/:revision_number)' => 'disbursements#published', :as => :published, via: [:get, :post]
+  match 'pfda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short, via: [:get, :post]
+  match 'pda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short_2, via: [:get, :post]
 
   resources :ports do
     resources :terminals do

@@ -65,7 +65,13 @@ class DisbursementsController < ApplicationController
   def published
     @title = "Proforma DA"
     @disbursement = Disbursement.find_by_publication_id(params[:id])
-    @revision = @disbursement.current_revision rescue nil
+    @revision_number = params[:revision_number]
+    if @revision_number
+      @revision = @disbursement.disbursement_revisions
+                    .where(number: @revision_number.to_i).first
+    else
+      @revision = @disbursement.current_revision rescue nil
+    end
     pfda_view = PfdaView.new
     pfda_view.disbursement_revision_id = @revision.id rescue nil
     pfda_view.ip = request.remote_ip
@@ -131,6 +137,13 @@ class DisbursementsController < ApplicationController
       format.html { redirect_to disbursements_path}
       format.json { render json: @disbursement }
     end
+  end
+
+  def revisions
+    @disbursement = Disbursement.find(params[:id])
+    @title = "Revision for #{@disbursement.current_revision.data['vessel_name']} in #{@disbursement.port.name}#{ "/"+@disbursement.terminal.name if @disbursement.terminal} on #{l(@disbursement.current_revision.eta)}"
+    add_breadcrumb @title
+    @revisions = @disbursement.disbursement_revisions
   end
 
   def nomination_code

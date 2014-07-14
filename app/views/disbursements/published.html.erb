@@ -2,11 +2,23 @@
                                           (@disbursement.initial? or
                                            @disbursement.close?) %>">
   <% if @disbursement  %>
-    <% if @disbursement.initial? or @disbursement.close? or @disbursement.inquiry? %>
+    <% if @disbursement.initial? or @disbursement.close? or @disbursement.inquiry? or (@revision_number and current_user) %>
     <div class="row pfda-header">
       <div class="container">
         <div class="row">
           <div class="btn-group pull-right hidden-print">
+            <% if @revision_number %>
+            <a href="/pfda/<%= @disbursement.publication_id %>/<%= @revision_number.to_i-1 %>"
+               class="btn btn-default hint" title="Previous Revision"
+               <%= "disabled" unless @revision_number.to_i > 1 %>>
+               <i class="glyphicon glyphicon-chevron-left"></i> Prev
+            </a>
+            <a href="/pfda/<%= @disbursement.publication_id %>/<%= @revision_number.to_i+1 %>"
+               class="btn btn-default hint" title="Previous Revision"
+               <%= "disabled" unless @revision_number.to_i < @disbursement.current_revision.number %>>
+               <i class="glyphicon glyphicon-chevron-right"></i> Next
+            </a>
+            <% end %>
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
                class="btn btn-default hint" title="Printable PDF version">
               <%= image_tag "print.png" %>
@@ -28,12 +40,15 @@
       <div class="pfda-inner">
         <div class="row">
           <div class="col-md-6">
-            <% if @disbursement.initial? or @disbursement.inquiry? %>
-            <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
-            <h4>Sent prior to vessel arrival</h4>
+            <% if @revision_number %>
+              <h3 style="padding-top: 1em;">PFDA REVISION VIEW</h3>
+              <h4>Revision <%= @revision_number %><%= " (last revision)" if @revision_number == @disbursement.current_revision.number %></h4>
+            <% elsif @disbursement.initial? or @disbursement.inquiry? %>
+              <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
+              <h4>Sent prior to vessel arrival</h4>
             <% elsif @disbursement.close? %>
-            <h3 style="padding-top: 1em;">FINAL CLOSE ESTIMATE</h3>
-            <h4>Sent after vessel sailing</h4>
+              <h3 style="padding-top: 1em;">FINAL CLOSE ESTIMATE</h3>
+              <h4>Sent after vessel sailing</h4>
             <% end %>
           </div>
           <div class="col-md-6">
