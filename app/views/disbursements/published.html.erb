@@ -14,7 +14,7 @@
                <i class="glyphicon glyphicon-chevron-left"></i> Prev
             </a>
             <a href="/pfda/<%= @disbursement.publication_id %>/<%= @revision_number.to_i+1 %>"
-               class="btn btn-default hint" title="Previous Revision"
+               class="btn btn-default hint" title="Next Revision"
                <%= "disabled" unless @revision_number.to_i < @disbursement.current_revision.number %>>
                <i class="glyphicon glyphicon-chevron-right"></i> Next
             </a>
