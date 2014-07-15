@@ -85,6 +85,11 @@ CTX
     return self.compulsory[k] == "1"
   end
 
+  def tax_applies?(k)
+    return false if self.tax_exempt?
+    return self.values[k] != self.values_with_tax[k]
+  end
+
   def crystalize
     p = self.disbursement.port.crystalize
     o = self.disbursement.office.crystalize rescue {}
@@ -180,7 +185,9 @@ CTX
       "status" => self.disbursement.status.to_s.upcase,
       "code" => k,
       "reference" => self.reference,
-      "sort" => self.fields[k].to_i
+      "sort" => self.fields[k].to_i,
+      "taxApplies" => self.tax_applies?(k),
+      "comment" => self.comments[k]
     }
   end
 
