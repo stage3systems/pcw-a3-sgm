@@ -1,5 +1,7 @@
 = ProformaDA
 
+{<img src="https://drone.io/github.com/stage3systems/proformada/status.png" alt="Build Status" />}[https://drone.io/github.com/stage3systems/proformada/latest]
+
 A flexible system for proforma disbursements estimates.
 
 
