@@ -40,6 +40,7 @@ gem 'delayed_job_active_record'
 gem 'turbolinks'
 gem 'nprogress-rails'
 gem 'daemons'
+gem "codeclimate-test-reporter", group: :test, require: nil
 
 
 gem 'sass-rails', '>= 4.0.0'
