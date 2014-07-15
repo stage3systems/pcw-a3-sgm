@@ -248,7 +248,6 @@ DEPENDENCIES
   sass-rails (>= 4.0.0)
   simple_enum
   simple_form (>= 3.1.0.rc1)
-  simplecov
   spreadsheet
   sprockets-rails
   therubyracer

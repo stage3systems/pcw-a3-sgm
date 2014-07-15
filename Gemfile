@@ -25,7 +25,6 @@ gem 'unicorn', group: :production
 gem 'prawn', '>= 1.0.0'
 gem 'carrierwave'
 gem 'browser'
-gem 'simplecov', :require => false, :group => :test
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'spreadsheet'
