@@ -2,7 +2,12 @@ class PortsController < CommonController
   before_filter :authenticate_user!
   before_filter :ensure_admin
 
+
   add_breadcrumb "Ports", :ports_url
+
+  def model
+    Port
+  end
 
   # GET /ports
   # GET /ports.json

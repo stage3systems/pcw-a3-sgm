@@ -4,6 +4,10 @@ class TaxesController < CommonController
 
   add_breadcrumb "Taxes", :taxes_url
 
+  def model
+    Tax
+  end
+
   # GET /taxes
   # GET /taxes.json
   def index

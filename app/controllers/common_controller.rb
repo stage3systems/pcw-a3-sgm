@@ -77,7 +77,4 @@ class CommonController < ApplicationController
     end
   end
 
-  def model
-    params[:controller].classify.constantize
-  end
 end

@@ -4,6 +4,10 @@ class CompaniesController < CommonController
 
   add_breadcrumb "Companies", :companies_url
 
+  def model
+    Company
+  end
+
   def index
     @title = "Companies"
     @companies_grid = initialize_grid(Company,

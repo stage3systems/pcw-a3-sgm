@@ -4,6 +4,10 @@ class VesselsController < CommonController
 
   add_breadcrumb "Vessels", :vessels_url
 
+  def model
+    Vessel
+  end
+
   # GET /vessels
   # GET /vessels.json
   def index
