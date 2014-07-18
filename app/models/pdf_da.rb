@@ -13,6 +13,11 @@ class PdfDA < Prawn::Document
     shortcuts
     font_setup
     header
+    @cell_style = {
+      border_widths: [0.1, 0, 0.1, 0],
+      inline_format: true,
+      border_color: 'dddddd'
+    }
     to_table
     from_table
     services_table
@@ -89,11 +94,7 @@ class PdfDA < Prawn::Document
         ['<b>Load Time</b>', "#{@revision.loadtime} hours"],
         ['<b>Tugs</b>', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
       ]
-      table data,
-            cell_style: {border_widths: [0.1, 0, 0.1, 0],
-                         inline_format: true,
-                         border_color: 'dddddd'},
-            column_widths: [70, 200]
+      table data, cell_style: @cell_style, column_widths: [70, 200]
     end
   end
 
@@ -102,11 +103,7 @@ class PdfDA < Prawn::Document
       data = [
         ['<b>From</b>', "<b>#{@revision.data['office_name']||@revision.data['from_name']}</b>\n#{@revision.data['office_address1']||@revision.data['from_address1']}\n#{@revision.data['office_address2']||@revision.data['from_address2']}\n#{@revision.data['office_address3']}#{ "\n" unless @revision.data['office_address3'].blank? }#{@revision.email}"]
       ]
-      table data,
-            cell_style: {border_widths: [0.1, 0, 0.1, 0],
-                         inline_format: true,
-                         border_color: 'dddddd'},
-            column_widths: [70, 155]
+      table data, cell_style: @cell_style, column_widths: [70, 155]
     end
   end
 
