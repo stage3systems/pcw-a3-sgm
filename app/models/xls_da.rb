@@ -78,22 +78,24 @@ class XlsDA < Spreadsheet::Workbook
     r+1
   end
 
-  def add_services(r)
-    # setup services
+  def add_service_header(r)
     @sheet.row(r).push "Item",
                        "Comment",
                        "Amount (#{@currency_code})"
     @sheet.row(r).push "Amount (#{@currency_code}) Including Taxes" unless @revision.tax_exempt?
     @sheet.row(r).default_format = @head_right_fmt
     (0..1).each {|i| @sheet.row(r).set_format(i, @head_left_fmt) }
-    r += 1
+    r+1
+  end
+
+  def add_services(r)
+    # setup services
+    r = add_service_header(r)
     @revision.field_keys.each_with_index do |k, i|
       @sheet.row(r+i).push @revision.descriptions[k],
                            @revision.comments[k],
                            nan_to_zero(@revision.values[k])
-      unless @revision.tax_exempt?
-        @sheet.row(r+i).push nan_to_zero(@revision.values_with_tax[k])
-      end
+      @sheet.row(r+i).push nan_to_zero(@revision.values_with_tax[k]) unless @revision.tax_exempt?
       @sheet.row(r+i).default_format = @right_fmt
       (0..1).each {|c| @sheet.row(r+i).set_format(c, @left_fmt) }
     end

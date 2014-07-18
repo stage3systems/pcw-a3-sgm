@@ -277,15 +277,12 @@ class DisbursementsController < ApplicationController
   end
 
   private
-  def save_revision
-    if not @revision.update_attributes(disbursement_revision_params)
-      return false
-    end
+  def handle_extra_items
     # handle extra items
-    old_extras = @revision.field_keys.map {|k| k.starts_with?("EXTRAITEM") ? k : nil }.compact
-    extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
+    @old_extras = @revision.field_keys.map {|k| k.starts_with?("EXTRAITEM") ? k : nil }.compact
+    @extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
     # remove keys that do not exist anymore
-    old_extras.each do |k|
+    @old_extras.each do |k|
       if not extras.member? k
         @revision.fields.delete(k)
         @revision.codes.delete(k)
@@ -294,17 +291,21 @@ class DisbursementsController < ApplicationController
         @revision.values_with_tax.delete(k)
       end
     end
-    # reindex field_keys
-    fields = {}
+  end
+
+  def reindex_field_keys
+    @fields = {}
     @revision.field_keys.each_with_index do |k,i|
-      fields[k] = i
+      @fields[k] = i
     end
-    # add new items
+  end
+
+  def add_new_items
     next_val = fields.values.max+1 rescue 1
-    ctx = V8::Context.new
-    extras.each do |k|
-      if not old_extras.member? k
-        fields[k] = next_val
+    @ctx = V8::Context.new
+    @extras.each do |k|
+      if not @old_extras.member? k
+        @fields[k] = next_val
         @revision.compulsory[k] = "0"
         taxApplies = "true"
         begin
@@ -316,8 +317,21 @@ class DisbursementsController < ApplicationController
         next_val += 1
       end
     end
-    @revision.fields = fields
-    fields.keys.each do |k|
+  end
+
+  def compute_and_save_revision
+    @revision.compute
+    @revision.user = current_user
+    DisbursementRevision.hstore_fields.each do |f|
+      @revision.send("#{f}_will_change!")
+    end
+    @revision.save
+    @disbursement.current_revision = @revision
+    @disbursement.save
+  end
+
+  def process_fields
+    @fields.keys.each do |k|
       val = params["disabled_#{k}"]
       if val and not @revision.compulsory?(k)
         @revision.disabled[k] = (val == "1" ? "1" : "0")
@@ -330,17 +344,18 @@ class DisbursementsController < ApplicationController
       end
       @revision.comments[k] = params["comment_#{k}"]
     end
-    @revision.compute
-    @revision.user = current_user
-    DisbursementRevision.hstore_fields.each do |f|
-      @revision.send("#{f}_will_change!")
-    end
-    @revision.save
-    @disbursement.current_revision = @revision
-    @disbursement.save
   end
 
-  private
+  def save_revision
+    return false unless @revision.update_attributes(disbursement_revision_params)
+    handle_extra_items
+    reindex_field_keys
+    add_new_items
+    @revision.fields = @fields
+    process_fields
+    compute_and_save_revision
+  end
+
   def disbursement_params
     params.require(:disbursement).permit(
       :company_id, :dwt, :grt, :loa, :nrt,
@@ -349,6 +364,7 @@ class DisbursementsController < ApplicationController
       :appointment_id, :nomination_id
     )
   end
+
   def disbursement_revision_params
     params.require(:disbursement_revision).permit(
       :cargo_qty, :data, :days_alongside, :descriptions,

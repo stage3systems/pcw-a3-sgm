@@ -107,40 +107,49 @@ class PdfDA < Prawn::Document
     end
   end
 
-  def services_table
-    services_data = [
-      # table header
-      [
-        {:content => "<b>Item</b>"},
-        {content: "<b>Amount (#{@currency_code})</b>",
-         align: :right},
-        {content: "<b>Amount (#{@currency_code}) Including Taxes</b>",
-         align: :right},
-      ]
+  def services_table_header
+    [
+      {:content => "<b>Item</b>"},
+      {content: "<b>Amount (#{@currency_code})</b>",
+       align: :right},
+      {content: "<b>Amount (#{@currency_code}) Including Taxes</b>",
+       align: :right},
     ]
-    # real service data
-    @revision.field_keys.each do |f|
-      next if @revision.disabled[f] == "1"
-      desc = @revision.descriptions[f]
-      if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
-        desc += " <font size=\"5\">#{@revision.comments[f]}</font>"
-      end
-      services_data <<  [
-        desc,
-        {content: number_to_currency(nan_to_zero(@revision.values[f]), unit: ""),
-         align: :right},
-        {content: number_to_currency(nan_to_zero(@revision.values_with_tax[f]), unit: ""),
-         align: :right}
-      ]
+  end
+
+  def service_data_for(f)
+    desc = @revision.descriptions[f]
+    if @revision.comments and @revision.comments[f] and @revision.comments[f] != ''
+      desc += " <font size=\"5\">#{@revision.comments[f]}</font>"
     end
-    # totals
-    services_data << [
+    [
+      desc,
+      {content: number_to_currency(nan_to_zero(@revision.values[f]), unit: ""),
+       align: :right},
+      {content: number_to_currency(nan_to_zero(@revision.values_with_tax[f]), unit: ""),
+       align: :right}
+    ]
+  end
+
+  def services_table_footer
+    [
       '<b>Total</b>',
       {content: "<b>#{@total}<b>",
        align: :right},
       {content: "<b><font size=\"12\">#{@total_with_tax}</font></b>",
        align: :right}
     ]
+  end
+
+  def services_table
+    services_data = [services_table_header]
+    # real service data
+    @revision.field_keys.each do |f|
+      next if @revision.disabled[f] == "1"
+      services_data << service_data_for(f)
+    end
+    # totals
+    services_data << services_table_footer
 
     # Remove tax included column if needed
     column_widths = @revision.tax_exempt? ? [315, 225] : [180, 135, 225]
