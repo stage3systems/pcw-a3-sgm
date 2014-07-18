@@ -56,7 +56,7 @@ class PortsController < ApplicationController
   # POST /ports.json
   def create
     @title = "New Port"
-    @port = Port.new(params[:port])
+    @port = Port.new(port_params)
     add_breadcrumb "New Port", new_port_url
 
     respond_to do |format|
@@ -78,7 +78,7 @@ class PortsController < ApplicationController
     add_breadcrumb "Edit #{@port.name}", edit_port_url(@port)
 
     respond_to do |format|
-      if @port.update_attributes(params[:port])
+      if @port.update_attributes(port_params)
         format.html { redirect_to @port, notice: 'Port was successfully updated.' }
         format.json { head :no_content }
       else
@@ -98,5 +98,10 @@ class PortsController < ApplicationController
       format.html { redirect_to ports_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def port_params
+    params.require(:port).permit(:name, :tax_id, :currency_id)
   end
 end

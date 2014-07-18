@@ -225,7 +225,7 @@ class DisbursementsController < ApplicationController
   # POST /disbursements
   def create
     @title = "New PDA"
-    @disbursement = Disbursement.new(params[:disbursement])
+    @disbursement = Disbursement.new(disbursement_params)
     @disbursement.user = current_user
     @disbursement.office = current_user.office || Office.find_by_name("Head Office")
 
@@ -282,7 +282,7 @@ class DisbursementsController < ApplicationController
 
   private
   def save_revision
-    if not @revision.update_attributes(params[:disbursement_revision])
+    if not @revision.update_attributes(disbursement_revision_params)
       return false
     end
     # handle extra items
@@ -678,5 +678,24 @@ TXT
     sheet.row(r).height = 20
     sheet.merge_cells(r, 0, r, @revision.tax_exempt? ? 1 : 2)
     book
+  end
+
+  private
+  def disbursement_params
+    params.require(:disbursement).permit(
+      :company_id, :dwt, :grt, :loa, :nrt,
+      :port_id, :status_cd, :tbn, :terminal_id,
+      :vessel_id, :tbn_template, :type_cd,
+      :appointment_id, :nomination_id
+    )
+  end
+  def disbursement_revision_params
+    params.require(:disbursement_revision).permit(
+      :cargo_qty, :data, :days_alongside, :descriptions,
+      :disbursement_id, :loadtime,
+      :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
+      :cargo_type_id, :comments, :eta, :disabled,
+      :overriden, :voyage_number, :amount
+    )
   end
 end

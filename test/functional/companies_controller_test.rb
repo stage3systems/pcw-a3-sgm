@@ -53,7 +53,7 @@ class CompaniesControllerTest < ActionController::TestCase
   end
 
   test "should update company" do
-    put :update, id: @company, company: {  }
+    put :update, id: @company, company: {name: 'tested company'}
     assert_redirected_to company_path(assigns(:company))
   end
 

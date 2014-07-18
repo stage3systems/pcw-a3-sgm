@@ -62,7 +62,7 @@ class VesselsController < ApplicationController
   # POST /vessels.json
   def create
     @title = "New Vessel"
-    @vessel = Vessel.new(params[:vessel])
+    @vessel = Vessel.new(vessel_params)
     add_breadcrumb "New Vessel", new_vessel_url
 
     respond_to do |format|
@@ -84,7 +84,7 @@ class VesselsController < ApplicationController
     add_breadcrumb "Edit #{@vessel.name}", edit_vessel_url(@vessel)
 
     respond_to do |format|
-      if @vessel.update_attributes(params[:vessel])
+      if @vessel.update_attributes(vessel_params)
         format.html { redirect_to @vessel, notice: 'Vessel was successfully updated.' }
         format.json { head :no_content }
       else
@@ -104,5 +104,10 @@ class VesselsController < ApplicationController
       format.html { redirect_to vessels_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def vessel_params
+    params.require(:vessel).permit(:dwt, :grt, :loa, :nrt, :name)
   end
 end

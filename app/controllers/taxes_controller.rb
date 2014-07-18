@@ -54,7 +54,7 @@ class TaxesController < ApplicationController
   # POST /taxes.json
   def create
     @title = "New Tax"
-    @tax = Tax.new(params[:tax])
+    @tax = Tax.new(tax_params)
     add_breadcrumb "New", new_tax_url
 
     respond_to do |format|
@@ -76,7 +76,7 @@ class TaxesController < ApplicationController
     add_breadcrumb "Edit #{@tax.code}", edit_tax_url(@tax)
 
     respond_to do |format|
-      if @tax.update_attributes(params[:tax])
+      if @tax.update_attributes(tax_params)
         format.html { redirect_to @tax, notice: 'Tax was successfully updated.' }
         format.json { head :no_content }
       else
@@ -96,5 +96,10 @@ class TaxesController < ApplicationController
       format.html { redirect_to taxes_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def tax_params
+    params.require(:tax).permit(:name, :code, :rate)
   end
 end

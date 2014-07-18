@@ -1,11 +1,6 @@
 class Disbursement < ActiveRecord::Base
   default_scope -> {where("status_cd != 2")}
   attr_accessor :tbn_template
-  attr_accessible :company_id, :dwt, :grt, :loa, :nrt,
-                  :port_id, :publication_id, :user_id,
-                  :status_cd, :tbn, :terminal_id, :vessel_id,
-                  :tbn_template, :type_cd,
-                  :appointment_id, :nomination_id
   belongs_to :port
   belongs_to :terminal
   belongs_to :office

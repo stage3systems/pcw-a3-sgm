@@ -12,10 +12,6 @@ class User < ActiveRecord::Base
   has_many :disbursement_revisions
   belongs_to :office
   attr_accessor :login
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :uid, :provider, :first_name, :last_name, :admin, :login,
-  # attr_accessible :title, :body
 
 
   #def self.find_for_saml(auth, signed_in_resource=nil)

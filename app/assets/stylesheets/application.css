@@ -10,8 +10,8 @@
  *
  *= require_self
  *= require jquery.dataTables
- *= require jquery.ui.datepicker
- *= require jquery.ui.selectable
+ *= require jquery-ui/datepicker
+ *= require jquery-ui/selectable
  *= require application_bootstrap
  *= require ui.dynatree
  *= require font-awesome

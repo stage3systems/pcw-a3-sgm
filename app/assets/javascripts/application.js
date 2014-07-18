@@ -17,10 +17,10 @@
 //= require format-currency
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
-//= require jquery.ui.datepicker
-//= require jquery.ui.sortable
-//= require jquery.ui.effect
-//= require jquery.ui.effect-highlight
+//= require jquery-ui/datepicker
+//= require jquery-ui/sortable
+//= require jquery-ui/effect
+//= require jquery-ui/effect-highlight
 //= require bootstrap_init
 //= require jquery.dataTables
 //= require dataTables.htmlnumbers

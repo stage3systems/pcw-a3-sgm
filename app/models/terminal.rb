@@ -1,5 +1,4 @@
 class Terminal < ActiveRecord::Base
-  attr_accessible :name, :port_id
   belongs_to :port, counter_cache: true
   has_many :services, -> {order 'row_order ASC'}
   has_many :tariffs

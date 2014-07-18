@@ -1,6 +1,4 @@
 class Office < ActiveRecord::Base
-  attr_accessible :address_1, :address_2, :address_3,
-                  :fax, :name, :phone, :email, :remote_id
   has_and_belongs_to_many :ports
   has_many :users
 

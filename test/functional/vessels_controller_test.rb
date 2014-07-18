@@ -53,7 +53,7 @@ class VesselsControllerTest < ActionController::TestCase
   end
 
   test "should update vessel" do
-    put :update, id: @vessel, vessel: {  }
+    put :update, id: @vessel, vessel: {name: 'tested vessel'}
     assert_redirected_to vessel_path(assigns(:vessel))
   end
 

@@ -34,7 +34,6 @@ gem 'newrelic_rpm', group: :production
 gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
 gem 'httparty'
-gem 'protected_attributes'
 gem 'delayed_job_active_record'
 gem 'turbolinks'
 gem 'nprogress-rails'

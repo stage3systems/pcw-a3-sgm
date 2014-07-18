@@ -61,7 +61,7 @@ class CompaniesController < ApplicationController
   # POST /companies.json
   def create
     @title = "New Company"
-    @company = Company.new(params[:company])
+    @company = Company.new(company_params)
     add_breadcrumb "New Company", new_company_url
 
     respond_to do |format|
@@ -83,7 +83,7 @@ class CompaniesController < ApplicationController
     add_breadcrumb "Edit #{@company.name}", edit_company_url(@company)
 
     respond_to do |format|
-      if @company.update_attributes(params[:company])
+      if @company.update_attributes(company_params)
         format.html { redirect_to @company, notice: 'Company was successfully updated.' }
         format.json { head :no_content }
       else
@@ -103,5 +103,10 @@ class CompaniesController < ApplicationController
       format.html { redirect_to companies_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def company_params
+    params.require(:company).permit(:email, :name)
   end
 end

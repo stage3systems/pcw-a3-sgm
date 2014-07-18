@@ -1,6 +1,5 @@
 # encoding: utf-8
 class CargoType < ActiveRecord::Base
-  attr_accessible :maintype, :remote_id, :subsubsubtype, :subsubtype, :subtype
   has_many :disbursement_revisions
   default_scope -> {order('maintype ASC, subtype ASC, subsubtype ASC, subsubsubtype ASC')}
 

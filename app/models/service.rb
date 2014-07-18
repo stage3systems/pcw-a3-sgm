@@ -1,8 +1,6 @@
 class Service < ActiveRecord::Base
   include RankedModel
   attr_accessor :changelog
-  attr_accessible :user_id, :code, :item, :key,
-                  :port_id, :row_order, :terminal_id, :document, :compulsory
   validate :code_checks
   belongs_to :port, counter_cache: true
   belongs_to :terminal

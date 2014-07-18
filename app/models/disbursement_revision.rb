@@ -1,10 +1,4 @@
 class DisbursementRevision < ActiveRecord::Base
-  attr_accessible :cargo_qty, :codes, :data, :days_alongside, :descriptions,
-                  :disbursement_id, :fields, :loadtime, :number, :reference,
-                  :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
-                  :cargo_type_id, :comments, :eta, :compulsory, :disabled,
-                  :overriden, :user_id, :anonymous_views, :pdf_views,
-                  :voyage_number, :amount, :currency_symbol
   belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user

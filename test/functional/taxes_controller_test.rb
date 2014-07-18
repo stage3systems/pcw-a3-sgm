@@ -53,7 +53,7 @@ class TaxesControllerTest < ActionController::TestCase
   end
 
   test "should update tax" do
-    put :update, id: @tax, tax: {  }
+    put :update, id: @tax, tax: {rate: 0.2}
     assert_redirected_to tax_path(assigns(:tax))
   end
 

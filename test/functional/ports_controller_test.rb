@@ -53,7 +53,7 @@ class PortsControllerTest < ActionController::TestCase
   end
 
   test "should update port" do
-    put :update, id: @port, port: {  }
+    put :update, id: @port, port: {name: 'tested'}
     assert_redirected_to port_path(assigns(:port))
   end
 
