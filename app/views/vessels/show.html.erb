@@ -1,14 +1,14 @@
 <% content_for :navbar_buttons do %>
-  <%= link_to 'Edit', edit_vessel_path(@vessel), :class => "btn btn-primary btn-sm" %>
+  <%= link_to 'Edit', edit_vessel_path(@instance), :class => "btn btn-primary btn-sm" %>
   <%= link_to 'Back', vessels_path, :class => "btn btn-default btn-sm" %>
 <% end %>
 <div class="row">
   <div class="col-md-12">
     <p id="notice"><%= notice %></p>
 
-    <h2 class="title"><%= @vessel.name %></h2>
+    <h2 class="title"><%= @instance.name %></h2>
     <% ['dwt', 'grt', 'loa', 'nrt'].each do |k| %>
-      <p><strong><%= k.upcase %>:</strong> <%= @vessel.send(k) %></p>
+      <p><strong><%= k.upcase %>:</strong> <%= @instance.send(k) %></p>
     <% end %>
 
   </div>

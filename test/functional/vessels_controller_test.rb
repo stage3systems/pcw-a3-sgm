@@ -39,7 +39,7 @@ class VesselsControllerTest < ActionController::TestCase
       post :create, vessel: {name: 'test vessel', loa: 100, grt: 10000, nrt: 10000, dwt: 10000 }
     end
 
-    assert_redirected_to vessel_path(assigns(:vessel))
+    assert_redirected_to vessel_path(assigns(:instance))
   end
 
   test "should show vessel" do
@@ -54,7 +54,7 @@ class VesselsControllerTest < ActionController::TestCase
 
   test "should update vessel" do
     put :update, id: @vessel, vessel: {name: 'tested vessel'}
-    assert_redirected_to vessel_path(assigns(:vessel))
+    assert_redirected_to vessel_path(assigns(:instance))
   end
 
   test "should destroy vessel" do

@@ -39,7 +39,7 @@ class TaxesControllerTest < ActionController::TestCase
       post :create, tax: {name: 'test tax', code: 'TT', rate: 0.1 }
     end
 
-    assert_redirected_to tax_path(assigns(:tax))
+    assert_redirected_to tax_path(assigns(:instance))
   end
 
   test "should show tax" do
@@ -54,7 +54,7 @@ class TaxesControllerTest < ActionController::TestCase
 
   test "should update tax" do
     put :update, id: @tax, tax: {rate: 0.2}
-    assert_redirected_to tax_path(assigns(:tax))
+    assert_redirected_to tax_path(assigns(:instance))
   end
 
   test "should destroy tax" do

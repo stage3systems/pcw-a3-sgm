@@ -39,7 +39,7 @@ class PortsControllerTest < ActionController::TestCase
       post :create, port: {name: 'test', currency_id: 1, tax_id: 1  }
     end
 
-    assert_redirected_to port_path(assigns(:port))
+    assert_redirected_to port_path(assigns(:instance))
   end
 
   test "should show port" do
@@ -54,7 +54,7 @@ class PortsControllerTest < ActionController::TestCase
 
   test "should update port" do
     put :update, id: @port, port: {name: 'tested'}
-    assert_redirected_to port_path(assigns(:port))
+    assert_redirected_to port_path(assigns(:instance))
   end
 
   test "should destroy port" do

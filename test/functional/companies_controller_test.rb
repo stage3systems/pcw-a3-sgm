@@ -39,7 +39,7 @@ class CompaniesControllerTest < ActionController::TestCase
       post :create, company: {name: 'test company', email: 'some@email.com' }
     end
 
-    assert_redirected_to company_path(assigns(:company))
+    assert_redirected_to company_path(assigns(:instance))
   end
 
   test "should show company" do
@@ -54,7 +54,7 @@ class CompaniesControllerTest < ActionController::TestCase
 
   test "should update company" do
     put :update, id: @company, company: {name: 'tested company'}
-    assert_redirected_to company_path(assigns(:company))
+    assert_redirected_to company_path(assigns(:instance))
   end
 
   test "should destroy company" do
