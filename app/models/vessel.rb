@@ -23,4 +23,21 @@ class Vessel < ActiveRecord::Base
     self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
   end
+
+  def aos_modify(data)
+    i = Vessel.where(remote_id: data['id']).first
+    i = Vessel.new if i.nil? and Vessel.valid_data(data)
+    i.update_from_json(data)
+    i.save
+  end
+
+  private
+  def self.valid_data(data)
+    missing = ['loa', 'intlNetRegisteredTonnage',
+     'intlGrossRegisteredTonnage', 'fullSummerDeadweight'].map do |k|
+      data[k].nil?
+    end
+    return false if missing.member? true
+    true
+  end
 end

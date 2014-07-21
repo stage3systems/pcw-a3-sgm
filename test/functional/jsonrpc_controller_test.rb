@@ -317,6 +317,33 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert Office.find_by(remote_id: 123).nil?
   end
 
+  test "MODIFY creates vessel workaround" do
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                    'changeme',
+                    "CREATE",
+                    "vessel",
+                    {
+                      id: 1234,
+                      name: 'bar',
+                      loa: 100,
+                      intlNetRegisteredTonnage: 10000,
+                      intlGrossRegisteredTonnage: 20000,
+                      fullSummerDeadweight: 30000
+                    }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    v = Vessel.find_by(remote_id: 1234)
+    assert v.name == 'bar'
+    assert v.loa == 100
+    assert v.nrt == 10000
+    assert v.grt == 20000
+    assert v.dwt == 30000
+    v.destroy
+  end
+
   test "vessel lifecycle" do
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
