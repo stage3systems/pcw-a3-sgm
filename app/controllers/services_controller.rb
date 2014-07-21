@@ -75,7 +75,7 @@ class ServicesController < ApplicationController
   def create
     get_port_and_terminal
     changelog = params[:service].delete(:changelog)
-    @service = Service.new(params[:service])
+    @service = Service.new(safe_params)
     @service.port = @port
     @service.terminal = @terminal
     @service.user = current_user
@@ -120,7 +120,7 @@ class ServicesController < ApplicationController
     @service.user = current_user if @service.user.nil?
 
     respond_to do |format|
-      if @service.update_attributes(params[:service])
+      if @service.update_attributes(safe_params)
         update = ServiceUpdate.new()
         update.service = @service
         update.user = current_user
@@ -179,5 +179,10 @@ class ServicesController < ApplicationController
     else
       add_breadcrumb "Services", port_services_url(@port)
     end
+  end
+
+  def safe_params
+    params.require(:service).permit(:code, :item, :key, :port_id, :row_order,
+                                    :terminal_id, :document, :compulsory)
   end
 end
