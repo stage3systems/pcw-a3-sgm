@@ -283,7 +283,7 @@ class DisbursementsController < ApplicationController
     @extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
     # remove keys that do not exist anymore
     @old_extras.each do |k|
-      if not extras.member? k
+      if not @extras.member? k
         @revision.fields.delete(k)
         @revision.codes.delete(k)
         @revision.descriptions.delete(k)
