@@ -15,3 +15,11 @@ brisbane:
   services_count: 2
   tariffs_count: 0
   terminals_count: 0
+
+dummy:
+  tax: :gst
+  currency: :aud
+  name: Dummy
+  services_count: 0
+  tariffs_count: 0
+  terminals_count: 0

@@ -59,7 +59,7 @@ class XlsDA < Spreadsheet::Workbook
   end
 
   def add_vessel_info(r)
-    @sheet.row(r).push "Vessel", @disbursement.vessel_name
+    @sheet.row(r).push "Vessel", @revision.data['vessel_name']
     @sheet.row(r).set_format(0, @head_left_fmt)
     r += 1
     unless @revision.voyage_number.blank?

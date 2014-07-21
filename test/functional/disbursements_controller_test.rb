@@ -180,4 +180,56 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_response :success
     log_out
   end
+
+  test "show revisions" do
+    log_in :admin
+    get :revisions, id: @published.id
+    assert_response :success
+    log_out
+  end
+
+  test "disbursement lifecycle" do
+    log_in :office_operator
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
+        to_return(:status => 200, :body => {
+          data: {
+            count: 0,
+            page: 0,
+            disbursement: []
+          }
+        }.to_json, :headers => {})
+    post :create, disbursement: {
+      type_cd: 0,
+      port_id: @port.id,
+      company_id: @company.id,
+      tbn: false,
+      vessel_id: @vessel.id,
+      appointment_id: 321,
+      nomination_id: 321
+    }
+    d = assigns(:disbursement)
+    post :update, id: d.id, disbursement_revision: {
+      cargo_qty: 10000,
+      loadtime: 2.0,
+      tax_exempt: false,
+      tugs_in: 2,
+      tugs_out: 2
+    }
+    assert_redirected_to disbursements_path
+    post :update, id: d.id, disbursement_revision: {
+      cargo_qty: 20000,
+      loadtime: 2.0,
+      tax_exempt: false,
+      tugs_in: 2,
+      tugs_out: 2
+    }
+    assert_redirected_to disbursements_path
+    get :published, id: @published.publication_id
+    assert_response :success
+    get :published, id: @published.publication_id, revision_number: 1
+    assert_response :success
+    delete :destroy, id: d.id
+    log_out
+  end
+
 end

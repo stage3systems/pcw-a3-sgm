@@ -24,9 +24,9 @@ class Vessel < ActiveRecord::Base
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
   end
 
-  def aos_modify(data)
+  def self.aos_modify(data)
     i = Vessel.where(remote_id: data['id']).first
-    i = Vessel.new if i.nil? and Vessel.valid_data(data)
+    i = Vessel.new if i.nil? and valid_data(data)
     i.update_from_json(data)
     i.save
   end

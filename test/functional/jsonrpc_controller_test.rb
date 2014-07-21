@@ -321,7 +321,7 @@ class JsonrpcControllerTest < ActionController::TestCase
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
-                    "CREATE",
+                    "MODIFY",
                     "vessel",
                     {
                       id: 1234,

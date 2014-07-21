@@ -11,3 +11,7 @@ two:
 coal:
   port: brisbane
   name: 'Brisbane Coal Terminal'
+
+dummy:
+  port: dummy
+  name: 'Dummy Terminal'

@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 revisionone:
   disbursement: draft
+  eta: <%= Date.today.to_s(:db) %>
   data: {} 
   fields: 
   descriptions: 
@@ -18,15 +19,16 @@ revisionone:
 
 revisiontwo:
   disbursement: published
+  eta: <%= Date.today.to_s(:db) %>
   user: admin
   data: {}
   fields: {MNL: 1}
   descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
   values:  {MNL: 1000.0}
   values_with_tax: {MNL: 1100.0}
   codes: {}
   disabled: {}
-  comments: {}
   compulsory: {}
   overriden: {}
   tax_exempt: false

@@ -80,7 +80,7 @@ class PdfDA < Prawn::Document
         ['<b>To</b>', "<b>#{@revision.data['company_name']}</b>\n#{@revision.data['company_email']}"],
         ['<b>Reference</b>', @revision.reference],
         ['<b>Issued</b>', I18n.l(@revision.updated_at.to_date)],
-        ['<b>Vessel<b>', "#{@disbursement.vessel_name}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"]
+        ['<b>Vessel<b>', "#{@revision.data['vessel_name']}\n<font size=\"5\">(GRT: #{@revision.data["vessel_grt"]} | NRT: #{@revision.data["vessel_nrt"]} | DWT: #{@revision.data["vessel_dwt"]} | LOA: #{@revision.data["vessel_loa"]})</font>"]
       ]
       unless @revision.voyage_number.blank?
         data += [
@@ -227,7 +227,7 @@ Please remit funds at least two (2) days prior to vessels arrival to the followi
 <b>BSB Number: #{@revision.data['bsb_number']}</b>
 <b>A/C Number: #{@revision.data['ac_number']}</b>
 <b>A/C Name: #{@revision.data['ac_name']}</b>
-<b>Reference: #{@disbursement.vessel_name}</b>
+<b>Reference: #{@revision.data['vessel_name']}</b>
 
 Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.
 

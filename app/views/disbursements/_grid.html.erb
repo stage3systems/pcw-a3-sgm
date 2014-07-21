@@ -18,7 +18,7 @@
     d.company.name rescue ''
   end
   g.column name: 'Vessel',attribute: 'name', model: 'Vessel' do |d|
-    d.vessel_name
+    d.current_revision.data['vessel_name']
   end
   g.column name: 'Amount', attribute: 'amount', model: 'DisbursementRevision', filter: false do |d|
     number_to_currency d.current_revision.amount, unit: ""

@@ -34,11 +34,8 @@ class User < ActiveRecord::Base
 
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
-    if login = conditions.delete(:login).downcase
-      where(conditions).where(["lower(uid) = :value OR lower(email) = :value", { :value => login }]).first
-    else
-      where(conditions).first
-    end
+    login = conditions.delete(:login).downcase
+    where(conditions).where(["lower(uid) = :value OR lower(email) = :value", { :value => login }]).first
   end
 
   def authorized_ports

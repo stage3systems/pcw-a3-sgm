@@ -30,7 +30,7 @@ class Disbursement < ActiveRecord::Base
                  cleaning: 3, spare_parts: 4, other: 5
 
   def title
-    "#{self.vessel_name} in #{self.port.name}"
+    "#{self.current_revision.data['vessel_name']} in #{self.port.name}"
   end
 
   def delete
@@ -44,18 +44,10 @@ class Disbursement < ActiveRecord::Base
       '/disbursement/'+self.appointment_id.to_s)
   end
 
-  def vessel_name
-    if tbn
-      "TBN-#{self.company.name rescue "NoPrincipal"}"
-    else
-      self.vessel.name
-    end
-  end
-
   def crystalize_vessel
     if self.tbn?
       {
-        "vessel_name" => self.vessel_name,
+        "vessel_name" => "TBN-#{self.company.name rescue "NoPrincipal"}",
         "vessel_dwt" => self.dwt,
         "vessel_grt" => self.grt,
         "vessel_nrt" => self.nrt,

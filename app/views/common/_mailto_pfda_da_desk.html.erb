@@ -1,8 +1,8 @@
 <a class="btn btn-default btn-sm<%= " disabled" if disbursement.draft? %>"
    <% unless disbursement.draft? %>
    title="Send a Link By Email"
-   href="mailto:<%= disbursement.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursement.vessel_name} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
-Please click on the link below to view the requested Proforma Disbursement Account for #{disbursement.vessel_name} calling at #{disbursement.port.name}.
+   href="mailto:<%= disbursement.company.email %>?subject=<%= ERB::Util.url_encode("#{disbursement.current_revision.data['vessel_name']} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
+Please click on the link below to view the requested Proforma Disbursement Account for #{disbursement.current_revision.data['vessel_name']} calling at #{disbursement.port.name}.
 You can download a PDF file view of the estimate from this link (no log in required).
 
 #{published_short_url(disbursement.publication_id)}
