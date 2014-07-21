@@ -67,23 +67,21 @@ class AosApi
   end
 
   def offices
-    oo = []
-    self.each('office', {agencyCompany: 1}) do |o|
-      email = self.first('emailAddress', {officeId: o['id'], prime: 1}) rescue nil
-      o['email'] = email["address"] if email
-      oo << o
-    end
-    oo
+    entities_with_email('office', {agencyCompany: 1})
   end
 
   def companies
-    cc = []
-    self.each('company') do |c|
-      email = self.first('emailAddress', {companyId: c['id'], prime: 1}) rescue nil
-      c['email'] = email["address"] if email
-      cc << c
-    end
-    cc
+    entities_with_email('company')
   end
 
+  private
+  def entities_with_email(entity, filter={})
+    ee = []
+    self.each(entity, filter) do |e|
+      email = first('emailAddress', {"#{entity}Id" => e['id'], prime: 1}) rescue nil
+      e['email'] = email['address'] if email
+      ee << e
+    end
+    ee
+  end
 end
