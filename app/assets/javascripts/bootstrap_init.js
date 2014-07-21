@@ -71,6 +71,7 @@ $(document).on('page:change', function() {
 });
 var getBloodhoundFor = function(entities) {
   var b = new Bloodhound({
+    limit: 20,
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     remote: '/'+entities+'/search/%QUERY.json'
