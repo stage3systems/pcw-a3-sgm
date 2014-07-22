@@ -29,20 +29,20 @@ class PdfDA < Prawn::Document
 
   def font_setup
     # setup fallback fonts for asian charsets
-    font_size = 8
-    font_families.update(
+    self.font_size = 8
+    self.font_families.update(
       "DejaVuSans" => {
         bold: Rails.root.join('fonts', 'DejaVuSans-Bold.ttf').to_s,
         normal: Rails.root.join('fonts', 'DejaVuSans.ttf').to_s })
     kai = Rails.root.join('fonts', 'gkai00mp.ttf').to_s
-    font_families.update(
+    self.font_families.update(
       "Kai" => {
           normal: { file: kai, font: "Kai" },
           bold: kai,
           italic: kai,
           bold_italic: kai})
-    font "DejaVuSans"
-    fallback_fonts = ["Kai"]
+    self.font "DejaVuSans"
+    self.fallback_fonts = ["Kai"]
   end
 
   def title(title, subtitle)
