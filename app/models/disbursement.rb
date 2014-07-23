@@ -97,6 +97,24 @@ class Disbursement < ActiveRecord::Base
     super(:include => [:disbursement_revisions, :port])
   end
 
+  def fill_nomination_data(nomination_id)
+    return unless nomination_id
+    api = AosApi.new
+    n = api.find('nomination', nomination_id)
+    a = api.find('appointment', n['appointmentId'])
+    v = Vessel.where(remote_id: n['vesselId']).first rescue nil
+    self.vessel = v
+    if n['principalId']
+      c = Company.where(remote_id: n['principalId']).first rescue nil
+      self.company = c
+    end
+    p = Port.where(remote_id: n['portId']).first rescue nil
+    self.port = p
+    self.nomination_id = nomination_id
+    self.appointment_id = n['appointmentId']
+    self.nomination_reference = "#{a['fileNumber']}-#{n['nominationNumber']}"
+  end
+
   private
   def generate_publication_id
     self.publication_id = UUIDTools::UUID.random_create.to_s

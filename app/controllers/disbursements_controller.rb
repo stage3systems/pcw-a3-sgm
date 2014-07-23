@@ -63,50 +63,22 @@ class DisbursementsController < ApplicationController
   def published
     @title = "Proforma DA"
     @disbursement = Disbursement.find_by_publication_id(params[:id])
-    @revision_number = params[:revision_number]
-    if @revision_number
-      @revision = @disbursement.disbursement_revisions
-                    .where(number: @revision_number.to_i).first
-    else
-      @revision = @disbursement.current_revision rescue nil
-    end
-    pfda_view = PfdaView.new
-    pfda_view.disbursement_revision_id = @revision.id rescue nil
-    pfda_view.ip = request.remote_ip
-    pfda_view.browser = browser.name
-    pfda_view.browser_version = browser.version
-    pfda_view.user_agent = request.env['HTTP_USER_AGENT']
-    pfda_view.pdf = false
+    setup_revision
+    setup_view
 
     respond_to do |format|
       format.html {
         if @revision and current_user.nil?
-          pfda_view.save
+          @pfda_view.save
           DisbursementRevision.increment_counter :anonymous_views, @revision.id
         end
         render layout: "published"
       }
       format.pdf {
-        if @revision and current_user.nil?
-          pfda_view.pdf = true
-          pfda_view.save
-          DisbursementRevision.increment_counter :pdf_views, @revision.id
-        end
-        Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
-        file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
-        unless File.exists? file
-          PdfDA.new(@disbursement, @revision, root_url).render_file file
-        end
-        send_file(file, :type => "application/pdf")
+        handle_pdf
       }
       format.xls {
-        #@revision.increment! :xls_views if @revision and current_user.nil?
-        Dir.mkdir Rails.root.join('sheets') unless Dir.exists? Rails.root.join('sheets')
-        file = Rails.root.join 'sheets', "#{@revision.reference}.xls"
-        unless File.exists? file
-          XlsDA.new(@disbursement, @revision).write file
-        end
-        send_file(file, :type => "application/ms-excel")
+        handle_xls
       }
     end
   end
@@ -176,24 +148,10 @@ class DisbursementsController < ApplicationController
   def new
     @title = "New PDA"
     @disbursement = Disbursement.new
-    if params[:nomination_id]
-      api = AosApi.new
-      n = api.find('nomination', params[:nomination_id])
-      a = api.find('appointment', n['appointmentId'])
-      v = Vessel.where(remote_id: n['vesselId']).first rescue nil
-      params[:vessel_name] = v.name if v
-      @disbursement.vessel = v
-      if n['principalId']
-        c = Company.where(remote_id: n['principalId']).first rescue nil
-        params[:company_name] = c.name if c
-        @disbursement.company = c
-      end
-      p = Port.where(remote_id: n['portId']).first rescue nil
-      @disbursement.port = p
-      @disbursement.nomination_id = params[:nomination_id]
-      @disbursement.appointment_id = n['appointmentId']
-      @disbursement.nomination_reference = "#{a['fileNumber']}-#{n['nominationNumber']}"
-    end
+    @disbursement.fill_nomination_data(params[:nomination_id])
+    @disbursement
+    params[:company_name] = @disbursement.company.name if @disbursement.company
+    params[:vessel_name] = @disbursement.vessel.name if @disbursement.vessel
     @disbursement.status_cd = params[:status_cd].to_i
     @disbursement.tbn = @disbursement.inquiry?
 
@@ -356,7 +314,7 @@ class DisbursementsController < ApplicationController
       :company_id, :dwt, :grt, :loa, :nrt,
       :port_id, :status_cd, :tbn, :terminal_id,
       :vessel_id, :tbn_template, :type_cd,
-      :appointment_id, :nomination_id
+      :appointment_id, :nomination_id, :nomination_reference
     )
   end
 
@@ -368,5 +326,49 @@ class DisbursementsController < ApplicationController
       :cargo_type_id, :comments, :eta, :disabled,
       :overriden, :voyage_number, :amount
     )
+  end
+
+  def setup_revision
+    @revision_number = params[:revision_number]
+    if @revision_number
+      @revision = @disbursement.disbursement_revisions
+                    .where(number: @revision_number.to_i).first
+    else
+      @revision = @disbursement.current_revision rescue nil
+    end
+  end
+
+  def setup_view
+    @pfda_view = PfdaView.new
+    @pfda_view.disbursement_revision_id = @revision.id rescue nil
+    @pfda_view.ip = request.remote_ip
+    @pfda_view.browser = browser.name
+    @pfda_view.browser_version = browser.version
+    @pfda_view.user_agent = request.env['HTTP_USER_AGENT']
+    @pfda_view.pdf = false
+  end
+
+  def handle_pdf
+    if @revision and current_user.nil?
+      @pfda_view.pdf = true
+      @pfda_view.save
+      DisbursementRevision.increment_counter :pdf_views, @revision.id
+    end
+    Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
+    file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
+    unless File.exists? file
+      PdfDA.new(@disbursement, @revision, root_url).render_file file
+    end
+    send_file(file, :type => "application/pdf")
+  end
+
+  def handle_xls
+    #@revision.increment! :xls_views if @revision and current_user.nil?
+    Dir.mkdir Rails.root.join('sheets') unless Dir.exists? Rails.root.join('sheets')
+    file = Rails.root.join 'sheets', "#{@revision.reference}.xls"
+    unless File.exists? file
+      XlsDA.new(@disbursement, @revision).write file
+    end
+    send_file(file, :type => "application/ms-excel")
   end
 end
