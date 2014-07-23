@@ -142,13 +142,6 @@ class DisbursementsController < ApplicationController
     @revisions = @disbursement.disbursement_revisions
   end
 
-  def nomination_code
-    api = AosApi.new
-    n = api.find('nomination', params[:nomination_id])
-    a = api.find('appointment', n['appointmentId'])
-    render json: {code: "#{a['fileNumber']}-#{n['nominationNumber']}"}
-  end
-
   def nominations
     api = AosApi.new
     render json: api.search('nomination', params.merge({'limit' => 10})).body
@@ -186,6 +179,7 @@ class DisbursementsController < ApplicationController
     if params[:nomination_id]
       api = AosApi.new
       n = api.find('nomination', params[:nomination_id])
+      a = api.find('appointment', n['appointmentId'])
       v = Vessel.where(remote_id: n['vesselId']).first rescue nil
       params[:vessel_name] = v.name if v
       @disbursement.vessel = v
@@ -198,6 +192,7 @@ class DisbursementsController < ApplicationController
       @disbursement.port = p
       @disbursement.nomination_id = params[:nomination_id]
       @disbursement.appointment_id = n['appointmentId']
+      @disbursement.nomination_reference = "#{a['fileNumber']}-#{n['nominationNumber']}"
     end
     @disbursement.status_cd = params[:status_cd].to_i
     @disbursement.tbn = @disbursement.inquiry?

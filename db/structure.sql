@@ -306,7 +306,8 @@ CREATE TABLE disbursements (
     aos_id integer,
     type_cd integer DEFAULT 0,
     nomination_id integer,
-    appointment_id integer
+    appointment_id integer,
+    nomination_reference character varying(255)
 );
 
 
@@ -1293,4 +1294,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140620154753');
 INSERT INTO schema_migrations (version) VALUES ('20140623131845');
 
 INSERT INTO schema_migrations (version) VALUES ('20140624100705');
+
+INSERT INTO schema_migrations (version) VALUES ('20140722085112');
 

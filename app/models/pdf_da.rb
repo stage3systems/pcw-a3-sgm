@@ -227,7 +227,7 @@ Please remit funds at least two (2) days prior to vessels arrival to the followi
 <b>BSB Number: #{@revision.data['bsb_number']}</b>
 <b>A/C Number: #{@revision.data['ac_number']}</b>
 <b>A/C Name: #{@revision.data['ac_name']}</b>
-<b>Reference: #{@revision.data['vessel_name']}</b>
+<b>Reference: #{@revision.data['vessel_name']} #{@disbursement.nomination_reference}</b>
 
 Disclaimer: this is only an estimate and any additional costs incurred for this vessel will be accounted for in our Final D/A.
 

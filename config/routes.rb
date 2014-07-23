@@ -32,7 +32,6 @@ ProformaDA::Application.routes.draw do
     collection do
       match 'search' => "disbursements#search", via: [:get, :post]
       match 'nominations' => "disbursements#nominations", via: [:get, :post]
-      match 'nomination_code' => "disbursements#nomination_code", via: [:get, :post]
       match 'nomination_details' => "disbursements#nomination_details", via: [:get, :post]
     end
   end

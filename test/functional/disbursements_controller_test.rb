@@ -51,12 +51,22 @@ class DisbursementsControllerTest < ActionController::TestCase
         to_return(:status => 200, :body => {
                     data: {
                       nomination: [{
+                        appointmentId: 123,
                         vesselId: 1,
                         principalId: 1,
-                        portId: 1
+                        portId: 1,
+                        nominationNumber: 'A'
                       }]
                     }
                   }.to_json, :headers => {})
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/123").
+        to_return(:status => 200, :body => {
+          data: {
+            appointment: [{
+              fileNumber: '123456789'
+            }]
+          }
+        }.to_json, :headers => {})
     get :new, nomination_id: 123
     assert_response :success
     log_out
@@ -94,31 +104,6 @@ class DisbursementsControllerTest < ActionController::TestCase
         }.to_json, :headers => {})
     post :nomination_details, {format: :json, nomination_id: 123}
     assert_response :success
-    log_out
-  end
-
-  test "get nomination code" do
-    log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
-        to_return(:status => 200, :body => {
-          data: {
-            nomination: [{
-              nominationNumber: "A",
-              appointmentId: 123
-            }]
-          }
-        }.to_json, :headers => {})
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/123").
-        to_return(:status => 200, :body => {
-          data: {
-            appointment: [{
-              fileNumber: "987654"
-            }]
-          }
-        }.to_json, :headers => {})
-    post :nomination_code, {format: :json, nomination_id: 123}
-    assert_response :success
-    assert JSON.parse(response.body)['code'] == '987654-A'
     log_out
   end
 
