@@ -32,30 +32,9 @@ class DisbursementsController < ApplicationController
   end
 
   def search
-    port = Port.find(params[:port_id].to_i) rescue nil
-    terminal = Terminal.find(params[:terminal_id].to_i) rescue nil
-    cargo_type = CargoType.find(params[:cargo_type_id].to_i) rescue nil
-    start_date = Date.parse(params[:start_date]) rescue nil
-    end_date = Date.parse(params[:end_date]) rescue nil
-    p = {}
-    p[:port_id] = port.id if port
-    p[:terminal_id] = terminal.id if terminal
-    @disbursements = Disbursement.joins(:current_revision).where(p)
-    @disbursements = @disbursements.where('disbursements.updated_at > :start_date', start_date: start_date) if start_date
-    @disbursements = @disbursements.where('disbursements.updated_at < :end_date', end_date: end_date) if end_date
-    @disbursements = @disbursements.where("disbursement_revisions.data -> 'vessel_name' ILIKE ?", "%#{params[:vessel_name]}%") if params[:vessel_name]
-    count = @disbursements.count
-    @disbursements = @disbursements.order('updated_at DESC')
-    page = params[:page].to_i
-    @disbursements = @disbursements.offset(page*10).limit(10)
     respond_to do |format|
       format.json {
-        render json: {
-          :disbursements => @disbursements,
-          :count => count,
-          :page => page+1,
-          :params => params
-        }
+        render json: DisbursementSearch.new(params).results
       }
     end
   end
@@ -64,6 +43,7 @@ class DisbursementsController < ApplicationController
     @title = "Proforma DA"
     @disbursement = Disbursement.find_by_publication_id(params[:id])
     setup_revision
+    @document = DisbursementDocument.new(@disbursement, @revision)
     setup_view
 
     respond_to do |format|
@@ -86,9 +66,10 @@ class DisbursementsController < ApplicationController
   def print
     @disbursement = Disbursement.find(params[:id])
     @revision = @disbursement.current_revision
+    @document = DisbursementDocument.new(@disbursement, @revision)
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     response.headers["Pragma"] = "no-cache"
-    send_data PdfDA.new(@disbursement, @revision, root_url).render, type: "application/pdf",
+    send_data PdfDA.new(@document, root_url).render, type: "application/pdf",
               filename: "#{@revision.reference}#{ " - DRAFT" if @disbursement.draft? }.pdf"
   end
 
@@ -254,7 +235,7 @@ class DisbursementsController < ApplicationController
   end
 
   def add_new_items
-    next_val = fields.values.max+1 rescue 1
+    next_val = @fields.values.max+1 rescue 1
     @ctx = V8::Context.new
     @extras.each do |k|
       if not @old_extras.member? k
@@ -357,7 +338,7 @@ class DisbursementsController < ApplicationController
     Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
     file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
     unless File.exists? file
-      PdfDA.new(@disbursement, @revision, root_url).render_file file
+      PdfDA.new(@document, root_url).render_file file
     end
     send_file(file, :type => "application/pdf")
   end
@@ -367,7 +348,7 @@ class DisbursementsController < ApplicationController
     Dir.mkdir Rails.root.join('sheets') unless Dir.exists? Rails.root.join('sheets')
     file = Rails.root.join 'sheets', "#{@revision.reference}.xls"
     unless File.exists? file
-      XlsDA.new(@disbursement, @revision).write file
+      XlsDA.new(@document).write file
     end
     send_file(file, :type => "application/ms-excel")
   end

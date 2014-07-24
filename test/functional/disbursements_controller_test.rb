@@ -5,6 +5,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     @published = disbursements(:published)
     @port = ports(:newcastle)
     @vessel = vessels(:vesselone)
+    @cargo_type = cargo_types(:one)
     @company = companies(:evax)
   end
 
@@ -109,7 +110,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "search disbursements" do
     log_in :admin
-    post :search, {format: :json, port_id: 1}
+    post :search, {format: :json, port_id: 1, cargo_type_id: @cargo_type.id}
     assert_response :success
     log_out
   end

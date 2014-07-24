@@ -1,25 +1,20 @@
 Spreadsheet.client_encoding = 'UTF-8'
 
 class XlsDA < Spreadsheet::Workbook
+
   include FileReport
-  include ActionView::Helpers::NumberHelper
-  include ApplicationHelper
 
-  def initialize(disbursement, revision)
+  def initialize(document)
     super()
-    @disbursement = disbursement
-    @revision = revision
+    set_context(document)
 
-    shortcuts
     create_formats
 
     @sheet = create_worksheet
     @sheet.name = "Proforma DA"
     (0..3).each {|i| @sheet.column(i).width = 40}
 
-    r = 0
-
-    r = add_title(r)
+    r = add_title(0)
     r = add_subtitle(r)
     r = add_vessel_info(r)
     r = add_services(r)
@@ -58,22 +53,22 @@ class XlsDA < Spreadsheet::Workbook
     r+2
   end
 
+  def vessel_info_row(r, title, data)
+    @sheet.row(r).push title, data
+    @sheet.row(r).set_format(0, @head_left_fmt)
+    r+1
+  end
+
   def add_vessel_info(r)
-    @sheet.row(r).push "Vessel", @revision.data['vessel_name']
-    @sheet.row(r).set_format(0, @head_left_fmt)
-    r += 1
-    unless @revision.voyage_number.blank?
-      @sheet.row(r).push "Voyage Number", @revision.voyage_number
-      @sheet.row(r).set_format(0, @head_left_fmt)
-      r += 1
+    [
+      ["Vessel", @revision.data['vessel_name']],
+      ["Voyage Number", @revision.voyage_number],
+      ["ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"]
+    ].each do |n,v|
+      r = vessel_info_row(r, n, v)
     end
-    @sheet.row(r).push "ETA", "#{I18n.l(@revision.eta) rescue "N/A"}"
-    @sheet.row(r).set_format(0, @head_left_fmt)
-    r += 1
     ["grt", "nrt", "dwt", "loa"].each do |n|
-      @sheet.row(r).push n.upcase, @revision.data["vessel_#{n}"]
-      @sheet.row(r).set_format(0, @head_left_fmt)
-      r += 1
+      r = vessel_info_row(r, n, @revision.data["vessel_#{n}"])
     end
     r+1
   end
@@ -88,16 +83,22 @@ class XlsDA < Spreadsheet::Workbook
     r+1
   end
 
+  def get_service_row(k)
+    cols = [@document.description_for(k),
+            @document.comment_for(k),
+            @document.value_for(k)]
+    cols << @document.value_with_tax_for(k) unless @revision.tax_exempt?
+    cols
+  end
+
   def add_services(r)
     # setup services
     r = add_service_header(r)
     @revision.field_keys.each_with_index do |k, i|
-      @sheet.row(r+i).push @revision.descriptions[k],
-                           @revision.comments[k],
-                           nan_to_zero(@revision.values[k])
-      @sheet.row(r+i).push nan_to_zero(@revision.values_with_tax[k]) unless @revision.tax_exempt?
-      @sheet.row(r+i).default_format = @right_fmt
-      (0..1).each {|c| @sheet.row(r+i).set_format(c, @left_fmt) }
+      row = @sheet.row(r+i)
+      row.push *get_service_row(k)
+      row.default_format = @right_fmt
+      (0..1).each {|c| row.set_format(c, @left_fmt) }
     end
     r+@revision.field_keys.length
   end
@@ -105,15 +106,14 @@ class XlsDA < Spreadsheet::Workbook
   def add_total(r)
     @sheet.row(r).push "ESTIMATED AMOUNT",
                        "",
-                       "#{number_to_currency @total, unit: ""}"
+                       @document.total
     unless @revision.tax_exempt?
-      @sheet.row(r).push "#{number_to_currency @total_with_tax, unit: ""}"
+      @sheet.row(r).push @document.total_with_tax
     end
     @sheet.row(r).default_format = @total_fmt
     @sheet.row(r).height = 20
     @sheet.merge_cells(r, 0, r, @revision.tax_exempt? ? 1 : 2)
     r
   end
-
 
 end

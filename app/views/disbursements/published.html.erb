@@ -43,12 +43,9 @@
             <% if @revision_number %>
               <h3 style="padding-top: 1em;">PFDA REVISION VIEW</h3>
               <h4>Revision <%= @revision_number %><%= " (last revision)" if @revision_number == @disbursement.current_revision.number %></h4>
-            <% elsif @disbursement.initial? or @disbursement.inquiry? %>
-              <h3 style="padding-top: 1em;">PROFORMA DISBURSEMENT</h3>
-              <h4>Sent prior to vessel arrival</h4>
-            <% elsif @disbursement.close? %>
-              <h3 style="padding-top: 1em;">FINAL CLOSE ESTIMATE</h3>
-              <h4>Sent after vessel sailing</h4>
+            <% else %>
+              <h3 style="padding-top: 1em;"><%= @document.title %></h3>
+              <h4><%= @document.subtitle %></h4>
             <% end %>
           </div>
           <div class="col-md-6">
@@ -59,82 +56,23 @@
         <div class="row">
           <div class="col-md-6">
             <table class="table border-bottom">
+              <% @document.to_data.each do |h, v| %>
               <tr>
-                <th>To</th>
-                <td>
-                  <strong><%= @revision.data['company_name'] %></strong>
-                  <br /><%= @revision.data['company_email'] %>
-                </td>
-              </tr>
-              <tr>
-                <th>Reference</th>
-                <td><%= @revision.reference %></td>
-              </tr>
-              <tr>
-                <th>Issued</th>
-                <td><%= l @revision.updated_at.to_date %></td>
-              </tr>
-              <tr>
-                <th>Vessel</th>
-                <td>
-                  <%= @revision.data['vessel_name'] %>
-                  <small>(GRT: <%= @revision.data["vessel_grt"] %> |
-                          NRT: <%= @revision.data["vessel_nrt"] %> |
-                          DWT: <%= @revision.data["vessel_dwt"] %> |
-                          LOA: <%= @revision.data["vessel_loa"] %>)</small>
-                </td>
-              </tr>
-              <% unless @revision.voyage_number.blank? %>
-              <tr>
-                <th>Voyage Number</th>
-                <td>
-                  <%= @revision.voyage_number %>
-                </td>
+                <th><%= h %></th>
+                <td><%= format_list(v) %></td>
               </tr>
               <% end %>
-              <tr>
-                <th>Port</th>
-                <td><%= @disbursement.port.name %></td>
-              </tr>
-              <tr>
-                <th>Cargo Type</th>
-                <td><%= @revision.cargo_type.subsubtype rescue "N/A" %></td>
-              </tr>
-              <tr>
-                <th>ETA</th>
-                <td><%= l(@revision.eta) rescue "N/A" %></td>
-              </tr>
-              <tr>
-                <th>Cargo Quantity</th>
-                <td><%= @revision.cargo_qty %></td>
-              </tr>
-              <tr>
-                <th>Load Time (Hours)</th>
-                <td><%= @revision.loadtime %></td>
-              </tr>
-              <tr>
-                <th>Tugs</th>
-                <td>
-                  <%= @revision.tugs_in %> In -
-                  <%= @revision.tugs_out %> Out
-                </td>
-              </tr>
             </table>
           </div>
           <div class="col-md-1">&nbsp;</div>
           <div class="col-md-5">
             <table class="table border-bottom">
+              <% @document.from_data.each do |h, v| %>
               <tr>
-                <th>From</th>
-                <td>
-                  <strong><%= @revision.data['office_name']||@revision.data['from_name'] %></strong><br />
-                  <%= @revision.data['office_address1']||@revision.data['from_address1'] %><br />
-                  <%= @revision.data['office_address2']||@revision.data['from_address2'] %><br />
-                  <%= @revision.data['office_address3'] %>
-                  <% unless @revision.data['office_address3'].blank? %><br /><% end %>
-                  <%= @revision.data['office_email']||ProformaDA::Application.config.tenant_default_email %>
-                </td>
+                <th><%= h %></th>
+                <td><%= format_list(v) %></td>
               </tr>
+              <% end %>
             </table>
           </div>
         </div>
@@ -146,11 +84,11 @@
                 <tr>
                   <th>Item</th>
                   <th class="text-right">
-                    Amount (<%= @revision.data["currency_code"] %>)
+                    Amount (<%= @document.currency_code %>)
                   </th>
                   <% unless @revision.tax_exempt? %>
                   <th class="text-right">
-                    Amount (<%= @revision.data["currency_code"] %>)
+                    Amount (<%= @document.currency_code %>)
                     Including Taxes
                   </th>
                   <% end %>
@@ -161,23 +99,20 @@
                   <% unless @revision.disabled[f] == "1" %>
                   <tr>
                     <td>
-                      <%= @revision.descriptions[f] %>
-                      <% if @revision.comments and
-                            @revision.comments[f] and
-                            @revision.comments[f] != '' %>
+                      <%= @document.description_for(f) %>
+                      <% if @document.has_comment?(f) %>
                         &nbsp;
                         <span class="comment">
-                          <%= @revision.comments[f] %>
+                          <%= @document.comment_for(f) %>
                         </span>
                       <% end %>
                     </td>
                     <td class="text-right">
-                      <%= number_to_currency nan_to_zero(@revision.values[f]), unit: "" %>
+                      <%= @document.value_for(f) %>
                     </td>
                     <% unless @revision.tax_exempt? %>
                     <td class="text-right">
-                      <%= number_to_currency nan_to_zero(@revision.values_with_tax[f]),
-                                             unit: "" %>
+                      <%= @document.value_with_tax_for(f) %>
                     </td>
                     <% end %>
                   </tr>
@@ -188,13 +123,11 @@
                 <tr>
                   <th>Total</th>
                   <th class="text-right">
-                    <%= number_to_currency @revision.data["total"],
-                                           unit: "" %>
+                    <%= @document.total %>
                   </th>
                   <% unless @revision.tax_exempt? %>
                   <th class="text-right">
-                    <%= number_to_currency @revision.data["total_with_tax"],
-                                           unit: "" %>
+                    <%= @document.total_with_tax %>
                   </th>
                   <% end %>
                 </tr>
@@ -206,13 +139,10 @@
               </div>
               <div class="final-figure-amount">
                 <span class="amount">
-                  <%= number_to_currency(
-                        @revision.data[
-                          "total#{"_with_tax" unless @revision.tax_exempt? }"
-                        ], unit: "") %>
+                  <%= @document.amount %>
                 </span>
                 <span class="currency">
-                  <%= @revision.data["currency_code"] %>
+                  <%= @document.currency_code %>
                 </span>
               </div>
             </div>
@@ -222,53 +152,10 @@
         <hr class="published" />
         <div class="row">
           <div class="col-md-12">
-          <p>Please remit funds at least two (2) days prior to vessels arrival
-             to the following Bank Account:<p>
-          <p>
-            <strong>
-              <%= @revision.data['bank_name'] %><br />
-              <%= @revision.data['bank_address1'] %><br />
-              <%= @revision.data['bank_address2'] %><br />
-            </strong>
-          </p>
-          <p><strong>
-          SWIFT Code: <%= @revision.data['swift_code'] %><br />
-          BSB Number: <%= @revision.data['bsb_number'] %><br />
-          A/C Number: <%= @revision.data['ac_number'] %><br />
-          A/C Name: <%= @revision.data['ac_name'] %><br />
-          Reference: <%= @revision.data['vessel_name'] %> <%= @disbursement.nomination_reference %><br />
-          </strong></p>
-          <p>
-            Disclaimer: this is only an estimate and any additional costs
-            incurred for this vessel will be accounted for in our Final D/A.
-          </p>
-          <p>
-            This estimate is exclusive of Australian Freight Tax (AFT) which,
-            if applicable, shall be paid by the freight beneficiary, ie
-            owner/disponent owner.
-          </p>
-          <% if @revision.tax_exempt? %>
-          <p>
-            This estimate is exclusive of Australian Goods and Services Tax
-            (GST).  The GST portion will be claimed back from the Australian
-            Tax Office on your behalf.
-          </p>
-          <% else %>
-          <p>
-            This estimate is inclusive of Australian Goods and Services Tax
-            (GST).
-          </p>
-          <% end %>
-          <p>
-            Note: providers of towage services in Australia use their own
-            amended versions of the UK Standard Conditions for Towage and
-            other Services, copies of which are available upon request or
-            from the towage provider’s website.
-          </p>
-          <p>
+            <%= format_list(@document.funding_data) %>
+            <br />
             Download the full <%= link_to "Terms and Conditions" ,
                                           "/#{ProformaDA::Application.config.tenant_terms}" %>.
-          </p>
           </div>
         </div>
       </div>

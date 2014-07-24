@@ -1,25 +1,18 @@
 class Disbursement < ActiveRecord::Base
   default_scope -> {where("status_cd != 2")}
   attr_accessor :tbn_template
-  belongs_to :port
-  belongs_to :terminal
-  belongs_to :office
-  belongs_to :vessel
-  belongs_to :company
-  belongs_to :user
+  [:port, :terminal, :office, :vessel, :company, :user].each do |k|
+    belongs_to k
+  end
   belongs_to :current_revision, class_name: "DisbursementRevision"
   has_many :disbursement_revisions,
            -> {order 'updated_at DESC'},
            dependent: :destroy
-  validates_presence_of :type_cd
-  validates_presence_of :port_id
+  validates_presence_of :type_cd, :port_id
   validates_presence_of :company_id, unless: :inquiry?
   validates_presence_of :vessel_id, :unless => :tbn?
   validates_presence_of :dwt, :grt, :loa, :nrt, :if => :tbn?
-  validate :dwt, :numericality => true
-  validate :grt, :numericality => true
-  validate :nrt, :numericality => true
-  validate :loa, :numericality => true
+  [:dwt, :grt, :nrt, :loa].each {|k| validate k, numericality: true}
   before_create :generate_publication_id
   after_create :create_initial_revision
 
@@ -42,6 +35,43 @@ class Disbursement < ActiveRecord::Base
     ProformaDA::Application.config.aos_api_url.sub(
       '/api',
       '/disbursement/'+self.appointment_id.to_s)
+  end
+
+
+  def crystalize
+    p = port.crystalize
+    t = crystalize_terminal((p["fields"].values.map{|v|v.to_i}.max||0)+1)
+    d = {
+      "data" => [crystalize_vessel,
+                 p["data"],
+                 crystalize_company,
+                 crystalize_office,
+                 Configuration.last.crystalize,
+                 t["data"]].reduce(:merge)
+    }
+    ["fields", "descriptions", "compulsory", "codes"].each do |f|
+      d[f] = p[f].merge(t[f])
+    end
+    d
+  end
+
+  def crystalize_office
+    office.crystalize rescue {}
+  end
+
+  def crystalize_company
+    company.crystalize rescue {}
+  end
+
+  def crystalize_terminal(n)
+    terminal.crystalize(n) rescue
+        {
+          "data" => {},
+          "fields" => {},
+          "descriptions" => {},
+          "codes" => {},
+          "compulsory" => {},
+        }
   end
 
   def crystalize_vessel
@@ -72,23 +102,7 @@ class Disbursement < ActiveRecord::Base
       nxt.send("#{k}=", cur.send(k))
     end
     nxt.crystalize
-    # update the "schema"
-    cur.fields.keys.each do |k|
-      # copy custom services over
-      if k.starts_with? "EXTRAITEM"
-        nxt.fields[k] = nxt.fields.values.map {|v| v.to_i}.max+1 rescue 1
-        nxt.codes[k] = cur.codes[k]
-        nxt.descriptions[k] = cur.descriptions[k]
-        nxt.compulsory[k] = false
-      end
-      # merge legacy data
-      if nxt.fields.has_key?(k)
-        nxt.comments[k] = cur.comments[k] if cur.comments
-        nxt.disabled[k] = cur.disabled[k]
-        nxt.overriden[k] = cur.overriden[k] if cur.overriden.has_key? k
-      end
-    end
-    # compute the result
+    nxt.update_schema(cur)
     nxt.compute
     nxt
   end
@@ -113,6 +127,17 @@ class Disbursement < ActiveRecord::Base
     self.nomination_id = nomination_id
     self.appointment_id = n['appointmentId']
     self.nomination_reference = "#{a['fileNumber']}-#{n['nominationNumber']}"
+  end
+
+  def charge_base
+    {
+      "appointmentId" => appointment_id,
+      "nominationId" => nomination_id,
+      "payeeId" => company.remote_id,
+      "creatorId" => user.remote_id,
+      "estimatePdfUuid" => publication_id,
+      "status" => status.to_s.upcase,
+    }
   end
 
   private

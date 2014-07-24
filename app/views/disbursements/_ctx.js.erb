@@ -1,0 +1,35 @@
+var ctx = {
+  services: <%= revision.field_keys.to_json %>,
+  vessel: {
+    nrt: <%= revision.data["vessel_nrt"] %>,
+    grt: <%= revision.data["vessel_grt"] %>,
+    dwt: <%= revision.data["vessel_dwt"] %>,
+    loa: <%= revision.data["vessel_loa"] %>
+  },
+  estimate: {
+    eta: new Date(<%= "\"" if revision.eta %><%= revision.eta %><%= "\"" if revision.eta %>),
+    cargo_qty: <%= revision.cargo_qty || 0 %>,
+    tugs_in: <%= revision.tugs_in || 0 %>,
+    tugs_out: <%= revision.tugs_out || 0 %>,
+    loadtime: <%= revision.loadtime || 0 %>,
+    days_alongside: <%= revision.days_alongside || 0 %>
+  },
+  cargo_type: {
+    type: "<%= revision.data["cargo_type"] %>",
+    subtype: "<%= revision.data["cargo_subtype"] %>",
+    subsubtype: "<%= revision.data["cargo_subsubtype"] %>",
+    subsubsubtype: "<%= revision.data["cargo_subsubsubtype"] %>"
+  },
+  tax_rate: <%= revision.data["tax_rate"] %>,
+  data: <%= revision.data.to_json %>,
+  codes: <%= revision.codes.to_json %>,
+  parsed_codes: {},
+  values: <%= revision.values.to_json %>,
+  values_with_tax: <%= revision.values_with_tax.to_json %>,
+  comments: <%= revision.comments.to_json %>,
+  compulsory: <%= Hash[revision.compulsory.map{|k,v| [k,v=="1"]}].to_json %>,
+  disabled: <%= Hash[revision.disabled.map{|k,v| [k,v=="1"]}].to_json %>,
+  overriden: <%= revision.overriden.to_json %>,
+  computed: {},
+  computed_with_tax: {}
+};

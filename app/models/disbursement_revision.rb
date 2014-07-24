@@ -12,63 +12,46 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def compute
-    ctx = V8::Context.new
-    ctx.eval(self.context)
-    ctx.load(Rails::root.join("app/assets/javascripts/compute.js"))
-    ctx.eval("parseCodes(ctx)");
-    ctx.eval("compute(ctx)");
-    self.data["total"] = ctx.eval("ctx.total")
-    self.data["total_with_tax"] = ctx.eval("ctx.totalTaxInc")
-    self.fields.keys.each do |k|
-      self.values[k] = ctx.eval("ctx.values['#{k}']")
-      self.values_with_tax[k] = ctx.eval("ctx.values_with_tax['#{k}']")
+    ComputationContext.new(self).compute
+    flag_changes
+    self.reference = compute_reference
+    self.amount = compute_amount
+    self.currency_symbol = compute_currency_symbol
+  end
+
+  def update_schema(old)
+    old.fields.keys.each do |k|
+      import_extra_item(old, k) if k.starts_with? "EXTRAITEM"
+      merge_legacy_data(old, k) if self.fields.has_key?(k)
     end
-    self.data_will_change!
-    self.values_will_change!
-    self.values_with_tax_will_change!
-    self.reference = self.compute_reference
-    self.amount = self.compute_amount
-    self.currency_symbol = self.compute_currency_symbol
+  end
+
+  def import_extra_item(old, k)
+    self.fields[k] = self.next_index
+    self.codes[k] = old.codes[k]
+    self.descriptions[k] = old.descriptions[k]
+    self.compulsory[k] = false
+  end
+
+  def merge_legacy_data(old, k)
+    self.comments[k] = old.comments[k] if old.comments
+    self.disabled[k] = old.disabled[k]
+    self.overriden[k] = old.overriden[k] if old.overriden.has_key? k
+  end
+
+  def next_index
+    self.fields.values.map {|v| v.to_i}.max+1 rescue 1
+  end
+
+  def flag_changes
+    # work around hstore driver issue
+    data_will_change!
+    values_will_change!
+    values_with_tax_will_change!
   end
 
   def context
-    <<CTX
-    var ctx = {
-      services: #{self.field_keys.to_json},
-      vessel: {
-        nrt: #{self.data["vessel_nrt"]},
-        grt: #{self.data["vessel_grt"]},
-        dwt: #{self.data["vessel_dwt"]},
-        loa: #{self.data["vessel_loa"]}
-      },
-      estimate: {
-        eta: new Date(#{"\"" if self.eta}#{self.eta}#{"\"" if self.eta}),
-        cargo_qty: #{self.cargo_qty || 0},
-        tugs_in: #{self.tugs_in || 0},
-        tugs_out: #{self.tugs_out || 0},
-        loadtime: #{self.loadtime || 0},
-        days_alongside: #{self.days_alongside || 0}
-      },
-      cargo_type: {
-        type: "#{self.data["cargo_type"]}",
-        subtype: "#{self.data["cargo_subtype"]}",
-        subsubtype: "#{self.data["cargo_subsubtype"]}",
-        subsubsubtype: "#{self.data["cargo_subsubsubtype"]}"
-      },
-      tax_rate: #{self.data["tax_rate"]},
-      data: #{self.data.to_json},
-      codes: #{self.codes.to_json},
-      parsed_codes: {},
-      values: #{self.values.to_json},
-      values_with_tax: #{self.values_with_tax.to_json},
-      comments: #{self.comments.to_json},
-      compulsory: #{Hash[self.compulsory.map{|k,v| [k,v=="1"]}].to_json},
-      disabled: #{Hash[self.disabled.map{|k,v| [k,v=="1"]}].to_json},
-      overriden: #{self.overriden.to_json},
-      computed: {},
-      computed_with_tax: {}
-    };
-CTX
+    LightTemplate.new(['disbursements', '_ctx.js.erb'], {revision: self}).render
   end
 
   def disabled?(k)
@@ -85,31 +68,13 @@ CTX
   end
 
   def crystalize
-    p = self.disbursement.port.crystalize
-    o = self.disbursement.office.crystalize rescue {}
-    v = self.disbursement.crystalize_vessel
-    c = self.disbursement.company.crystalize rescue {}
-    conf = Configuration.last.crystalize
-    t = self.disbursement.terminal.crystalize(
-              (p["fields"].values.map{|v|v.to_i}.max||0)+1) rescue
-        {
-          "data" => {},
-          "fields" => {},
-          "descriptions" => {},
-          "codes" => {},
-          "compulsory" => {},
-        }
-    ct = self.cargo_type.crystalize rescue {}
-    self.data = v.merge(p["data"]).merge(c).merge(o).merge(conf).merge(t["data"]).merge(ct)
-    self.fields = p["fields"].merge(t["fields"])
-    self.descriptions = p["descriptions"].merge(t["descriptions"])
-    self.compulsory = p["compulsory"].merge(t["compulsory"])
-    self.codes = p["codes"].merge(t["codes"])
-    self.disabled = {}
-    self.overriden = {}
-    self.values = {}
-    self.values_with_tax = {}
-    self.comments = {}
+    d = disbursement.crystalize
+    ct = cargo_type.crystalize rescue {}
+    self.data = d["data"].merge(ct)
+    ['fields', 'descriptions',
+     'compulsory', 'codes'].each {|f| send("#{f}=", d[f]) }
+    ['disabled', 'overriden', 'values',
+     'values_with_tax', 'comments'].each {|f| send("#{f}=", {}) }
   end
 
   def previous
@@ -155,9 +120,10 @@ CTX
       charges[c['code']] = c
     end
     keys = self.fields.keys.select {|k| !self.disabled?(k) }
+    base = self.disbursement.charge_base
     keys.each do |k|
       c = charges[k]
-      j = self.charge_to_json(k)
+      j = base.merge(self.charge_to_json(k))
       api.save('disbursement', c ? c.merge(j) : j)
     end
     (charges.keys-keys).each do |k|
@@ -167,17 +133,11 @@ CTX
 
   def charge_to_json(k)
     {
-      "appointmentId" => self.disbursement.appointment_id,
-      "nominationId" => self.disbursement.nomination_id,
-      "payeeId" => self.disbursement.company.remote_id,
-      "creatorId" => self.disbursement.user.remote_id,
       "modifierId" => self.user.remote_id,
       "grossAmount" => self.values_with_tax[k],
       "netAmount" => self.values[k],
       "estimateId" => self.disbursement_id,
-      "estimatePdfUuid" => self.disbursement.publication_id,
       "description" => self.descriptions[k],
-      "status" => self.disbursement.status.to_s.upcase,
       "code" => k,
       "reference" => self.reference,
       "sort" => self.fields[k].to_i,
