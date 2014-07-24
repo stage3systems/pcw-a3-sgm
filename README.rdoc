@@ -1,7 +1,8 @@
 = ProformaDA
 
-{<img src="https://drone.io/github.com/stage3systems/proformada/status.png" alt="Build Status" />}[https://drone.io/github.com/stage3systems/proformada/latest]
 {<img src="https://codeship.io/projects/f3e47930-ee15-0131-ca90-52d081e90df9/status" alt="Codeship Status" />}[https://codeship.io/projects/26769]
+{<img src="https://codeclimate.com/repos/53c5578669568074ac0069a9/badges/bdc716516bcd1d87baee/gpa.png" />}[https://codeclimate.com/repos/53c5578669568074ac0069a9/feed]
+{<img src="https://codeclimate.com/repos/53c5578669568074ac0069a9/badges/bdc716516bcd1d87baee/coverage.png" />}[https://codeclimate.com/repos/53c5578669568074ac0069a9/feed]
 
 A flexible system for proforma disbursements estimates.
 
