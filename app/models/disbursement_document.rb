@@ -4,7 +4,7 @@ class DisbursementDocument
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
-    @revision = revision || disbursement.current_revision
+    @revision = revision || disbursement.current_revision rescue nil
   end
 
   def title
