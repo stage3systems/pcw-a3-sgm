@@ -180,14 +180,12 @@ class DisbursementsController < ApplicationController
       @revision.number = 1
     else
       @revision = @disbursement.next_revision
+      @revision.user = current_user
     end
+    save_revision
     respond_to do |format|
-      if save_revision
-        format.html { redirect_to disbursements_url,
-                      notice: 'Disbursement was successfully updated.' }
-      else
-        format.html { render action: "edit" }
-      end
+      format.html { redirect_to disbursements_url,
+                    notice: 'Disbursement was successfully updated.' }
     end
   end
 
@@ -255,7 +253,6 @@ class DisbursementsController < ApplicationController
 
   def compute_and_save_revision
     @revision.compute
-    @revision.user = current_user
     DisbursementRevision.hstore_fields.each do |f|
       @revision.send("#{f}_will_change!")
     end
@@ -281,7 +278,7 @@ class DisbursementsController < ApplicationController
   end
 
   def save_revision
-    return false unless @revision.update_attributes(disbursement_revision_params)
+    @revision.assign_attributes(disbursement_revision_params)
     handle_extra_items
     reindex_field_keys
     add_new_items

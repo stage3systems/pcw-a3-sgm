@@ -9,6 +9,19 @@ class DisbursementsControllerTest < ActionController::TestCase
     @company = companies(:evax)
   end
 
+  def aos_result(entity, value)
+    {
+      :status => 200, :body => {
+        data: {
+          count: value.length,
+          page: 0,
+          entity => value
+        }
+      }.to_json,
+      :headers => {}
+    }
+  end
+
   test "anonymous users must login" do
     get :index
     assert_response :redirect
@@ -49,25 +62,15 @@ class DisbursementsControllerTest < ActionController::TestCase
   test "new from nomination_id" do
     log_in :operator
     stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
-        to_return(:status => 200, :body => {
-                    data: {
-                      nomination: [{
+        to_return(aos_result(:nomination, [{
                         appointmentId: 123,
                         vesselId: 1,
                         principalId: 1,
                         portId: 1,
                         nominationNumber: 'A'
-                      }]
-                    }
-                  }.to_json, :headers => {})
+                      }]))
     stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/123").
-        to_return(:status => 200, :body => {
-          data: {
-            appointment: [{
-              fileNumber: '123456789'
-            }]
-          }
-        }.to_json, :headers => {})
+        to_return(aos_result(:appointment, [{fileNumber: '123456789'}]))
     get :new, nomination_id: 123
     assert_response :success
     log_out
@@ -92,17 +95,12 @@ class DisbursementsControllerTest < ActionController::TestCase
   test "get nomination details" do
     log_in :operator
     stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
-        to_return(:status => 200, :body => {
-          data: {
-            count: 1,
-            page: 0,
-            nomination: [{
-              portId: 1,
-              vesselId: 1,
-              principalId: 1
-            }]
-          }
-        }.to_json, :headers => {})
+        to_return(aos_result(
+                  :nomination, [{
+                    portId: 1,
+                    vesselId: 1,
+                    principalId: 1
+                  }]))
     post :nomination_details, {format: :json, nomination_id: 123}
     assert_response :success
     log_out
@@ -187,16 +185,15 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_out
   end
 
+
+  def stub_no_disbursement
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
+        to_return(aos_result(:disbursement, []))
+  end
+
   test "disbursement lifecycle" do
     log_in :office_operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
-        to_return(:status => 200, :body => {
-          data: {
-            count: 0,
-            page: 0,
-            disbursement: []
-          }
-        }.to_json, :headers => {})
+    stub = stub_no_disbursement
     post :create, disbursement: {
       type_cd: 0,
       port_id: @port.id,
@@ -215,17 +212,71 @@ class DisbursementsControllerTest < ActionController::TestCase
       tugs_out: 2
     }
     assert_redirected_to disbursements_path
+    # update some values
     post :update, id: d.id, disbursement_revision: {
       cargo_qty: 20000,
       loadtime: 2.0,
-      tax_exempt: false,
+      tax_exempt: true,
       tugs_in: 2,
       tugs_out: 2
     }
     assert_redirected_to disbursements_path
-    get :published, id: @published.publication_id
+    # add disabled extra field
+    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"vesselone - Newcastle - 25 JUL 2014 - DRAFT - REV. 3\",\"sort\":1,\"taxApplies\":false,\"comment\":\"Comment\"}",
+                    :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
+    post :update, id: d.id,
+      disbursement_revision: {
+        cargo_qty: 20000,
+        loadtime: 2.0,
+        tax_exempt: true,
+        tugs_in: 2,
+        tugs_out: 2
+      },
+      value_EXTRAITEM123456: 0.0,
+      overriden_EXTRAITEM123456: 1000.0,
+      description_EXTRAITEM123456: "New Item",
+      code_EXTRAITEM123456: "{taxApplies: false}",
+      comment_EXTRAITEM123456: "Comment",
+      disabled_EXTRAITEM123456: "1"
+    assert_redirected_to disbursements_path
+    # enable extra field
+    post :update, id: d.id,
+      disbursement_revision: {
+        cargo_qty: 20000,
+        loadtime: 2.0,
+        tax_exempt: true,
+        tugs_in: 2,
+        tugs_out: 2
+      },
+      value_EXTRAITEM123456: 0.0,
+      overriden_EXTRAITEM123456: 1000.0,
+      description_EXTRAITEM123456: "New Item",
+      code_EXTRAITEM123456: "{taxApplies: false}",
+      comment_EXTRAITEM123456: "Comment",
+      disabled_EXTRAITEM123456: "1"
+    assert_redirected_to disbursements_path
+    # remove extra field
+    remove_request_stub stub
+    stub = stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
+        to_return(aos_result(:disbursement, [{id: 1, code: "EXTRAITEM123456"}]))
+
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/delete/disbursement/1").
+        to_return(:status => 200, :body => "", :headers => {})
+    post :update, id: d.id,
+      disbursement_revision: {
+        cargo_qty: 20000,
+        loadtime: 2.0,
+        tax_exempt: true,
+        tugs_in: 2,
+        tugs_out: 2
+      }
+    assert_redirected_to disbursements_path
+    # check view
+    get :published, id: d.publication_id
     assert_response :success
-    get :published, id: @published.publication_id, revision_number: 1
+    get :published, id: d.publication_id, revision_number: 1
     assert_response :success
     delete :destroy, id: d.id
     log_out

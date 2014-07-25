@@ -26,6 +26,7 @@ operator:
 
 office_operator:
   uid: officeop
+  remote_id: 987
   first_name: Office
   last_name: Operator
   admin: false
