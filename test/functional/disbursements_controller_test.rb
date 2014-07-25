@@ -119,25 +119,35 @@ class DisbursementsControllerTest < ActionController::TestCase
     # unknown id should display page
     get :published, id: "321654987"
     assert_response :success
-    # Page
-    get :published, id: @published.publication_id
-    assert_response :success
-    # PDF
-    file = Rails.root.join 'pdfs', "#{@published.current_revision.reference}.pdf"
-    File.delete(file) rescue nil?
-    get :published, {format: :pdf, id: @published.publication_id}
-    assert_response :success
-    assert File.exists? file
-    get :published, {format: :pdf, id: @published.publication_id}
-    assert_response :success
-    # XLS
-    file = Rails.root.join 'sheets', "#{@published.current_revision.reference}.xls"
-    File.delete(file) rescue nil?
-    get :published, {format: :xls, id: @published.publication_id}
-    assert_response :success
-    assert File.exists? file
-    get :published, {format: :xls, id: @published.publication_id}
-    assert_response :success
+    ["inquiry", "draft", "initial", "close"].each do |s|
+      [:generic, :generic_tax_exempt].each do |d|
+        @da = disbursements(d)
+        # set status
+        log_in :operator
+        post :status, {id: @da.id, status: s}
+        assert_response :redirect
+        log_out
+        # Page
+        get :published, id: @da.publication_id
+        assert_response :success
+        # PDF
+        file = Rails.root.join 'pdfs', "#{@da.current_revision.reference}.pdf"
+        File.delete(file) rescue nil?
+        get :published, {format: :pdf, id: @da.publication_id}
+        assert_response :success
+        assert File.exists? file
+        get :published, {format: :pdf, id: @da.publication_id}
+        assert_response :success
+        # XLS
+        file = Rails.root.join 'sheets', "#{@da.current_revision.reference}.xls"
+        File.delete(file) rescue nil?
+        get :published, {format: :xls, id: @da.publication_id}
+        assert_response :success
+        assert File.exists? file
+        get :published, {format: :xls, id: @da.publication_id}
+        assert_response :success
+      end
+    end
   end
 
   test "edit and update disbursement" do

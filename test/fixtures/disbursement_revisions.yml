@@ -41,3 +41,53 @@ revisiontwo:
   reference: reference2
   cargo_type: one
   voyage_number: voyage123
+
+generic_revision:
+  disbursement: generic
+  eta: <%= Date.today.to_s(:db) %>
+  user: admin
+  data: {}
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  compulsory: {}
+  overriden: {}
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference3
+  cargo_type: one
+  voyage_number: voyage123
+
+generic_revision_tax_exempt:
+  disbursement: generic_tax_exempt
+  eta: <%= Date.today.to_s(:db) %>
+  user: admin
+  data: {}
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  compulsory: {}
+  overriden: {}
+  tax_exempt: true
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference3
+  cargo_type: one
+  voyage_number: voyage123

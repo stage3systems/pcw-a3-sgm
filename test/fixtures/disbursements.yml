@@ -27,3 +27,34 @@ published:
   nrt: 9.99
   dwt: 9.99
   loa: 9.99
+
+generic:
+  port: :brisbane
+  user: admin
+  terminal: coal
+  vessel: :vesseltwo
+  company: :evax
+  status_cd: 1
+  publication_id: id3
+  current_revision: generic_revision
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
+generic_tax_exempt:
+  port: :brisbane
+  user: admin
+  terminal: coal
+  vessel: :vesseltwo
+  company: :evax
+  status_cd: 1
+  publication_id: id4
+  current_revision: generic_revision_tax_exempt
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
