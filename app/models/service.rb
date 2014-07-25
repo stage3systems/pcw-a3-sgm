@@ -53,4 +53,8 @@ CTX
       errors.add(:code, "Runtime Error: #{e.message}")
     end
   end
+
+  def name
+    item
+  end
 end

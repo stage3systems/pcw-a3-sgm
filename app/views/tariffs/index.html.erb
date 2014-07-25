@@ -25,7 +25,7 @@
       </thead>
 
       <tbody>
-        <% @tariffs.each do |tariff| %>
+        <% @instances.each do |tariff| %>
         <tr>
           <td><%= link_to tariff.name, @terminal.nil? ? port_tariff_url(@port, tariff) : port_terminal_tariff_url(@port, @terminal, tariff) %></td>
 

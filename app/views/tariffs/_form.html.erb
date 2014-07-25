@@ -1,4 +1,4 @@
-<%= simple_form_for(@terminal.nil? ? [@port, @tariff] : [@port, @terminal, @tariff]) do |f| %>
+<%= simple_form_for(@terminal.nil? ? [@port, @instance] : [@port, @terminal, @instance]) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">

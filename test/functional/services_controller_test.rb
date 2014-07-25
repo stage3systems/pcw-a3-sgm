@@ -19,13 +19,13 @@ class ServicesControllerTest < ActionController::TestCase
   test "should get index" do
     get :index, port_id: @port.id
     assert_response :success
-    assert_not_nil assigns(:services)
+    assert_not_nil assigns(:instances)
   end
 
   test "should get index for teminal level services" do
     get :index, port_id: @port.id, terminal_id: @terminal.id
     assert_response :success
-    assert_not_nil assigns(:services)
+    assert_not_nil assigns(:instances)
   end
 
   test "should get new" do
@@ -45,7 +45,7 @@ class ServicesControllerTest < ActionController::TestCase
       code: '{compute: function(ctx) {return 1000;},taxApplies: false}',
               item: 'Test', key: 'TST',
               row_order: 0, compulsory: false}
-    ps1 = assigns(:service)
+    ps1 = assigns(:instance)
     assert_redirected_to port_services_path(@port)
     # view first service
     get :show, port_id: @port.id, id: ps1.id
@@ -56,7 +56,7 @@ class ServicesControllerTest < ActionController::TestCase
       item: 'Test 2', key: 'TST2',
       row_order: 1, compulsory: false
     }
-    ps2 = assigns(:service)
+    ps2 = assigns(:instance)
     assert_redirected_to port_services_path(@port)
     # view second service
     get :show, port_id: @port.id, id: ps2.id
@@ -81,12 +81,12 @@ class ServicesControllerTest < ActionController::TestCase
     assert_redirected_to port_services_path(@port)
     # reorder resources
     get :index, port_id: @port.id
-    services = assigns(:services)
+    services = assigns(:instances)
     assert_equal services[0], ps1
     assert_equal services[1], ps2
     post :sort, port_id: @port.id, id: ps1.id, row_order_position: 10
     get :index, port_id: @port.id
-    services = assigns(:services)
+    services = assigns(:instances)
     assert_equal services[0], ps2
     assert_equal services[1], ps1
     # delete service
@@ -108,7 +108,7 @@ class ServicesControllerTest < ActionController::TestCase
                     row_order: 0,
                     compulsory: false
                   }
-    ts1 = assigns(:service)
+    ts1 = assigns(:instance)
     assert_redirected_to port_terminal_services_path(@port, @terminal)
     # view first service
     get :show, port_id: @port.id, terminal_id: @terminal.id, id: ts1.id
@@ -121,7 +121,7 @@ class ServicesControllerTest < ActionController::TestCase
                     item: 'Test 2', key: 'TST2',
                     row_order: 1, compulsory: false
                   }
-    ts2 = assigns(:service)
+    ts2 = assigns(:instance)
     assert_redirected_to port_terminal_services_path(@port, @terminal)
     # view second service
     get :show, port_id: @port.id, terminal_id: @terminal.id, id: ts2.id
@@ -146,13 +146,13 @@ class ServicesControllerTest < ActionController::TestCase
     assert_redirected_to port_terminal_services_path(@port, @terminal)
     # reorder resources
     get :index, port_id: @port.id, terminal_id: @terminal.id
-    services = assigns(:services)
+    services = assigns(:instances)
     assert_equal services[0], ts1
     assert_equal services[1], ts2
     post :sort, port_id: @port.id, terminal_id: @terminal.id,
                 id: ts1.id, row_order_position: 10
     get :index, port_id: @port.id, terminal_id: @terminal.id
-    services = assigns(:services)
+    services = assigns(:instances)
     assert_equal services[0], ts2
     assert_equal services[1], ts1
     # delete service

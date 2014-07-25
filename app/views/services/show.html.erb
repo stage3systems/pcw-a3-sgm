@@ -1,9 +1,9 @@
 <% content_for :navbar_buttons do %>
   <% if @terminal %>
-    <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @service), :class => "btn btn-primary btn-sm" %>
+    <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @instance), :class => "btn btn-primary btn-sm" %>
     <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => "btn btn-default btn-sm" %>
   <% else %>
-    <%= link_to 'Edit', edit_port_service_path(@port, @service), :class => "btn btn-primary btn-sm" %>
+    <%= link_to 'Edit', edit_port_service_path(@port, @instance), :class => "btn btn-primary btn-sm" %>
     <%= link_to 'Back', port_services_path(@port), :class => "btn btn-default btn-sm" %>
   <% end %>
 <% end %>
@@ -11,16 +11,16 @@
   <div class="col-md-12">
     <h2 class="title">Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
     <% ['item', 'key'].each do |k| %>
-      <p><strong><%= k.capitalize %>:</strong> <%= @service.send(k) %></p>
+      <p><strong><%= k.capitalize %>:</strong> <%= @instance.send(k) %></p>
     <% end %>
-    <p><strong>Compulsory:</strong> <%= @service.compulsory ? 'Yes' : 'No' %></p>
-    <p><strong>Reference Document:</strong> <%= link_to(File.basename(@service.document.url), @service.document.url) rescue 'N/A' %></p>
+    <p><strong>Compulsory:</strong> <%= @instance.compulsory ? 'Yes' : 'No' %></p>
+    <p><strong>Reference Document:</strong> <%= link_to(File.basename(@instance.document.url), @instance.document.url) rescue 'N/A' %></p>
 
-    <p><strong>Created By:</strong> <%= @service.user.full_name rescue 'N/A' %></p>
-    <p><strong>Created On:</strong> <%= l @service.created_at %></p>
+    <p><strong>Created By:</strong> <%= @instance.user.full_name rescue 'N/A' %></p>
+    <p><strong>Created On:</strong> <%= l @instance.created_at %></p>
     <p><strong>Code:</strong></p>
     <div style="height: 440px;">
-      <div id="code" data-ace-mode="javascript"><%= @service.code %></div>
+      <div id="code" data-ace-mode="javascript"><%= @instance.code %></div>
     </div>
     <div class="clearfix"></div>
     <p><strong>Change Log:</strong></p>
@@ -34,7 +34,7 @@
         </tr>
       </thead>
       <tbody>
-      <% @service.service_updates.order('created_at DESC').each do |u| %>
+      <% @instance.service_updates.order('created_at DESC').each do |u| %>
         <tr>
           <td><%= l u.created_at %></td>
           <td><%= u.user.full_name rescue 'N/A' %></td>

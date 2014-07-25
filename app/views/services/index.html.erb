@@ -28,7 +28,7 @@
       </thead>
 
       <tbody>
-        <% @services.each do |service| %>
+        <% @instances.each do |service| %>
         <tr class="item" data-item_id="<%= service.id %>">
           <td><%= link_to service.item, @terminal.nil? ? port_service_url(@port, service) : port_terminal_service_url(@port, @terminal, service) %></td>
           <td><%= service.key %></td>
