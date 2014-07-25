@@ -2,8 +2,8 @@ class DisbursementSearch
   def initialize(params)
     @params = params
     @disbursements = Disbursement.joins(:current_revision)
-    filter_port
-    filter_terminal
+    filter_association(Port)
+    filter_association(Terminal)
     filter_cargo_type
     filter_dates
     filter_vessel_name
@@ -23,14 +23,10 @@ class DisbursementSearch
   end
 
   private
-  def filter_port
-    port = Port.find(@params[:port_id].to_i) rescue nil
-    @disbursements = @disbursements.where(port_id: port.id) if port
-  end
-
-  def filter_terminal
-    terminal = Terminal.find(@params[:terminal_id].to_i) rescue nil
-    @disbursements = @disbursements.where(terminal_id: terminal.id) if terminal
+  def filter_association(kls)
+    id = "#{kls.name.downcase}_id".to_sym
+    i = kls.find(@params[id].to_i) rescue nil
+    @disbursements = @disbursements.where(id => i.id) if i
   end
 
   def filter_cargo_type
