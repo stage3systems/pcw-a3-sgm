@@ -116,6 +116,9 @@ class DisbursementsControllerTest < ActionController::TestCase
   end
 
   test "view published disbursements" do
+    # unknown id should display page
+    get :published, id: "321654987"
+    assert_response :success
     # Page
     get :published, id: @published.publication_id
     assert_response :success
