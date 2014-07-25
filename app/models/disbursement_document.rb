@@ -59,7 +59,7 @@ class DisbursementDocument
 
   def office_address_lines
     lines = (1..3).map do |i|
-      @revision.data["from_address#{i}"] || @revision.data["office_address#{i}"]
+      @revision.data["office_address#{i}"] || @revision.data["from_address#{i}"]
     end
     lines.compact
   end
