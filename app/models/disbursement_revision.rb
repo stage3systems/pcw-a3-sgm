@@ -93,14 +93,6 @@ class DisbursementRevision < ActiveRecord::Base
     self.data[self.tax_exempt? ? 'total' : 'total_with_tax']
   end
 
-  def email
-    e = self.data['office_email']
-    e = self.disbursement.office.email rescue nil if e.blank?
-    e = self.user.email rescue nil if e.blank?
-    e = ProformaDA::Application.config.tenant_default_email if e.blank?
-    e
-  end
-
   def compute_reference
     ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number.gsub('/', '') unless self.voyage_number.blank?} - #{(self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase} - #{self.disbursement.status.upcase rescue "DELETED"} - REV. #{self.number}"
     ref.gsub('/', '_')
