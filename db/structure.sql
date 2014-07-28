@@ -89,7 +89,9 @@ CREATE TABLE companies (
     email character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    remote_id integer
+    remote_id integer,
+    prefunding_type character varying(255),
+    prefunding_percent integer
 );
 
 
@@ -1296,4 +1298,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140623131845');
 INSERT INTO schema_migrations (version) VALUES ('20140624100705');
 
 INSERT INTO schema_migrations (version) VALUES ('20140722085112');
+
+INSERT INTO schema_migrations (version) VALUES ('20140728084202');
 

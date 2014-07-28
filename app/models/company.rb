@@ -5,16 +5,18 @@ class Company < ActiveRecord::Base
 
   extend Syncable
 
+  FIELDS=['name', 'email', 'prefunding_type', 'prefunding_percent']
+
   def crystalize
-    {
-      "company_name" => name,
-      "company_email" => email
-    }
+    FIELDS.inject({}) {|data,f| data["company_#{f}"] = self.send(f); data }
   end
 
   def update_from_json(data)
     self.remote_id = data['id']
-    self.name = data['name']
-    self.email = data['email'] if data['email']
+    FIELDS.each do |f|
+      d = data[f.camelize(:lower)]
+      send("#{f}=", d) if d
+    end
   end
+
 end

@@ -158,8 +158,7 @@ class DisbursementDocument
   private
   def banking_header
     [
-      "Please remit funds at least two (2) days prior to "+
-      "vessels arrival to the following Bank Account:",
+      FundingAgreement.new(self).conditions,
       ""
     ]
   end

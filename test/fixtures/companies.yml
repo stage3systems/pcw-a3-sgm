@@ -8,3 +8,28 @@ evax:
   remote_id: 321
   name: Evax S.A.R.L.
   email: contact@evax.fr
+
+unset_funding:
+  name: Unset funding
+
+no_funding:
+  name: No Funding
+  prefunding_type: NONE
+
+percent_on_close:
+  name: Percent on Close
+  prefunding_type: PERCENT_ON_CLOSE
+
+percent_on_berth:
+  name: Percent on Berth
+  prefunding_type: PERCENT_ON_BERTH
+
+percent_on_berth_100:
+  name: 100% Percent on Berth
+  prefunding_type: PERCENT_ON_BERTH
+  prefunding_percent: 100
+
+less_agency_fee_on_berth:
+  name: Less Agency Fee on Berth
+  prefunding_type: LESS_AGENCY_FEE_ON_BERTH
+
