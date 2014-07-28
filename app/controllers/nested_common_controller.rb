@@ -1,4 +1,4 @@
-class NestedCommonController < ApplicationController
+class NestedCommonController < BaseController
   before_filter :authenticate_user!
   before_filter :ensure_admin
 
@@ -55,7 +55,7 @@ class NestedCommonController < ApplicationController
     port_breadcrumb
     add_breadcrumb "New #{model_name}", new_url
 
-    form_response(@instance.save, "created", "new")
+    form_response(@instance.save, parent_url, "created", "new")
   end
 
   def update
@@ -64,7 +64,8 @@ class NestedCommonController < ApplicationController
     parse_params
     @instance.user = current_user if @instance.user.nil?
 
-    form_response(@instance.update_attributes(safe_params), "updated", "edit")
+    form_response(@instance.update_attributes(safe_params),
+                  parent_url, "updated", "edit")
   end
 
   def destroy
@@ -86,9 +87,6 @@ class NestedCommonController < ApplicationController
   end
 
   def parse_params
-  end
-
-  def successful_save
   end
 
   def new_instance
@@ -154,20 +152,5 @@ class NestedCommonController < ApplicationController
     @terminal = Terminal.find_by_id(params[:terminal_id])
   end
 
-  def form_response(success, operation, error_action)
-    respond_to do |format|
-      if success
-        successful_save
-        format.html {
-          redirect_to parent_url,
-                      notice: "#{model_name} was successfully #{operation}."
-        }
-        format.json { render json: @instance, status: :created, location: @instance }
-      else
-        format.html { render action: error_action }
-        format.json { render json: @instance.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
 end

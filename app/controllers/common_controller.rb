@@ -1,10 +1,10 @@
-class CommonController < ApplicationController
+class CommonController < BaseController
 
   def show
-    @title = "View #{model.name}"
+    @title = "View #{model_name}"
     @instance = model.find(params[:id])
     add_breadcrumb "#{@instance.name}",
-                   send("#{model.name.downcase}_url", @instance)
+                   send("#{model_name.downcase}_url", @instance)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -13,10 +13,10 @@ class CommonController < ApplicationController
   end
 
   def new
-    @title = "New #{model.name}"
+    @title = "New #{model_name}"
     @instance = model.new
-    add_breadcrumb "New #{model.name}",
-                   send("new_#{model.name.downcase}_url")
+    add_breadcrumb "New #{model_name}",
+                   send("new_#{model_name.downcase}_url")
 
     respond_to do |format|
       format.html # new.html.erb
@@ -25,46 +25,28 @@ class CommonController < ApplicationController
   end
 
   def create
-    @title = "New #{model.name}"
+    @title = "New #{model_name}"
     @instance = model.new(safe_params)
-    add_breadcrumb "New #{model.name}", send("new_#{model.name.downcase}_url")
+    add_breadcrumb "New #{model_name}", send("new_#{model_name.downcase}_url")
 
-    respond_to do |format|
-      if @instance.save
-        format.html {
-          redirect_to @instance,
-                      notice: "#{model.name} was successfully created." }
-        format.json { render json: @instance, status: :created, location: @instance }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @instance.errors, status: :unprocessable_entity }
-      end
-    end
+    form_response(@instance.save, @instance, "created", "new")
   end
 
   def update
-    @title = "Edit #{model.name}"
+    @title = "Edit #{model_name}"
     @instance = model.find(params[:id])
     add_breadcrumb "Edit #{@instance.name}",
-                    send("edit_#{model.name.downcase}_url", @instance)
+                    send("edit_#{model_name.downcase}_url", @instance)
 
-    respond_to do |format|
-      if @instance.update_attributes(safe_params)
-        format.html { redirect_to @instance,
-                                  notice: "#{model.name} was successfully updated." }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @instance.errors, status: :unprocessable_entity }
-      end
-    end
+    form_response(@instance.update_attributes(safe_params),
+                  @instance, "updated", "edit")
   end
 
   def edit
-    @title = "Edit #{model.name}"
+    @title = "Edit #{model_name}"
     @instance = model.find(params[:id])
     add_breadcrumb "Edit #{@instance.name}",
-                    send("edit_#{model.name.downcase}_url", @instance)
+                    send("edit_#{model_name.downcase}_url", @instance)
   end
 
   def destroy
@@ -72,9 +54,8 @@ class CommonController < ApplicationController
     @instance.destroy
 
     respond_to do |format|
-      format.html { redirect_to send("#{model.name.downcase.pluralize}_url") }
+      format.html { redirect_to send("#{model_name.downcase.pluralize}_url") }
       format.json { head :no_content }
     end
   end
-
 end
