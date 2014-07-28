@@ -1,4 +1,4 @@
-class TerminalsController < ApplicationController
+class TerminalsController < BaseController
   before_filter :authenticate_user!
   before_filter :ensure_admin, :except => [:index]
 
@@ -62,15 +62,8 @@ class TerminalsController < ApplicationController
     port_breadcrumb
     add_breadcrumb "New Terminal", new_port_terminal_url(@port)
 
-    respond_to do |format|
-      if @terminal.save
-        format.html { redirect_to [@port, @terminal], notice: 'Terminal was successfully created.' }
-        format.json { render json: @terminal, status: :created, location: @terminal }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @terminal.errors, status: :unprocessable_entity }
-      end
-    end
+    @instance = @terminal
+    form_response(@instance.save, [@port, @instance], "created", "new")
   end
 
   # PUT /terminals/1
@@ -81,15 +74,8 @@ class TerminalsController < ApplicationController
     port_breadcrumb
     add_breadcrumb "Edit #{@terminal.name}", edit_port_terminal_url(@port, @terminal)
 
-    respond_to do |format|
-      if @terminal.update_attributes(params[:terminal])
-        format.html { redirect_to [@port, @terminal], notice: 'Terminal was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @terminal.errors, status: :unprocessable_entity }
-      end
-    end
+    @instance = @terminal
+    form_response(@instance.save, [@port, @instance], "updated", "edit")
   end
 
   # DELETE /terminals/1
@@ -104,6 +90,7 @@ class TerminalsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
   private
   def port_breadcrumb
     add_breadcrumb "Ports", ports_url
