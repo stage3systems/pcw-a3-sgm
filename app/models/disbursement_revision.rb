@@ -94,8 +94,13 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def compute_reference
-    ref = "#{self.data['vessel_name']} - #{self.data['port_name']}#{ " - "+self.data['terminal_name'] if self.data.has_key? 'terminal_name' }#{ " - "+self.voyage_number.gsub('/', '') unless self.voyage_number.blank?} - #{(self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase} - #{self.disbursement.status.upcase rescue "DELETED"} - REV. #{self.number}"
-    ref.gsub('/', '_')
+    d = self.data
+    elems = (['vessel_name', 'port_name', 'terminal_name'].map {|e| d[e]}).compact
+    elems << self.voyage_number unless self.voyage_number.blank?
+    elems << self.date_updated
+    elems << self.disbursement_status
+    elems << "REV. #{self.number}"
+    elems.join(' - ').gsub('/', '_')
   end
 
   def self.hstore_fields
@@ -104,23 +109,9 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def sync_with_aos
-    return unless self.disbursement.nomination_id
-    api = AosApi.new
-    charges = {}
-    api.each('disbursement',
-             {nominationId: self.disbursement.nomination_id}) do |c|
-      charges[c['code']] = c
-    end
-    keys = self.fields.keys.select {|k| !self.disabled?(k) }
-    base = self.disbursement.charge_base
-    keys.each do |k|
-      c = charges[k]
-      j = base.merge(self.charge_to_json(k))
-      api.save('disbursement', c ? c.merge(j) : j)
-    end
-    (charges.keys-keys).each do |k|
-      api.delete('disbursement', charges[k]['id'])
-    end
+    aos_nom = AosNomination.from_aos_id(self.disbursement.nomination_id)
+    return unless aos_nom
+    aos_nom.sync_revision(self)
   end
 
   def charge_to_json(k)
@@ -142,4 +133,15 @@ class DisbursementRevision < ActiveRecord::Base
     self.delay.sync_with_aos
   end
 
+  def date_updated
+    (self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase
+  end
+
+  def disbursement_status
+    self.disbursement.status.upcase rescue "DELETED"
+  end
+
+  def active_keys
+    self.fields.keys.select {|k| !self.disabled?(k) }
+  end
 end

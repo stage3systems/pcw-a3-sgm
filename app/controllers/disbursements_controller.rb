@@ -101,17 +101,8 @@ class DisbursementsController < ApplicationController
   end
 
   def nomination_details
-    api = AosApi.new
-    n = api.find('nomination', params[:nomination_id])
-    a = api.find('appointment', n['appointmentId'])
-    p = Port.where(remote_id: n['portId']).first if n['portId']
-    c = Company.where(remote_id: n['principalId']).first if n['principalId']
-    v = Vessel.where(remote_id: n['vesselId']).first if n['vesselId']
-    r = {nomination_reference: "#{a['fileNumber']}-#{n['nominationNumber']}"}
-    r.merge!({port_id: p.id, port_name: p.name}) if p
-    r.merge!({company_id: c.id, company_name: c.name}) if c
-    r.merge!({vessel_id: v.id, vessel_name: v.name}) if v
-    render json: r
+    aos_nom = AosNomination.from_aos_id(params[:nomination_id])
+    render json: aos_nom.to_json
   end
 
   # GET /disbursements/1
