@@ -180,8 +180,8 @@ class DisbursementsController < ApplicationController
       @revision.number = 1
     else
       @revision = @disbursement.next_revision
-      @revision.user = current_user
     end
+    @revision.user = current_user
     save_revision
     respond_to do |format|
       format.html { redirect_to disbursements_url,
