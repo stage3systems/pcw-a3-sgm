@@ -97,10 +97,15 @@ class DisbursementsControllerTest < ActionController::TestCase
     stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
         to_return(aos_result(
                   :nomination, [{
+                    appointmentId: 1234,
                     portId: 1,
                     vesselId: 1,
-                    principalId: 1
+                    principalId: 1,
+                    nominationNumber: 'A'
                   }]))
+
+    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/1234").
+        to_return(aos_result(:appointment, [{fileNumber: "123456789"}]))
     post :nomination_details, {format: :json, nomination_id: 123}
     assert_response :success
     log_out

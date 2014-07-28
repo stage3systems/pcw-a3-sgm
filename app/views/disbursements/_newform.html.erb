@@ -56,6 +56,9 @@
   <input type="hidden" id="disbursement_appointment_id"
          name="disbursement[appointment_id]"
          value="<%= @disbursement.appointment_id %>" />
+  <input type="hidden" id="disbursement_nomination_reference"
+         name="disbursement[nomination_reference]"
+         value="<%= @disbursement.nomination_reference %>" />
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
       <%= f.button :submit, 'Next' %>
@@ -118,6 +121,8 @@
           $("input#disbursement_company_id").val(null);
           $("input#company_name").val("");
         }
+        $("input#disbursement_nomination_reference")
+            .val(d.nomination_reference);
       }
     });
   };
