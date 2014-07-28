@@ -31,12 +31,12 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_in :admin
     get :index
     assert_response :success
-    assert_not_nil assigns(:disbursements)
+    assert_not_nil assigns(:disbursements_grid)
     log_out
     log_in :operator
     get :index
     assert_response :success
-    assert_not_nil assigns(:disbursements)
+    assert_not_nil assigns(:disbursements_grid)
     log_out
   end
 

@@ -7,27 +7,10 @@ class DisbursementsController < ApplicationController
   # GET /disbursements.json
   def index
     @title = "Disbursements"
-    includes = []
-    joins = [:port, :current_revision]
-    ((params["grid"]["f"]["companies.name"] rescue false) ? joins : includes) << :company
-    ((params["grid"]["f"]["vessels.name"] rescue false) ? joins : includes) << :vessel
-    @disbursements_grid = initialize_grid(Disbursement.where(
-          port_id: current_user.authorized_ports.pluck(:id)
-        ),
-        joins: joins,
-        include: includes,
-        order: 'disbursement_revisions.updated_at',
-        order_direction: 'desc',
-        custom_order: {
-          'disbursements.current_revision_id' => 'current_revision.updated_at',
-          'disbursements.port_id' => 'port.name',
-          'disbursements.company_id' => 'company.name'
-        },
-        per_page: 10)
-    @disbursements = []
+    grid = DisbursementsGrid.new(current_user, params)
+    @disbursements_grid = initialize_grid(grid.relation, grid.options)
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @disbursements }
     end
   end
 
@@ -47,19 +30,9 @@ class DisbursementsController < ApplicationController
     setup_view
 
     respond_to do |format|
-      format.html {
-        if @revision and current_user.nil?
-          @pfda_view.save
-          DisbursementRevision.increment_counter :anonymous_views, @revision.id
-        end
-        render layout: "published"
-      }
-      format.pdf {
-        handle_pdf
-      }
-      format.xls {
-        handle_xls
-      }
+      format.html { @pfda_view.anonymous!; render layout: "published" }
+      format.pdf { @pfda_view.pdf!; handle_pdf }
+      format.xls { handle_xls }
     end
   end
 
@@ -76,11 +49,7 @@ class DisbursementsController < ApplicationController
 
   def status
     @disbursement = Disbursement.find(params[:id])
-    if ["draft", "initial", "close", "archived"].member? params[:status]
-      @disbursement.send("#{params[:status]}!")
-      @disbursement.save
-      @disbursement.current_revision.schedule_sync
-    end
+    set_disbursement_status(params[:status])
 
     respond_to do |format|
       format.html { redirect_to disbursements_path}
@@ -90,7 +59,7 @@ class DisbursementsController < ApplicationController
 
   def revisions
     @disbursement = Disbursement.find(params[:id])
-    @title = "Revision for #{@disbursement.current_revision.data['vessel_name']} in #{@disbursement.port.name}#{ "/"+@disbursement.terminal.name if @disbursement.terminal} on #{l(@disbursement.current_revision.eta)}"
+    @title = "Revision for #{@disbursement.full_title}"
     add_breadcrumb @title
     @revisions = @disbursement.disbursement_revisions
   end
@@ -121,12 +90,7 @@ class DisbursementsController < ApplicationController
   def new
     @title = "New PDA"
     @disbursement = Disbursement.new
-    @disbursement.fill_nomination_data(params[:nomination_id])
-    @disbursement
-    params[:company_name] = @disbursement.company.name if @disbursement.company
-    params[:vessel_name] = @disbursement.vessel.name if @disbursement.vessel
-    @disbursement.status_cd = params[:status_cd].to_i
-    @disbursement.tbn = @disbursement.inquiry?
+    prefill_disbursement
 
     respond_to do |format|
       format.html # new.html.erb
@@ -148,8 +112,7 @@ class DisbursementsController < ApplicationController
   def create
     @title = "New PDA"
     @disbursement = Disbursement.new(disbursement_params)
-    @disbursement.user = current_user
-    @disbursement.office = current_user.office || Office.find_by_name("Head Office")
+    set_user_and_office
 
     respond_to do |format|
       if @disbursement.save
@@ -166,15 +129,9 @@ class DisbursementsController < ApplicationController
   # PUT /disbursements/1.json
   def update
     @title = "Edit PDA"
-    @disbursement = Disbursement.find(params[:id])
-    if @disbursement.current_revision.number == 0
-      @revision = @disbursement.current_revision
-      @revision.number = 1
-    else
-      @revision = @disbursement.next_revision
-    end
-    @revision.user = current_user
-    save_revision
+    DisbursementUpdater.new(params[:id], current_user)
+      .run(disbursement_revision_params, params)
+
     respond_to do |format|
       format.html { redirect_to disbursements_url,
                     notice: 'Disbursement was successfully updated.' }
@@ -201,84 +158,6 @@ class DisbursementsController < ApplicationController
   end
 
   private
-  def handle_extra_items
-    # handle extra items
-    @old_extras = @revision.field_keys.map {|k| k.starts_with?("EXTRAITEM") ? k : nil }.compact
-    @extras = params.keys.map {|k| k.starts_with?("value_EXTRAITEM") ? k.split('_')[1] : nil}.compact
-    # remove keys that do not exist anymore
-    @old_extras.each do |k|
-      if not @extras.member? k
-        @revision.fields.delete(k)
-        @revision.codes.delete(k)
-        @revision.descriptions.delete(k)
-        @revision.values.delete(k)
-        @revision.values_with_tax.delete(k)
-      end
-    end
-  end
-
-  def reindex_field_keys
-    @fields = {}
-    @revision.field_keys.each_with_index do |k,i|
-      @fields[k] = i
-    end
-  end
-
-  def add_new_items
-    next_val = @fields.values.max+1 rescue 1
-    @ctx = V8::Context.new
-    @extras.each do |k|
-      if not @old_extras.member? k
-        @fields[k] = next_val
-        @revision.compulsory[k] = "0"
-        taxApplies = "true"
-        begin
-          taxApplies = ctx.eval("("+params["code_#{k}"]+").taxApplies") ? "true" : "false"
-        rescue
-        end
-        @revision.codes[k] = "{compute: function(c) {return 0;},taxApplies: #{taxApplies}}"
-        @revision.descriptions[k] = params["description_#{k}"]
-        next_val += 1
-      end
-    end
-  end
-
-  def compute_and_save_revision
-    @revision.compute
-    DisbursementRevision.hstore_fields.each do |f|
-      @revision.send("#{f}_will_change!")
-    end
-    @revision.save
-    @disbursement.current_revision = @revision
-    @disbursement.save
-  end
-
-  def process_fields
-    @fields.keys.each do |k|
-      val = params["disabled_#{k}"]
-      if val and not @revision.compulsory?(k)
-        @revision.disabled[k] = (val == "1" ? "1" : "0")
-      end
-      val = params["overriden_#{k}"]
-      if val and val != ""
-        @revision.overriden[k] = val
-      else
-        @revision.overriden.delete(k)
-      end
-      @revision.comments[k] = params["comment_#{k}"]
-    end
-  end
-
-  def save_revision
-    @revision.assign_attributes(disbursement_revision_params)
-    handle_extra_items
-    reindex_field_keys
-    add_new_items
-    @revision.fields = @fields
-    process_fields
-    compute_and_save_revision
-  end
-
   def disbursement_params
     params.require(:disbursement).permit(
       :company_id, :dwt, :grt, :loa, :nrt,
@@ -310,20 +189,10 @@ class DisbursementsController < ApplicationController
 
   def setup_view
     @pfda_view = PfdaView.new
-    @pfda_view.disbursement_revision_id = @revision.id rescue nil
-    @pfda_view.ip = request.remote_ip
-    @pfda_view.browser = browser.name
-    @pfda_view.browser_version = browser.version
-    @pfda_view.user_agent = request.env['HTTP_USER_AGENT']
-    @pfda_view.pdf = false
+    @pfda_view.setup(request, browser, @revision)
   end
 
   def handle_pdf
-    if @revision and current_user.nil?
-      @pfda_view.pdf = true
-      @pfda_view.save
-      DisbursementRevision.increment_counter :pdf_views, @revision.id
-    end
     Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
     file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
     unless File.exists? file
@@ -340,5 +209,26 @@ class DisbursementsController < ApplicationController
       XlsDA.new(@document).write file
     end
     send_file(file, :type => "application/ms-excel")
+  end
+
+  def set_disbursement_status(status)
+    if ["draft", "initial", "close", "archived"].member? status
+      @disbursement.send("#{status}!")
+      @disbursement.save
+      @disbursement.current_revision.schedule_sync
+    end
+  end
+
+  def set_user_and_office
+    @disbursement.user = current_user
+    @disbursement.office = current_user.office || Office.find_by_name("Head Office")
+  end
+
+  def prefill_disbursement
+    @disbursement.fill_nomination_data(params[:nomination_id])
+    params[:company_name] = @disbursement.company.name if @disbursement.company
+    params[:vessel_name] = @disbursement.vessel.name if @disbursement.vessel
+    @disbursement.status_cd = params[:status_cd].to_i
+    @disbursement.tbn = @disbursement.inquiry?
   end
 end

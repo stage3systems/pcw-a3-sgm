@@ -11,6 +11,13 @@ class DisbursementRevision < ActiveRecord::Base
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}
   end
 
+  def delete_field(k)
+    ['fields', 'codes', 'descriptions',
+     'values', 'values_with_tax'].each do |s|
+      self.send(s).delete(k)
+    end
+  end
+
   def compute
     ComputationContext.new(self).compute
     flag_changes

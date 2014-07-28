@@ -22,8 +22,16 @@ class Disbursement < ActiveRecord::Base
   as_enum :type, standard: 0, owners_husbandry: 1, bunker_call: 2,
                  cleaning: 3, spare_parts: 4, other: 5
 
-  def title
+  def title(full=false)
     "#{self.current_revision.data['vessel_name']} in #{self.port.name}"
+  end
+
+  def full_title
+    t = self.title
+    r = self.current_revision
+    t += "/#{self.terminal.name}" if self.terminal
+    t += " on #{I18n.l r.eta}" if r.eta
+    t
   end
 
   def delete
