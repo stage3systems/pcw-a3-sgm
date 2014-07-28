@@ -39,8 +39,7 @@ class Disbursement < ActiveRecord::Base
 
 
   def crystalize
-    p = port.crystalize
-    t = crystalize_terminal((p["fields"].values.map{|v|v.to_i}.max||0)+1)
+    p, t = crystalize_port_and_terminal
     d = {
       "data" => [crystalize_vessel,
                  p["data"],
@@ -53,6 +52,12 @@ class Disbursement < ActiveRecord::Base
       d[f] = p[f].merge(t[f])
     end
     d
+  end
+
+  def crystalize_port_and_terminal
+    p = port.crystalize
+    t = crystalize_terminal((p["fields"].values.map{|v|v.to_i}.max||0)+1)
+    [p, t]
   end
 
   def crystalize_office
@@ -112,21 +117,12 @@ class Disbursement < ActiveRecord::Base
   end
 
   def fill_nomination_data(nomination_id)
-    return unless nomination_id
-    api = AosApi.new
-    n = api.find('nomination', nomination_id)
-    a = api.find('appointment', n['appointmentId'])
-    v = Vessel.where(remote_id: n['vesselId']).first rescue nil
-    self.vessel = v
-    if n['principalId']
-      c = Company.where(remote_id: n['principalId']).first rescue nil
-      self.company = c
+    nomination = AosNomination.from_aos_id(nomination_id)
+    return unless nomination
+    ['vessel', 'port', 'company',
+     'appointment_id', 'nomination_reference'].each do |e|
+      send("#{e}=", nomination.send(e))
     end
-    p = Port.where(remote_id: n['portId']).first rescue nil
-    self.port = p
-    self.nomination_id = nomination_id
-    self.appointment_id = n['appointmentId']
-    self.nomination_reference = "#{a['fileNumber']}-#{n['nominationNumber']}"
   end
 
   def charge_base
