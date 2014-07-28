@@ -50,7 +50,7 @@ class DisbursementDocument
   end
 
   def cargo_type
-    @revision.cargo_type.subsubtype rescue "N/A"
+    (@revision.cargo_type.subsubtype rescue nil) || "N/A"
   end
 
   def from
