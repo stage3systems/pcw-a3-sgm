@@ -57,7 +57,7 @@ class TerminalsController < BaseController
   # POST /terminals.json
   def create
     @port = Port.find(params[:port_id])
-    @terminal = Terminal.new(params[:terminal])
+    @terminal = Terminal.new(safe_params)
     @terminal.port_id = @port.id
     port_breadcrumb
     add_breadcrumb "New Terminal", new_port_terminal_url(@port)
@@ -75,7 +75,8 @@ class TerminalsController < BaseController
     add_breadcrumb "Edit #{@terminal.name}", edit_port_terminal_url(@port, @terminal)
 
     @instance = @terminal
-    form_response(@instance.save, [@port, @instance], "updated", "edit")
+    form_response(@instance.update_attributes(safe_params),
+                  [@port, @instance], "updated", "edit")
   end
 
   # DELETE /terminals/1
@@ -95,5 +96,9 @@ class TerminalsController < BaseController
   def port_breadcrumb
     add_breadcrumb "Ports", ports_url
     add_breadcrumb "#{@port.name}", port_url(@port)
+  end
+
+  def safe_params
+    params.require(:terminal).permit(:name)
   end
 end
