@@ -101,4 +101,8 @@ class TerminalsController < BaseController
   def safe_params
     params.require(:terminal).permit(:name)
   end
+
+  def model
+    Terminal
+  end
 end
