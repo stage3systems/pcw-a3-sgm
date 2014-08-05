@@ -45,7 +45,7 @@ namespace :monson do
       api = AosApi.new
       api.each('office', {agencyCompany: 1}) do |o|
         office = Office.where('remote_id = :id OR name ilike :name',
-                              id: o['id'], name: "%#{o["name"]}%").first
+                              id: o['id'], name: "#{o["name"]}").first
         office = Office.new unless office
         office.update_from_json(o)
         office.save!
@@ -57,7 +57,7 @@ namespace :monson do
       api.each('vessel') do |v|
         next if v['name'] == 'TBN'
         vessel = Vessel.where('remote_id = :id OR name ilike :name',
-                              id: v['id'], name: "%#{v["name"]}%").first
+                              id: v['id'], name: "#{v["name"]}").first
         next unless v['loa'] or (vessel and vessel.loa)
         next unless v['intlGrossRegisteredTonnage'] or (vessel and vessel.grt)
         next unless v['intlNetRegisteredTonnage'] or (vessel and vessel.nrt)
@@ -72,7 +72,7 @@ namespace :monson do
       api = AosApi.new
       api.companies.each do |c|
         company = Company.where('remote_id = :id OR name ilike :name',
-                                id: c['id'], name: "%#{c["name"]}%").first
+                                id: c['id'], name: "#{c["name"]}").first
         company = Company.new unless company
         company.update_from_json(c)
         company.save!
@@ -99,7 +99,7 @@ namespace :monson do
         aos_office = api.find("office", op['officeId'])
         port = Port.where('remote_id = :id OR name ilike :name',
                           id: op['portId'],
-                          name: "%#{aos_port['name']}%").first
+                          name: "#{aos_port['name']}").first
         unless port
           port = Port.new
           port.currency = currency
@@ -110,7 +110,7 @@ namespace :monson do
         port.save!
         office = Office.where('remote_id = :id OR name ilike :name',
                               id: op['officeId'],
-                              name: "%#{aos_office['name']}%").first
+                              name: "#{aos_office['name']}").first
         unless office.port_ids.member? port.id
           office.ports << port
         end
