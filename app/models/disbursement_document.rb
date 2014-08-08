@@ -5,6 +5,7 @@ class DisbursementDocument
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
     @revision = revision || disbursement.current_revision rescue nil
+    @name = @disbursement.inquiry? ? "Inquiry" : "estimate" if @disbursement
   end
 
   def title
@@ -147,16 +148,18 @@ class DisbursementDocument
   end
 
   def funding_data
-    [banking_header, bank_details,
-     bank_account_details,
-     funding_disclaimer,
-     freight_tax_disclaimer,
-     tax_exempt_note,
-     towage_provider_note].reduce(:concat)
+    d = [funding_disclaimer,
+         freight_tax_disclaimer,
+         tax_exempt_note,
+         towage_provider_note]
+    d.unshift(prefunding,
+              bank_details,
+              bank_account_details) unless @disbursement.inquiry?
+    d.reduce(:concat)
   end
 
   private
-  def banking_header
+  def prefunding
     [
       FundingAgreement.new(self).conditions,
       ""
@@ -184,16 +187,22 @@ class DisbursementDocument
   end
 
   def funding_disclaimer
-    [
+    disclaimer = if @disbursement.inquiry?
+      "Disclaimer: Please note that this is an Inquiry only, and whilst "+
+      "Monson Agencies Australia take every care to ensure that the figures "+
+      "and information contained in the Inquiry are as accurate as possible, "+
+      "the actual Proforma Estimate may, and often does, for various reasons "+
+      "beyond our control, vary from the Inquiry"
+    else
       "Disclaimer: this is only an estimate and any additional costs "+
-      "incurred for this vessel will be accounted for in our Final D/A.",
-      ""
-    ]
+      "incurred for this vessel will be accounted for in our Final D/A."
+    end
+    [ disclaimer, ""]
   end
 
   def freight_tax_disclaimer
     [
-      "This estimate is exclusive of Australian Freight Tax (AFT) which, "+
+      "This #{@name} is exclusive of Australian Freight Tax (AFT) which, "+
       "if applicable, shall be paid by the freight beneficiary, "+
       "ie owner/disponent owner.",
       ""
@@ -203,7 +212,7 @@ class DisbursementDocument
   def tax_exempt_note
     return [] unless @revision.tax_exempt?
     [
-      "This estimate is exclusive of the Australian Goods "+
+      "This #{@name} is exclusive of the Australian Goods "+
       "and Services Tax (GST).",
       ""
     ]

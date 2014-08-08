@@ -27,6 +27,7 @@ class FundingAgreementTest < ActiveSupport::TestCase
       r.save
       doc = DisbursementDocument.new(da,r)
       fa = FundingAgreement.new(doc)
+      assert_not doc.funding_data.empty?
       assert_not fa.conditions.empty?
     end
     da.destroy

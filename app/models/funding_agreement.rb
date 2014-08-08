@@ -33,9 +33,9 @@ class FundingAgreement
   end
 
   def no_prefunding
-    "As per our Service Agreement, which is available on request, no "+
-    "advance funding is required. Please arrange most prompt settlement "+
-    "upon Final Disbursement Account to the following Bank Account:"
+    "Your remittance is appreciated as per our funding agreement. "+
+    "Please arrange most prompt settlement upon Final Disbursement Account "+
+    "to the following Bank Account:"
   end
 
   def percent_on_close
