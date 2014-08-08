@@ -16,7 +16,6 @@ class PdfDA < Prawn::Document
     super(page_layout: :portrait)
     set_context(document)
     @root_url = root_url
-
     font_setup
     header
     @cell_style = {
@@ -65,10 +64,10 @@ class PdfDA < Prawn::Document
 
   def header
     # title and logo
-    fill_color = '000000'
+    self.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images',
                                 ProformaDA::Application.config.tenant_da_logo)
-    bounding_box([0, 720], width: 540, height: 160) do
+    bounding_box([0, 720], width: 540, height: 120) do
       title(@document.title, @document.subtitle)
       image logo_path, width: 60, position: :right, vposition: :center
     end
@@ -97,7 +96,7 @@ class PdfDA < Prawn::Document
   end
 
   def to_table
-    bounding_box([0, 560], width: 270, height: 300) do
+    bounding_box([0, 600], width: 270, height: 260) do
       fill_color = '123123'
       table table_format(@document.to_data),
             cell_style: @cell_style,
@@ -110,7 +109,7 @@ class PdfDA < Prawn::Document
   end
 
   def from_table
-    bounding_box([315, 560], width: 225, height: 300) do
+    bounding_box([315, 600], width: 225, height: 260) do
       table table_format(@document.from_data),
             cell_style: @cell_style,
             column_widths: [70, 155]
