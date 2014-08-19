@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.4'
-
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'rails', '4.1.5'
 
 gem 'pg'
 gem 'omniauth'
@@ -40,6 +37,10 @@ gem 'nprogress-rails'
 gem 'daemons'
 gem "codeclimate-test-reporter", group: :test, require: nil
 
+#gem 'capistrano', '~> 3.2.0'
+#gem 'capistrano-rails', '~> 1.1.1', group: :development
+#gem 'capistrano-rbenv', '~> 2.0'
+
 
 gem 'sass-rails', '>= 4.0.0'
 gem 'sprockets-rails'
@@ -47,22 +48,3 @@ gem 'coffee-rails'
 gem 'uglifier'
 
 gem 'webmock', group: [:test]
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
