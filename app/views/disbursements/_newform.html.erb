@@ -66,10 +66,12 @@
   </div>
 <% end %>
 </div>
+<% unless @disbursement.inquiry? %>
 <div class="col-md-6">
   <h2>Matching Nominations <i class="fa nomination-spinner fa-spinner fa-spin"></i></h2>
   <div class="nominations">Refreshing data, please wait...</div>
 </div>
+<% end %>
 <script type="text/javascript">
   var nominations = {};
   var nominationId = <%= @disbursement.nomination_id.to_json %>;
