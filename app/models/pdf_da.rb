@@ -11,9 +11,17 @@ class PdfDA < Prawn::Document
   LIGHT_GREY = 'dddddd'
   NO_BORDER = [0, 0, 0, 0]
   FULL_BORDER = [1, 1, 1, 1]
+  # A4
+  WIDTH = 595
+  HEIGHT = 842
+  MARGIN = 36
+  USABLE_WIDTH = WIDTH-MARGIN*2
+  USABLE_HEIGHT = HEIGHT-MARGIN*2
+  HEADER_HEIGHT = 120
+  TO_FROM_HEIGHT = 300
 
   def initialize(document, root_url)
-    super(page_layout: :portrait)
+    super(page_size: 'A4', page_layout: :portrait, margin: MARGIN)
     set_context(document)
     @root_url = root_url
     font_setup
@@ -28,7 +36,7 @@ class PdfDA < Prawn::Document
     services_table
     final_figure
     move_down(72)
-    stroke_line [0,y], [540,y]
+    stroke_line [0,y], [USABLE_WIDTH,y]
     funding_details
     terms_and_conditions
   end
@@ -67,7 +75,8 @@ class PdfDA < Prawn::Document
     self.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images',
                                 ProformaDA::Application.config.tenant_da_logo)
-    bounding_box([0, 720], width: 540, height: 120) do
+    bounding_box([0, HEIGHT-MARGIN],
+                 width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
       image logo_path, width: 60, position: :right, vposition: :center
     end
@@ -96,23 +105,25 @@ class PdfDA < Prawn::Document
   end
 
   def to_table
-    bounding_box([0, 600], width: 270, height: 260) do
+    bounding_box([0, HEIGHT-MARGIN-HEADER_HEIGHT],
+                 width: 262, height: TO_FROM_HEIGHT) do
       fill_color = '123123'
       table table_format(@document.to_data),
             cell_style: @cell_style,
-            column_widths: [70, 200]
+            column_widths: [68, 194]
     end
   end
 
   def table_column_widths
-    @revision.tax_exempt? ? [315, 225] : [180, 135, 225]
+    @revision.tax_exempt? ? [305, 218] : [174, 130, 219]
   end
 
   def from_table
-    bounding_box([315, 600], width: 225, height: 260) do
+    bounding_box([305, HEIGHT-MARGIN-HEADER_HEIGHT],
+                 width: 218, height: TO_FROM_HEIGHT) do
       table table_format(@document.from_data),
             cell_style: @cell_style,
-            column_widths: [70, 155]
+            column_widths: [68, 150]
     end
   end
 
@@ -163,7 +174,7 @@ class PdfDA < Prawn::Document
   def services_table
 
     # Draw the service table
-    y = 340
+    y = USABLE_HEIGHT-HEADER_HEIGHT-TO_FROM_HEIGHT
     table = make_table(services_table_data,
                cell_style: {border_widths: [0, 0, 0.1, 0],
                             inline_format: true,
