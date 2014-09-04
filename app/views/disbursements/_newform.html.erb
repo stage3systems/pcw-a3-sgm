@@ -108,6 +108,7 @@
       success: function(d) {
         if (d.port_id) {
           $("select#disbursement_port_id").val(d.port_id);
+          setTimeout(updateTerminals, 0);
         }
         if (d.vessel_id) {
           $("input#disbursement_vessel_id").val(d.vessel_id);
