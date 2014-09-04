@@ -19,6 +19,12 @@
                <i class="glyphicon glyphicon-chevron-right"></i> Next
             </a>
             <% end %>
+            <% if current_user %>
+            <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
+                       button: 'hint',
+                       disbursement: @disbursement,
+                       config: Configuration.last %>
+            <% end %>
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
                class="btn btn-default hint" title="Printable PDF version">
               <%= image_tag "print.png" %>

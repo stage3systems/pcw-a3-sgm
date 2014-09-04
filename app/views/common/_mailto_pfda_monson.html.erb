@@ -1,4 +1,4 @@
-<a class="btn btn-default btn-sm<%= " disabled" if disbursement.draft? %>"
+<a class="btn btn-default <%= button rescue 'button-sm' %><%= " disabled" if disbursement.draft? %>"
    <% unless disbursement.draft? %>
    title="Send a Link By Email"
    href="mailto:<%= disbursement.company.email rescue '' %>?subject=<%= ERB::Util.url_encode("#{disbursement.current_revision.data['vessel_name']} calling at #{disbursement.port.name}") %>&body=<%= ERB::Util.url_encode(<<BODY
