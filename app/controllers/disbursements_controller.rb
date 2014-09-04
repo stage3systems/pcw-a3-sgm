@@ -129,12 +129,20 @@ class DisbursementsController < ApplicationController
   # PUT /disbursements/1.json
   def update
     @title = "Edit PDA"
-    DisbursementUpdater.new(params[:id], current_user)
-      .run(disbursement_revision_params, params)
+    updater = DisbursementUpdater.new(params[:id], current_user)
+    updater.run(disbursement_revision_params, params)
 
     respond_to do |format|
-      format.html { redirect_to disbursements_url,
-                    notice: 'Disbursement was successfully updated.' }
+      format.html {
+        d = updater.disbursement
+        target = if d.draft?
+            disbursements_url
+        else
+          published_short_url(d.publication_id)
+        end
+        redirect_to target,
+                  notice: 'Disbursement was successfully updated.'
+      }
     end
   end
 

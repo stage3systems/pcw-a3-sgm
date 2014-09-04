@@ -1,4 +1,5 @@
 class DisbursementUpdater
+  attr_reader :disbursement
 
   def initialize(id, user)
     @disbursement = Disbursement.find(id)
