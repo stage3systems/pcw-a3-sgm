@@ -16,6 +16,13 @@
       <table class="table table-condensed table-bordered">
         <tbody>
           <tr>
+            <th>Status</th>
+            <td><%= render partial: 'status_button',
+                           locals: {
+                            disbursement: @disbursement,
+                            deferred: true } %></td>
+          </tr>
+          <tr>
             <th>Port</th>
             <td><%= @revision.data["port_name"] %></td>
           </tr>

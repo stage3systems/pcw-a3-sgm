@@ -157,7 +157,9 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_in :operator
     get :edit, id: @published.id
     assert_response :success
-    post :update, id: @published.id, disbursement_revision: {tugs_in: 2}
+    post :update, id: @published.id,
+                  disbursement: {status_cd: 3},
+                  disbursement_revision: {tugs_in: 2}
     assert_response :redirect
     log_out
   end

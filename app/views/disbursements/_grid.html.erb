@@ -61,7 +61,7 @@
                   style: "width: auto;",
                   class: "status status-#{ d.status.to_s }"
     end
-    render partial: 'status_button', locals: {disbursement: d}
+    render partial: 'status_button', locals: {disbursement: d, deferred: false}
   end
   g.column do |d|
     render partial: 'actions', locals: {disbursement: d}

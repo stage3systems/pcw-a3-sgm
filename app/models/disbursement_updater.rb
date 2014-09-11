@@ -11,6 +11,7 @@ class DisbursementUpdater
   def run(revision_params, all_params)
     @revision.assign_attributes(revision_params)
     @params = all_params
+    update_status
     cleanup_extra_items
     reindex_field_keys
     add_new_items
@@ -19,6 +20,14 @@ class DisbursementUpdater
   end
 
   private
+  def update_status
+    status = @params[:disbursement][:status_cd] rescue nil
+    return unless status
+    @disbursement.status_cd = status
+    @disbursement.save
+    @revision.disbursement.reload
+  end
+
   def setup_revision
     if @disbursement.current_revision.number == 0
       @revision = @disbursement.current_revision
