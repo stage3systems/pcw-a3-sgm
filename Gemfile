@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.5'
+gem 'rails', '4.1.6'
 
 gem 'pg'
 gem 'omniauth'
@@ -20,6 +20,7 @@ gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn', group: :production
 gem 'prawn', '>= 1.0.0'
+gem 'prawn-table'
 gem 'carrierwave'
 gem 'browser'
 gem 'jquery-rails'
