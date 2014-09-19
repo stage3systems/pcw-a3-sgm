@@ -8,6 +8,9 @@
               published_short_url(:id => d.publication_id)
     end
   end
+  g.column name: 'Nomination', attribute: 'nomination_reference' do |d|
+    link_to d.nomination_reference, d.aos_url, target: '_blank'
+  end
   g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision' do |d|
     l(d.current_revision.eta) rescue "N/A"
   end
