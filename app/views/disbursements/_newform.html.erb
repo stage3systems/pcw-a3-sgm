@@ -95,7 +95,6 @@
     nominationId = id;
     $("input#disbursement_appointment_id").val(nominations[id].appointmentId);
     $("input#disbursement_nomination_id").val(id);
-    $('input[type="submit"]').removeAttr('disabled');
     setTimeout(function() {nominationDetails(id);}, 0);
   };
   var nominationDetails = function(id) {
@@ -126,6 +125,7 @@
         }
         $("input#disbursement_nomination_reference")
             .val(d.nomination_reference);
+        $('input[type="submit"]').removeAttr('disabled');
       }
     });
   };
