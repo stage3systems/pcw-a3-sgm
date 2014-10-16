@@ -229,8 +229,14 @@ class DisbursementsControllerTest < ActionController::TestCase
     }
     assert_redirected_to disbursements_path
     # add disabled extra field
+    reference = d.current_revision.reference.sub('REV. 1', 'REV. 3')
     stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"vesselone - Newcastle - 25 JUL 2014 - DRAFT - REV. 3\",\"sort\":1,\"taxApplies\":false,\"comment\":\"Comment\"}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":1,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":true}",
+                    :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
+    reference = reference.sub('REV. 3', 'REV. 4')
+    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":false}",
                     :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -262,7 +268,7 @@ class DisbursementsControllerTest < ActionController::TestCase
       description_EXTRAITEM123456: "New Item",
       code_EXTRAITEM123456: "{taxApplies: false}",
       comment_EXTRAITEM123456: "Comment",
-      disabled_EXTRAITEM123456: "1"
+      disabled_EXTRAITEM123456: "0"
     assert_redirected_to disbursements_path
     # remove extra field
     remove_request_stub stub

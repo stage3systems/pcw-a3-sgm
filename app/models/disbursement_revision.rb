@@ -132,7 +132,8 @@ class DisbursementRevision < ActiveRecord::Base
       "reference" => self.reference,
       "sort" => self.fields[k].to_i,
       "taxApplies" => self.tax_applies?(k),
-      "comment" => self.comments[k]
+      "comment" => self.comments[k],
+      "disabled" => self.disabled[k] == "1"
     }
   end
 
@@ -148,7 +149,4 @@ class DisbursementRevision < ActiveRecord::Base
     self.disbursement.status.upcase rescue "DELETED"
   end
 
-  def active_keys
-    self.fields.keys.select {|k| !self.disabled?(k) }
-  end
 end

@@ -42,7 +42,7 @@ class AosNomination
   end
 
   def sync_revision(revision)
-    keys = revision.active_keys
+    keys = revision.fields.keys
     base = revision.disbursement.charge_base
     keys.each do |k|
       c = charges[k]
