@@ -22,7 +22,7 @@
             <% if current_user %>
             <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
                        button: 'hint',
-                       disbursement: @disbursement,
+                       doc: @document,
                        config: Configuration.last %>
             <% end %>
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"

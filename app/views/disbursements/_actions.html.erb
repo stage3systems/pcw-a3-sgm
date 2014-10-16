@@ -1,7 +1,7 @@
 <div class="btn-toolbar da-actions">
           <div class="btn-group btn-group-sm">
                     <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
-                              disbursement: disbursement,
+                              doc: DisbursementDocument.new(disbursement),
                               config: Configuration.last %>
                     <%= link_to icon(:list), access_log_disbursement_path(disbursement),
                               :class => 'btn btn-default btn-sm',
