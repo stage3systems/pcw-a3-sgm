@@ -7,7 +7,7 @@ You can download a PDF file view of the estimate from this link (no log in requi
 
 #{published_short_url(doc.disbursement.publication_id)}
 
-#{doc.funding_data.map {|d| (d[:value] rescue d) }.join("\n")}
+#{doc.funding_data(true).map {|d| (d[:value] rescue d) }.join("\n")}
 
 Download the full Terms and Conditions:
 #{root_url}#{ProformaDA::Application.config.tenant_terms}

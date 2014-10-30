@@ -147,11 +147,11 @@ class DisbursementDocument
     ]
   end
 
-  def funding_data
+  def funding_data(mail=false)
     d = [funding_disclaimer,
          freight_tax_disclaimer,
-         tax_exempt_note,
-         towage_provider_note]
+         tax_exempt_note]
+    d << towage_provider_note unless mail
     d.unshift(prefunding,
               bank_details,
               bank_account_details) unless @disbursement.inquiry?
