@@ -7,6 +7,9 @@ var parseCodes = function(ctx) {
   }
 };
 var normalizeValue = function(val) {
+  if (isNaN(val)) {
+    return "0.00";
+  }
   return parseFloat(val).toFixed(2);
 };
 var compute = function(ctx) {

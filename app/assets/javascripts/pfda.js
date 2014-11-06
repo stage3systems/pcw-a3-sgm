@@ -67,7 +67,7 @@ var setupDA = function(pfda, ctx) {
                       },
           emptytext: 'Click to add Comment'
     });
-    $("td a.editable_value").editable({display: valueDisplay});
+    $("td a.editable_value").editable({display: valueDisplay, defaultValue: 0});
   }
   var cleanCompute = function() {
     $("a.editable_value").removeClass("editable-unsaved");
