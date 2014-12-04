@@ -1,0 +1,26 @@
+<a class="btn btn-default <%= button rescue 'button-sm' %><%= " disabled" if doc.disbursement.draft? %>"
+   <% unless doc.disbursement.draft? %>
+   title="Send a Link By Email"
+   href="mailto:<%= doc.company_email %>?subject=<%= ERB::Util.url_encode("#{doc.vessel_name} calling at #{doc.port_name}") %>&body=<%= ERB::Util.url_encode(<<BODY
+Please click on the link below to view the requested #{doc.title.titleize} for #{doc.vessel_name} calling at #{doc.port_name}.
+You can download a PDF file view of the estimate from this link (no log in required).
+
+#{published_short_url(doc.disbursement.publication_id)}
+
+For enquires relating to this Estimate please contact our local Port Office:
+
+#{doc.disbursement.office.name rescue config.company_name}
+#{doc.disbursement.office.address_1 rescue config.company_address1}
+#{doc.disbursement.office.address_2 rescue config.company_address2}
+#{doc.disbursement.office.address_3 rescue ""}
+#{doc.disbursement.office.email rescue ProformaDA::Application.config.tenant_default_email}
+
+BODY
+)
+%>"
+   <% else %>
+   href="#"
+   <% end %>
+>
+  <%= icon('envelope') %>
+</a>

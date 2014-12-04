@@ -75,5 +75,15 @@ module ProformaDA
     #config.tenant_da_logo = 'da-desk.png'
     #config.tenant_terms = 'da-desk.pdf'
     #config.tenant_piwik_id = 8
+
+    #config.tenant = 'mariteam'
+    #config.tenant_name = 'MariTeam'
+    #config.tenant_aos_name = 'Agency Operations System'
+    #config.tenant_full_name = 'MariTeam Shipping Agencies'
+    #config.tenant_default_email = 'agency.rotterdam@mariteam-shipping.com'
+    #config.tenant_da_logo = 'mariteam.png'
+    #config.tenant_favicon = 'mariteam_favicon.ico'
+    #config.tenant_terms = 'mariteam_agency_confitions.pdf'
+    #config.tenant_piwik_id = 9
   end
 end
