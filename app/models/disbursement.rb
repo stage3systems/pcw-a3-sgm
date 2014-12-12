@@ -20,7 +20,7 @@ class Disbursement < ActiveRecord::Base
                    inquiry: 4, final: 5, archived: 6
 
   as_enum :type, standard: 0, owners_husbandry: 1, bunker_call: 2,
-                 cleaning: 3, spare_parts: 4, other: 5
+                 cleaning: 3, spare_parts: 4, other: 5, blank: 6
 
   def title(full=false)
     "#{self.current_revision.data['vessel_name']} in #{self.port.name}"
@@ -65,6 +65,10 @@ class Disbursement < ActiveRecord::Base
   def crystalize_port_and_terminal
     p = port.crystalize
     t = crystalize_terminal((p["fields"].values.map{|v|v.to_i}.max||0)+1)
+    ['fields', 'descriptions', 'codes', 'compulsory'].each do |k|
+      p[k] = {}
+      t[k] = {}
+    end if self.blank?
     [p, t]
   end
 
