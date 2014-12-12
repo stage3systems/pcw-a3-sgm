@@ -55,6 +55,15 @@
             <% editor = d.current_revision.user %>
             <%= link_to d.title, edit_disbursement_url(d) %><br>
             <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
           </li>
         <% end.empty? %>
           <li> No DRAFT disbursement available.</li>
@@ -69,6 +78,14 @@
             <% editor = d.current_revision.user %>
             <%= link_to d.title, edit_disbursement_url(d) %><br>
             <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
           </li>
         <% end.empty? %>
           <li> No DRAFT disbursement available.</li>
@@ -78,11 +95,20 @@
       <div class="col-md-3">
         <h4>Initial</h4>
         <ul class="list-unstyled list-last-updated">
-        <% if @initials.each do |p| %>
+        <% if @initials.each do |d| %>
           <li>
-            <% publisher = p.current_revision.user %>
-            <%= link_to p.title, published_short_url(id: p.publication_id) %><br>
-            <small>Updated on <strong><%= l p.current_revision.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
+            <% publisher = d.current_revision.user %>
+            <%= link_to d.title, published_short_url(id: d.publication_id) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
           </li>
         <% end.empty? %>
           <li>No INITIAL disbursement available.</li>
@@ -92,11 +118,20 @@
       <div class="col-md-3">
         <h4>Close</h4>
         <ul class="list-unstyled list-last-updated">
-        <% if @closes.each do |f| %>
+        <% if @closes.each do |d| %>
           <li>
-            <% editor = f.current_revision.user %>
-            <%= link_to f.title, published_short_url(id: f.publication_id) %><br>
-            <small>Updated on <strong><%= l f.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <% editor = d.current_revision.user %>
+            <%= link_to d.title, published_short_url(id: d.publication_id) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
           </li>
         <% end.empty? %>
           <li>No CLOSE disbursement available.</li>
