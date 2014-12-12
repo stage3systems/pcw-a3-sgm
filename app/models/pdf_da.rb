@@ -176,7 +176,7 @@ class PdfDA < Prawn::Document
     # Draw the service table
     y = USABLE_HEIGHT-HEADER_HEIGHT-TO_FROM_HEIGHT
     table = make_table(services_table_data,
-               cell_style: {border_widths: [0, 0, 0.1, 0],
+               cell_style: {border_widths: [0, 0, 0.5, 0],
                             inline_format: true,
                             border_color: GREY},
                header: true,
