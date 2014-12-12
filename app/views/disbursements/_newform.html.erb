@@ -38,7 +38,11 @@
                 as: :fake,
                 input_html: {value: params[:vessel_name]} %>
     <%= f.input :vessel_id, as: :hidden %>
+    <% if @disbursement.inquiry? %>
     <%= f.input :tbn, label: 'TBN' %>
+    <% else %>
+    <%= f.input :tbn, label: 'TBN', as: :hidden %>
+    <% end %>
   </div>
   <div class="form-group tbn_fields">
     <%= f.input :tbn_template,
