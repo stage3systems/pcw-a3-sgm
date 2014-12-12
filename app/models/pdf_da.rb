@@ -27,7 +27,7 @@ class PdfDA < Prawn::Document
     font_setup
     header
     @cell_style = {
-      border_widths: [0.1, 0, 0.1, 0],
+      border_widths: [1, 0, 1, 0],
       inline_format: true,
       border_color: LIGHT_GREY
     }
@@ -176,17 +176,17 @@ class PdfDA < Prawn::Document
     # Draw the service table
     y = USABLE_HEIGHT-HEADER_HEIGHT-TO_FROM_HEIGHT
     table = make_table(services_table_data,
-               cell_style: {border_widths: [0, 0, 0.5, 0],
+               cell_style: {border_widths: [0, 0, 1, 0],
                             inline_format: true,
                             border_color: GREY},
                header: true,
                column_widths: table_column_widths) do |table|
       table.style(table.row(0),
                   border_color: BLACK,
-                  border_widths: [0, 0, 0.5, 0])
+                  border_widths: [0, 0, 1, 0])
       table.style(table.row(-1),
                   border_color: BLACK,
-                  border_widths: [0.5, 0, 0, 0])
+                  border_widths: [1, 0, 0, 0])
     end
     table.draw
   end
