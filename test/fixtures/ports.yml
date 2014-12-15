@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 newcastle:
+  remote_id: 654
   tax: :gst
   currency: :aud
   name: Newcastle
@@ -9,6 +10,7 @@ newcastle:
   terminals_count: 2
 
 brisbane:
+  remote_id: 987
   tax: :gst
   currency: :aud
   name: Brisbane

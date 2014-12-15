@@ -5,12 +5,30 @@ class DisbursementTest < ActiveSupport::TestCase
     @newcastle = ports(:newcastle)
     @brisbane = ports(:brisbane)
     @stage3 = companies(:stage3)
+    @feecompany = companies(:feecompany)
+    aos_stub(:get, "agencyFee?companyId=654", :agencyFee, [
+      {id: 1,
+       amount: "1000.0",
+       title: "First fee",
+       description: "Agency Fee One",
+       portId: nil},
+      {id: 2,
+       amount: "2000.0",
+       title: "Second fee",
+       description: "Agency Fee Two",
+       portId: @brisbane.remote_id},
+      {id: 3,
+       amount: "3000.0",
+       title: "Third fee",
+       description: "Agency Fee Three",
+       portId: @newcastle.remote_id}
+    ])
   end
 
-  def disbursement(port)
+  def disbursement(port, company=@stage3)
     d = Disbursement.new
     d.port = port
-    d.company = @stage3
+    d.company = company
     d.tbn = true
     d.dwt = 1
     d.grt = 1
@@ -20,6 +38,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "first revision is automatically created" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@newcastle)
     assert d.save
     assert_not_nil d.current_revision
@@ -27,6 +46,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "the first revision totals are computed" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@brisbane)
     assert d.save
     assert d.current_revision.data["total"] == "3000.00"
@@ -34,6 +54,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "the context is taken into account" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
@@ -48,6 +69,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "computed values can be overriden" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
@@ -58,6 +80,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "overriden values are persisted across revisions" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
@@ -87,6 +110,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "disabled fields are ignored only when not compulsory" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
     d = self.disbursement(@brisbane)
     assert d.save
     r = d.current_revision
@@ -107,5 +131,51 @@ class DisbursementTest < ActiveSupport::TestCase
     r.compute
     assert r.data["total"] == "4000.00"
     assert r.data["total_with_tax"] == "4400.00"
+  end
+
+  test "company fees are inserted" do
+    d = self.disbursement(@brisbane, @feecompany)
+    assert d.save
+    r = d.current_revision
+    assert r.data["total"] == "6000.00"
+    assert r.data["total_with_tax"] == "6600.00"
+    assert r.descriptions['AGENCY_FEE_1'] == 'First fee'
+    assert r.descriptions['AGENCY_FEE_2'] == 'Second fee'
+    assert r.descriptions['AGENCY_FEE_3'] == nil
+  end
+
+  test "company fees can be disabled" do
+    d = self.disbursement(@brisbane, @feecompany)
+    assert d.save
+    r = d.current_revision
+    assert r.data["total"] == "6000.00"
+    assert r.data["total_with_tax"] == "6600.00"
+    r.disabled['AGENCY_FEE_1'] = "1"
+    r.compute
+    assert r.data["total"] == "5000.00"
+    assert r.data["total_with_tax"] == "5500.00"
+  end
+
+  test "company fees can be overriden" do
+    d = self.disbursement(@brisbane, @feecompany)
+    assert d.save
+    r = d.current_revision
+    assert r.data["total"] == "6000.00"
+    assert r.data["total_with_tax"] == "6600.00"
+    r.overriden['AGENCY_FEE_1'] = "2000.00"
+    r.compute
+    assert r.data["total"] == "7000.00"
+    assert r.data["total_with_tax"] == "7700.00"
+  end
+
+  test "blank disbursements have no charges" do
+    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
+    d = self.disbursement(@brisbane)
+    d.blank!
+    d.save
+    r = d.current_revision
+    assert r.data["total"] == "0.0"
+    assert r.data["total_with_tax"] == "0.0"
+    assert r.amount == 0.0
   end
 end

@@ -24,11 +24,11 @@ class ComputationContext < V8::Context
   end
 
   def total
-    self.eval("ctx.total")
+    self.eval("ctx.total") || 0.0
   end
 
   def total_with_tax
-    self.eval("ctx.totalTaxInc")
+    self.eval("ctx.totalTaxInc") || 0.0
   end
 
   def value_for(k)

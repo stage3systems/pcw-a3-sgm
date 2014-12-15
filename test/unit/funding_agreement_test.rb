@@ -16,6 +16,7 @@ class FundingAgreementTest < ActiveSupport::TestCase
   end
 
   def exercise_company(company_name)
+    aos_stub(:get, 'agencyFee?companyId=', :agencyFee, [])
     da = setup_da(company_name)
     [:initial, :close, :inquiry].each do |status|
       da.send("#{status}!")

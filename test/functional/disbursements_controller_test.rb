@@ -9,19 +9,6 @@ class DisbursementsControllerTest < ActionController::TestCase
     @company = companies(:evax)
   end
 
-  def aos_result(entity, value)
-    {
-      :status => 200, :body => {
-        data: {
-          count: value.length,
-          page: 0,
-          entity => value
-        }
-      }.to_json,
-      :headers => {}
-    }
-  end
-
   test "anonymous users must login" do
     get :index
     assert_response :redirect
@@ -42,6 +29,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "new disbursement" do
     log_in :admin
+    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
     get :new
     assert_response :success
     post :create, disbursement: {
@@ -61,17 +49,15 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "new from nomination_id" do
     log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
-        to_return(aos_result(:nomination, [{
-                        appointmentId: 123,
-                        vesselId: 1,
-                        principalId: 1,
-                        portId: 1,
-                        nominationNumber: 'A'
-                      }]))
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/123").
-        to_return(aos_result(:appointment, [{fileNumber: '123456789'}]))
-    get :new, nomination_id: 123
+    aos_stub(:get, "nomination/123",
+             :nomination, [{
+                appointmentId: 123,
+                vesselId: 1,
+                principalId: 1,
+                portId: 1,
+                nominationNumber: 'A'
+              }])
+    aos_stub(:get, "appointment/123", :appointment, [{fileNumber: '123456789'}])
     assert_response :success
     log_out
   end
@@ -155,6 +141,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "edit and update disbursement" do
     log_in :operator
+    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
     get :edit, id: @published.id
     assert_response :success
     post :update, id: @published.id,
@@ -201,6 +188,7 @@ class DisbursementsControllerTest < ActionController::TestCase
   test "disbursement lifecycle" do
     log_in :office_operator
     stub = stub_no_disbursement
+    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
     post :create, disbursement: {
       type_cd: 0,
       port_id: @port.id,

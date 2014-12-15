@@ -9,6 +9,11 @@ evax:
   name: Evax S.A.R.L.
   email: contact@evax.fr
 
+feecompany:
+  remote_id: 654
+  name: Company With Remote Fee
+  email: remote@f.ee
+
 unset_funding:
   name: Unset funding
 

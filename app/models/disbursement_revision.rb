@@ -28,12 +28,14 @@ class DisbursementRevision < ActiveRecord::Base
 
   def update_schema(old)
     old.fields.keys.each do |k|
-      import_extra_item(old, k) if k.starts_with? "EXTRAITEM"
+      if k.starts_with? "EXTRAITEM" or k.starts_with? "AGENCY_FEE_"
+        import_extra_charge(old, k)
+      end
       merge_legacy_data(old, k) if self.fields.has_key?(k)
     end
   end
 
-  def import_extra_item(old, k)
+  def import_extra_charge(old, k)
     self.fields[k] = self.next_index
     self.codes[k] = old.codes[k]
     self.descriptions[k] = old.descriptions[k]

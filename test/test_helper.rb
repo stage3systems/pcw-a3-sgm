@@ -31,3 +31,24 @@ class ActionController::TestCase
     sign_out @user
   end
 end
+
+def aos_url(path)
+  "https://test:test@test.agencyops.net/api/v1/#{path}"
+end
+def aos_result(entity, value)
+  {
+    :status => 200, :body => {
+      data: {
+        count: value.length,
+        page: 0,
+        entity => value
+      }
+    }.to_json,
+    :headers => {}
+  }
+end
+def aos_stub(method, url, entity, result)
+  stub_request(method, aos_url(url)).
+      to_return(aos_result(entity, result))
+end
+
