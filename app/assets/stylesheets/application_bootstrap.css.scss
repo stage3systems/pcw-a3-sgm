@@ -111,3 +111,10 @@ div.nominations {
   li:hover { background: lighten($sidebar-active-bg, 20%); }
   li.selected:hover { background: lighten($sidebar-active-bg, 10%); }
 }
+
+div.hint {
+  text-transform: none;
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}

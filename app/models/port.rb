@@ -25,13 +25,15 @@ class Port < ActiveRecord::Base
       "fields" => {},
       "descriptions" => {},
       "codes" => {},
-      "compulsory" => {}
+      "compulsory" => {},
+      "hints" => {}
     }
     self.services.each_with_index do |c, i|
       d["fields"][c.key] = i
       d["descriptions"][c.key] = c.item
       d["codes"][c.key] = c.code
       d["compulsory"][c.key] = c.compulsory ? "1": "0"
+      d["hints"][c.key] = "Port specific service"
     end
     d
   end

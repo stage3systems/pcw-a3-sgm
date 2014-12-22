@@ -114,6 +114,7 @@ var setupDA = function(pfda, ctx) {
         ctx.overriden[key] = "0";
         $("table.disbursement tbody").append(
             '<tr class="service" id="service_'+key+'">'
+             +'<td><span class="label label-success">Extra Item</span></td>'
              +'<th>'+item+'&nbsp;<i class="glyphicon glyphicon-remove-circle" '
                                   +'onclick="removeExtra(\''+key+'\')"></i>'
                   +'&nbsp;<span class="editable_value" '
@@ -147,18 +148,18 @@ var setupDA = function(pfda, ctx) {
       }
   });
   var setupDisableListeners = function() {
-      $("input.disable").on("change", function(e) {
-          var key = $(e.target).attr("name").split('_')[1],
-              disabled = $(e.target).is(":checked");
-          if (disabled) {
-              $('tr.service#service_'+key).addClass('muted');
-          } else {
-              $('tr.service#service_'+key).removeClass('muted');
-          }
-          $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
-          ctx.disabled[key] = disabled;
-          update();
-      });
+    $("input.disable").on("change", function(e) {
+      var key = $(e.target).attr("name").split('_')[1],
+      disabled = $(e.target).is(":checked");
+      if (disabled) {
+        $('tr.service#service_'+key).addClass('muted');
+      } else {
+        $('tr.service#service_'+key).removeClass('muted');
+      }
+      $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
+      ctx.disabled[key] = disabled;
+      update();
+    });
   };
   setupDisableListeners();
   $("select.date").on("change", update);

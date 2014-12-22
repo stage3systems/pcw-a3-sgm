@@ -13,7 +13,7 @@ class DisbursementRevision < ActiveRecord::Base
 
   def delete_field(k)
     ['fields', 'codes', 'descriptions',
-     'values', 'values_with_tax'].each do |s|
+     'values', 'values_with_tax', 'hints', 'comments'].each do |s|
       self.send(s).delete(k)
     end
   end
@@ -28,7 +28,7 @@ class DisbursementRevision < ActiveRecord::Base
 
   def update_schema(old)
     old.fields.keys.each do |k|
-      if k.starts_with? "EXTRAITEM" or k.starts_with? "AGENCY_FEE_"
+      if k.starts_with? "EXTRAITEM" or k.starts_with? "AGENCY-FEE-"
         import_extra_charge(old, k)
       end
       merge_legacy_data(old, k) if self.fields.has_key?(k)
@@ -45,6 +45,7 @@ class DisbursementRevision < ActiveRecord::Base
   def merge_legacy_data(old, k)
     self.comments[k] = old.comments[k] if old.comments
     self.disabled[k] = old.disabled[k]
+    self.hints[k] = old.hints[k] if old.hints
     self.overriden[k] = old.overriden[k] if old.overriden.has_key? k
   end
 
@@ -81,7 +82,7 @@ class DisbursementRevision < ActiveRecord::Base
     ct = cargo_type.crystalize rescue {}
     self.data = d["data"].merge(ct)
     ['fields', 'descriptions',
-     'compulsory', 'codes'].each {|f| send("#{f}=", d[f]) }
+     'compulsory', 'codes', 'hints'].each {|f| send("#{f}=", d[f]) }
     ['disabled', 'overriden', 'values',
      'values_with_tax', 'comments'].each {|f| send("#{f}=", {}) }
   end
@@ -114,7 +115,7 @@ class DisbursementRevision < ActiveRecord::Base
 
   def self.hstore_fields
     [:data, :fields, :descriptions, :comments, :compulsory,
-     :disabled, :codes, :overriden, :values, :values_with_tax]
+     :disabled, :hints, :codes, :overriden, :values, :values_with_tax]
   end
 
   def sync_with_aos

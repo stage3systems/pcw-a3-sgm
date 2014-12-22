@@ -56,7 +56,7 @@ class Disbursement < ActiveRecord::Base
                  Configuration.last.crystalize,
                  t["data"]].reduce(:merge)
     }
-    ["fields", "descriptions", "compulsory", "codes"].each do |f|
+    ["fields", "descriptions", "compulsory", "codes", "hints"].each do |f|
       d[f] = p[f].merge(t[f])
     end
     crystalize_agency_fees(d)
@@ -65,7 +65,7 @@ class Disbursement < ActiveRecord::Base
   def crystalize_agency_fees(d)
     agency_fees = AosAgencyFees.new(self)
     afs = agency_fees.crystalize((d['fields'].values.map {|v| v.to_i}.max||0)+1)
-    ["fields", "descriptions", "compulsory", "codes", "comments"].each do |f|
+    ["fields", "descriptions", "compulsory", "codes", "hints"].each do |f|
       d[f] = {} unless d[f]
       d[f] = d[f].merge(afs[f])
     end
@@ -98,6 +98,7 @@ class Disbursement < ActiveRecord::Base
           "descriptions" => {},
           "codes" => {},
           "compulsory" => {},
+          "hints" => {}
         }
   end
 

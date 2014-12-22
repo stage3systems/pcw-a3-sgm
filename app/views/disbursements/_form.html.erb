@@ -98,6 +98,7 @@
     <table class="disbursement table table-bordered table-condensed">
       <thead>
         <tr>
+          <th>Type</th>
           <th>Name</th>
           <th>Amount (<%= @revision.data["currency_code"] %>)</th>
           <th class="tax_inc tax">Amount (<%= @revision.data["currency_code"] %>) Tax Included</th>
@@ -106,13 +107,26 @@
       </thead>
       <tbody>
         <% @revision.field_keys.each do |k| %>
-          <tr class="service<% if not @revision.compulsory?(k) and @revision.disabled?(k) %> muted<% end %>" id="service_<%= k %>">
+          <tr class="service<% if not @revision.compulsory?(k) and @revision.disabled?(k) %> muted<% end %><% if k.start_with? 'AGENCY-FEE-' %> agency-fee<% end %>"
+              id="service_<%= k %>">
+            <td>
+              <% if k.start_with? 'AGENCY-FEE-' %>
+              <span class="label label-primary">Agency Fee</span>
+              <% elsif k.start_with? 'EXTRAITEM' %>
+              <span class="label label-info">Etra Item</span>
+              <% else %>
+              <span class="label label-default">Port/Terminal Charge</span>
+              <% end %>
+            </td>
             <th>
               <%= @revision.descriptions[k] %>
               <% if k.starts_with? "EXTRAITEM" %>
                 &nbsp;<i class="glyphicon glyphicon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
               <% end %>
               &nbsp;<span class="editable_value" id="comment_<%= k %>"><%= @revision.comments[k] rescue '' %></span>
+              <% if @revision.hints and @revision.hints[k] %>
+              <div class="hint"><%= @revision.hints[k] %></div>
+              <% end %>
             </th>
             <td id="service_<%= k %>">
               <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden glyphicon glyphicon-remove-circle" onclick="revertValue('<%= k %>')"></i>
@@ -133,6 +147,7 @@
       </tbody>
       <tfoot>
         <tr>
+          <td></td>
           <td class="form-inline">
             <div class="form-group">
               <input id="extra_item" class="form-control extra-item" />
@@ -148,6 +163,7 @@
           <td></td>
         </tr>
         <tr>
+          <td></td>
           <th>TOTAL</th>
           <th class="total"></th>
           <th class="total_tax_inc tax"></th>

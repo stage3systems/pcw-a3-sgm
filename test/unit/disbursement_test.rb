@@ -139,9 +139,11 @@ class DisbursementTest < ActiveSupport::TestCase
     r = d.current_revision
     assert r.data["total"] == "6000.00"
     assert r.data["total_with_tax"] == "6600.00"
-    assert r.descriptions['AGENCY_FEE_1'] == 'First fee'
-    assert r.descriptions['AGENCY_FEE_2'] == 'Second fee'
-    assert r.descriptions['AGENCY_FEE_3'] == nil
+    assert r.descriptions['AGENCY-FEE-1'] == 'First fee'
+    assert r.hints['AGENCY-FEE-1'] == 'Agency Fee One'
+    assert r.descriptions['AGENCY-FEE-2'] == 'Second fee'
+    assert r.hints['AGENCY-FEE-2'] == 'Agency Fee Two (Port Specific Fee)'
+    assert r.descriptions['AGENCY-FEE-3'] == nil
   end
 
   test "company fees can be disabled" do
@@ -150,7 +152,7 @@ class DisbursementTest < ActiveSupport::TestCase
     r = d.current_revision
     assert r.data["total"] == "6000.00"
     assert r.data["total_with_tax"] == "6600.00"
-    r.disabled['AGENCY_FEE_1'] = "1"
+    r.disabled['AGENCY-FEE-1'] = "1"
     r.compute
     assert r.data["total"] == "5000.00"
     assert r.data["total_with_tax"] == "5500.00"
@@ -162,7 +164,7 @@ class DisbursementTest < ActiveSupport::TestCase
     r = d.current_revision
     assert r.data["total"] == "6000.00"
     assert r.data["total_with_tax"] == "6600.00"
-    r.overriden['AGENCY_FEE_1'] = "2000.00"
+    r.overriden['AGENCY-FEE-1'] = "2000.00"
     r.compute
     assert r.data["total"] == "7000.00"
     assert r.data["total_with_tax"] == "7700.00"
