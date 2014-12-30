@@ -20,7 +20,7 @@ class FundingAgreementTest < ActiveSupport::TestCase
     da = setup_da(company_name)
     [:initial, :close, :inquiry].each do |status|
       da.send("#{status}!")
-      da.save
+      da.save!
       da.reload
       r = da.current_revision
       r.crystalize

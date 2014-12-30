@@ -1,4 +1,8 @@
 ProformaDA::Application.configure do
+
+  # this will default to :random in rails 5
+  config.active_support.test_order = :sorted
+
   # Settings specified here will take precedence over those in config/application.rb
   config.eager_load = false
 
@@ -9,7 +13,7 @@ ProformaDA::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_assets = true
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil

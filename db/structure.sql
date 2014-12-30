@@ -260,7 +260,8 @@ CREATE TABLE disbursement_revisions (
     pdf_views integer DEFAULT 0,
     voyage_number character varying(255),
     amount numeric,
-    currency_symbol character varying(255)
+    currency_symbol character varying(255),
+    hints hstore
 );
 
 
@@ -1300,4 +1301,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140624100705');
 INSERT INTO schema_migrations (version) VALUES ('20140722085112');
 
 INSERT INTO schema_migrations (version) VALUES ('20140728084202');
+
+INSERT INTO schema_migrations (version) VALUES ('20141222110933');
 
