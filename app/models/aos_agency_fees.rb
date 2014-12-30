@@ -12,6 +12,7 @@ class AosAgencyFees
       "compulsory" => {},
       "hints" => {}
     }
+    return fees unless @disbursement.company
     i = offset
     @api.each('agencyFee', {companyId: @disbursement.company.remote_id}) do |f|
       if f['portId'].nil? or f['portId'] == @disbursement.port.remote_id
