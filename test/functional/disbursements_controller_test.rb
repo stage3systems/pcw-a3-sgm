@@ -58,6 +58,7 @@ class DisbursementsControllerTest < ActionController::TestCase
                 nominationNumber: 'A'
               }])
     aos_stub(:get, "appointment/123", :appointment, [{fileNumber: '123456789'}])
+    get :new, nomination_id: 123
     assert_response :success
     log_out
   end

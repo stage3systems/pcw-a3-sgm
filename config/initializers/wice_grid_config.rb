@@ -1,5 +1,7 @@
 if defined?(Wice::Defaults)
 
+  # :nocov:
+
   # Default number of rows to show per page.
   Wice::Defaults::PER_PAGE = 10
 

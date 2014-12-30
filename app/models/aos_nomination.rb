@@ -1,7 +1,7 @@
 class AosNomination
   def self.from_aos_id(id)
     return nil unless id
-    d = self.new(id)
+    self.new(id)
   end
 
   def initialize(id)
@@ -80,6 +80,6 @@ class AosNomination
   end
 
   def aos_appt
-    @aos_appt ||= @api.find('appointment', aos_nom['appointmentId'])
+    @aos_appt ||= @api.find('appointment', appointment_id)
   end
 end
