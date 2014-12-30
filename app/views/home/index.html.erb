@@ -14,7 +14,7 @@
                   label: false, collection: [] %>
       <%= f.input :vessel_name, placeholder: "Vessel Name",
                   label: false, class: 'reset' %>
-      <%= f.input :cargo_type, label: "Cargo Type",
+      <%= f.input :cargo_type,
                   prompt: 'Select a Cargo Type', label: false,
                   class: 'cargo-type',
                   collection: CargoType.authorized, label_method: :display %>

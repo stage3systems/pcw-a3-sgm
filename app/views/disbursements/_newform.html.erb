@@ -4,6 +4,7 @@
                     html: {class: 'form-horizontal'},
                     wrapper: :horizontal_form,
                     wrapper_mappings: {
+                      check_boxes: :horizontal_radio_and_checkboxes,
                       boolean: :horizontal_boolean
                     }) do |f| %>
   <%= f.error_notification %>
@@ -38,7 +39,7 @@
                 input_html: {value: params[:vessel_name]} %>
     <%= f.input :vessel_id, as: :hidden %>
     <% if @disbursement.inquiry? %>
-    <%= f.input :tbn, label: 'TBN' %>
+    <%= f.input :tbn, label: 'TBN', as: :boolean %>
     <% else %>
     <%= f.input :tbn, label: 'TBN', as: :hidden %>
     <% end %>
