@@ -284,4 +284,33 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_out
   end
 
+  test "disbursement agency fee lifecycle" do
+    log_in :office_operator
+    stub = stub_no_disbursement
+    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
+    post :create, disbursement: {
+      type_cd: 0,
+      port_id: @port.id,
+      company_id: @company.id,
+      tbn: false,
+      vessel_id: @vessel.id,
+      appointment_id: 321,
+      nomination_id: 321
+    }
+    d = assigns(:disbursement)
+    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [
+      {id: 1,
+       amount: "2000.0",
+       title: "First fee",
+       description: "Agency Fee",
+       portId: @port.remote_id
+      }
+    ])
+    get :edit, id: d.id
+    assert_response :success
+    dr = assigns(:revision)
+    assert_not_nil dr
+    assert_equal dr.fields.keys, ['AGENCY-FEE-1']
+    log_out
+  end
 end
