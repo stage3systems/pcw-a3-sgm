@@ -200,7 +200,7 @@
   };
   <%= @revision.context.html_safe %>
   var pfda = {
-    revisionId: <%= @revision.id %>,
+    revisionId: <%= @revision.id || 0 %>,
     numItems: <%= @revision.field_keys.count %>,
     cargoTypes: {
     <% @cargo_types.each do |ct| %>
