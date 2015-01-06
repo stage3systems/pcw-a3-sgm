@@ -103,9 +103,8 @@ class DisbursementsController < ApplicationController
   def edit
     @title = "Edit PDA"
     @disbursement = Disbursement.find(params[:id])
-    @revision = @disbursement.current_revision
     # check agency fees
-    @revision = @disbursement.next_revision if @revision.number == 0
+    @revision = @disbursement.next_revision
     @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.authorized
   end
