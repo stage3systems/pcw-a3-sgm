@@ -115,44 +115,14 @@
         </tr>
       </thead>
       <tbody>
-        <% @revision.field_keys.each do |k| %>
-          <tr class="service<% if not @revision.compulsory?(k) and @revision.disabled?(k) %> muted<% end %><% if k.start_with? 'AGENCY-FEE-' %> agency-fee<% end %>"
-              id="service_<%= k %>">
-            <td>
-              <% if k.start_with? 'AGENCY-FEE-' %>
-              <span class="label label-primary">Agency Fee</span>
-              <% elsif k.start_with? 'EXTRAITEM' %>
-              <span class="label label-info">Extra Item</span>
-              <% else %>
-              <span class="label label-default">Port/Terminal Charge</span>
-              <% end %>
-            </td>
-            <th>
-              <%= @revision.descriptions[k] %>
-              <% if k.starts_with? "EXTRAITEM" %>
-                &nbsp;<i class="glyphicon glyphicon-remove-circle" onclick="removeExtra('<%= k %>')"></i>
-              <% end %>
-              &nbsp;<span class="editable_value" id="comment_<%= k %>"><%= @revision.comments[k] rescue '' %></span>
-              <% if @revision.hints and @revision.hints[k] %>
-              <div class="hint"><%= @revision.hints[k] %></div>
-              <% end %>
-            </th>
-            <td id="service_<%= k %>">
-              <a class="editable_value" id="field_<%= k %>" title="Click to override" href="#"></a>&nbsp;<i class="hidden glyphicon glyphicon-remove-circle" onclick="revertValue('<%= k %>')"></i>
-              <input type="hidden" name="overriden_<%= k %>"
-              <% if @revision.overriden.has_key?(k) %>
-                     value="<%= @revision.overriden[k] %>"
-              <% end %>
-              />
-              <input type="hidden" name="value_<%= k %>" />
-              <input  type="hidden" name="value_with_tax_<%= k %>" />
-              <input  type="hidden" name="comment_<%= k %>" value="<%= @revision.comments[k] %>"/>
-              <input  type="hidden" name="disabled_<%= k %>" value="<%= @revision.disabled?(k) ? "1" : "0" %>" />
-            </td>
-            <td id="service_with_tax_<%= k %>" class="tax"></td>
-            <td><% unless @revision.compulsory?(k) %><input class="disable" type="checkbox" name="disable_<%= k %>" <% if @revision.disabled?(k) %>checked="checked"<% end %> /><% end %></td>
-          </tr>
-        <% end %>
+        <tr>
+          <td class="text-center" colspan="5">
+            <h4>
+              Loading Data, please wait...
+              <span class="fa fa-spinner fa-spin"></span>
+            </h4>
+          </td>
+        </tr>
       </tbody>
       <tfoot>
         <tr>
@@ -183,7 +153,7 @@
     </div>
 
   <div class="form-actions">
-    <%= f.submit "Save PDA", class: "btn btn-primary" %>
+    <%= f.submit "Save PDA", class: "btn btn-primary disabled" %>
     <% if @revision.number == 1 %>
     <%= link_to "Cancel",
                 @disbursement,
@@ -200,6 +170,8 @@
   };
   <%= @revision.context.html_safe %>
   var pfda = {
+    portId: <%= @disbursement.port_id.to_json %>,
+    companyId: <%= @disbursement.company_id.to_json %>,
     revisionId: <%= @revision.id || 0 %>,
     numItems: <%= @revision.field_keys.count %>,
     cargoTypes: {
@@ -208,11 +180,14 @@
     <% end %>
     }
   };
-  var setup = function() {
-    setupDA(pfda, ctx);
-  }
-  $(document).ready(setup);
-  $(document).on('page:load', setup);
+  setupDA(pfda, ctx);
+  <% if @disbursement.company_id %>
+  updateAgencyFeesOn(pfda, ctx, "<%= @revision.eta %>");
+  <% else %>
+  rebuildTable(ctx);
+  $('input[type="submit"]').removeClass('disabled');
+  <% end %>
+
   $("#company_name").typeahead(null, {
     name: 'principal',
     displayKey: 'name',

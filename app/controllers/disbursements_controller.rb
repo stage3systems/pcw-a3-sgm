@@ -64,16 +64,6 @@ class DisbursementsController < ApplicationController
     @revisions = @disbursement.disbursement_revisions
   end
 
-  def nominations
-    api = AosApi.new
-    render json: api.search('nomination', params.merge({'limit' => 10})).body
-  end
-
-  def nomination_details
-    aos_nom = AosNomination.from_aos_id(params[:nomination_id])
-    render json: aos_nom.to_json
-  end
-
   # GET /disbursements/1
   # GET /disbursements/1.json
   def show
@@ -103,8 +93,7 @@ class DisbursementsController < ApplicationController
   def edit
     @title = "Edit PDA"
     @disbursement = Disbursement.find(params[:id])
-    # check agency fees
-    @revision = @disbursement.next_revision
+    @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
     @cargo_types = CargoType.authorized
   end

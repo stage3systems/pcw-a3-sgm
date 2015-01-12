@@ -103,7 +103,7 @@
     setTimeout(function() {nominationDetails(id);}, 0);
   };
   var nominationDetails = function(id) {
-    $.ajax('/disbursements/nomination_details.json', {
+    $.ajax('/api/nomination_details.json', {
       type: 'POST',
       dataType: 'json',
       data: {
@@ -143,7 +143,7 @@
     if (port == "Please select a Port") port = "";
     var principal = $("input#company_name").val();
     var vessel = $("input#vessel_name").val();
-    $.ajax('/disbursements/nominations.json', {
+    $.ajax('/api/nominations.json', {
       type: 'POST',
       dataType: 'json',
       data: {

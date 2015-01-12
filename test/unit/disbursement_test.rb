@@ -6,7 +6,10 @@ class DisbursementTest < ActiveSupport::TestCase
     @brisbane = ports(:brisbane)
     @stage3 = companies(:stage3)
     @feecompany = companies(:feecompany)
-    aos_stub(:get, "agencyFee?companyId=654", :agencyFee, [
+    aos_stub(:get,
+             "agencyFee?companyId=654&dateEffectiveEnd=2015-01-12&"+
+             "dateExpiresStart=2015-01-12&portId=987",
+             :agencyFee, [
       {id: 1,
        amount: "1000.0",
        title: "First fee",
@@ -16,12 +19,7 @@ class DisbursementTest < ActiveSupport::TestCase
        amount: "2000.0",
        title: "Second fee",
        description: "Agency Fee Two",
-       portId: @brisbane.remote_id},
-      {id: 3,
-       amount: "3000.0",
-       title: "Third fee",
-       description: "Agency Fee Three",
-       portId: @newcastle.remote_id}
+       portId: @brisbane.remote_id}
     ])
   end
 
@@ -136,38 +134,47 @@ class DisbursementTest < ActiveSupport::TestCase
   test "company fees are inserted" do
     d = self.disbursement(@brisbane, @feecompany)
     assert d.save
+    updater = DisbursementUpdater.new(d.id, nil)
+    updater.run({eta: "2015-01-12"}, {})
+    d = updater.disbursement
     r = d.current_revision
-    assert r.data["total"] == "6000.00"
-    assert r.data["total_with_tax"] == "6600.00"
-    assert r.descriptions['AGENCY-FEE-1'] == 'First fee'
-    assert r.hints['AGENCY-FEE-1'] == 'Agency Fee One'
-    assert r.descriptions['AGENCY-FEE-2'] == 'Second fee'
-    assert r.hints['AGENCY-FEE-2'] == 'Agency Fee Two (Port Specific Fee)'
-    assert r.descriptions['AGENCY-FEE-3'] == nil
+    assert_equal "6000.00", r.data["total"]
+    assert_equal "6600.00", r.data["total_with_tax"]
+    assert_equal 'First fee', r.descriptions['AGENCY-FEE-1']
+    assert_equal 'Agency Fee One', r.hints['AGENCY-FEE-1']
+    assert_equal 'Second fee', r.descriptions['AGENCY-FEE-2']
+    assert_equal 'Agency Fee Two (Port Specific Fee)', r.hints['AGENCY-FEE-2']
+    assert r.descriptions['AGENCY-FEE-3'].nil?
   end
 
   test "company fees can be disabled" do
     d = self.disbursement(@brisbane, @feecompany)
     assert d.save
+    updater = DisbursementUpdater.new(d.id, nil)
+    updater.run({eta: "2015-01-12"}, {})
+    d = updater.disbursement
     r = d.current_revision
-    assert r.data["total"] == "6000.00"
-    assert r.data["total_with_tax"] == "6600.00"
+    assert_equal "6000.00", r.data["total"]
+    assert_equal "6600.00", r.data["total_with_tax"]
     r.disabled['AGENCY-FEE-1'] = "1"
     r.compute
-    assert r.data["total"] == "5000.00"
-    assert r.data["total_with_tax"] == "5500.00"
+    assert_equal "5000.00", r.data["total"]
+    assert_equal "5500.00", r.data["total_with_tax"]
   end
 
   test "company fees can be overriden" do
     d = self.disbursement(@brisbane, @feecompany)
     assert d.save
+    updater = DisbursementUpdater.new(d.id, nil)
+    updater.run({eta: "2015-01-12"}, {})
+    d = updater.disbursement
     r = d.current_revision
-    assert r.data["total"] == "6000.00"
-    assert r.data["total_with_tax"] == "6600.00"
+    assert_equal "6000.00", r.data["total"]
+    assert_equal "6600.00", r.data["total_with_tax"]
     r.overriden['AGENCY-FEE-1'] = "2000.00"
     r.compute
-    assert r.data["total"] == "7000.00"
-    assert r.data["total_with_tax"] == "7700.00"
+    assert_equal "7000.00", r.data["total"]
+    assert_equal "7700.00", r.data["total_with_tax"]
   end
 
   test "blank disbursements have no charges" do
@@ -176,8 +183,8 @@ class DisbursementTest < ActiveSupport::TestCase
     d.blank!
     d.save
     r = d.current_revision
-    assert r.data["total"] == "0.0"
-    assert r.data["total_with_tax"] == "0.0"
-    assert r.amount == 0.0
+    assert_equal "0.0", r.data["total"]
+    assert_equal "0.0", r.data["total_with_tax"]
+    assert_equal "0.0", r.amount.to_s
   end
 end

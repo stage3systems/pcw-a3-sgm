@@ -18,6 +18,10 @@ brisbane:
   tariffs_count: 0
   terminals_count: 0
 
+test:
+  id: 123
+  remote_id: 123
+
 dummy:
   tax: :gst
   currency: :aud

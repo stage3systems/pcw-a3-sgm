@@ -1,38 +1,24 @@
 class AosAgencyFees
-  def initialize(disbursement)
-   @api = AosApi.new
-   @disbursement = disbursement
-  end
-
-  def crystalize(offset=0)
-    fees = {
-      "fields" => {},
-      "descriptions" => {},
-      "codes" => {},
-      "compulsory" => {},
-      "hints" => {}
-    }
-    return fees unless @disbursement.company
-    i = offset
-    @api.each('agencyFee', {companyId: @disbursement.company.remote_id}) do |f|
-      port_id = f['portId']
-      if port_id.nil? or port_id == @disbursement.port.remote_id
-        key = "AGENCY-FEE-#{f['id']}"
-        fees["fields"][key] = i
-        fees["compulsory"][key] = false
-        fees["codes"][key] = make_js(f['amount'])
-        fees["descriptions"][key] = f['title']
-        hint = f['description']
-        hint += ' (Port Specific Fee)' if port_id
-        fees["hints"][key] = hint
-        i += 1
-      end
+  def self.find(q)
+    api = AosApi.new
+    fees = []
+    api.each('agencyFee', q) do |f|
+      fees << self.convert_fee(f)
     end
     fees
   end
 
   private
-  def make_js(amount)
-    "{compute: function(ctx) {return #{amount};}, taxApplies: true}"
+  def self.convert_fee(f)
+    hint = f['description']
+    hint += ' (Port Specific Fee)' if f['portId']
+    code = "{compute: function(ctx) {return #{f['amount']};}, taxApplies: true}"
+    {
+      id: f['id'],
+      description: f['title'],
+      hint: hint,
+      amount: f['amount'],
+      code: code
+    }
   end
 end

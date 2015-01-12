@@ -64,10 +64,6 @@ class DisbursementRevision < ActiveRecord::Base
     LightTemplate.new(['disbursements', '_ctx.js.erb'], {revision: self}).render
   end
 
-  def disabled?(k)
-    return self.disabled[k] == "1"
-  end
-
   def compulsory?(k)
     return self.compulsory[k] == "1"
   end

@@ -31,7 +31,7 @@ var ready = function() {
       var s = editor.getSession().getValue();
       console.log(s);
       target.val(s);
-    }
+    };
     div.parents("form").submit(copyAce);
   });
   $('#sortable').sortable({
@@ -78,4 +78,4 @@ var getBloodhoundFor = function(entities) {
   });
   b.initialize();
   return b;
-}
+};

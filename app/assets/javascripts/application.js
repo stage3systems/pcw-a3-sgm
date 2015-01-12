@@ -41,3 +41,4 @@
 //= require nprogress
 //= require nprogress-turbolinks
 //= require typeahead.bundle
+//= require lodash

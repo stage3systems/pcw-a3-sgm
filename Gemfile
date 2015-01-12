@@ -34,6 +34,7 @@ gem 'geoip'
 gem 'httparty'
 gem 'delayed_job_active_record'
 gem 'turbolinks'
+gem 'lodash-rails'
 gem 'nprogress-rails'
 gem 'daemons'
 gem "codeclimate-test-reporter", group: :test, require: nil

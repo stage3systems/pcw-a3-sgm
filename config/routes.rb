@@ -31,13 +31,15 @@ ProformaDA::Application.routes.draw do
     end
     collection do
       match 'search' => "disbursements#search", via: [:get, :post]
-      match 'nominations' => "disbursements#nominations", via: [:get, :post]
-      match 'nomination_details' => "disbursements#nomination_details", via: [:get, :post]
     end
   end
   match 'proforma_disbursements/:id(/:revision_number)' => 'disbursements#published', :as => :published, via: [:get, :post]
   match 'pfda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short, via: [:get, :post]
   match 'pda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short_2, via: [:get, :post]
+
+  match 'api/nominations' => "api#nominations", via: [:get, :post]
+  match 'api/nomination_details' => "api#nomination_details", via: [:get, :post]
+  match 'api/agency_fees' => "api#agency_fees", via: [:get, :post]
 
   resources :ports do
     resources :terminals do

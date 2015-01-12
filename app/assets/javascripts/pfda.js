@@ -1,5 +1,253 @@
 $.fn.editable.defaults.mode = 'inline';
 
+var rebuildTable = function(ctx) {
+  var $tbody = $('table.disbursement tbody');
+  $tbody.empty();
+  _.each(ctx.services, function(s) {
+    var $tr = $('<tr class="service"></tr>');
+    $tr.attr('id', 'service_'+s);
+    if (ctx.disabled[s]) {
+      $tr.addClass('muted');
+    }
+    $tr.append(typeCell(ctx, s));
+    $tr.append(nameCell(ctx, s));
+    $tr.append(amountCell(ctx, s));
+    $tr.append(taxAmountCell(ctx, s));
+    $tr.append(disableCell(ctx, s));
+    $tbody.append($tr);
+  });
+  setTimeout(function() {
+    displayTaxExempt();
+    updateTable(ctx);
+    setupDisableListeners(ctx);
+  }, 0);
+};
+
+
+var setupDisableListeners = function(ctx) {
+  $("input.disable").on("change", function(e) {
+    var key = $(e.target).attr("name").split('_')[1],
+    disabled = $(e.target).is(":checked");
+    if (disabled) {
+      $('tr.service#service_'+key).addClass('muted');
+    } else {
+      $('tr.service#service_'+key).removeClass('muted');
+    }
+    $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
+    ctx.disabled[key] = disabled;
+    updateTable(ctx);
+  });
+};
+
+var updateTable = function(ctx) {
+    ctx.estimate.eta = new Date($("input#disbursement_revision_eta").val());
+    ctx.estimate.cargo_qty = parseInt($("input#disbursement_revision_cargo_qty").val());
+    ctx.estimate.tugs_in = parseInt($("input#disbursement_revision_tugs_in").val());
+    ctx.estimate.tugs_out = parseInt($("input#disbursement_revision_tugs_out").val());
+    ctx.estimate.loadtime = parseInt($("input#disbursement_revision_loadtime").val());
+    ctx.estimate.days_alongside = parseFloat($("input#disbursement_revision_days_alongside").val());
+    parseCodes(ctx);
+    compute(ctx);
+    var n = ctx.services.length,
+        i = -1;
+    while (++i < n) {
+      var key = ctx.services[i];
+      $("td#service_"+key+" a").html(convert(ctx.values[key]));
+      $("td#service_"+key+" a").attr("data-value", ctx.values[key]);
+      $("td#service_with_tax_"+key).html(convert(ctx.values_with_tax[key]));
+      $('input[name="value_'+key+'"]').val(ctx.values[key]);
+      $('input[name="value_with_tax_'+key+'"]').val(ctx.values_with_tax[key]);
+      if ((key in ctx.overriden) && key.indexOf("EXTRAITEM") !== 0) {
+        $("td#service_"+key+" i").removeClass("hidden");
+        $("td#service_"+key+" a").addClass("editable-unsaved");
+      }
+    }
+    $("th.total").html(convert(ctx.total));
+    $("th.total_tax_inc").html(convert(ctx.totalTaxInc));
+    $("th span.editable_value").editable({
+          display: function(value, sourceData) {
+                      var key = $(this).attr("id").split("_")[1];
+                      $(this).html(value);
+                      $('input[name="comment_'+key+'"]').val(value);
+                      },
+          emptytext: 'Click to add Comment'
+    });
+    var valueDisplay = function(value, sourceData) {
+      var key = $(this).attr("id").split("_")[1];
+      var val = normalizeValue(value);
+      if (ctx.computed[key] != val) {
+        ctx.overriden[key] = val;
+        $('input[name="overriden_'+key+'"]').val(val);
+      }
+      $(this).html(convert(val));
+      setTimeout(function() { updateTable(ctx); }, 0);
+    };
+    $("td a.editable_value").editable({display: valueDisplay, defaultValue: 0});
+};
+
+var deleteService = function(ctx, k) {
+  _.each(['codes', 'descriptions', 'hints',
+          'values', 'values_with_tax', 'compulsory',
+          'disabled', 'overriden'], function(m) {
+    delete ctx[m][k];
+  });
+  ctx.services = _.difference(ctx.services, [k]);
+};
+
+var updateAgencyFees = function(ctx, fees) {
+  var agencyFeeKeys = _.filter(ctx.services, isAgencyFee);
+  // backup existing fees
+  var agencyFeesByDesc = _.foldl(agencyFeeKeys, function(acc, k) {
+    acc[ctx.descriptions[k]] = {
+      key: k,
+      comment: ctx.comments[k],
+      overriden: ctx.overriden[k],
+      disabled: ctx.disabled[k]
+    };
+    return acc;
+  }, {});
+  // delete old fees
+  _.each(agencyFeeKeys, function(k) { deleteService(ctx, k); });
+  // add new fees
+  _.each(fees, function(fee) {
+    var key = 'AGENCY-FEE-'+fee.id;
+    ctx.services.push(key);
+    ctx.codes[key] = '{compute: function(ctx) {return '+
+                     fee.amount+';},taxApplies: true}';
+    ctx.descriptions[key] = fee.description;
+    ctx.hints[key] = fee.hint;
+    ctx.compulsory[key] = false;
+    var migratedFee = agencyFeesByDesc[fee.description];
+    if (migratedFee) {
+      ctx.comments[key] = migratedFee.comment;
+      if (typeof(migratedFee.overriden) !== 'undefined') {
+        ctx.overriden[key] = migratedFee.overriden;
+      }
+      ctx.disabled[key] = migratedFee.disabled;
+    }
+  });
+};
+
+var isExtraItem = function(s) {
+  return s.indexOf('EXTRAITEM') === 0;
+};
+
+var isAgencyFee = function(s) {
+  return s.indexOf('AGENCY-FEE') === 0;
+};
+
+var nameCell = function(ctx, s) {
+  var $th = $('<th></th>');
+  var $descriptionSpan = $('<span class="description">'+
+                           ctx.descriptions[s]+'</span>');
+  $th.append($descriptionSpan);
+  if (isExtraItem(s)) {
+    $th.append('&nbsp;');
+    $th.append('<i class="glyphicon glyphicon-remove-circle" '+
+               'onClick="removeExtra(\''+s+'\')"></i>');
+  }
+  $th.append('&nbsp;');
+  var comment =  ctx.comments[s];
+  $commentSpan = $('<span class="editable_value"></span>');
+  $commentSpan.attr('id', 'comment_'+s);
+  if (comment) {
+    $commentSpan.text(comment);
+  }
+  $th.append($commentSpan);
+  var hint = ctx.hints ? ctx.hints[s] : null;
+  if (hint) {
+    $th.append('<div class="hint">'+hint+'</div>');
+  }
+  return $th;
+};
+
+var typeCell = function(ctx, s) {
+  var $td = $('<td></td>'),
+      $span = $('<span class="label"></span>');
+  if (isExtraItem(s)) {
+    $span.addClass('label-success');
+    $span.text('Extra Item');
+  } else if (isAgencyFee(s)) {
+    $span.addClass('label-primary');
+    $span.text('Agency Fee');
+  } else {
+    $span.addClass('label-default');
+    $span.text('Port/Terminal Charge');
+  }
+  return $td.append($span);
+};
+
+var amountCell = function(ctx, s) {
+  var $td = $('<td></td>');
+  $td.attr('id', 'service_'+s);
+  var $a = $('<a class="editable_value" href="#" '+
+             'title="Click to override"></a>');
+  $a.attr('id', 'field_'+s);
+  $td.append($a);
+  $td.append('&nbsp;');
+  $td.append('<i class="hidden glyphicon glyphicon-remove-circle" '+
+             'onclick="revertValue(\''+s+'\')"></i>');
+  var $overriden = $('<input type="hidden">');
+  $overriden.attr('name', 'overriden_'+s);
+  var overriden = ctx.overriden[s];
+  if (overriden) {
+    $overriden.val(overriden);
+  }
+  $td.append($overriden);
+  $td.append('<input type="hidden" name="value_'+s+'">');
+  $td.append('<input type="hidden" name="value_with_tax_'+s+'">');
+  if (isExtraItem(s)) {
+    $td.append('<input type="hidden" name="description_'+s+'" '+
+               'value="'+ctx.descriptions[s]+'">');
+  }
+  var $comment = $('<input type="hidden" name="comment_'+s+'">');
+  $comment.val(ctx.comments[s]);
+  $td.append($comment);
+  var $disabled = $('<input type="hidden" name="disabled_'+s+'">');
+  $disabled.val(ctx.disabled[s] ? '1' : '0');
+  $td.append($disabled);
+  return $td;
+};
+
+var taxAmountCell = function(ctx, s) {
+  var $td = $('<td class="tax"></td>');
+  $td.attr('id', 'service_with_tax_'+s);
+  return $td;
+};
+
+var disableCell = function(ctx, s) {
+  var $td = $('<td></td>');
+  if (!ctx.compulsory[s]) {
+    var $disabled = $('<input class="disable" '+
+                      'type="checkbox" name="disable_'+s+'">');
+    $disabled.prop('checked', ctx.disabled[s]);
+    $td.append($disabled);
+  }
+  return $td;
+};
+
+var displayTaxExempt = function() {
+  var taxExempt = $("input#disbursement_revision_tax_exempt").is(':checked');
+  if (taxExempt) {
+    $(".tax").hide();
+  } else {
+    $(".tax").show();
+  }
+};
+
+var updateAgencyFeesOn = function(pfda, ctx, date) {
+  $.get('/api/agency_fees?company_id='+pfda.companyId+'&port_id='+pfda.portId+
+        '&eta='+date)
+    .done(function(r) {
+      updateAgencyFees(ctx, r);
+      rebuildTable(ctx);
+      $('input[type="submit"]').removeClass('disabled');
+    })
+    .fail(function(r) {
+      alert('Failed to load Agency Fees');
+    });
+};
+
 var setupDA = function(pfda, ctx) {
   var uuid = function() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -24,50 +272,8 @@ var setupDA = function(pfda, ctx) {
     });
     update();
   };
-  var valueDisplay = function(value, sourceData) {
-    var key = $(this).attr("id").split("_")[1];
-    var val = normalizeValue(value);
-    if (ctx.computed[key] != val) {
-      ctx.overriden[key] = val;
-      $('input[name="overriden_'+key+'"]').val(val);
-    }
-    $(this).html(convert(val));
-    setTimeout(update, 0);
-  };
   function update() {
-    ctx.estimate.eta = new Date($("input#disbursement_revision_eta").val());
-    ctx.estimate.cargo_qty = parseInt($("input#disbursement_revision_cargo_qty").val());
-    ctx.estimate.tugs_in = parseInt($("input#disbursement_revision_tugs_in").val()),
-    ctx.estimate.tugs_out = parseInt($("input#disbursement_revision_tugs_out").val()),
-    ctx.estimate.loadtime = parseInt($("input#disbursement_revision_loadtime").val()),
-    ctx.estimate.days_alongside = parseFloat($("input#disbursement_revision_days_alongside").val())
-    parseCodes(ctx);
-    compute(ctx);
-    var n = ctx.services.length,
-        i = -1;
-    while (++i < n) {
-      var key = ctx.services[i];
-      $("td#service_"+key+" a").html(convert(ctx.values[key]));
-      $("td#service_"+key+" a").attr("data-value", ctx.values[key]);
-      $("td#service_with_tax_"+key).html(convert(ctx.values_with_tax[key]));
-      $('input[name="value_'+key+'"]').val(ctx.values[key]);
-      $('input[name="value_with_tax_'+key+'"]').val(ctx.values_with_tax[key]);
-      if ((key in ctx.overriden) && key.indexOf("EXTRAITEM") != 0) {
-        $("td#service_"+key+" i").removeClass("hidden");
-        $("td#service_"+key+" a").addClass("editable-unsaved");
-      }
-    }
-    $("th.total").html(convert(ctx.total));
-    $("th.total_tax_inc").html(convert(ctx.totalTaxInc));
-    $("th span.editable_value").editable({
-          display: function(value, sourceData) {
-                      var key = $(this).attr("id").split("_")[1];
-                      $(this).html(value);
-                      $('input[name="comment_'+key+'"]').val(value);
-                      },
-          emptytext: 'Click to add Comment'
-    });
-    $("td a.editable_value").editable({display: valueDisplay, defaultValue: 0});
+    updateTable(ctx);
   }
   var cleanCompute = function() {
     $("a.editable_value").removeClass("editable-unsaved");
@@ -75,12 +281,7 @@ var setupDA = function(pfda, ctx) {
   };
 
   var handleTaxExempt = function() {
-    var taxExempt = $("input#disbursement_revision_tax_exempt").is(':checked');
-    if (taxExempt) {
-      $(".tax").hide();
-    } else {
-      $(".tax").show();
-    }
+    displayTaxExempt();
     update();
   };
   $("input#disbursement_revision_cargo_qty").on("change", cleanCompute);
@@ -105,71 +306,36 @@ var setupDA = function(pfda, ctx) {
       if (item) {
         var key = 'EXTRAITEM'+uuid();
         var taxApplies = $("input#extra_tax_applies").is(":checked");
-        ctx.services[pfda.numItems] = key;
-        ctx.codes[key] = '{compute: function(ctx) {return 0;},'
-                         +'taxApplies: '+taxApplies+'}';
+        var index = ctx.services.length;
+        ctx.services[index] = key;
+        ctx.codes[key] = '{compute: function(ctx) {return 0;},'+
+                         'taxApplies: '+taxApplies+'}';
         ctx.values[key] = 0;
+        ctx.descriptions[key] = item;
         ctx.compulsory[key] = false;
         ctx.computed[key] = "0";
         ctx.overriden[key] = "0";
-        $("table.disbursement tbody").append(
-            '<tr class="service" id="service_'+key+'">'
-             +'<td><span class="label label-success">Extra Item</span></td>'
-             +'<th>'+item+'&nbsp;<i class="glyphicon glyphicon-remove-circle" '
-                                  +'onclick="removeExtra(\''+key+'\')"></i>'
-                  +'&nbsp;<span class="editable_value" '
-                              +'id="comment_'+key+'"></span>'
-             +'</th>'
-             +'<td id="service_'+key+'">'
-               +'<a class="editable_value" id="field_'+key+'" '
-                  +'title="Click to override" href="#"></a>&nbsp;'
-               +'<i class="hidden glyphicon glyphicon-remove-circle" '
-                  +'onclick="revertValue(\''+key+'\')"></i>'
-               +'<input type="hidden" name="overriden_'+key+'" />'
-               +'<input type="hidden" name="value_'+key+'" />'
-               +'<input type="hidden" name="value_with_tax_'+key+'" '
-                      +'value="0" />'
-              +'<input type="hidden" name="code_'+key+'" '
-                     +'value="'+ctx.codes[key]+'" />'
-              +'<input type="hidden" name="description_'+key+'" '
-                     +'value="'+item+'" />'
-               +'<input type="hidden" name="comment_'+key+'" />'
-               +'<input  type="hidden" name="disabled_'+key+'" value="0" />'
-             +'</td>'
-             +'<td id="service_with_tax_'+key+'" class="tax"></td>'
-             +'<td><input class="disable" type="checkbox" '
-                        +'name="disable_'+key+'" /></td>'
-           +'</tr>');
-        $("input#extra_item").val("");
-        $("input#extra_tax_applies").removeAttr("checked");
-        pfda.numItems += 1;
-        handleTaxExempt();
-        setupDisableListeners();
+        rebuildTable(ctx);
+        $("input#extra_item").val('');
       }
   });
-  var setupDisableListeners = function() {
-    $("input.disable").on("change", function(e) {
-      var key = $(e.target).attr("name").split('_')[1],
-      disabled = $(e.target).is(":checked");
-      if (disabled) {
-        $('tr.service#service_'+key).addClass('muted');
-      } else {
-        $('tr.service#service_'+key).removeClass('muted');
-      }
-      $('input[name="disabled_'+key+'"]').val(disabled ? "1" : "0");
-      ctx.disabled[key] = disabled;
-      update();
-    });
-  };
-  setupDisableListeners();
   $("select.date").on("change", update);
   $("input#eta_picker").datepicker({
     dateFormat: "dd M yy",
     altField: "input#disbursement_revision_eta",
     altFormat: "yy-mm-dd"
-  })
+  });
+  $('input#extra_item').keypress(function(event) { return event.keyCode != 13; });
   $("input#eta_picker").datepicker(
     "setDate", new Date($("input#disbursement_revision_eta").val()));
-  $("input#eta_picker").on("change", update);
+  $("input#eta_picker").on("change", function() {
+    var $tbody = $('table.disbursement tbody');
+    $tbody.empty();
+    $tbody.append('<tr><td class="text-center" colspan="5">'+
+                  '<h4>Updating Agency Fees, please wait... '+
+                  '<span class="fa fa-spinner fa-spin"></span>'+
+                  '</h4></td></tr>');
+    updateAgencyFeesOn(pfda, ctx, $("input#disbursement_revision_eta").val());
+  });
   handleTaxExempt();
 };

@@ -53,7 +53,7 @@ GEM
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    codeclimate-test-reporter (0.4.3)
+    codeclimate-test-reporter (0.4.5)
       simplecov (>= 0.7.1, < 1.0.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -103,12 +103,14 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.3)
       railties (>= 3.2.16)
-    json (1.8.1)
+    json (1.8.2)
     kaminari (0.16.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    kgio (2.9.2)
+    kgio (2.9.3)
     libv8 (3.16.14.7)
+    lodash-rails (2.4.1)
+      railties (>= 3.1)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     macaddr (1.7.1)
@@ -116,11 +118,11 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
-    mini_portile (0.6.1)
-    minitest (5.5.0)
+    mini_portile (0.6.2)
+    minitest (5.5.1)
     multi_json (1.10.1)
     multi_xml (0.5.5)
-    newrelic_rpm (3.9.8.273)
+    newrelic_rpm (3.9.9.275)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     nprogress-rails (0.1.6.5)
@@ -132,13 +134,13 @@ GEM
       ruby-saml (~> 0.7.2)
     orm_adapter (0.5.0)
     pdf-core (0.4.0)
-    pg (0.17.1)
+    pg (0.18.1)
     prawn (1.3.0)
       pdf-core (~> 0.4.0)
       ttfunk (~> 1.4.0)
     prawn-table (0.2.1)
     rack (1.6.0)
-    rack-test (0.6.2)
+    rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.0)
       actionmailer (= 4.2.0)
@@ -171,7 +173,7 @@ GEM
     ref (1.0.5)
     responders (2.0.2)
       railties (>= 4.2.0.alpha, < 5)
-    ruby-ole (1.2.11.7)
+    ruby-ole (1.2.11.8)
     ruby-saml (0.7.2)
       canonix (= 0.1.1)
       nokogiri
@@ -217,7 +219,7 @@ GEM
       coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.6.0)
+    uglifier (2.7.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicorn (4.8.3)
@@ -232,7 +234,7 @@ GEM
     webmock (1.20.4)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    wice_grid (3.4.11)
+    wice_grid (3.4.12)
       coffee-rails
       kaminari (>= 0.13.0)
 
@@ -260,6 +262,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   kaminari
+  lodash-rails
   newrelic_rpm
   nprogress-rails
   omniauth

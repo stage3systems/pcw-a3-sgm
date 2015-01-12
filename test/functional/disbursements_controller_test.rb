@@ -29,7 +29,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "new disbursement" do
     log_in :admin
-    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
+    stub_no_agency_fee
     get :new
     assert_response :success
     post :create, disbursement: {
@@ -70,33 +70,6 @@ class DisbursementsControllerTest < ActionController::TestCase
     log_out
   end
 
-  test "get nominations" do
-    log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/search/nomination?action=nominations&controller=disbursements&limit=10").
-        to_return(:status => 200, :body => "", :headers => {})
-    get :nominations
-    assert_response :success
-    log_out
-  end
-
-  test "get nomination details" do
-    log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
-        to_return(aos_result(
-                  :nomination, [{
-                    appointmentId: 1234,
-                    portId: 1,
-                    vesselId: 1,
-                    principalId: 1,
-                    nominationNumber: 'A'
-                  }]))
-
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/1234").
-        to_return(aos_result(:appointment, [{fileNumber: "123456789"}]))
-    post :nomination_details, {format: :json, nomination_id: 123}
-    assert_response :success
-    log_out
-  end
 
   test "search disbursements" do
     log_in :admin
@@ -142,7 +115,7 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "edit and update disbursement" do
     log_in :operator
-    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
+    stub_no_agency_fee
     get :edit, id: @published.id
     assert_response :success
     post :update, id: @published.id,
@@ -186,10 +159,19 @@ class DisbursementsControllerTest < ActionController::TestCase
         to_return(aos_result(:disbursement, []))
   end
 
+  def agency_fee_url(date=Date.today,port_id=987)
+    "agencyFee?companyId=321&dateEffectiveEnd=#{date}&"+
+    "dateExpiresStart=#{date}&portId=#{port_id}"
+  end
+
+  def stub_no_agency_fee
+    aos_stub(:get, agency_fee_url, :agencyFee, [])
+  end
+
   test "disbursement lifecycle" do
     log_in :office_operator
     stub = stub_no_disbursement
-    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
+    stub_no_agency_fee
     post :create, disbursement: {
       type_cd: 0,
       port_id: @port.id,
@@ -286,8 +268,8 @@ class DisbursementsControllerTest < ActionController::TestCase
 
   test "disbursement agency fee lifecycle" do
     log_in :office_operator
-    stub = stub_no_disbursement
-    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [])
+    stub_no_disbursement
+    stub_no_agency_fee
     post :create, disbursement: {
       type_cd: 0,
       port_id: @port.id,
@@ -298,7 +280,7 @@ class DisbursementsControllerTest < ActionController::TestCase
       nomination_id: 321
     }
     d = assigns(:disbursement)
-    aos_stub(:get, "agencyFee?companyId=321", :agencyFee, [
+    aos_stub(:get, agency_fee_url("2015-01-12", @port.remote_id), :agencyFee, [
       {id: 1,
        amount: "2000.0",
        title: "First fee",
@@ -306,11 +288,73 @@ class DisbursementsControllerTest < ActionController::TestCase
        portId: @port.remote_id
       }
     ])
+    # agency fees are loaded from js in the first revision
     get :edit, id: d.id
     assert_response :success
     dr = assigns(:revision)
     assert_not_nil dr
-    assert_equal dr.fields.keys, ['AGENCY-FEE-1']
+    assert_equal 0, dr.number
+    assert_equal [], dr.fields.keys
+    # save DA triggers a server side agency fee fetch
+    stub_request(:post,
+                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 1\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+             :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
+    post :update, id: d.id,
+                  disbursement: {},
+                  disbursement_revision: {eta: "2015-01-12"}
+    assert_redirected_to disbursements_path
+    # edit again
+    get :edit, id: d.id
+    assert_response :success
+    dr = assigns(:revision)
+    assert_not_nil dr
+    assert_equal 1, dr.number
+    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+    assert_equal "2200.0", dr.amount.to_s
+    # override fee
+    stub_request(:post,
+                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 2\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+             :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
+    post :update, id: d.id,
+                  disbursement: {},
+                  disbursement_revision: {eta: "2015-01-12"},
+                  'overriden_AGENCY-FEE-1': "3000"
+    assert_redirected_to disbursements_path
+    # edit again
+    get :edit, id: d.id
+    assert_response :success
+    dr = assigns(:revision)
+    assert_not_nil dr
+    assert_equal 2, dr.number
+    assert_equal "3300.0", dr.amount.to_s
+    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+
+
+    # disable fee
+    stub_request(:post,
+                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 3\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
+             :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
+    post :update, id: d.id,
+                  disbursement: {},
+                  disbursement_revision: {eta: "2015-01-12"},
+                  'overriden_AGENCY-FEE-1': "3000",
+                  'disabled_AGENCY-FEE-1': "1"
+    assert_redirected_to disbursements_path
+    # edit again
+    get :edit, id: d.id
+    assert_response :success
+    dr = assigns(:revision)
+    assert_not_nil dr
+    assert_equal 3, dr.number
+    assert_equal "0.0", dr.amount.to_s
+    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+
     log_out
   end
 end

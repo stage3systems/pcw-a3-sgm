@@ -12,8 +12,9 @@ class DisbursementUpdater
     @revision.assign_attributes(revision_params)
     @params = all_params
     update_status
+    handle_agency_fees
     cleanup_extra_items
-    reindex_field_keys
+    reorder_and_reindex_field_keys
     add_new_items
     process_fields
     compute_and_save_revision
@@ -26,6 +27,71 @@ class DisbursementUpdater
     @disbursement.status_cd = status
     @disbursement.save
     @revision.disbursement.reload
+  end
+
+  def fetch_agency_fees
+    @fees = []
+    return unless @disbursement.company
+    return unless @revision.eta
+    @fees = AosAgencyFees.find({
+      companyId: @disbursement.company.remote_id,
+      portId: @disbursement.port.remote_id,
+      dateEffectiveEnd: @revision.eta,
+      dateExpiresStart: @revision.eta
+    })
+  end
+
+  def backup_local_agency_fees
+    @fee_keys = @revision.fields.keys.select {|k| k.start_with? 'AGENCY-FEE-'}
+    @fees_by_desc = @fee_keys.inject({}) do |acc, k|
+      acc[@revision.descriptions[k]] = {
+        key: k,
+        comment: @revision.comments[k],
+        overriden: @revision.overriden[k],
+        disabled: @revision.disabled[k]
+      }
+      acc
+    end
+  end
+
+  def add_fee(fee, key, index)
+    @revision.fields[key] = index
+    @revision.codes[key] = fee[:code]
+    @revision.descriptions[key] = fee[:description]
+    @revision.hints[key] = fee[:hint]
+    @revision.compulsory[key] = false
+  end
+
+  def restore_fee_settings(key, fee)
+    migrated = @fees_by_desc[fee[:description]]
+    if migrated
+      @revision.comments[key] = migrated[:comment]
+      unless migrated[:overriden].nil?
+        @revision.overriden[key] = migrated[:overriden]
+      end
+      @revision.disabled[key] = migrated[:disabled] ? "1" : "0"
+    end
+  end
+
+  def merge_agency_fees
+    index = @revision.fields.values.max+1 rescue 1
+    @fees.each do |fee|
+      key = "AGENCY-FEE-#{fee[:id]}"
+      add_fee(fee, key, index)
+      restore_fee_settings(key, fee)
+      index += 1
+    end
+  end
+
+  def cleanup_agency_fees
+    @fee_keys.each {|k| @revision.delete_field(k) }
+  end
+
+  def handle_agency_fees
+    fetch_agency_fees
+    backup_local_agency_fees
+    cleanup_agency_fees
+    merge_agency_fees
   end
 
   def setup_revision
@@ -46,11 +112,28 @@ class DisbursementUpdater
     (@old_extras-@extras).each {|k| @revision.delete_field(k)}
   end
 
-  def reindex_field_keys
-    @fields = {}
+  def group_charges_by_type
+    @charges = {}
+    @extraitems = {}
+    @fees = {}
     @revision.field_keys.each_with_index do |k,i|
-      @fields[k] = i
+      if k.start_with? 'EXTRAITEM'
+        @extraitems[k] = i
+      elsif k.start_with? 'AGENCY-FEE-'
+        @fees[k] = i
+      else
+        @charges[k] = i
+      end
     end
+  end
+
+  def reorder_and_reindex_field_keys
+    group_charges_by_type
+    @fields = {}
+    i = 0
+    @charges.each {|k,j| @fields[k] = i; i += 1 }
+    @fees.each {|k,j| @fields[k] = i; i += 1 }
+    @extraitems.each {|k,j| @fields[k] = i; i += 1 }
   end
 
   def add_new_items
