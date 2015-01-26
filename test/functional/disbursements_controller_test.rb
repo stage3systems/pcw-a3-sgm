@@ -296,9 +296,10 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_equal 0, dr.number
     assert_equal [], dr.fields.keys
     # save DA triggers a server side agency fee fetch
+    reference = dr.reference.sub('REV. 0', 'REV. 1')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 1\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -314,9 +315,10 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_equal ['AGENCY-FEE-1'], dr.fields.keys
     assert_equal "2200.0", dr.amount.to_s
     # override fee
+    reference = dr.reference.sub('REV. 1', 'REV. 2')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 2\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -332,12 +334,11 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_equal 2, dr.number
     assert_equal "3300.0", dr.amount.to_s
     assert_equal ['AGENCY-FEE-1'], dr.fields.keys
-
-
     # disable fee
+    reference = dr.reference.sub('REV. 2', 'REV. 3')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"vesselone - Newcastle - 12 JAN 2015 - DRAFT - REV. 3\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,

@@ -94,13 +94,13 @@ class XlsDA < Spreadsheet::Workbook
   def add_services(r)
     # setup services
     r = add_service_header(r)
-    @revision.field_keys.each_with_index do |k, i|
+    @document.active_fields.each_with_index do |k, i|
       row = @sheet.row(r+i)
       row.push *get_service_row(k)
       row.default_format = @right_fmt
       (0..1).each {|c| row.set_format(c, @left_fmt) }
     end
-    r+@revision.field_keys.length
+    r+@document.active_fields.length
   end
 
   def add_total(r)
