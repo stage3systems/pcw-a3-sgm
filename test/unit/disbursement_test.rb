@@ -4,11 +4,17 @@ class DisbursementTest < ActiveSupport::TestCase
   def setup
     @newcastle = ports(:newcastle)
     @brisbane = ports(:brisbane)
+    @coal = terminals(:coal)
     @stage3 = companies(:stage3)
     @feecompany = companies(:feecompany)
+    @date=Date.today
     aos_stub(:get,
-             "agencyFee?companyId=654&dateEffectiveEnd=2015-01-12&"+
-             "dateExpiresStart=2015-01-12&portId=987",
+             "agencyFee?companyId=987&dateEffectiveEnd=#{@date}&"+
+             "dateExpiresStart=#{@date}&portId=987",
+             :agencyFee, [])
+    aos_stub(:get,
+             "agencyFee?companyId=654&dateEffectiveEnd=#{@date}&"+
+             "dateExpiresStart=#{@date}&portId=987",
              :agencyFee, [
       {id: 1,
        amount: "1000.0",
@@ -23,9 +29,10 @@ class DisbursementTest < ActiveSupport::TestCase
     ])
   end
 
-  def disbursement(port, company=@stage3)
+  def disbursement(port, terminal=nil, company=@stage3)
     d = Disbursement.new
     d.port = port
+    d.terminal = terminal
     d.company = company
     d.tbn = true
     d.dwt = 1
@@ -36,7 +43,10 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "first revision is automatically created" do
-    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
+    aos_stub(:get,
+             "agencyFee?companyId=987&dateEffectiveEnd=#{@date}&"+
+             "dateExpiresStart=#{@date}&portId=654",
+             :agencyFee, [])
     d = self.disbursement(@newcastle)
     assert d.save
     assert_not_nil d.current_revision
@@ -44,16 +54,22 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "the first revision totals are computed" do
-    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
-    d = self.disbursement(@brisbane)
+    aos_stub(:get,
+             "agencyFee?companyId=987&dateEffectiveEnd=#{@date}&"+
+             "dateExpiresStart=#{@date}&portId=654",
+             :agencyFee, [])
+    d = self.disbursement(@brisbane, @coal)
     assert d.save
     assert d.current_revision.data["total"] == "3000.00"
     assert d.current_revision.data["total_with_tax"] == "3300.00"
   end
 
   test "the context is taken into account" do
-    aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
-    d = self.disbursement(@brisbane)
+    aos_stub(:get,
+             "agencyFee?companyId=987&dateEffectiveEnd=#{@date}&"+
+             "dateExpiresStart=#{@date}&portId=654",
+             :agencyFee, [])
+    d = self.disbursement(@brisbane, @coal)
     assert d.save
     r = d.current_revision
     r.tugs_in = 2
@@ -68,7 +84,7 @@ class DisbursementTest < ActiveSupport::TestCase
 
   test "computed values can be overriden" do
     aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
-    d = self.disbursement(@brisbane)
+    d = self.disbursement(@brisbane, @coal)
     assert d.save
     r = d.current_revision
     r.overriden['MNL'] = "12000.00";
@@ -79,7 +95,7 @@ class DisbursementTest < ActiveSupport::TestCase
 
   test "overriden values are persisted across revisions" do
     aos_stub(:get, "agencyFee?companyId=", :agencyFee, [])
-    d = self.disbursement(@brisbane)
+    d = self.disbursement(@brisbane, @coal)
     assert d.save
     r = d.current_revision
     r.overriden['MNL'] = "12000.00";
@@ -132,7 +148,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "company fees are inserted" do
-    d = self.disbursement(@brisbane, @feecompany)
+    d = self.disbursement(@brisbane, nil, @feecompany)
     assert d.save
     updater = DisbursementUpdater.new(d.id, nil)
     updater.run({eta: "2015-01-12"}, {})
@@ -148,7 +164,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "company fees can be disabled" do
-    d = self.disbursement(@brisbane, @feecompany)
+    d = self.disbursement(@brisbane, nil, @feecompany)
     assert d.save
     updater = DisbursementUpdater.new(d.id, nil)
     updater.run({eta: "2015-01-12"}, {})
@@ -163,7 +179,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   test "company fees can be overriden" do
-    d = self.disbursement(@brisbane, @feecompany)
+    d = self.disbursement(@brisbane, nil, @feecompany)
     assert d.save
     updater = DisbursementUpdater.new(d.id, nil)
     updater.run({eta: "2015-01-12"}, {})

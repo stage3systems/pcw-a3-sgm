@@ -1,7 +1,7 @@
 class Configuration < ActiveRecord::Base
 
-  def crystalize
-    {
+  def crystalize(d)
+    d['data'].merge!({
       "from_name" => company_name,
       "from_address1" => company_address1,
       "from_address2" => company_address2,
@@ -12,6 +12,6 @@ class Configuration < ActiveRecord::Base
       "bsb_number" => bsb_number,
       "ac_number" => ac_number,
       "ac_name" => ac_name
-    }
+    })
   end
 end

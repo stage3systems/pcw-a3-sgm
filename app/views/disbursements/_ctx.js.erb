@@ -1,7 +1,7 @@
 var ctx = {
   services: <%= revision.field_keys.to_json %>,
   descriptions: <%= revision.descriptions.to_json %>,
-  hints: <%= revision.hints.to_json rescue {} %>,
+  hints: <%= (revision.hints || {}).to_json rescue {} %>,
   vessel: {
     nrt: <%= revision.data["vessel_nrt"] %>,
     grt: <%= revision.data["vessel_grt"] %>,

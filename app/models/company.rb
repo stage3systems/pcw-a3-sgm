@@ -7,8 +7,9 @@ class Company < ActiveRecord::Base
 
   FIELDS=['name', 'email', 'prefunding_type', 'prefunding_percent']
 
-  def crystalize
-    FIELDS.inject({}) {|data,f| data["company_#{f}"] = self.send(f); data }
+  def crystalize(d)
+    FIELDS.inject(d['data']) {|data,f| data["company_#{f}"] = self.send(f); data }
+    d
   end
 
   def update_from_json(data)

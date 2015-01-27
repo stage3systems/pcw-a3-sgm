@@ -20,6 +20,7 @@ brisbane:
 
 test:
   id: 123
+  tax: :gst
   remote_id: 123
 
 dummy:

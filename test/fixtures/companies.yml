@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 stage3:
+  remote_id: 987
   name: Stage 3 Systems Inc.
   email: contact@stage3systems.com
 

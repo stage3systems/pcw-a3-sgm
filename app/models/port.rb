@@ -10,30 +10,29 @@ class Port < ActiveRecord::Base
   belongs_to :tax
   has_and_belongs_to_many :offices
 
+  def crystalize(d, skip_services=false)
+    d['data'].merge!({
+      'port_name' => self.name,
+      'tax_name' => self.tax.name,
+      'tax_rate' => self.tax.rate,
+      'tax_code' => self.tax.code,
+      'currency_name' => self.currency.name,
+      'currency_code' => self.currency.code,
+      'currency_symbol' => self.currency.symbol
+    })
+    crystalize_services(d) unless skip_services
+    d
+  end
 
-  def crystalize
-    d = {
-      "data" => {
-        "port_name" => self.name,
-        "tax_name" => self.tax.name,
-        "tax_rate" => self.tax.rate,
-        "tax_code" => self.tax.code,
-        "currency_name" => self.currency.name,
-        "currency_code" => self.currency.code,
-        "currency_symbol" => self.currency.symbol
-      },
-      "fields" => {},
-      "descriptions" => {},
-      "codes" => {},
-      "compulsory" => {},
-      "hints" => {}
-    }
-    self.services.each_with_index do |c, i|
-      d["fields"][c.key] = i
-      d["descriptions"][c.key] = c.item
-      d["codes"][c.key] = c.code
-      d["compulsory"][c.key] = c.compulsory ? "1": "0"
-      d["hints"][c.key] = "Port specific service"
+  private
+  def crystalize_services(d)
+    self.services.each do |s|
+      d['fields'][s.key] = d['index']
+      d['descriptions'][s.key] = s.item
+      d['codes'][s.key] = s.code
+      d['compulsory'][s.key] = s.compulsory ? '1': '0'
+      d['hints'][s.key] = 'Port specific service'
+      d['index'] += 1
     end
     d
   end

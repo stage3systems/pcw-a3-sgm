@@ -5,14 +5,14 @@ class Vessel < ActiveRecord::Base
 
   extend Syncable
 
-  def crystalize
-    {
+  def crystalize(d)
+    d['data'].merge!({
       "vessel_name" => self.name,
       "vessel_dwt" => self.dwt.to_s,
       "vessel_grt" => self.grt.to_s,
       "vessel_loa" => self.loa.to_s,
       "vessel_nrt" => self.nrt.to_s
-    }
+    })
   end
 
   def update_from_json(data)

@@ -45,79 +45,19 @@ class Disbursement < ActiveRecord::Base
       '/disbursement/'+self.appointment_id.to_s)
   end
 
-
-  def crystalize
-    p, t = crystalize_port_and_terminal
-    d = {
-      "data" => [crystalize_vessel,
-                 p["data"],
-                 crystalize_company,
-                 crystalize_office,
-                 Configuration.last.crystalize,
-                 t["data"]].reduce(:merge)
-    }
-    ["fields", "descriptions", "compulsory", "codes", "hints"].each do |f|
-      d[f] = p[f].merge(t[f])
-    end
-    d
-  end
-
-  def crystalize_port_and_terminal
-    p = port.crystalize
-    t = crystalize_terminal((p["fields"].values.map{|v|v.to_i}.max||0)+1)
-    ['fields', 'descriptions', 'codes', 'compulsory'].each do |k|
-      p[k] = {}
-      t[k] = {}
-    end if self.blank?
-    [p, t]
-  end
-
-  def crystalize_office
-    office.crystalize rescue {}
-  end
-
-  def crystalize_company
-    company.crystalize rescue {}
-  end
-
-  def crystalize_terminal(n)
-    terminal.crystalize(n) rescue
-        {
-          "data" => {},
-          "fields" => {},
-          "descriptions" => {},
-          "codes" => {},
-          "compulsory" => {},
-          "hints" => {}
-        }
-  end
-
-  def crystalize_vessel
-    if self.tbn?
-      {
-        "vessel_name" => "TBN-#{self.company.name rescue "NoPrincipal"}",
-        "vessel_dwt" => self.dwt,
-        "vessel_grt" => self.grt,
-        "vessel_nrt" => self.nrt,
-        "vessel_loa" => self.loa
-      }
-    else
-      self.vessel.crystalize
-    end
-  end
-
   def next_revision
     cur = self.current_revision
     nxt = DisbursementRevision.new(disbursement_id: self.id)
     nxt.number = cur.number+1
-    # copy the current revision parameters
+    # copy over the previous revision parameters
     ["cargo_qty", "days_alongside", "loadtime", "eta",
-     "tugs_in", "tugs_out", "tax_exempt", "cargo_type_id"].each do |k|
+     "voyage_number", "tugs_in", "tugs_out", "tax_exempt",
+     "cargo_type_id"].each do |k|
       nxt.send("#{k}=", cur.send(k))
     end
-    nxt.crystalize
-    nxt.update_schema(cur)
-    nxt.compute
+    DisbursementRevision.hstore_fields.each do |f|
+      nxt.send("#{f}=", cur.send(f))
+    end
     nxt
   end
 
@@ -154,7 +94,12 @@ class Disbursement < ActiveRecord::Base
     dr = DisbursementRevision.new
     dr.disbursement = self
     dr.number = 0
-    dr.crystalize
+    dr.user = self.user
+    d = Crystalizer.new(self).run()
+    ['data', 'fields', 'descriptions',
+     'compulsory', 'codes', 'hints'].each {|f| dr.send("#{f}=", d[f]) }
+    ['disabled', 'overriden', 'values',
+     'values_with_tax', 'comments'].each {|f| dr.send("#{f}=", {}) }
     dr.compute
     dr.save
     self.current_revision_id = dr.id

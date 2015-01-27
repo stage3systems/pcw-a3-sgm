@@ -9,6 +9,7 @@ var rebuildTable = function(ctx) {
     if (ctx.disabled[s]) {
       $tr.addClass('muted');
     }
+    $tr.append('<td><span class="fa fa-sort"></span></td>');
     $tr.append(typeCell(ctx, s));
     $tr.append(nameCell(ctx, s));
     $tr.append(amountCell(ctx, s));
@@ -20,9 +21,25 @@ var rebuildTable = function(ctx) {
     displayTaxExempt();
     updateTable(ctx);
     setupDisableListeners(ctx);
+    setupSortable();
+    computeOrder();
   }, 0);
 };
 
+
+var setupSortable = function(ctx) {
+  $('table.disbursement tbody').sortable({
+    handle: 'td:first',
+    update: computeOrder
+  }).disableSelection();
+};
+
+var computeOrder = function() {
+  $('table.disbursement tbody tr').each(function(i, e) {
+    var key = $(e).attr('id').split('_')[1];
+    $('input[name="order_'+key+'"]').val(i);
+  });
+};
 
 var setupDisableListeners = function(ctx) {
   $("input.disable").on("change", function(e) {
@@ -195,6 +212,7 @@ var amountCell = function(ctx, s) {
   }
   $td.append($overriden);
   $td.append('<input type="hidden" name="value_'+s+'">');
+  $td.append('<input type="hidden" name="order_'+s+'">');
   $td.append('<input type="hidden" name="value_with_tax_'+s+'">');
   if (isExtraItem(s)) {
     $td.append('<input type="hidden" name="description_'+s+'" '+
@@ -233,19 +251,6 @@ var displayTaxExempt = function() {
   } else {
     $(".tax").show();
   }
-};
-
-var updateAgencyFeesOn = function(pfda, ctx, date) {
-  $.get('/api/agency_fees?company_id='+pfda.companyId+'&port_id='+pfda.portId+
-        '&eta='+date)
-    .done(function(r) {
-      updateAgencyFees(ctx, r);
-      rebuildTable(ctx);
-      $('input[type="submit"]').removeClass('disabled');
-    })
-    .fail(function(r) {
-      alert('Failed to load Agency Fees');
-    });
 };
 
 var setupDA = function(pfda, ctx) {
@@ -328,14 +333,5 @@ var setupDA = function(pfda, ctx) {
   $('input#extra_item').keypress(function(event) { return event.keyCode != 13; });
   $("input#eta_picker").datepicker(
     "setDate", new Date($("input#disbursement_revision_eta").val()));
-  $("input#eta_picker").on("change", function() {
-    var $tbody = $('table.disbursement tbody');
-    $tbody.empty();
-    $tbody.append('<tr><td class="text-center" colspan="5">'+
-                  '<h4>Updating Agency Fees, please wait... '+
-                  '<span class="fa fa-spinner fa-spin"></span>'+
-                  '</h4></td></tr>');
-    updateAgencyFeesOn(pfda, ctx, $("input#disbursement_revision_eta").val());
-  });
   handleTaxExempt();
 };

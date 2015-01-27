@@ -26,33 +26,6 @@ class DisbursementRevision < ActiveRecord::Base
     self.currency_symbol = compute_currency_symbol
   end
 
-  def update_schema(old)
-    old.fields.keys.each do |k|
-      if k.starts_with? "EXTRAITEM" or k.starts_with? "AGENCY-FEE-"
-        import_extra_charge(old, k)
-      end
-      merge_legacy_data(old, k) if self.fields.has_key?(k)
-    end
-  end
-
-  def import_extra_charge(old, k)
-    self.fields[k] = self.next_index
-    self.codes[k] = old.codes[k]
-    self.descriptions[k] = old.descriptions[k]
-    self.compulsory[k] = false
-  end
-
-  def merge_legacy_data(old, k)
-    self.comments[k] = old.comments[k] if old.comments
-    self.disabled[k] = old.disabled[k]
-    self.hints[k] = old.hints[k] if old.hints
-    self.overriden[k] = old.overriden[k] if old.overriden.has_key? k
-  end
-
-  def next_index
-    self.fields.values.map {|v| v.to_i}.max+1 rescue 1
-  end
-
   def flag_changes
     # work around hstore driver issue
     data_will_change!
@@ -73,22 +46,19 @@ class DisbursementRevision < ActiveRecord::Base
     return self.values[k] != self.values_with_tax[k]
   end
 
-  def crystalize
-    d = disbursement.crystalize
-    ct = cargo_type.crystalize rescue {}
-    self.data = d["data"].merge(ct)
-    ['fields', 'descriptions',
-     'compulsory', 'codes', 'hints'].each {|f| send("#{f}=", d[f]) }
-    ['disabled', 'overriden', 'values',
-     'values_with_tax', 'comments'].each {|f| send("#{f}=", {}) }
-  end
-
   def previous
     self.disbursement.disbursement_revisions.where(:number => self.number-1).first
   end
 
   def next
     self.disbursement.disbursement_revisions.where(:number => self.number+1).first
+  end
+
+  def update_status!
+    self.data['status'] = self.disbursement.status_cd
+    self.data_will_change!
+    self.reference = compute_reference
+    self.save
   end
 
   def compute_currency_symbol
@@ -137,6 +107,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def schedule_sync
+    return if self.number == 0
     self.delay.sync_with_aos
   end
 

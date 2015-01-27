@@ -2,7 +2,7 @@
 revisionone:
   disbursement: draft
   eta: <%= Date.today.to_s(:db) %>
-  data: {} 
+  data: {}
   fields: 
   descriptions: 
   values: 
@@ -21,7 +21,13 @@ revisiontwo:
   disbursement: published
   eta: <%= Date.today.to_s(:db) %>
   user: admin
-  data: {}
+  data: {
+    tax_rate: 1.1,
+    vessel_nrt: 100,
+    vessel_grt: 100,
+    vessel_loa: 100,
+    vessel_dwt: 100
+  }
   fields: {MNL: 1}
   descriptions: {MNL: Marine Levy}
   comments: {MNL: Comment for Marine Levy}

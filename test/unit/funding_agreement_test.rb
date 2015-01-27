@@ -7,10 +7,15 @@ class FundingAgreementTest < ActiveSupport::TestCase
   end
 
   def setup_da(company_name)
+    date = Date.today
     da = Disbursement.new
     da.port = @port
     da.vessel = @vessel
     da.company = companies(company_name)
+    aos_stub(:get,
+             "agencyFee?companyId=#{da.company.remote_id}&dateEffectiveEnd=#{date}&"+
+             "dateExpiresStart=#{date}&portId=#{@port.remote_id}",
+             :agencyFee, [])
     da.save
     da
   end
@@ -23,7 +28,6 @@ class FundingAgreementTest < ActiveSupport::TestCase
       da.save!
       da.reload
       r = da.current_revision
-      r.crystalize
       r.compute
       r.save
       doc = DisbursementDocument.new(da,r)

@@ -4,24 +4,16 @@ class Terminal < ActiveRecord::Base
   has_many :tariffs
   has_many :disbursements
 
-  def crystalize(offset=0)
-    d = {
-      "data" => {
-        "terminal_name" => self.name,
-      },
-      "fields" => {},
-      "descriptions" => {},
-      "codes" => {},
-      "compulsory" => {},
-      "hints" => {}
-    }
-    self.services.each_with_index do |c, i|
-      d["fields"][c.key] = i+offset
-      d["descriptions"][c.key] = c.item
-      d["codes"][c.key] = c.code
-      d["compulsory"][c.key] = c.compulsory ? "1" : "0"
-      d["hints"][c.key] = "Terminal specific service"
-    end
+  def crystalize(d, skip_services=false)
+    d['data']['terminal_name'] = self.name
+    self.services.each do |s|
+      d['fields'][s.key] = d['index']
+      d['descriptions'][s.key] = s.item
+      d['codes'][s.key] = s.code
+      d['compulsory'][s.key] = s.compulsory ? '1' : '0'
+      d['hints'][s.key] = 'Terminal specific service'
+      d['index'] += 1
+    end unless skip_services
     d
   end
 end

@@ -213,7 +213,7 @@ class DisbursementsController < ApplicationController
     if ["draft", "initial", "close", "archived"].member? status
       @disbursement.send("#{status}!")
       @disbursement.save
-      @disbursement.current_revision.schedule_sync
+      @disbursement.current_revision.update_status!
     end
   end
 

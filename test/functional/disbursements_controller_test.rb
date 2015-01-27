@@ -93,6 +93,7 @@ class DisbursementsControllerTest < ActionController::TestCase
         # Page
         get :published, id: @da.publication_id
         assert_response :success
+        @da.reload
         # PDF
         file = Rails.root.join 'pdfs', "#{@da.current_revision.reference}.pdf"
         File.delete(file) rescue nil?
@@ -159,7 +160,7 @@ class DisbursementsControllerTest < ActionController::TestCase
         to_return(aos_result(:disbursement, []))
   end
 
-  def agency_fee_url(date=Date.today,port_id=987)
+  def agency_fee_url(date=Date.today,port_id=654)
     "agencyFee?companyId=321&dateEffectiveEnd=#{date}&"+
     "dateExpiresStart=#{date}&portId=#{port_id}"
   end
@@ -202,12 +203,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     # add disabled extra field
     reference = d.current_revision.reference.sub('REV. 1', 'REV. 3')
     stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":1,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":true}",
-                    :headers => {'Content-Type'=>'application/json'}).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    reference = reference.sub('REV. 3', 'REV. 4')
-    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":false}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":true}",
                     :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -226,6 +222,11 @@ class DisbursementsControllerTest < ActionController::TestCase
       disabled_EXTRAITEM123456: "1"
     assert_redirected_to disbursements_path
     # enable extra field
+    reference = reference.sub('REV. 3', 'REV. 4')
+    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":false}",
+                    :headers => {'Content-Type'=>'application/json'}).
+          to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
       disbursement_revision: {
         cargo_qty: 20000,
@@ -269,7 +270,15 @@ class DisbursementsControllerTest < ActionController::TestCase
   test "disbursement agency fee lifecycle" do
     log_in :office_operator
     stub_no_disbursement
-    stub_no_agency_fee
+    # agency fees are crystalized from revision 0
+    aos_stub(:get, agency_fee_url(Date.today.to_s, @port.remote_id), :agencyFee, [
+      {id: 1,
+       amount: "2000.0",
+       title: "First fee",
+       description: "Agency Fee",
+       portId: @port.remote_id
+      }
+    ])
     post :create, disbursement: {
       type_cd: 0,
       port_id: @port.id,
@@ -280,22 +289,12 @@ class DisbursementsControllerTest < ActionController::TestCase
       nomination_id: 321
     }
     d = assigns(:disbursement)
-    aos_stub(:get, agency_fee_url("2015-01-12", @port.remote_id), :agencyFee, [
-      {id: 1,
-       amount: "2000.0",
-       title: "First fee",
-       description: "Agency Fee",
-       portId: @port.remote_id
-      }
-    ])
-    # agency fees are loaded from js in the first revision
     get :edit, id: d.id
     assert_response :success
     dr = assigns(:revision)
     assert_not_nil dr
     assert_equal 0, dr.number
-    assert_equal [], dr.fields.keys
-    # save DA triggers a server side agency fee fetch
+    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
     reference = dr.reference.sub('REV. 0', 'REV. 1')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").

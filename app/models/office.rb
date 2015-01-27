@@ -4,14 +4,14 @@ class Office < ActiveRecord::Base
 
   extend Syncable
 
-  def crystalize
-    {
+  def crystalize(d)
+    d['data'].merge!({
       "office_name" => name,
       "office_email" => email,
       "office_address1" => address_1,
       "office_address2" => address_2,
       "office_address3" => address_3
-    }
+    })
   end
 
   def update_from_json(data)
