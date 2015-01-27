@@ -4,16 +4,11 @@ class Terminal < ActiveRecord::Base
   has_many :tariffs
   has_many :disbursements
 
+  include ServiceHolderHelper
+
   def crystalize(d, skip_services=false)
     d['data']['terminal_name'] = self.name
-    self.services.each do |s|
-      d['fields'][s.key] = d['index']
-      d['descriptions'][s.key] = s.item
-      d['codes'][s.key] = s.code
-      d['compulsory'][s.key] = s.compulsory ? '1' : '0'
-      d['hints'][s.key] = 'Terminal specific service'
-      d['index'] += 1
-    end unless skip_services
+    crystalize_services(d) unless skip_services
     d
   end
 end

@@ -10,6 +10,8 @@ class Port < ActiveRecord::Base
   belongs_to :tax
   has_and_belongs_to_many :offices
 
+  include ServiceHolderHelper
+
   def crystalize(d, skip_services=false)
     d['data'].merge!({
       'port_name' => self.name,
@@ -21,19 +23,6 @@ class Port < ActiveRecord::Base
       'currency_symbol' => self.currency.symbol
     })
     crystalize_services(d) unless skip_services
-    d
-  end
-
-  private
-  def crystalize_services(d)
-    self.services.each do |s|
-      d['fields'][s.key] = d['index']
-      d['descriptions'][s.key] = s.item
-      d['codes'][s.key] = s.code
-      d['compulsory'][s.key] = s.compulsory ? '1': '0'
-      d['hints'][s.key] = 'Port specific service'
-      d['index'] += 1
-    end
     d
   end
 
