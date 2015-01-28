@@ -800,7 +800,8 @@ CREATE TABLE vessels (
     dwt numeric,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    remote_id integer
+    remote_id integer,
+    imo_code integer
 );
 
 
@@ -1303,4 +1304,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140722085112');
 INSERT INTO schema_migrations (version) VALUES ('20140728084202');
 
 INSERT INTO schema_migrations (version) VALUES ('20141222110933');
+
+INSERT INTO schema_migrations (version) VALUES ('20150128060100');
 

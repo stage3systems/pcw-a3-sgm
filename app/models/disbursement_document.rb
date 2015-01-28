@@ -86,7 +86,7 @@ class DisbursementDocument
   end
 
   def wire_reference
-    "#{@revision.data['vessel_name']} #{@disbursement.nomination_reference}"
+    "#{@revision.data['vessel_name']} #{@revision.data['vessel_imo']} #{@disbursement.nomination_reference}"
   end
 
   def value_for(k)

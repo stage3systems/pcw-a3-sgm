@@ -11,7 +11,8 @@ class Vessel < ActiveRecord::Base
       "vessel_dwt" => self.dwt.to_s,
       "vessel_grt" => self.grt.to_s,
       "vessel_loa" => self.loa.to_s,
-      "vessel_nrt" => self.nrt.to_s
+      "vessel_nrt" => self.nrt.to_s,
+      "vessel_imo" => self.imo_code.to_s
     })
   end
 
@@ -22,6 +23,7 @@ class Vessel < ActiveRecord::Base
     self.nrt = data['intlNetRegisteredTonnage'] if data['intlNetRegisteredTonnage']
     self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
+    self.imo_code = data['imoCode'] if data['imoCode']
   end
 
   def self.aos_modify(data)
