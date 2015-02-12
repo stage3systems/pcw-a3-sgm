@@ -85,6 +85,7 @@ var updateTable = function(ctx) {
           display: function(value, sourceData) {
                       var key = $(this).attr("id").split("_")[1];
                       $(this).html(value);
+                      ctx.comments[key] = value;
                       $('input[name="comment_'+key+'"]').val(value);
                       },
           emptytext: 'Click to add Comment'
