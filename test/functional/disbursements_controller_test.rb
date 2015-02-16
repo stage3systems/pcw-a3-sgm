@@ -217,7 +217,7 @@ class DisbursementsControllerTest < ActionController::TestCase
       value_EXTRAITEM123456: 0.0,
       overriden_EXTRAITEM123456: 1000.0,
       description_EXTRAITEM123456: "New Item",
-      code_EXTRAITEM123456: "{taxApplies: false}",
+      code_EXTRAITEM123456: "{taxApplies: true}",
       comment_EXTRAITEM123456: "Comment",
       disabled_EXTRAITEM123456: "1"
     assert_redirected_to disbursements_path
@@ -238,7 +238,7 @@ class DisbursementsControllerTest < ActionController::TestCase
       value_EXTRAITEM123456: 0.0,
       overriden_EXTRAITEM123456: 1000.0,
       description_EXTRAITEM123456: "New Item",
-      code_EXTRAITEM123456: "{taxApplies: false}",
+      code_EXTRAITEM123456: "{taxApplies: true}",
       comment_EXTRAITEM123456: "Comment",
       disabled_EXTRAITEM123456: "0"
     assert_redirected_to disbursements_path

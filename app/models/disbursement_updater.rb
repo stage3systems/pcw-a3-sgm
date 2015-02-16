@@ -64,7 +64,7 @@ class DisbursementUpdater
   def add_item(k)
     @fields[k] = @params["order_#{k}"]
     @revision.compulsory[k] = "0"
-    taxApplies = (ctx.eval("("+@params["code_#{k}"]+").taxApplies") ? "true" : "false") rescue "true"
+    taxApplies = (@ctx.eval("("+@params["code_#{k}"]+").taxApplies") ? "true" : "false") rescue "true"
     @revision.codes[k] = "{compute: function(c) {return 0;},taxApplies: #{taxApplies}}"
     @revision.descriptions[k] = @params["description_#{k}"]
   end

@@ -212,6 +212,9 @@ var amountCell = function(ctx, s) {
     $overriden.val(overriden);
   }
   $td.append($overriden);
+  var $code = $('<input type="hidden" name="code_'+s+'">');
+  $code.val(ctx.codes[s]);
+  $td.append($code);
   $td.append('<input type="hidden" name="value_'+s+'">');
   $td.append('<input type="hidden" name="order_'+s+'">');
   $td.append('<input type="hidden" name="value_with_tax_'+s+'">');
