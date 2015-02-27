@@ -764,7 +764,8 @@ CREATE TABLE users (
     admin boolean DEFAULT false,
     office_id integer,
     remote_id integer,
-    deleted boolean DEFAULT false
+    deleted boolean DEFAULT false,
+    rocket_id integer
 );
 
 
@@ -1306,4 +1307,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140728084202');
 INSERT INTO schema_migrations (version) VALUES ('20141222110933');
 
 INSERT INTO schema_migrations (version) VALUES ('20150128060100');
+
+INSERT INTO schema_migrations (version) VALUES ('20150227103344');
 

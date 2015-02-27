@@ -7,20 +7,65 @@
       <% flash.each do |name, msg| %>
       <% unless name == :timedout or msg.class != String %>
       <div class="alert alert-<%= name == :notice ? "info" : "danger" %>">
-        <% unless name == :notice %><strong>Oops!</strong> <% end %><%= msg %>
+        <% unless name == :notice %><strong>Oops!<%= name %></strong> <% end %><%= msg %>
       </div>
       <% end %>
       <% end %>
 
       <h1>PDA Estimator</h1>
-      <form accept-charset="UTF-8" action="<%= session_path(resource) %>" id="new_user" method="post" novalidate="novalidate">
-        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <div>
         <label class="sr-only" for="">Username</label>
         <input type="text" name="user[login]" placeholder="Username" class="username">
         <label class="sr-only" for="">Password</label>
         <input type="password" name="user[password]" placeholder="Password" class="password">
-        <input type="submit" value="Log In" class="">
-      </form>
+        <button class="btn submit">Log In</button>
+      </div>
+      <script type="text/javascript">
+        var auth0 = new Auth0({
+          domain: '<%= @domain %>',
+          clientID: '<%= @client_id %>'
+        });
+        var showError = function(txt) {
+          $('div.alert-danger').remove();
+          $('<div class="alert alert-danger">'+
+              '<strong>Oops!</strong> '+txt+
+            '</div>').insertBefore('div.login-container h1');
+        };
+        var logIn = function() {
+          var button = $('button.submit');
+          var username = $('input[name="user[login]').val();
+          var password = $('input[name="user[password]').val();
+          if (username == '' && password == '') return;
+          $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
+          $(button).attr('disabled', 'disabled');
+          username += '.<%= @tenant %>';
+          auth0.login({
+            connection: '<%= @connection %>',
+            username: username,
+            password: password
+          }, function (err, profile, id_token, access_token) {
+            if (err) {
+              showError('Invalid user name or password.');
+              $(button).html('Log In');
+              $(button).removeAttr('disabled');
+              return;
+            }
+            $.post('/auth/register',
+                   {token: id_token})
+              .done(function(r) {
+                window.location = "<%= root_path %>";
+              })
+              .fail(function() {
+                showError('An error prevented login. Please try again or contact support');
+              });
+          });
+        }
+        $('input').on('keypress', function(e) {
+          var keycode = (e.keyCode ? e.keyCode : e.which);
+          if (keycode === 13) logIn();
+        });
+        $('button.submit').on('click', logIn);
+      </script>
       <p class="forgot-pass">
         <a href="https://stage3systems.zendesk.com/home">Trouble logging in?</a>
       </p>

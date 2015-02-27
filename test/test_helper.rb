@@ -20,15 +20,17 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::TestCase
-  include Devise::TestHelpers
 
   def log_in(user)
-    @request.env["devise.mapping"] = Devise.mappings[user]
-    @user = users(user)
-    sign_in @user
+    u =  users(user)
+    session[:token] = {
+      "sub" => "auth0|#{u.rocket_id}",
+      "exp" => (DateTime.now+1.day).to_i
+    }
   end
+
   def log_out
-    sign_out @user
+    session[:token] = nil
   end
 end
 

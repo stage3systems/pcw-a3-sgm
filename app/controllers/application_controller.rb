@@ -2,9 +2,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :set_timezone
 
-  #def after_sign_out_path_for(resource_or_scope)
-    #ProformaDA::Application.config.after_sign_out_path
-  #end
   def ensure_admin
     if current_user.nil? or not current_user.admin?
       redirect_to root_path
@@ -16,4 +13,15 @@ class ApplicationController < ActionController::Base
     tz = ActiveSupport::TimeZone["UTC"] if tz.nil?
     Time.zone = tz
   end
+
+  def authenticate_user!
+    if current_user.nil?
+      redirect_to auth_login_path
+    end
+  end
+
+  def current_user
+    @current_user ||= User.from_token(session[:token])
+  end
+
 end

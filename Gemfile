@@ -10,7 +10,6 @@ gem 'bootstrap-editable-rails'
 gem 'font-awesome-sass'
 gem 'therubyracer', :require => 'v8'
 gem 'breadcrumbs_on_rails'
-gem 'devise'
 gem 'uuidtools'
 gem 'd3js-rails'
 gem 'simple_enum'
@@ -40,6 +39,7 @@ gem 'daemons'
 gem 'select2-rails'
 gem 'roo', '2.0.0beta1'
 gem "codeclimate-test-reporter", group: :test, require: nil
+gem 'jwt'
 
 #gem 'capistrano', '~> 3.2.0'
 #gem 'capistrano-rails', '~> 1.1.1', group: :development

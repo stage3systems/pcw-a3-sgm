@@ -58,6 +58,15 @@ module ProformaDA
     config.aos_api_password = ''
     config.aos_api_psk = 'changeme'
 
+    # Auth0
+    config.auth0 = {
+      client_secret: '',
+      client_id: '',
+      tenant: '',
+      domain: '',
+      connection: 'rocket'
+    }
+
     # multi tenancy tenant
     config.tenant = 'monson'
     config.tenant_name = 'Monson'

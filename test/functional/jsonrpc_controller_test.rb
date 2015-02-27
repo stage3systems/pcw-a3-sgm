@@ -49,13 +49,15 @@ class JsonrpcControllerTest < ActionController::TestCase
                       id: 123,
                       loginName: "jsmith",
                       firstName: "John",
-                      lastName: "Smith"
+                      lastName: "Smith",
+                      rocketId: 321
                     }
                   ]}
     assert_response :success
     body = JSON.parse(response.body)
-    assert body['result'] == "ok"
+    assert_equal "ok", body['result']
     assert User.find_by(remote_id: 123)
+    assert User.find_by(rocket_id: 321)
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
