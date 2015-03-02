@@ -33,8 +33,8 @@
         };
         var logIn = function() {
           var button = $('button.submit');
-          var username = $('input[name="user[login]').val();
-          var password = $('input[name="user[password]').val();
+          var username = $('input[name="user[login]"]').val();
+          var password = $('input[name="user[password]"]').val();
           if (username == '' && password == '') return;
           $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
           $(button).attr('disabled', 'disabled');
