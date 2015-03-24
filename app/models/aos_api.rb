@@ -43,7 +43,7 @@ class AosApi
     resp = JSON.parse(self.class.get("/#{entity}", query: query).body)
     count = 0
     page = 0
-    total = resp["data"]["count"].to_i
+    total = resp["data"]["count"].to_i rescue 0
     while count < total do
       count += resp["data"][entity].length
       resp["data"][entity].each do |e|
