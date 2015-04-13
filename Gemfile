@@ -37,6 +37,7 @@ gem 'turbolinks'
 gem 'lodash-rails'
 gem 'nprogress-rails'
 gem 'daemons'
+gem 'select2-rails'
 gem "codeclimate-test-reporter", group: :test, require: nil
 
 #gem 'capistrano', '~> 3.2.0'

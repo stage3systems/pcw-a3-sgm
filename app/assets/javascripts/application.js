@@ -42,3 +42,4 @@
 //= require nprogress-turbolinks
 //= require typeahead.bundle
 //= require lodash
+//= require select2

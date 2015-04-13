@@ -187,6 +187,8 @@
   rebuildTable(ctx);
   $('input[type="submit"]').removeClass('disabled');
 
+  $('select#disbursement_revision_cargo_type_id').select2();
+
   $("#company_name").typeahead(null, {
     name: 'principal',
     displayKey: 'name',

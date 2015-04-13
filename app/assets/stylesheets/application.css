@@ -14,4 +14,6 @@
  *= require jquery-ui/selectable
  *= require application_bootstrap
  *= require ui.dynatree
+ *= require select2
+ *= require select2-bootstrap
  */
