@@ -161,6 +161,14 @@ var nameCell = function(ctx, s) {
   $th.append($descriptionSpan);
   if (isExtraItem(s)) {
     $th.append('&nbsp;');
+    var checked = '';
+    var m = ctx.codes[s].match(/taxApplies: *(.*)}/);
+    if (m && m[1] === 'true') checked = ' checked="checked"';
+    $th.append('<small>(<label>Tax Applies: </label>'+
+               '<input onchange="toggleTaxApplies(\''+s+'\')" '+
+               'id="tax_applies_'+s+'" type="checkbox"'+
+               checked+'>)</small>');
+    $th.append('&nbsp;');
     $th.append('<i class="glyphicon glyphicon-remove-circle" '+
                'onClick="removeExtra(\''+s+'\')"></i>');
   }
@@ -271,6 +279,18 @@ var setupDA = function(pfda, ctx) {
     $('input[name="overriden_'+key+'"]').val('');
     $("td#service_"+key+" a.editable_value").removeClass("editable-unsaved");
     $("td#service_"+key+" i").addClass("hidden");
+    update();
+  };
+
+  window.toggleTaxApplies = function(key) {
+    var c = ctx.codes[key];
+    var m = c.match(/taxApplies: *(.*)}/);
+    if (m && m[1] === 'true') {
+      ctx.codes[key] = c.replace('true}', 'false}');
+    } else {
+      ctx.codes[key] = c.replace('false}', 'true}');
+    }
+    $('input[name="code_'+key+'"]').val(ctx.codes[key]);
     update();
   };
 

@@ -16,6 +16,7 @@ class DisbursementUpdater
     cleanup_extra_items
     reorder_field_keys
     add_new_items
+    update_extra_items
     process_fields
     compute_and_save_revision
   end
@@ -64,9 +65,16 @@ class DisbursementUpdater
   def add_item(k)
     @fields[k] = @params["order_#{k}"]
     @revision.compulsory[k] = "0"
+    @revision.descriptions[k] = @params["description_#{k}"]
+  end
+
+  def update_extra_items
+    @extras.each {|k| update_tax_applies(k)}
+  end
+
+  def update_tax_applies(k)
     taxApplies = (@ctx.eval("("+@params["code_#{k}"]+").taxApplies") ? "true" : "false") rescue "true"
     @revision.codes[k] = "{compute: function(c) {return 0;},taxApplies: #{taxApplies}}"
-    @revision.descriptions[k] = @params["description_#{k}"]
   end
 
   def process_fields
