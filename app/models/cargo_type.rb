@@ -13,6 +13,11 @@ class CargoType < ActiveRecord::Base
     fn
   end
 
+  def qualifier
+    ts = [self.maintype, self.subtype, self.subsubtype, self.subsubsubtype]
+    ts.compact.last
+  end
+
   def crystalize
     {
       "cargo_type" => self.maintype,

@@ -51,7 +51,7 @@ class DisbursementDocument
   end
 
   def cargo_type
-    (@revision.cargo_type.subsubtype rescue nil) || "N/A"
+    (@revision.cargo_type.qualifier rescue nil) || "N/A"
   end
 
   def from
