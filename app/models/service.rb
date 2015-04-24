@@ -5,6 +5,7 @@ class Service < ActiveRecord::Base
   belongs_to :port, counter_cache: true
   belongs_to :terminal
   belongs_to :user
+  belongs_to :activity_code
   has_many :service_updates
   mount_uploader :document, TariffUploader
   ranks :row_order, :with_same => [:port_id, :terminal_id]
