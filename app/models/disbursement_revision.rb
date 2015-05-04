@@ -80,7 +80,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def self.hstore_fields
-    [:data, :fields, :descriptions, :comments, :compulsory,
+    [:data, :fields, :descriptions, :activity_codes, :comments, :compulsory,
      :disabled, :hints, :codes, :overriden, :values, :values_with_tax]
   end
 
@@ -98,6 +98,7 @@ class DisbursementRevision < ActiveRecord::Base
       "estimateId" => self.disbursement_id,
       "description" => self.descriptions[k],
       "code" => k,
+      "activityCode" => (self.activity_codes[k] rescue 'MISC'),
       "reference" => self.reference,
       "sort" => self.fields[k].to_i,
       "taxApplies" => self.tax_applies?(k),

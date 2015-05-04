@@ -22,6 +22,7 @@ class Crystalizer
       "fields" => {},
       "descriptions" => {},
       "codes" => {},
+      "activity_codes" => {},
       "compulsory" => {},
       "hints" => {},
       "index" => 0
@@ -59,6 +60,7 @@ class Crystalizer
     @hash['fields'][key] = @hash['index']
     @hash['descriptions'][key] = f[:description]
     @hash['codes'][key] = f[:code]
+    @hash['activity_codes'][key] = 'AFEE'
     @hash['compulsory'][key] = '0'
     @hash['hints'][key] = f[:hint]
     @hash['index'] += 1

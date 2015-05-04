@@ -44,6 +44,38 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: activity_codes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE activity_codes (
+    id integer NOT NULL,
+    code character varying,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: activity_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE activity_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE activity_codes_id_seq OWNED BY activity_codes.id;
+
+
+--
 -- Name: cargo_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -261,7 +293,8 @@ CREATE TABLE disbursement_revisions (
     voyage_number character varying(255),
     amount numeric,
     currency_symbol character varying(255),
-    hints hstore
+    hints hstore,
+    activity_codes hstore
 );
 
 
@@ -613,7 +646,8 @@ CREATE TABLE services (
     updated_at timestamp without time zone NOT NULL,
     user_id integer,
     document character varying(255),
-    compulsory boolean DEFAULT true
+    compulsory boolean DEFAULT true,
+    activity_code_id integer
 );
 
 
@@ -764,7 +798,8 @@ CREATE TABLE users (
     admin boolean DEFAULT false,
     office_id integer,
     remote_id integer,
-    deleted boolean DEFAULT false
+    deleted boolean DEFAULT false,
+    rocket_id integer
 );
 
 
@@ -822,6 +857,13 @@ CREATE SEQUENCE vessels_id_seq
 --
 
 ALTER SEQUENCE vessels_id_seq OWNED BY vessels.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY activity_codes ALTER COLUMN id SET DEFAULT nextval('activity_codes_id_seq'::regclass);
 
 
 --
@@ -962,6 +1004,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY vessels ALTER COLUMN id SET DEFAULT nextval('vessels_id_seq'::regclass);
+
+
+--
+-- Name: activity_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY activity_codes
+    ADD CONSTRAINT activity_codes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1132,6 +1182,13 @@ CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at
 
 
 --
+-- Name: index_services_on_activity_code_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_services_on_activity_code_id ON services USING btree (activity_code_id);
+
+
+--
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1143,6 +1200,14 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: fk_rails_e798075302; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY services
+    ADD CONSTRAINT fk_rails_e798075302 FOREIGN KEY (activity_code_id) REFERENCES activity_codes(id);
 
 
 --
@@ -1306,4 +1371,12 @@ INSERT INTO schema_migrations (version) VALUES ('20140728084202');
 INSERT INTO schema_migrations (version) VALUES ('20141222110933');
 
 INSERT INTO schema_migrations (version) VALUES ('20150128060100');
+
+INSERT INTO schema_migrations (version) VALUES ('20150227103344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150424124210');
+
+INSERT INTO schema_migrations (version) VALUES ('20150424125206');
+
+INSERT INTO schema_migrations (version) VALUES ('20150504100551');
 
