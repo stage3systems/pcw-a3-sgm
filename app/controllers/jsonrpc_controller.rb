@@ -22,7 +22,9 @@ class JsonrpcController < ApplicationController
       'company' => Company,
       'office' => Office,
       'vessel' => Vessel,
-      'emailAddress' => EmailAddress
+      'emailAddress' => EmailAddress,
+      'activityCode' => ActivityCode,
+      'activity' => ActivityCode
     }
     k = classes[entity]
     return error(-32001, "Unsupported entity") if k.nil?
