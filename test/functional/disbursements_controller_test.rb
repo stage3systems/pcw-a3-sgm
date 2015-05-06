@@ -298,7 +298,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     reference = dr.reference.sub('REV. 0', 'REV. 1')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -317,7 +317,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     reference = dr.reference.sub('REV. 1', 'REV. 2')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
@@ -337,7 +337,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     reference = dr.reference.sub('REV. 2', 'REV. 3')
     stub_request(:post,
                  "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
+        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
              :headers => {'Content-Type'=>'application/json'}).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,

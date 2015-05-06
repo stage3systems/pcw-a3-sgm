@@ -58,6 +58,7 @@ class Disbursement < ActiveRecord::Base
     DisbursementRevision.hstore_fields.each do |f|
       nxt.send("#{f}=", cur.send(f))
     end
+    nxt.activity_codes = {} unless nxt.activity_codes
     nxt
   end
 
@@ -96,7 +97,7 @@ class Disbursement < ActiveRecord::Base
     dr.number = 0
     dr.user = self.user
     d = Crystalizer.new(self).run()
-    ['data', 'fields', 'descriptions',
+    ['data', 'fields', 'descriptions', 'activity_codes',
      'compulsory', 'codes', 'hints'].each {|f| dr.send("#{f}=", d[f]) }
     ['disabled', 'overriden', 'values',
      'values_with_tax', 'comments'].each {|f| dr.send("#{f}=", {}) }
