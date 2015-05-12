@@ -52,7 +52,8 @@ CREATE TABLE activity_codes (
     code character varying,
     name character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    remote_id integer
 );
 
 
@@ -1379,4 +1380,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150424124210');
 INSERT INTO schema_migrations (version) VALUES ('20150424125206');
 
 INSERT INTO schema_migrations (version) VALUES ('20150504100551');
+
+INSERT INTO schema_migrations (version) VALUES ('20150506155442');
 

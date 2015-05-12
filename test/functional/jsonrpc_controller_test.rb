@@ -344,6 +344,56 @@ class JsonrpcControllerTest < ActionController::TestCase
     v.destroy
   end
 
+  test "activity code lifecycle" do
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                    'changeme',
+                    'CREATE',
+                    'activityCode',
+                    {
+                      id: 123,
+                      name: 'Test code',
+                      code: 'CODE'
+                    }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    c = ActivityCode.find_by(remote_id: 123)
+    assert c.name == 'Test code'
+    assert c.code == 'CODE'
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                    'changeme',
+                    "MODIFY",
+                    "activityCode",
+                    {
+                      id: 123,
+                      name: 'Updated test code',
+                      code: 'CODE'
+                    }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    c = ActivityCode.find_by(remote_id: 123)
+    assert c.name == 'Updated test code'
+    assert c.code == 'CODE'
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                    'changeme',
+                    "DELETE",
+                    "activityCode",
+                    {
+                      id: 123
+                    }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    assert ActivityCode.find_by(remote_id: 123).nil?
+  end
+
   test "vessel lifecycle" do
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
