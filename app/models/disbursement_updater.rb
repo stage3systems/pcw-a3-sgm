@@ -82,6 +82,7 @@ class DisbursementUpdater
     @fields.keys.each do |k|
       field_disabled(k)
       field_overriden(k)
+      update_activity_code(k)
       @revision.comments[k] = @params["comment_#{k}"]
     end
   end
@@ -99,6 +100,18 @@ class DisbursementUpdater
       @revision.overriden[k] = o
     else
       @revision.overriden.delete(k)
+    end
+  end
+
+  def update_activity_code(k)
+    if k.start_with? 'AGENCY-FEE'
+      @revision.activity_codes[k] = 'AFEE'
+    elsif k.start_with? 'EXTRAITEM'
+      @revision.activity_codes[k] = 'MISC'
+    else
+      s = @disbursement.terminal.services.find_by(key: k) rescue nil
+      s = @disbursement.port.services.find_by(key: k) if s.nil?
+      @revision.activity_codes[k] = (s.activity_code.code rescue 'MISC')
     end
   end
 

@@ -4,6 +4,9 @@
   <div class="form-inputs">
     <%= f.input :item %>
     <%= f.input :key %>
+    <%= f.association :activity_code,
+                      label: "On Account Activity Code",
+                      label_method: :display %>
     <%= f.input :compulsory %>
     <%= f.input :code, :as => :editor_ace %>
     <%= f.input :document %>
@@ -13,4 +16,7 @@
   <div class="form-actions">
     <%= f.button :submit, class: 'btn btn-primary' %>
   </div>
+  <script type="text/javascript">
+    $('select#service_activity_code_id').select2();
+  </script>
 <% end %>
