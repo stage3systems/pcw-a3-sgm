@@ -8,19 +8,20 @@ class FundingAgreement
 
   def conditions
     d = @revision.data
+    pfpercent = d['company_prefunding_percent'].to_i
     case d['company_prefunding_type']
     when 'NONE'
       no_prefunding
     when 'PERCENT_ON_CLOSE'
-      percent_on_close
+      percent_on_close(pfpercent)
     when 'PERCENT_ON_BERTH'
-      if d['company_prefunding_percent'].to_i == 100
+      if pfpercent == 100
         full_funding_conditions
       else
-        standard_conditions
+        standard_conditions(pfpercent)
       end
     when 'LESS_AGENCY_FEE_ON_BERTH'
-      standard_conditions
+      minus_fee_conditions(pfpercent)
     else
       default_conditions
     end
@@ -33,31 +34,42 @@ class FundingAgreement
   end
 
   def no_prefunding
-    "Your remittance is appreciated as per our funding agreement. "+
-    "Please arrange most prompt settlement upon Final Disbursement Account "+
-    "to the following Bank Account:"
+    "As per our Service Agreement, which is available on request, no "+
+    "advance funding is required. Please arrange most prompt settlement "+
+    "upon Final Disbursement Account to the following Bank Account:"
   end
 
-  def percent_on_close
+  def percent_on_close(percent)
     da_status_switch(
-      "Please arrange funding to the following Bank Account in due course:",
-      "Please arrange remittance of advance funds to the following Bank Account:")
+      "Please arrange #{percent}% of estimated total, to the following "+
+      "Bank Account in due course:",
+      "Please remit at least #{percent}% of estimated total, as advance "+
+      "funding, to the following Bank Account:")
   end
 
   def full_funding_conditions
     da_status_switch(
       "Please remit in full 100% of estimated total, at least two (2) days "+
       "prior to vessel's arrival, to the following Bank Account:",
-      "If yet to arrange, please remit in full 100% of estimated total to "+
-      "the following Bank Account:")
+      "If yet to arrange, please remit in full 100% of estimated total, "+
+      "immediately, to the following Bank Account:")
   end
 
-  def standard_conditions
+  def standard_conditions(percent)
     da_status_switch(
-      "Please remit advance funds at least two (2) days prior to "+
-      "vessel's arrival, to the following Bank Account:",
-      "If yet to arrange, please remit advance funding to the "+
-      "following Bank Account:")
+      "Please remit at least #{percent}% of estimated total, at least two "+
+      "(2) days prior to vessel's arrival, to the following Bank Account:",
+      "If yet to arrange, please remit at least #{percent}% of estimated "+
+      "total, immediately, to the following Bank Account:")
+  end
+
+  def minus_fee_conditions(percent)
+    da_status_switch(
+      "Please remit #{percent}% of estimated total (minus agency fee), "+
+      "at least two (2) days prior to vessel's arrival, to the following "+
+      "Bank Account:",
+      "If yet to arrange, please remit #{percent}% of estimated total, "+
+      "(minus agency fee), immediately, to the following Bank Account:")
   end
 
   def da_status_switch(initial, close)
