@@ -71,8 +71,10 @@ class DisbursementRevision < ActiveRecord::Base
 
   def compute_reference
     d = self.data
+    nom_ref =  self.disbursement.nomination_reference
     elems = (['vessel_name', 'port_name', 'terminal_name'].map {|e| d[e]}).compact
     elems << self.voyage_number unless self.voyage_number.blank?
+    elems << nom_ref unless nom_ref.blank?
     elems << self.date_updated
     elems << self.disbursement_status
     elems << "REV. #{self.number}"
