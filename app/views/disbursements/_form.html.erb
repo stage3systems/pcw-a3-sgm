@@ -157,7 +157,7 @@
 
   <div class="form-actions">
     <%= f.submit "Save PDA", class: "btn btn-primary disabled" %>
-    <% if @revision.number == 1 %>
+    <% if @revision.number == 0 %>
     <%= link_to "Cancel",
                 @disbursement,
                 method: :delete,
