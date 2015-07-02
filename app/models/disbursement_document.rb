@@ -149,8 +149,8 @@ class DisbursementDocument
 
   def funding_data(mail=false)
     d = [funding_disclaimer,
-         freight_tax_disclaimer,
-         tax_exempt_note]
+         (mail ? nil : freight_tax_disclaimer),
+         tax_exempt_note].compact
     d << towage_provider_note unless mail
     d.unshift(prefunding,
               bank_details,
