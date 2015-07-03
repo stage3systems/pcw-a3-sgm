@@ -9,7 +9,7 @@ class Disbursement < ActiveRecord::Base
            -> {order 'updated_at DESC'},
            dependent: :destroy
   validates_presence_of :type_cd, :port_id
-  validates_presence_of :company_id, unless: :inquiry?
+  validates_presence_of :company_id, unless: "inquiry? or deleted?"
   validates_presence_of :vessel_id, :unless => :tbn?
   validates_presence_of :dwt, :grt, :loa, :nrt, :if => :tbn?
   validates_numericality_of :dwt, :grt, :nrt, :loa, :if => :tbn?
