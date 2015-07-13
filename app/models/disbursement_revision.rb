@@ -115,7 +115,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def date_updated
-    (self.updated_at.to_date rescue Date.today).strftime('%d %b %Y').upcase
+    (self.updated_at || DateTime.now.utc).strftime('%d %b %Y - %H%M%S').upcase
   end
 
   def disbursement_status
