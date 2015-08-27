@@ -1,8 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :timeoutable, :trackable #:validatable
 
   extend Syncable
 
@@ -12,31 +8,6 @@ class User < ActiveRecord::Base
   has_many :disbursement_revisions
   belongs_to :office
   attr_accessor :login
-
-
-  #def self.find_for_saml(auth, signed_in_resource=nil)
-    #user = User.where(:provider => auth.provider, :uid => auth.uid).first
-    #unless user
-      #user = User.create(provider: auth.provider,
-                         #uid: auth.uid,
-                         #email: auth.extra.raw_info.email,
-                         #first_name: auth.extra.raw_info.firstName,
-                         #last_name: auth.extra.raw_info.lastName,
-                         #password: Devise.friendly_token[0, 20]
-                        #)
-    #end
-    #user
-  #end
-
-  def active_for_authentication?
-    super && !deleted
-  end
-
-  def self.find_for_database_authentication(warden_conditions)
-    conditions = warden_conditions.dup
-    login = conditions.delete(:login).downcase
-    where(conditions).where(["lower(uid) = :value OR lower(email) = :value", { :value => login }]).first
-  end
 
   def authorized_ports
     return Port if office.nil? or office.name == "Head Office"
@@ -56,16 +27,23 @@ class User < ActiveRecord::Base
     self.office_id = o.id if o
     if data['password']
       self.encrypted_password = data['password']
-    else
-      self.password = 'monson*'
     end
     self.admin = is_admin_type(data['personType'])
     self.deleted = (data['personType'] == '(DELETED)')
+    self.rocket_id = data['rocketId']
   end
 
   def is_admin_type(t)
     ['MANAGER/USER',
      'SYSTEM ADMINISTRATOR',
      'NAVARIK HIDDEN SUPERUSER'].member? t
+  end
+
+  def self.from_token(token)
+    return nil unless token
+    valid = (Time.at(token["exp"]) > DateTime.now) rescue false
+    return nil unless valid
+    rocket_id = (token["sub"].split('|')[1]).to_i
+    self.where(rocket_id: rocket_id).first
   end
 end

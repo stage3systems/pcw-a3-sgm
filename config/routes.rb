@@ -1,11 +1,4 @@
 ProformaDA::Application.routes.draw do
-  #devise_for :users, controllers: {omniauth_callbacks: "users/omniauth_callbacks"}
-  devise_for :users, path: '', path_names: {sign_in: 'users/auth/saml', sign_out: 'sign_out'}
-
-  #devise_scope :user do
-    #get '/users/auth/saml', :to => 'devise/sessions#new', :as => :new_user_session
-    #get '/sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
-  #end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -108,6 +101,11 @@ ProformaDA::Application.routes.draw do
   #   end
 
   post 'jsonrpc' => 'jsonrpc#index'
+
+  # auth
+  post 'auth/register' => 'auth#register'
+  get 'auth/login' => 'auth#login'
+  get 'auth/logout' => 'auth#logout'
 
   get "home/index"
   # You can have the root of your site routed with "root"

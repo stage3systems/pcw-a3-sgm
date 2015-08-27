@@ -13,6 +13,7 @@ admin:
   provider: test
   email: admin@test.com
   encrypted_password: $2a$14$oWymIMMTYrHMeEXwyWd5nOFmy6gZgYAQPFFVFrg6fSN.ddaEv3LnO
+  rocket_id: 1
   deleted: false
 
 operator:
@@ -22,6 +23,7 @@ operator:
   admin: false
   provider: test
   email: operator@test.com
+  rocket_id: 2
   deleted: false
 
 office_operator:
@@ -33,4 +35,5 @@ office_operator:
   provider: test
   email: officeop@test.com
   deleted: false
+  rocket_id: 3
   office: one

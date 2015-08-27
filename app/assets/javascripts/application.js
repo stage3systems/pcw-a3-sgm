@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require auth0
 //= require bootstrap-sprockets
 //= require jquery.cookie
 //= require jquery_ujs
