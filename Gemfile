@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.4'
 
 gem 'pg'
 gem 'omniauth'
@@ -37,7 +37,7 @@ gem 'lodash-rails'
 gem 'nprogress-rails'
 gem 'daemons', '1.1.9'
 gem 'select2-rails'
-gem 'roo', '2.0.0beta1'
+gem 'roo'
 gem "codeclimate-test-reporter", group: :test, require: nil
 gem 'jwt'
 
