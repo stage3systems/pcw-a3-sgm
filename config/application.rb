@@ -64,7 +64,11 @@ module ProformaDA
       client_id: '',
       tenant: '',
       domain: '',
-      connection: 'rocket'
+      connection: 'rocket',
+      rocket_url: '',
+      rocket_user: '',
+      rocket_password: '',
+      rocket_clear_token_on_logout: false
     }
 
     # multi tenancy tenant

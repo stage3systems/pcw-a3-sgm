@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require auth0
+//= require cross-domain-storage
+//= require rocket
 //= require bootstrap-sprockets
 //= require jquery.cookie
 //= require jquery_ujs

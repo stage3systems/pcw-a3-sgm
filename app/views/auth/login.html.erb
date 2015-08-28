@@ -13,59 +13,20 @@
       <% end %>
 
       <h1>PDA Estimator</h1>
-      <div>
+      <div class="spinner">
+        <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+      </div>
+      <div class="identity-choice" style="display: none;">
+        <button id="continue" class="btn blue">Continue as <span class="username">...</span></button>
+        <button id="signin" class="btn blue">Sign in with a different account</button>
+      </div>
+      <div class="login" style="display: none;">
         <label class="sr-only" for="">Username</label>
         <input type="text" name="user[login]" placeholder="Username" class="username">
         <label class="sr-only" for="">Password</label>
         <input type="password" name="user[password]" placeholder="Password" class="password">
-        <button class="btn submit">Log In</button>
+        <button class="btn blue" id="submit">Log In</button>
       </div>
-      <script type="text/javascript">
-        var auth0 = new Auth0({
-          domain: '<%= @domain %>',
-          clientID: '<%= @client_id %>'
-        });
-        var showError = function(txt) {
-          $('div.alert-danger').remove();
-          $('<div class="alert alert-danger">'+
-              '<strong>Oops!</strong> '+txt+
-            '</div>').insertBefore('div.login-container h1');
-        };
-        var logIn = function() {
-          var button = $('button.submit');
-          var username = $('input[name="user[login]"]').val();
-          var password = $('input[name="user[password]"]').val();
-          if (username == '' && password == '') return;
-          $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
-          $(button).attr('disabled', 'disabled');
-          username += '.<%= @tenant %>';
-          auth0.login({
-            connection: '<%= @connection %>',
-            username: username,
-            password: password
-          }, function (err, profile, id_token, access_token) {
-            if (err) {
-              showError('Invalid user name or password.');
-              $(button).html('Log In');
-              $(button).removeAttr('disabled');
-              return;
-            }
-            $.post('/auth/register',
-                   {token: id_token})
-              .done(function(r) {
-                window.location = "<%= root_path %>";
-              })
-              .fail(function() {
-                showError('An error prevented login. Please try again or contact support');
-              });
-          });
-        }
-        $('input').on('keypress', function(e) {
-          var keycode = (e.keyCode ? e.keyCode : e.which);
-          if (keycode === 13) logIn();
-        });
-        $('button.submit').on('click', logIn);
-      </script>
       <p class="forgot-pass">
         <a href="https://stage3systems.zendesk.com/home">Trouble logging in?</a>
       </p>
@@ -118,6 +79,93 @@
     <% end %>
   </div>
 </div>
+<script type="text/javascript">
+  var auth0 = new Auth0({
+    domain: '<%= @domain %>',
+    clientID: '<%= @client_id %>'
+  });
+  var clearError = function() {
+    $('div.alert-danger').remove();
+  };
+  var showError = function(txt) {
+    clearError();
+    $('<div class="alert alert-danger">'+
+        '<strong>Oops!</strong> '+txt+
+      '</div>').insertBefore('div.login-container h1');
+  };
+
+  var setupLogin = function() {
+    $('input').val('');
+    $('input').on('keypress', function(e) {
+      var keycode = (e.keyCode ? e.keyCode : e.which);
+      if (keycode === 13) logIn();
+    });
+    $('button#submit').removeAttr('disabled');
+    $('button#submit').on('click', logIn);
+  }
+
+  var xdStorage = new CDStorage('<%= @rocket_url %>', '/crossdomain.html');
+  getToken(xdStorage, function(err, token) {
+    $.post('/auth/check', {token: token})
+      .done(function(data) {
+        $("div.spinner").fadeOut(100);
+        if (data.user) {
+          $("span.username").html(data.user.name);
+          $("div.identity-choice").fadeIn(100);
+          $("button#continue").on("click", function() {
+            $(this).html($('<span class="fa fa-spinner fa-spin"></span>'));
+            $(this).attr('disabled', 'disabled');
+            $.post('/auth/register',
+                   {token: token})
+              .done(function() {
+                setToken(xdStorage, token);
+                window.location = "<%= root_path %>";
+              })
+              .fail(function() {
+                showError('An error prevented login. Please try again or contact support');
+              });
+          });
+          $("button#signin").on("click", function() {
+            $("div.identity-choice").fadeOut(100);
+            $("div.login").fadeIn(100, setupLogin);
+          });
+        } else {
+          $("div.login").fadeIn(100, setupLogin);
+        }
+      });
+  });
+
+  var logIn = function() {
+    var button = $('button#submit');
+    var username = $('input[name="user[login]"]').val();
+    var password = $('input[name="user[password]"]').val();
+    if (username == '' && password == '') return;
+    $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
+    $(button).attr('disabled', 'disabled');
+    username += '.<%= @tenant %>';
+    auth0.login({
+      connection: '<%= @connection %>',
+      username: username,
+      password: password
+    }, function (err, profile, id_token, access_token) {
+      if (err) {
+        showError('Invalid user name or password.');
+        $(button).html('Log In');
+        $(button).removeAttr('disabled');
+        return;
+      }
+      $.post('/auth/register',
+             {token: id_token})
+        .done(function(r) {
+          setToken(xdStorage, id_token);
+          window.location = "<%= root_path %>";
+        })
+        .fail(function() {
+          showError('An error prevented login. Please try again or contact support');
+        });
+    });
+  }
+</script>
 <script type="text/javascript">
 window.toggle_login = function() {
   $("div.browser-upgrade").hide();

@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-md-12">
+    <% unless (browser.ie? and
+               browser.version.to_i < 10 and params[:force].nil?) or
+                params[:browser_check] %>
+    <div class="login-container">
+      <% flash.each do |name, msg| %>
+      <% unless name == :timedout or msg.class != String %>
+      <div class="alert alert-<%= name == :notice ? "info" : "danger" %>">
+        <% unless name == :notice %><strong>Oops!<%= name %></strong> <% end %><%= msg %>
+      </div>
+      <% end %>
+      <% end %>
+
+      <h1>PDA Estimator</h1>
+      <div class="spinner">
+        <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+      </div>
+    </div>
+    <div class="login-footer">
+      &copy;2013-2015 Stage 3 Systems Inc. <a href="http://stage3systems.com/tos.html">Terms of Service</a>
+    </div>
+    <% else %>
+    <div class="col-md-10 col-md-offset-1 browsers">
+      <h2 class="title">Please Upgrade Your Browser</h2>
+      <p>This service uses the latest web technologies to make it faster
+         and easier to use.
+         Unfortunately, your browser does not support these technologies.</p>
+         <p>Please download or upgrade to one of the following browsers and
+            you will be on your way.</p>
+
+      <ul class="row">
+        <li class="col-md-6 ff">
+          <a href="http://www.mozilla.org/en-US/firefox/new/"
+             target="_blank">
+            <span>Mozilla Firefox</span> Version 4 or higher
+          </a>
+        </li>
+        <li class="col-md-6 safari">
+          <a href="http://support.apple.com/kb/dl1531"
+             target="_blank">
+            <span>Apple Safari</span> Version 5 or higher
+          </a>
+        </li>
+      </ul>
+      <ul class="row">
+        <li class="col-md-6 chrome">
+          <a href="https://www.google.com/intl/en/chrome/browser/"
+             target="_blank">
+            <span>Google Chrome</span> Version 4 or higher
+        </a>
+        </li>
+        <li class="col-md-6 ie">
+          <a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie"
+             target="_blank">
+            <span>Internet Explorer</span> Version 10 or higher
+         </a>
+        </li>
+      </ul>
+
+      <p class="ignore-browser">
+        <%= link_to "I know what I'm doing, let me in »",
+                    new_user_session_path(force: 1) %></p>
+    </div>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  var xdStorage = new CDStorage('<%= @rocket_url %>', '/crossdomain.html');
+  getToken(xdStorage, function(key, token) {
+    <% if @rocket_clear_token_on_logout %>
+    if (token) {
+      xdStorage.removeItem('userToken');
+    }
+    <% end %>
+    window.location = '<%= auth_login_path %>';
+  });
+</script>
+<script type="text/javascript">
+window.toggle_login = function() {
+  $("div.browser-upgrade").hide();
+  $("div.login").show();
+};
+</script>
