@@ -37,64 +37,6 @@ div.notice {
   padding-top: 1em;
 }
 
-.login-form {
-  width: 260px;
-  margin: 0 auto;
-  padding: 100px 0 60px;
-  .title {
-    font-size: 16px;
-  }
-  .login-submit {
-    margin-top: 10px;
-    clear: both;
-  }
-  input[type='submit'] {
-    height: 32px;
-    padding: 5px 20px;
-    background: #3aceff;
-    border: none;
-    color: #fff;
-    text-align: center;
-  }
-  .support {
-    line-height: 32px;
-    float: right;
-    a { color: #fff; }
-  }
-}
-
-.user_login, .user_password {
-  margin-bottom: 1px;
-  clear: both;
-  label {
-    @include size(32px, 32px);
-    margin: 0;
-    background: #555;
-    color: #fff;
-    line-height: 32px;
-    text-align: center;
-    display: block; float: left;
-  }
-}
-
-input#user_login, input#user_password {
-  @include size(228px, 32px);
-  padding: 5px;
-  background: rgba(0,0,0,0.2);
-  border: none;
-  color: #fff;
-  @include border-top-radius(0);
-  @include border-right-radius(0);
-  @include border-bottom-radius(0);
-  @include border-left-radius(0);
-}
-
-
-
-@media (min-width: $screen-sm) {
-  .login-form { width: 300px; }
-  input#user_login, input#user_password { width: 268px; }
-}
 div.nominations {
   padding: 1em;
   background: #fff;

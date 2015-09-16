@@ -15,37 +15,167 @@
   <%= csrf_meta_tags %>
   <%= render partial: 'common/piwik' %>
   <style>
-    html, body { min-height: 100%; height: 100%; }
-    body { background: url(<%= asset_path 'bg_login.jpg' %>) center center no-repeat; background-size: cover; }
-    .login-container { width: 300px; margin: 20px auto 0; padding: 15px; border: 1px solid rgba(255,255,255,0.3); font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 300; }
-    .login-container h1 { margin: 40px 0 50px; color: #fff; text-align: center; }
-    .login-container form { margin: 0; }
-    .login-container input { width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.3); border: none; display: block; border-radius: 3px; }
-    .login-container input.username { margin-bottom: 1px; border-radius: 3px 3px 0 0; } /* assuming only 2 input fields */
-    .login-container input.password { border-radius: 0 0 3px 3px; }
-    .login-container input[type=text]:focus { background: #fff; }
-    .login-container input[type=password]:focus { background: #fff; }
-    .login-container button.blue { margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.25); color: #fff; width: 100%;}
-    .login-container button.blue:hover,
-    .login-container button.blue:focus { background: rgba(0,0,0,0.4); }
-    .login-container .forgot-pass { margin: 20px 0; text-align: center; }
-    .login-container .forgot-pass a { color: rgba(255,255,255,0.5); }
-
-    .login-footer { width: 300px; margin: 0 auto; padding: 20px 0; font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; }
-    .login-footer a { margin-left: 20px; color: rgba(255,255,255,0.3); }
-
-    /* error / alerts */
-    .login-container .alert { margin: -15px -15px 0 -15px; background: #a94442; border: none; color: #ebccd1; border-radius: 0; }
-
-    /* style placeholder text */
-    .login-container input::-webkit-input-placeholder { color: rgba(255,255,255,0.7); }
-    .login-container input::-moz-placeholder { color: rgba(255,255,255,0.7); }
-    .login-container input:-ms-input-placeholder { color: rgba(255,255,255,0.7); }
-
-
-    @media (min-width: 768px){
-      .login-container { margin-top: 10%; }
+    html {
+      height: 100%;
+      font-size: 62.5%;
     }
+    body {
+      height: 100%;
+    }
+    body#login {
+      background-image: url(<%= asset_path 'bg_login.jpg' %>);
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .login {
+      width: 90%;
+      min-width: 280px;
+      min-height: 380px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.7); /* rgba(48,58,67,0.5); navy */
+      font-size: 15px;
+      color: #fff;
+    }
+    .login-logo {
+      width: 244px; /* dimension specific to logo */
+      height: 40px;
+      margin: 40px auto 55px;
+      background: url(<%= asset_path 'logo_monson.png' %>) top left no-repeat;
+      background-size: 244px 40px;
+    }
+    .login > p {
+      color: #8594a1;
+      text-align: center;
+    }
+    .login input,
+    .login a,
+    .login button {
+      width: 100%;
+      margin: 0 0 2px;
+      border-radius: 4px;
+    }
+    .login input[type='checkbox'],
+    .login input[type='radio'] {
+      width: auto;
+    }
+    .login .login-username,
+    .login .login-password {
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: #fff;
+    }
+    .login .login-username {
+      border-radius: 4px 4px 0 0;
+    }
+    .login .login-password {
+      border-radius: 0 0 4px 4px;
+    }
+    .login .login-submit {
+      font-size: inherit;
+      margin-top: 10px;
+      padding: 8px;
+      background: #37ad58;
+      border: none;
+      color: rgba(255,255,255,0.8);
+    }
+    .login-footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+    }
+    .login-footer a {
+      color: #fff;
+    }
+    .login-error {
+      margin: 0 -20px 20px;
+      padding: 20px;
+      background: #a94442;
+      font-size: 12px;
+      color: #f2dede;
+    }
+    .login-error a {
+      color: #fff;
+    }
+    .login .lets-go,
+    .login .switch-user {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      display: block;
+      border-radius: 4px;
+    }
+    .login .lets-go {
+      margin-bottom: 20px;
+      background: #277ed7;
+      border: none;
+      color: rgba(255,255,255,0.8);
+    }
+    .login .switch-user {
+      background: none;
+      border: 1px solid #277ed7; /* blue */
+    }
+    .login .login-submit:hover,
+    .login .login-submit:focus,
+    .login .logged-in a:hover,
+    .login .logged-in a:focus {
+      color: #fff;
+      text-decoration: none;
+    }
+    .login .switch-user:hover,
+    .login .switch-user:focus {
+      background: #37ad58; /* green */
+      border-color: #37ad58;
+    }
+    .login .icon-refresh-lg {
+      margin: 20px auto;
+      vertical-align: middle;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .login {
+        width: 360px;
+        height: 100%;
+        min-height: 420px;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .login-logo {
+        margin-top: 80px;
+      }
+      .login-footer .company {
+        width: 150px;
+        height: 20px;
+        margin: 20px auto 0;
+        background: url(<%= asset_path 'logo_stage3_white.png' %>) top center no-repeat;
+        background-size: 150px 20px;
+        display: block;
+        text-indent: -999px;
+      }
+    }
+    @media (min-height: 600px) and (min-width: 768px) {
+      .login-logo {
+        margin-top: 100px;
+      }
+      .login-footer {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 20px;
+      }
+    }
+    /*
+    @media (min-width: 992px) {
+      body#login { /* load hq image if likely to be desktop
+        background-image: url('images/bg_login_hq.jpg');
+      }
+    }*/
 
     /* browser checks */
     .browsers { color: #fff; border: 1px solid #fff;}
@@ -59,7 +189,7 @@
 
   </style>
 </head>
-<body>
+<body id="login">
 <div class="container-fluid">
   <%= yield %>
 </div>

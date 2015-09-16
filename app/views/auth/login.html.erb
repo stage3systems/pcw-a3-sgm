@@ -1,82 +1,37 @@
-<div class="row">
-  <div class="col-md-12">
-    <% unless (browser.ie? and
-               browser.version.to_i < 10 and params[:force].nil?) or
-                params[:browser_check] %>
-    <div class="login-container">
-      <% flash.each do |name, msg| %>
-      <% unless name == :timedout or msg.class != String %>
-      <div class="alert alert-<%= name == :notice ? "info" : "danger" %>">
-        <% unless name == :notice %><strong>Oops!<%= name %></strong> <% end %><%= msg %>
-      </div>
-      <% end %>
-      <% end %>
+<div class="login">
+  <h1 class="text-center">PDA Estimator</h1>
+  <div class="login-error" style="display: none;">
+    <p><strong class="js-error-title"></strong></p>
+    <span class="js-error-msg"></span>
+  </div>
+  <div class="spinner">
+    <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+  </div>
+  <div class="logged-in" style="display: none;">
+    <a href="#" class="lets-go js-login-as">
+      Continue as <span class="username">...</span>
+    </a>
+    <a href="#" class="switch-user js-switch-user">
+      Sign in with a different account
+    </a>
+  </div>
+  <div class="login-form" style="display: none;">
+    <form id="login">
+      <input type="text" name="username" class="input login-username"
+             placeholder="Username" autocomplete="off"
+             autocorrect="off" autocapitalize="off"
+             spellcheck="false">
+      <input type="password" name="password" class="input login-password"
+             placeholder="Password">
+      <a href="#" class="btn login-submit">Log In</a>
+    </form>
+  </div>
 
-      <h1>PDA Estimator</h1>
-      <div class="spinner">
-        <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
-      </div>
-      <div class="identity-choice" style="display: none;">
-        <button id="continue" class="btn blue">Continue as <span class="username">...</span></button>
-        <button id="signin" class="btn blue">Sign in with a different account</button>
-      </div>
-      <div class="login" style="display: none;">
-        <label class="sr-only" for="">Username</label>
-        <input type="text" name="user[login]" placeholder="Username" class="username">
-        <label class="sr-only" for="">Password</label>
-        <input type="password" name="user[password]" placeholder="Password" class="password">
-        <button class="btn blue" id="submit">Log In</button>
-      </div>
-      <p class="forgot-pass">
-        <a href="https://stage3systems.zendesk.com/home">Trouble logging in?</a>
-      </p>
-    </div>
-    <div class="login-footer">
-      &copy;2013-2015 Stage 3 Systems Inc. <a href="http://stage3systems.com/tos.html">Terms of Service</a>
-    </div>
-    <% else %>
-    <div class="col-md-10 col-md-offset-1 browsers">
-      <h2 class="title">Please Upgrade Your Browser</h2>
-      <p>This service uses the latest web technologies to make it faster
-         and easier to use.
-         Unfortunately, your browser does not support these technologies.</p>
-         <p>Please download or upgrade to one of the following browsers and
-            you will be on your way.</p>
-
-      <ul class="row">
-        <li class="col-md-6 ff">
-          <a href="http://www.mozilla.org/en-US/firefox/new/"
-             target="_blank">
-            <span>Mozilla Firefox</span> Version 4 or higher
-          </a>
-        </li>
-        <li class="col-md-6 safari">
-          <a href="http://support.apple.com/kb/dl1531"
-             target="_blank">
-            <span>Apple Safari</span> Version 5 or higher
-          </a>
-        </li>
-      </ul>
-      <ul class="row">
-        <li class="col-md-6 chrome">
-          <a href="https://www.google.com/intl/en/chrome/browser/"
-             target="_blank">
-            <span>Google Chrome</span> Version 4 or higher
-        </a>
-        </li>
-        <li class="col-md-6 ie">
-          <a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie"
-             target="_blank">
-            <span>Internet Explorer</span> Version 10 or higher
-         </a>
-        </li>
-      </ul>
-
-      <p class="ignore-browser">
-        <%= link_to "I know what I'm doing, let me in »",
-                    new_user_session_path(force: 1) %></p>
-    </div>
-    <% end %>
+  <div class="login-footer">
+    <div><a href="http://stage3systems.com/tos.html">Terms of Service</a></div>
+    &copy; 2013-<%= Date.today.year %>
+    <a href="http://stage3systems.com" target="_blank"
+       class="company">Stage 3 Systems Inc.</a>
   </div>
 </div>
 <script type="text/javascript">
@@ -85,23 +40,25 @@
     clientID: '<%= @client_id %>'
   });
   var clearError = function() {
-    $('div.alert-danger').remove();
+    $('div.login-error').hide();
   };
-  var showError = function(txt) {
-    clearError();
-    $('<div class="alert alert-danger">'+
-        '<strong>Oops!</strong> '+txt+
-      '</div>').insertBefore('div.login-container h1');
+  var showError = function(title, msg) {
+    $('.js-error-title').html(title);
+    $('.js-error-msg').html(msg);
+    $('div.login-error').show();
   };
 
   var setupLogin = function() {
-    $('input').val('');
-    $('input').on('keypress', function(e) {
+    $('input.input').val('');
+    $('input.input').on('keypress', function(e) {
       var keycode = (e.keyCode ? e.keyCode : e.which);
       if (keycode === 13) logIn();
     });
-    $('button#submit').removeAttr('disabled');
-    $('button#submit').on('click', logIn);
+    $('a.login-submit').removeAttr('disabled');
+    $('a.login-submit').on('click', function(e) {
+        e.preventDefault();
+        logIn();
+    });
   }
 
   var xdStorage = new CDStorage('<%= @rocket_url %>', '/crossdomain.html');
@@ -110,9 +67,11 @@
       .done(function(data) {
         $("div.spinner").fadeOut(100);
         if (data.user) {
-          $("span.username").html(data.user.name);
-          $("div.identity-choice").fadeIn(100);
-          $("button#continue").on("click", function() {
+          $("span.username").html(data.user.name+' ('+
+                                  data.user.rocket_name+')');
+          $("div.logged-in").fadeIn(100);
+          $("a.js-login-as").on("click", function(e) {
+            e.preventDefault();
             $(this).html($('<span class="fa fa-spinner fa-spin"></span>'));
             $(this).attr('disabled', 'disabled');
             $.post('/auth/register',
@@ -122,34 +81,44 @@
                 window.location = "<%= root_path %>";
               })
               .fail(function() {
-                showError('An error prevented login. Please try again or contact support');
+                showError(
+                  'The login details you entered were not '+
+                  'found in the system or are incorrect.',
+                  'Please contact Customer Support for assistance.');
               });
           });
-          $("button#signin").on("click", function() {
-            $("div.identity-choice").fadeOut(100);
-            $("div.login").fadeIn(100, setupLogin);
+          $("a.js-switch-user").on("click", function(e) {
+            e.preventDefault();
+            $("div.logged-in").fadeOut(100);
+            $("div.login-form").fadeIn(100, setupLogin);
           });
         } else {
-          $("div.login").fadeIn(100, setupLogin);
+          $("div.login-form").fadeIn(100, setupLogin);
         }
       });
   });
 
   var logIn = function() {
-    var button = $('button#submit');
-    var username = $('input[name="user[login]"]').val();
-    var password = $('input[name="user[password]"]').val();
+    var button = $('a.login-submit');
+    var username = $('input[name="username"]').val();
+    var password = $('input[name="password"]').val();
     if (username == '' && password == '') return;
     $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
     $(button).attr('disabled', 'disabled');
-    username += '.<%= @tenant %>';
+    if (!username.match(/\.<%= @tenant %>$/)) {
+      username += '.<%= @tenant %>';
+    }
     auth0.login({
       connection: '<%= @connection %>',
       username: username,
       password: password
     }, function (err, profile, id_token, access_token) {
+      console.log('Auth0 return', arguments);
       if (err) {
-        showError('Invalid user name or password.');
+        showError(
+          'The login details you entered were not '+
+          'found in the system or are incorrect.',
+          'Please contact Customer Support for assistance.');
         $(button).html('Log In');
         $(button).removeAttr('disabled');
         return;
@@ -161,14 +130,11 @@
           window.location = "<%= root_path %>";
         })
         .fail(function() {
-          showError('An error prevented login. Please try again or contact support');
+          showError(
+            'An unknown error occurred.',
+            'Please try again and contact Customer Support '+
+            'if the problem persists.');
         });
     });
   }
-</script>
-<script type="text/javascript">
-window.toggle_login = function() {
-  $("div.browser-upgrade").hide();
-  $("div.login").show();
-};
 </script>
