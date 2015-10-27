@@ -134,7 +134,8 @@ class DisbursementDocument
       ['ETA', eta],
       ['Cargo Quantity', @revision.cargo_qty.to_s],
       ['Load/Discharge', "#{@revision.loadtime} hours"],
-      ['Tugs', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"]
+      ['Tugs', "#{@revision.tugs_in} In - #{@revision.tugs_out} Out"],
+      ['Days Alongside', "#{@revision.days_alongside}"]
     ]
   end
 
