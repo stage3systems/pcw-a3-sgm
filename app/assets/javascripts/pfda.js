@@ -115,7 +115,7 @@ var deleteService = function(ctx, k) {
 var updateAgencyFees = function(ctx, fees) {
   var agencyFeeKeys = _.filter(ctx.services, isAgencyFee);
   // backup existing fees
-  var agencyFeesByDesc = _.foldl(agencyFeeKeys, function(acc, k) {
+  var agencyFeesByDesc = _.reduce(agencyFeeKeys, function(acc, k) {
     acc[ctx.descriptions[k]] = {
       key: k,
       comment: ctx.comments[k],
