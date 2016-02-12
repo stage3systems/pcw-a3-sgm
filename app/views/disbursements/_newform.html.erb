@@ -110,7 +110,8 @@
         nomination_id: nominationId
       },
       success: function(d) {
-        if (d.port_id) {
+        if (d.port_id
+            && d.port_id != $("select#disbursement_port_id").val()) {
           $("select#disbursement_port_id").val(d.port_id);
           setTimeout(updateTerminals, 0);
         }
