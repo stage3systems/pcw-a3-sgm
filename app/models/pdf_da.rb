@@ -18,7 +18,7 @@ class PdfDA < Prawn::Document
   USABLE_WIDTH = WIDTH-MARGIN*2
   USABLE_HEIGHT = HEIGHT-MARGIN*2
   HEADER_HEIGHT = 120
-  TO_FROM_HEIGHT = 300
+  TO_FROM_HEIGHT = 320
 
   def initialize(document, root_url)
     super(page_size: 'A4', page_layout: :portrait, margin: MARGIN)
