@@ -24,6 +24,9 @@
                        button: 'hint',
                        doc: @document,
                        config: Configuration.last %>
+            <%= link_to icon(:pencil), edit_disbursement_path(@disbursement),
+                        class: 'btn btn-default hint',
+                        title: 'Edit' %>
             <% end %>
             <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
                class="btn btn-default hint" title="Printable PDF version">
