@@ -30,6 +30,7 @@ ProformaDA::Application.routes.draw do
   match 'pfda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short, via: [:get, :post]
   match 'pda/:id(/:revision_number)' => 'disbursements#published', :as => :published_short_2, via: [:get, :post]
 
+  get 'api/ping' => "api#ping"
   match 'api/nominations' => "api#nominations", via: [:get, :post]
   match 'api/nomination_details' => "api#nomination_details", via: [:get, :post]
   match 'api/agency_fees' => "api#agency_fees", via: [:get, :post]

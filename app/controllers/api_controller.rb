@@ -1,5 +1,9 @@
 class ApiController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:ping]
+
+  def ping
+    render text: "pong"
+  end
 
   def nominations
     api = AosApi.new
