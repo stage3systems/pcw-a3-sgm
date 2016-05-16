@@ -4,7 +4,8 @@ class ApiControllerTest < ActionController::TestCase
 
   test "get nominations" do
     log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/search/nomination?action=nominations&controller=api&limit=10").
+    stub_request(:get, "https://test.agencyops.net/api/v1/search/nomination?action=nominations&controller=api&limit=10").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => "", :headers => {})
     get :nominations
     assert_response :success
@@ -13,7 +14,8 @@ class ApiControllerTest < ActionController::TestCase
 
   test "get nomination details" do
     log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/nomination/123").
+    stub_request(:get, "https://test.agencyops.net/api/v1/nomination/123").
+        with(basic_auth: ['test', 'test']).
         to_return(aos_result(
                   :nomination, [{
                     appointmentId: 1234,
@@ -23,7 +25,8 @@ class ApiControllerTest < ActionController::TestCase
                     nominationNumber: 'A'
                   }]))
 
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/appointment/1234").
+    stub_request(:get, "https://test.agencyops.net/api/v1/appointment/1234").
+        with(basic_auth: ['test', 'test']).
         to_return(aos_result(:appointment, [{fileNumber: "123456789"}]))
     post :nomination_details, {format: :json, nomination_id: 123}
     assert_response :success
@@ -32,7 +35,8 @@ class ApiControllerTest < ActionController::TestCase
 
   test "get agency fees" do
     log_in :operator
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/agencyFee?companyId=123&dateEffectiveEnd=2015-01-09&dateExpiresStart=2015-01-09&portId=123").
+    stub_request(:get, "https://test.agencyops.net/api/v1/agencyFee?companyId=123&dateEffectiveEnd=2015-01-09&dateExpiresStart=2015-01-09&portId=123").
+      with(basic_auth: ['test', 'test']).
       to_return(aos_result(:agencyFee, [
         {id: 1,
          title: 'Generic',

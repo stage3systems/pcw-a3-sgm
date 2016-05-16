@@ -1,5 +1,5 @@
 class Port < ActiveRecord::Base
-  default_scope -> {order('name ASC') }
+  default_scope -> {order('ports.name ASC') }
   paginates_per 10
   validates_presence_of :name, :tax_id, :currency_id
   has_many :disbursements

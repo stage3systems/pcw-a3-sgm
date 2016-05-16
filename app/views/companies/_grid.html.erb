@@ -1,8 +1,8 @@
 <%= grid(@companies_grid) do |g|
-  g.column name: 'Name', attribute: 'name', model: 'Company' do |c|
+  g.column name: 'Name', attribute: 'name' do |c|
     link_to c.name, company_path(c)
   end
-  g.column name: 'Email', attribute: 'email', model: 'Company' do |c|
+  g.column name: 'Email', attribute: 'email' do |c|
     link_to c.email, "mailto:#{c.email}" if c.email
   end
   g.column do |c|

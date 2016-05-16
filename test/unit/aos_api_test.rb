@@ -6,17 +6,19 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "save" do
-    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/dummy").
+    stub_request(:post, "https://test.agencyops.net/api/v1/save/dummy").
         with(:body => "{\"name\":\"dummy\",\"foo\":\"bar\"}",
-                    :headers => {'Content-Type'=>'application/json'}).
+                    :headers => {'Content-Type'=>'application/json'},
+                    :basic_auth => ['test', 'test']).
           to_return(:status => 200, :body => {
             status: 'success',
             data: {dummy: [{id: 1}]}
           }.to_json, :headers => {})
     @api.save('dummy', {name: 'dummy', foo: 'bar'})
-    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/dummy").
+    stub_request(:post, "https://test.agencyops.net/api/v1/save/dummy").
         with(:body => "{\"name\":\"dummy\",\"foo\":\"bar\"}",
-                    :headers => {'Content-Type'=>'application/json'}).
+                    :headers => {'Content-Type'=>'application/json'},
+                    :basic_auth => ['test', 'test']).
           to_return(:status => 200, :body => {
             data: {dummy: [{id: 1}]}
           }.to_json, :headers => {})
@@ -24,19 +26,22 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "delete" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/delete/dummy/1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/delete/dummy/1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => "", :headers => {})
     @api.delete('dummy', 1)
   end
 
   test "query" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/dummy?fooId=1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/dummy?fooId=1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => "", :headers => {})
     @api.query('dummy', {fooId: 1})
   end
 
   test "first" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/dummy").
+    stub_request(:get, "https://test.agencyops.net/api/v1/dummy").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
       data: {dummy: []}
     }.to_json, :headers => {})
@@ -44,7 +49,8 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "each" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/dummy").
+    stub_request(:get, "https://test.agencyops.net/api/v1/dummy").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 2,
@@ -58,7 +64,8 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "users" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/person?companyId=1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/person?companyId=1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,
@@ -66,7 +73,8 @@ class AosApiTest < ActiveSupport::TestCase
             person: [{id: 1, name: 'foo'}]
           }
         }.to_json, :headers => {})
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/person?companyId=2").
+    stub_request(:get, "https://test.agencyops.net/api/v1/person?companyId=2").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,
@@ -81,7 +89,8 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "offices" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/office?agencyCompany=1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/office?agencyCompany=1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,
@@ -89,7 +98,8 @@ class AosApiTest < ActiveSupport::TestCase
             office: [{id: 1, name: 'test'}]
           }
         }.to_json, :headers => {})
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/emailAddress?officeId=1&prime=1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/emailAddress?officeId=1&prime=1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,
@@ -101,7 +111,8 @@ class AosApiTest < ActiveSupport::TestCase
   end
 
   test "companies" do
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/company").
+    stub_request(:get, "https://test.agencyops.net/api/v1/company").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,
@@ -109,7 +120,8 @@ class AosApiTest < ActiveSupport::TestCase
             company: [{id: 1, name: 'c'}]
           }
         }.to_json, :headers => {})
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/emailAddress?companyId=1&prime=1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/emailAddress?companyId=1&prime=1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => {
           data: {
             count: 1,

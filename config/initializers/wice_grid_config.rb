@@ -35,6 +35,8 @@ if defined?(Wice::Defaults)
   # Default CSV field separator
   Wice::Defaults::CSV_FIELD_SEPARATOR = ','
 
+  Wice::Defaults::CSV_ENCODING = 'UTF-8'
+
 
   # The strategy when to show the filter.
   # * <tt>:when_filtered</tt> - when the table is the result of filtering
@@ -59,6 +61,8 @@ if defined?(Wice::Defaults)
     'ActiveRecord::ConnectionAdapters::PostgreSQLAdapter' => 'ILIKE'
   }
 
+  Wice::Defaults::USE_DEFAULT_SCOPE = false
+  Wice::Defaults::PAGINATION_THEME = :wice_grid
 
 
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -147,4 +151,6 @@ if defined?(Wice::Defaults)
   Wice::Defaults::POPUP_PLACEMENT_STRATEGY = :trigger # :pointer
 
   Wice::Defaults::PAGE_METHOD_NAME = :page
+  Wice::Defaults::DEFAULT_FILTER_FOR_DATE     = :jquery_datepicker
+  Wice::Defaults::DEFAULT_FILTER_FOR_DATETIME = :jquery_datepicker
 end

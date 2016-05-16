@@ -156,7 +156,8 @@ class DisbursementsControllerTest < ActionController::TestCase
 
 
   def stub_no_disbursement
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
+    stub_request(:get, "https://test.agencyops.net/api/v1/disbursement?nominationId=321").
+        with(basic_auth: ['test', 'test']).
         to_return(aos_result(:disbursement, []))
   end
 
@@ -202,9 +203,29 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_redirected_to disbursements_path
     # add disabled extra field
     reference = d.current_revision.reference.sub('REV. 1', 'REV. 3')
-    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":true}",
-                    :headers => {'Content-Type'=>'application/json'}).
+    stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
+        with(
+          body: hash_including({
+            appointmentId: 321,
+            nominationId: 321,
+            payeeId: 321,
+            creatorId: 987,
+            estimatePdfUuid: d.publication_id,
+            status: "DRAFT",
+            modifierId: 987,
+            grossAmount: "1100.00",
+            netAmount: "1000.00",
+            estimateId: d.id,
+            description: "New Item",
+            code: "EXTRAITEM123456",
+            activityCode: "MISC",
+            sort: 0,
+            taxApplies: false,
+            comment: "Comment",
+            disabled: true
+          }),
+          headers: {'Content-Type' => 'application/json'},
+          basic_auth: ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
       disbursement_revision: {
@@ -223,9 +244,10 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_redirected_to disbursements_path
     # enable extra field
     reference = reference.sub('REV. 3', 'REV. 4')
-    stub_request(:post, "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+    stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
         with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":false}",
-                    :headers => {'Content-Type'=>'application/json'}).
+                    :headers => {'Content-Type'=>'application/json'},
+                    :basic_auth => ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
       disbursement_revision: {
@@ -244,10 +266,12 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_redirected_to disbursements_path
     # remove extra field
     remove_request_stub stub
-    stub = stub_request(:get, "https://test:test@test.agencyops.net/api/v1/disbursement?nominationId=321").
+    stub = stub_request(:get, "https://test.agencyops.net/api/v1/disbursement?nominationId=321").
+        with(basic_auth: ['test', 'test']).
         to_return(aos_result(:disbursement, [{id: 1, code: "EXTRAITEM123456"}]))
 
-    stub_request(:get, "https://test:test@test.agencyops.net/api/v1/delete/disbursement/1").
+    stub_request(:get, "https://test.agencyops.net/api/v1/delete/disbursement/1").
+        with(basic_auth: ['test', 'test']).
         to_return(:status => 200, :body => "", :headers => {})
     post :update, id: d.id,
       disbursement_revision: {
@@ -297,9 +321,10 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_equal ['AGENCY-FEE-1'], dr.fields.keys
     reference = dr.reference.sub('REV. 0', 'REV. 1')
     stub_request(:post,
-                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+                 "https://test.agencyops.net/api/v1/save/disbursement").
         with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
-             :headers => {'Content-Type'=>'application/json'}).
+             :headers => {'Content-Type'=>'application/json'},
+             :basic_auth => ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
                   disbursement: {},
@@ -316,9 +341,10 @@ class DisbursementsControllerTest < ActionController::TestCase
     # override fee
     reference = dr.reference.sub('REV. 1', 'REV. 2')
     stub_request(:post,
-                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
+                 "https://test.agencyops.net/api/v1/save/disbursement").
         with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
-             :headers => {'Content-Type'=>'application/json'}).
+             :headers => {'Content-Type'=>'application/json'},
+             :basic_auth => ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
                   disbursement: {},
@@ -336,9 +362,29 @@ class DisbursementsControllerTest < ActionController::TestCase
     # disable fee
     reference = dr.reference.sub('REV. 2', 'REV. 3')
     stub_request(:post,
-                 "https://test:test@test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":true}",
-             :headers => {'Content-Type'=>'application/json'}).
+                 "https://test.agencyops.net/api/v1/save/disbursement").
+        with(
+          body: hash_including({
+            appointmentId: 321,
+            nominationId: 321,
+            payeeId: 321,
+            creatorId: 987,
+            estimatePdfUuid: d.publication_id,
+            status: "DRAFT",
+            modifierId: 987,
+            grossAmount: "3300.00",
+            netAmount: "3000.00",
+            estimateId: d.id,
+            description: "First fee",
+            code: "AGENCY-FEE-1",
+            activityCode: "AFEE",
+            sort: 0,
+            taxApplies: true,
+            comment: nil,
+            disabled:true
+          }),
+          headers: {'Content-Type'=>'application/json'},
+          basic_auth: ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
                   disbursement: {},

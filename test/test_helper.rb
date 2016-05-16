@@ -35,7 +35,7 @@ class ActionController::TestCase
 end
 
 def aos_url(path)
-  "https://test:test@test.agencyops.net/api/v1/#{path}"
+  "https://test.agencyops.net/api/v1/#{path}"
 end
 def aos_result(entity, value)
   {
@@ -51,6 +51,7 @@ def aos_result(entity, value)
 end
 def aos_stub(method, url, entity, result)
   stub_request(method, aos_url(url)).
+      with(basic_auth: ['test', 'test']).
       to_return(aos_result(entity, result))
 end
 

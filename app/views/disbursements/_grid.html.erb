@@ -1,5 +1,5 @@
 <%= grid(@disbursements_grid) do |g|
-  g.column name: 'Reference', attribute: 'reference', model: 'DisbursementRevision' do |d|
+  g.column name: 'Reference', attribute: 'reference', assoc: :current_revision do |d|
     if d.draft?
       link_to d.current_revision.reference,
               edit_disbursement_path(d)
@@ -11,34 +11,34 @@
   g.column name: 'Nomination', attribute: 'nomination_reference' do |d|
     link_to d.nomination_reference, d.aos_url, target: '_blank'
   end
-  g.column name: 'ETA', attribute: 'eta', model: 'DisbursementRevision' do |d|
+  g.column name: 'ETA', attribute: 'eta', assoc: :current_revision do |d|
     l(d.current_revision.eta) rescue "N/A"
   end
-  g.column name: 'Port', attribute: 'name', model: 'Port' do |d|
+  g.column name: 'Port', attribute: 'name', assoc: :port do |d|
     d.port.name
   end
-  g.column name: 'Company', attribute: 'name', model: 'Company' do |d|
+  g.column name: 'Company', attribute: 'name', assoc: :company do |d|
     d.company.name rescue ''
   end
-  g.column name: 'Vessel',attribute: 'name', model: 'Vessel' do |d|
+  g.column name: 'Vessel',attribute: 'name', assoc: :vessel do |d|
     d.current_revision.data['vessel_name']
   end
-  g.column name: 'Amount', attribute: 'amount', model: 'DisbursementRevision', filter: false do |d|
+  g.column name: 'Amount', attribute: 'amount', assoc: :current_revision, filter: false do |d|
     number_to_currency d.current_revision.amount, unit: ""
   end
   g.column name: 'Currency', filter: false do |d|
     d.current_revision.data['currency_code']
   end
-  g.column name: 'Last Modified', attribute: 'updated_at', model: 'DisbursementRevision', filter: false  do |d|
+  g.column name: 'Last Modified', attribute: 'updated_at', assoc: :current_revision, filter: false  do |d|
     l(d.current_revision.updated_at)
   end
-  g.column name: 'Rev.', attribute: 'number', model: 'DisbursementRevision', filter: false do |d|
+  g.column name: 'Rev.', attribute: 'number', assoc: :current_revision, filter: false do |d|
     link_to d.current_revision.number, "/disbursements/#{d.id}/revisions"
   end
-  g.column name: 'Views', attribute: 'anonymous_views', model: 'DisbursementRevision', filter: false do |d|
+  g.column name: 'Views', attribute: 'anonymous_views', assoc: :current_revision, filter: false do |d|
     link_to d.current_revision.anonymous_views, access_log_disbursement_path(d)
   end
-  g.column name: 'Prints', attribute: 'pdf_views', model: 'DisbursementRevision', filter: false  do |d|
+  g.column name: 'Prints', attribute: 'pdf_views', assoc: :current_revision, filter: false  do |d|
     link_to d.current_revision.pdf_views, access_log_disbursement_path(d)
   end
   g.column name: 'Status', attribute: 'status_cd',
