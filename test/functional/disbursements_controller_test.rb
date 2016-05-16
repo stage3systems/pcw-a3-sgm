@@ -245,9 +245,28 @@ class DisbursementsControllerTest < ActionController::TestCase
     # enable extra field
     reference = reference.sub('REV. 3', 'REV. 4')
     stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"1100.00\",\"netAmount\":\"1000.00\",\"estimateId\":#{d.id},\"description\":\"New Item\",\"code\":\"EXTRAITEM123456\",\"activityCode\":\"MISC\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":false,\"comment\":\"Comment\",\"disabled\":false}",
-                    :headers => {'Content-Type'=>'application/json'},
-                    :basic_auth => ['test', 'test']).
+        with(
+          body: hash_including({
+            appointmentId: 321,
+            nominationId: 321,
+            payeeId: 321,
+            creatorId: 987,
+            estimatePdfUuid: d.publication_id,
+            status: "DRAFT",
+            modifierId: 987,
+            grossAmount: "1100.00",
+            netAmount: "1000.00",
+            estimateId: d.id,
+            description: "New Item",
+            code: "EXTRAITEM123456",
+            activityCode: "MISC",
+            sort: 0,
+            taxApplies: false,
+            comment: "Comment",
+            disabled: false
+          }),
+          headers: {'Content-Type'=>'application/json'},
+          basic_auth: ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
       disbursement_revision: {
@@ -322,9 +341,28 @@ class DisbursementsControllerTest < ActionController::TestCase
     reference = dr.reference.sub('REV. 0', 'REV. 1')
     stub_request(:post,
                  "https://test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"2200.00\",\"netAmount\":\"2000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
-             :headers => {'Content-Type'=>'application/json'},
-             :basic_auth => ['test', 'test']).
+        with(
+          body: hash_including({
+            appointmentId: 321,
+            nominationId: 321,
+            payeeId: 321,
+            creatorId: 987,
+            estimatePdfUuid: d.publication_id,
+            status: "DRAFT",
+            modifierId: 987,
+            grossAmount: "2200.00",
+            netAmount: "2000.00",
+            estimateId: d.id,
+            description: "First fee",
+            code: "AGENCY-FEE-1",
+            activityCode: "AFEE",
+            sort: 0,
+            taxApplies: true,
+            comment: nil,
+            disabled: false
+          }),
+          headers: {'Content-Type'=>'application/json'},
+          basic_auth: ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
                   disbursement: {},
@@ -342,9 +380,28 @@ class DisbursementsControllerTest < ActionController::TestCase
     reference = dr.reference.sub('REV. 1', 'REV. 2')
     stub_request(:post,
                  "https://test.agencyops.net/api/v1/save/disbursement").
-        with(:body => "{\"appointmentId\":321,\"nominationId\":321,\"payeeId\":321,\"creatorId\":987,\"estimatePdfUuid\":\"#{d.publication_id}\",\"status\":\"DRAFT\",\"modifierId\":987,\"grossAmount\":\"3300.00\",\"netAmount\":\"3000.00\",\"estimateId\":#{d.id},\"description\":\"First fee\",\"code\":\"AGENCY-FEE-1\",\"activityCode\":\"AFEE\",\"reference\":\"#{reference}\",\"sort\":0,\"taxApplies\":true,\"comment\":null,\"disabled\":false}",
-             :headers => {'Content-Type'=>'application/json'},
-             :basic_auth => ['test', 'test']).
+        with(
+          body: hash_including({
+            appointmentId: 321,
+            nominationId: 321,
+            payeeId: 321,
+            creatorId: 987,
+            estimatePdfUuid: d.publication_id,
+            status: "DRAFT",
+            modifierId: 987,
+            grossAmount: "3300.00",
+            netAmount: "3000.00",
+            estimateId: d.id,
+            description: "First fee",
+            code: "AGENCY-FEE-1",
+            activityCode: "AFEE",
+            sort: 0,
+            taxApplies: true,
+            comment: nil,
+            disabled: false
+          }),
+          headers: {'Content-Type'=>'application/json'},
+          basic_auth: ['test', 'test']).
           to_return(aos_result(:disbursement, [{id: 1}]))
     post :update, id: d.id,
                   disbursement: {},
