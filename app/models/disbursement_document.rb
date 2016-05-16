@@ -32,7 +32,7 @@ class DisbursementDocument
   end
 
   def office_email
-    @revision.data['office_email'] || ProformaDA::Application.config.tenant_default_email
+    @revision.data['office_email'] || Rails.application.config.x.tenant["default_email"]
   end
 
   def issued

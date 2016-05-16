@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= "#{@title} | " if defined?(@title) %><%= ProformaDA::Application.config.tenant_name %> | PDA Estimator</title>
+  <title><%= "#{@title} | " if defined?(@title) %><%= Rails.application.config.x.tenant["display"] %> | PDA Estimator</title>
   <!--[if lt IE 9]>
   <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <%= stylesheet_link_tag "application", media: "all",
                            "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag ProformaDA::Application.config.tenant, media: "all" %>
+  <%= stylesheet_link_tag Rails.application.config.x.tenant["name"], media: "all" %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= favicon_link_tag ProformaDA::Application.config.tenant_favicon, :rel => 'shortcut icon' %>
+  <%= favicon_link_tag Rails.application.config.x.tenant["favicon"], :rel => 'shortcut icon' %>
   <%= csrf_meta_tags %>
   <%= render partial: 'common/piwik' %>
 </head>

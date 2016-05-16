@@ -52,7 +52,7 @@ class JsonrpcController < ApplicationController
 
   def check_token
     token = params[:params].shift rescue nil
-    return true if token == ProformaDA::Application.config.aos_api_psk
+    return true if token == Rails.application.config.x.aos["api"]["psk"]
     render json: error(-32000, "Invalid token")
     false
   end
@@ -75,4 +75,3 @@ class JsonrpcController < ApplicationController
     r
   end
 end
-

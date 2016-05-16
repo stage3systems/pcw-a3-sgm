@@ -2,7 +2,7 @@
   <% content_for :navbar_buttons do %>
     <a href="<%= @disbursement.aos_url %>"
        class="btn btn-primary"
-       target="_blank">Open in <%= ProformaDA::Application.config.tenant_aos_name %></a>
+       target="_blank">Open in <%= Rails.application.config.x.tenant["aos_name"] %></a>
   <% end %>
 <% end %>
 <%= simple_form_for(@revision, url: disbursement_url(@disbursement),

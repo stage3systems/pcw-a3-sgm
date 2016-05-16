@@ -1,0 +1,19 @@
+default: &default
+  api:
+    url: ''
+    user: ''
+    password: ''
+    psk: 'changeme'
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  api:
+    url: "https://test.agencyops.net/api"
+    user: "test"
+    password: "test"
+    psk: 'changeme'

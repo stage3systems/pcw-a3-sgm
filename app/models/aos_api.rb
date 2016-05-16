@@ -1,9 +1,9 @@
 class AosApi
   include HTTParty
-  base_uri("#{ProformaDA::Application.config.aos_api_url}/v1")
+  base_uri("#{Rails.application.config.x.aos["api"]["url"]}/v1")
   basic_auth(
-    ProformaDA::Application.config.aos_api_user,
-    ProformaDA::Application.config.aos_api_password)
+    Rails.application.config.x.aos["api"]["user"],
+    Rails.application.config.x.aos["api"]["password"])
 
   def initialize()
   end

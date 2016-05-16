@@ -61,14 +61,14 @@
     });
   }
 
-  var xdStorage = new CDStorage('<%= @rocket_url %>', '/crossdomain.html');
+  var xdStorage = new CDStorage('<%= @identity_url %>', '/crossdomain.html');
   getToken(xdStorage, function(err, token) {
     $.post('/auth/check', {token: token})
       .done(function(data) {
         $("div.spinner").fadeOut(100);
         if (data.user) {
           $("span.username").html(data.user.name+' ('+
-                                  data.user.rocket_name+')');
+                                  data.user.identity_name+')');
           $("div.logged-in").fadeIn(100);
           $("a.js-login-as").on("click", function(e) {
             e.preventDefault();

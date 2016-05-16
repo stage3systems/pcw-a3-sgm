@@ -1,0 +1,21 @@
+default: &default
+  auth0:
+    connect: 'rocket'
+    client:
+      secret: ''
+      id: ''
+  domain: ''
+  tenant: ''
+  url: ''
+  user: ''
+  password: ''
+  clear_token_on_logout: false
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

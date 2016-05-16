@@ -11,7 +11,7 @@ PREFUNDING STATUS
 #{doc.funding_data(true).map {|d| (d[:value] rescue d) }.join("\n")}
 
 Download the full Terms and Conditions:
-#{root_url}#{ProformaDA::Application.config.tenant_terms}
+#{root_url}#{Rails.application.config.x.tenant["terms"]}
 
 For enquires relating to this Estimate please contact our local Port Office:
 

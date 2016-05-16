@@ -20,7 +20,7 @@
             </a>
             <% end %>
             <% if current_user %>
-            <%= render "common/mailto_pfda_#{ProformaDA::Application.config.tenant}",
+            <%= render "common/mailto_pfda_#{Rails.application.config.x.tenant["name"]}",
                        button: 'hint',
                        doc: @document,
                        config: Configuration.last %>
@@ -58,7 +58,7 @@
             <% end %>
           </div>
           <div class="col-md-6">
-            <div class="pull-right"><%= image_tag ProformaDA::Application.config.tenant_da_logo %></div>
+            <div class="pull-right"><%= image_tag Rails.application.config.x.tenant["logo"] %></div>
           </div>
         </div>
         <div class="btn-group"></div>
@@ -164,7 +164,7 @@
             <%= format_list(@document.funding_data) %>
             <br />
             Download the full <%= link_to "Terms and Conditions" ,
-                                          "/#{ProformaDA::Application.config.tenant_terms}" %>.
+                                          "/#{Rails.application.config.x.tenant["terms"]}" %>.
           </div>
         </div>
       </div>

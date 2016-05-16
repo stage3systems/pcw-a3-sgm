@@ -1,0 +1,19 @@
+default: &default
+  name: 'monson'
+  display: 'Monson'
+  aos_name: 'Bridge'
+  full_name: 'Monson Agencies Australia Pty Ltd'
+  favicon: 'favicon_monson.png'
+  default_email: 'accounts@monson.com.au'
+  logo: 'monson_agency.png'
+  terms: 'maa-terms.pdf'
+  piwik_id: 2
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

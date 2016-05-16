@@ -38,7 +38,7 @@ class XlsDA < Spreadsheet::Workbook
   end
 
   def add_title(r)
-    @sheet.row(r).push ProformaDA::Application.config.tenant_full_name.upcase
+    @sheet.row(r).push Rails.application.config.x.tenant["full_name"].upcase
     @sheet.row(r).default_format = @title_fmt
     @sheet.row(r).height = 20
     @sheet.merge_cells(r, 0, r, 3)

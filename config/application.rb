@@ -50,55 +50,14 @@ module ProformaDA
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-    #config.after_sign_out_path = "https://localhost:8001/admin/logout"
 
     # AOS
-    config.aos_api_url = ''
-    config.aos_api_user = ''
-    config.aos_api_password = ''
-    config.aos_api_psk = 'changeme'
+    config.x.aos = Rails.application.config_for(:aos)
 
-    # Auth0
-    config.auth0 = {
-      client_secret: '',
-      client_id: '',
-      tenant: '',
-      domain: '',
-      connection: 'rocket',
-      rocket_url: '',
-      rocket_user: '',
-      rocket_password: '',
-      rocket_clear_token_on_logout: false
-    }
+    # Identity
+    config.x.identity = Rails.application.config_for(:identity)
 
-    # multi tenancy tenant
-    config.tenant = 'monson'
-    config.tenant_name = 'Monson'
-    config.tenant_aos_name = 'Bridge'
-    config.tenant_full_name = 'Monson Agencies Australia Pty Ltd'
-    config.tenant_favicon = 'favicon_monson.png'
-    config.tenant_default_email = 'accounts@monson.com.au'
-    config.tenant_da_logo = 'monson_agency.png'
-    config.tenant_terms = 'maa-terms.pdf'
-    config.tenant_piwik_id = 2
-
-    #config.tenant = 'da_desk'
-    #config.tenant_name = 'DA-Desk'
-    #config.tenant_full_name = "DA-Desk FZ-LLC"
-    #config.tenant_favicon = 'favicon_da_desk.ico'
-    #config.tenant_default_email = 'info@da-desk.com'
-    #config.tenant_da_logo = 'da-desk.png'
-    #config.tenant_terms = 'da-desk.pdf'
-    #config.tenant_piwik_id = 8
-
-    #config.tenant = 'mariteam'
-    #config.tenant_name = 'MariTeam'
-    #config.tenant_aos_name = 'Agency Operations System'
-    #config.tenant_full_name = 'MariTeam Shipping Agencies'
-    #config.tenant_default_email = 'agency.rotterdam@mariteam-shipping.com'
-    #config.tenant_da_logo = 'mariteam.png'
-    #config.tenant_favicon = 'mariteam_favicon.ico'
-    #config.tenant_terms = 'mariteam_agency_confitions.pdf'
-    #config.tenant_piwik_id = 9
+    # Tenant
+    config.x.tenant = Rails.application.config_for(:tenant)
   end
 end
