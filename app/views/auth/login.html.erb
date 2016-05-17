@@ -110,10 +110,11 @@
     }
     auth0.login({
       connection: '<%= @connection %>',
+      popup: false,
+      sso: false,
       username: username,
       password: password
-    }, function (err, profile, id_token, access_token) {
-      console.log('Auth0 return', arguments);
+    }, function (err, auth) {
       if (err) {
         showError(
           'The login details you entered were not '+
@@ -124,9 +125,9 @@
         return;
       }
       $.post('/auth/register',
-             {token: id_token})
+             {token: auth.idToken})
         .done(function(r) {
-          setToken(xdStorage, id_token);
+          setToken(xdStorage, auth.idToken);
           window.location = "<%= root_path %>";
         })
         .fail(function() {
