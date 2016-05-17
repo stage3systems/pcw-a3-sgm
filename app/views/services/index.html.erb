@@ -35,7 +35,7 @@
           <td><%= service.key %></td>
           <td><%= service.activity_code.code rescue "" %></td>
           <td><%= service.compulsory ? 'Yes' : 'No' %></td>
-          <td><%= link_to(File.basename(service.document.url), service.document.url) rescue '' %></td>
+          <td><%= link_to(File.basename(service.document.path), service.document.url) rescue '' %></td>
           <td><%= service.user.full_name rescue 'N/A' %></td>
           <td><%= l service.updated_at %></td>
           <td><%= service.service_updates.last.user.full_name rescue 'N/A' %></td>

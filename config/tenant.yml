@@ -7,6 +7,12 @@ default: &default
   default_email: 'accounts@monson.com.au'
   logo: 'monson_agency.png'
   terms: 'maa-terms.pdf'
+  s3:
+    aws_access_key_id: 'secret'
+    aws_secret_access_key: 'secret'
+    bucket: 's3s-dev-or'
+    region: 'us-west-2'
+    use_iam_profile: false
   piwik_id: 2
 
 development:

@@ -13,7 +13,7 @@
   <div class="col-md-12">
     <h2 class="title">Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
     <p><strong>Name:</strong> <%= @instance.name %></p>
-    <p><strong>Document:</strong> <% unless @instance.document.url.nil? %><%= link_to File.basename(@instance.document.url), @instance.document.url %><% end %></p>
+    <p><strong>Document:</strong> <% unless @instance.document.url.nil? %><%= link_to File.basename(@instance.document.path), @instance.document.url %><% end %></p>
     <p><strong>Valid From:</strong> <%= l @instance.validity_start %></p>
     <p><strong>Valid Until:</strong> <%= l @instance.validity_end %></p>
   </div>

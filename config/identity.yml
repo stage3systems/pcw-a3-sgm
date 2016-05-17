@@ -1,6 +1,6 @@
 default: &default
   auth0:
-    connect: 'rocket'
+    connection: 'rocket'
     client:
       secret: ''
       id: ''

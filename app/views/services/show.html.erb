@@ -14,7 +14,7 @@
       <p><strong><%= k.capitalize %>:</strong> <%= @instance.send(k) %></p>
     <% end %>
     <p><strong>Compulsory:</strong> <%= @instance.compulsory ? 'Yes' : 'No' %></p>
-    <p><strong>Reference Document:</strong> <%= link_to(File.basename(@instance.document.url), @instance.document.url) rescue 'N/A' %></p>
+    <p><strong>Reference Document:</strong> <%= link_to(File.basename(@instance.document.path), @instance.document.url) rescue 'N/A' %></p>
 
     <p><strong>Created By:</strong> <%= @instance.user.full_name rescue 'N/A' %></p>
     <p><strong>Created On:</strong> <%= l @instance.created_at %></p>
@@ -39,7 +39,7 @@
           <td><%= l u.created_at %></td>
           <td><%= u.user.full_name rescue 'N/A' %></td>
           <td><%= u.changelog %></td>
-          <td><%= link_to(File.basename(u.document.url), u.document.url) rescue 'N/A' %></td>
+          <td><%= link_to(File.basename(u.document.path), u.document.url) rescue 'N/A' %></td>
         </tr>
       <% end %>
       </tbody>
