@@ -2,6 +2,9 @@ ProformaDA::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
   config.eager_load = true
 
+  # Set log level
+  config.log_level = :info
+
   # Code is not reloaded between requests
   config.cache_classes = true
 
