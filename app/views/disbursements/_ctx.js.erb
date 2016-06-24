@@ -6,7 +6,9 @@ var ctx = {
     nrt: <%= revision.data["vessel_nrt"] %>,
     grt: <%= revision.data["vessel_grt"] %>,
     dwt: <%= revision.data["vessel_dwt"] %>,
-    loa: <%= revision.data["vessel_loa"] %>
+    loa: <%= revision.data["vessel_loa"] %>,
+    type: "<%= revision.data["vessel_type"] %>",
+    subtype: "<%= revision.data["vessel_subtype"] %>"
   },
   estimate: {
     eta: new Date(<%= "\"" if revision.eta %><%= revision.eta %><%= "\"" if revision.eta %>),

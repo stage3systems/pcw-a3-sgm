@@ -12,11 +12,19 @@ class Vessel < ActiveRecord::Base
       "vessel_grt" => self.grt.to_s,
       "vessel_loa" => self.loa.to_s,
       "vessel_nrt" => self.nrt.to_s,
-      "vessel_imo" => self.imo_code.to_s
+      "vessel_imo" => self.imo_code.to_s,
+      "vessel_type" => self.maintype.to_s,
+      "vessel_subtype" => self.subtype.to_s
     })
   end
 
   def update_from_json(data)
+    if data['vesselTypeId']
+      api = AosApi.new
+      t = api.find('vesselType', data['vesselTypeId'])
+      self.maintype = t["type"] if t
+      self.subtype = t["subtype"] if t
+    end
     self.remote_id = data['id']
     self.name = data['name']
     self.loa = data['loa'] if data['loa']
