@@ -7,5 +7,23 @@
     <h2 class="title"><%= @port.name %> / <%= @terminal.name %></h2>
     <p>This terminal has <%= link_to pluralize(@terminal.services.count, 'service'), port_terminal_services_url(@port, @terminal) %> defined.</p>
     <p>This terminal has <%= link_to pluralize(@terminal.tariffs.count, 'document'), port_terminal_tariffs_url(@port, @terminal) %> associated.</p>
+    <% if @terminal.metadata && @terminal.metadata.size > 0 %>
+      <hr>
+      <p>
+        <h5>Metadata</h5>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+          <% @terminal.metadata.each do |k, v| %>
+            <tr>
+              <td><%= k %></td>
+              <td><%= v %></td>
+            </tr>
+          <% end %>
+        </table>
+      </p>
+    <% end %>
   </div>
 </div>

@@ -39,6 +39,7 @@ class PortsController < CommonController
 
   private
   def safe_params
-    params.require(:port).permit(:name, :tax_id, :currency_id)
+    metadata_keys = params[:port].try(:fetch, :metadata, {}).keys
+    params.require(:port).permit(:name, :tax_id, :currency_id, {metadata: metadata_keys})
   end
 end

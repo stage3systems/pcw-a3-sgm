@@ -22,6 +22,7 @@ class Port < ActiveRecord::Base
       'currency_code' => self.currency.code,
       'currency_symbol' => self.currency.symbol
     })
+    self.metadata.each {|k,v| d['data']["port_#{k}"] = v} if self.metadata
     crystalize_services(d) unless skip_services
     d
   end

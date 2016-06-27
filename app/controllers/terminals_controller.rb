@@ -99,7 +99,8 @@ class TerminalsController < BaseController
   end
 
   def safe_params
-    params.require(:terminal).permit(:name)
+    metadata_keys = params[:terminal].try(:fetch, :metadata, {}).keys
+    params.require(:terminal).permit(:name, {metadata: metadata_keys})
   end
 
   def model
