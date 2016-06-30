@@ -1,6 +1,54 @@
 $.fn.editable.defaults.mode = 'inline';
 
+var rebuildRequiredFields = function(ctx) {
+  var $requiredInputs = $('div.required-inputs');
+  $requiredInputs.empty();
+  $requiredInputs.append('<h4>Required Inputs</h4>');
+  var requiredInputs = {};
+  _.each(ctx.services, function(k) {
+    var r = ctx.parsed_codes[k].requiredInputs;
+    if (r) {
+      _.each(r, function(val, key) {
+        if (requiredInputs[key]) {
+          console.log('Required input conflict on', key);
+          return;
+        }
+        requiredInputs[key] = val;
+      });
+    };
+  });
+  var allValid = true;
+  _.each(requiredInputs, function(val, key) {
+    var value = ctx.data['required_input_'+key] || val.defaultValue;
+    $requiredInputs.append(
+      '<div class="col-md-4"><div class="form-group">'+
+      '<label class="control-label col-sm-3">'+val.label+'</label>'+
+      '<div class="col-sm-9">'+
+      '<input name="required_input_'+key+'" class="form-control" value="'+value+'"></input>'+
+      '<span class="help-block"></span>'+
+      '</div></div></div>');
+    var $input = $('input[name="required_input_'+key+'"]');
+    var $div = $input.parent().parent();
+    var $span = $input.next();
+    $input.on('change', function(e) {
+      var raw = $input.val();
+      var validation = val.validate(raw);
+      if (validation.error) {
+        $div.addClass('has-error');
+        $span.text(validation.error);
+      } else {
+        $div.removeClass('has-error');
+        $span.text('');
+        ctx.data['required_input_'+key] = validation.success;
+        setTimeout(function() { updateTable(ctx); }, 0);
+      }
+    });
+  });
+  $requiredInputs.append('<div class="clearfix"></div>');
+}
+
 var rebuildTable = function(ctx) {
+  rebuildRequiredFields(ctx);
   var $tbody = $('table.disbursement tbody');
   $tbody.empty();
   _.each(ctx.services, function(s) {

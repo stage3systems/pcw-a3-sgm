@@ -13,6 +13,7 @@ class DisbursementUpdater
     @revision.data.merge!(@revision.cargo_type.crystalize) if @revision.cargo_type
     @params = all_params
     update_status
+    handle_required_inputs
     cleanup_extra_items
     reorder_field_keys
     add_new_items
@@ -38,6 +39,13 @@ class DisbursementUpdater
     @disbursement.status_cd = status
     @disbursement.save
     @revision.disbursement.reload
+  end
+
+  def handle_required_inputs
+    @params.keys.select {|k| k.starts_with?("required_input_")}
+      .each do |key|
+        @revision.data.store(key, @params[key])
+      end
   end
 
   def cleanup_extra_items
