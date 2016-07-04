@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  display: MyString
+  full_name: MyString
+  aos_name: MyString
+  favicon: MyString
+  default_email: MyString
+  logo: MyString
+  terms: MyString
+  piwik_id: 1
+  aos_api_url: MyString
+  aos_api_user: MyString
+  aos_api_password: MyString
+  aos_api_psk: MyString
+
+two:
+  name: MyString
+  display: MyString
+  full_name: MyString
+  aos_name: MyString
+  favicon: MyString
+  default_email: MyString
+  logo: MyString
+  terms: MyString
+  piwik_id: 1
+  aos_api_url: MyString
+  aos_api_user: MyString
+  aos_api_password: MyString
+  aos_api_psk: MyString
