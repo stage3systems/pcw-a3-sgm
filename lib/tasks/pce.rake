@@ -1,4 +1,4 @@
-namespace :monson do
+namespace :pce do
   namespace :migrate do
     desc "Migrate old style AOS mappings"
     task :aos_mappings => :environment do
