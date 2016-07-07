@@ -4,11 +4,13 @@ class FundingAgreementTest < ActiveSupport::TestCase
   def setup
     @vessel = vessels(:vesselone)
     @port = ports(:newcastle)
+    @tenant = tenants(:one)
   end
 
   def setup_da(company_name)
     date = Date.today
     da = Disbursement.new
+    da.tenant = @tenant
     da.port = @port
     da.vessel = @vessel
     da.company = companies(company_name)

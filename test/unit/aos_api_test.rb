@@ -2,7 +2,12 @@ require 'test_helper'
 
 class AosApiTest < ActiveSupport::TestCase
   def setup
-    @api = AosApi.new
+    t = Tenant.new({
+      aos_api_user: 'test',
+      aos_api_password: 'test',
+      aos_api_url: 'https://test.agencyops.net/api'
+    })
+    @api = AosApi.new(t)
   end
 
   test "save" do

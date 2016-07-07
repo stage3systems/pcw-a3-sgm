@@ -5,6 +5,7 @@
 # below each fixture, per the syntax in the comments below
 #
 admin:
+  tenant: one
   uid: admin
   remote_id: 1
   first_name: Admin
@@ -17,6 +18,7 @@ admin:
   deleted: false
 
 operator:
+  tenant: one
   uid: operator
   first_name: Head
   last_name: Operator
@@ -27,6 +29,7 @@ operator:
   deleted: false
 
 office_operator:
+  tenant: one
   uid: officeop
   remote_id: 987
   first_name: Office

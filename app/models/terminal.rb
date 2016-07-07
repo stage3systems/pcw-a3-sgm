@@ -3,6 +3,7 @@ class Terminal < ActiveRecord::Base
   has_many :services, -> {order 'row_order ASC'}
   has_many :tariffs
   has_many :disbursements
+  belongs_to :tenant
 
   include ServiceHolderHelper
 

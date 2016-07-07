@@ -5,7 +5,7 @@ class TerminalsController < BaseController
   # GET /terminals
   # GET /terminals.json
   def index
-    @port = Port.find(params[:port_id])
+    @port = port_by_id(params[:port_id])
     @terminals = @port.terminals
     port_breadcrumb
     add_breadcrumb "Terminals", port_terminals_url(@port)
@@ -19,7 +19,7 @@ class TerminalsController < BaseController
   # GET /terminals/1
   # GET /terminals/1.json
   def show
-    @port = Port.find(params[:port_id])
+    @port = port_by_id(params[:port_id])
     @terminal = Terminal.find(params[:id])
     port_breadcrumb
     add_breadcrumb "Terminals", port_terminals_url(@port)
@@ -34,8 +34,9 @@ class TerminalsController < BaseController
   # GET /terminals/new
   # GET /terminals/new.json
   def new
-    @port = Port.find(params[:port_id])
+    @port = port_by_id(params[:port_id])
     @terminal = Terminal.new
+    @terminal.tenant_id = current_tenant.id
     port_breadcrumb
     add_breadcrumb "New Terminal", new_port_terminal_url(@port)
 
@@ -47,8 +48,8 @@ class TerminalsController < BaseController
 
   # GET /terminals/1/edit
   def edit
-    @port = Port.find(params[:port_id])
-    @terminal = Terminal.find(params[:id])
+    @port = port_by_id(params[:port_id])
+    @terminal = terminal_by_id(params[:id])
     port_breadcrumb
     add_breadcrumb "Edit #{@terminal.name}", edit_port_terminal_url(@port, @terminal)
   end
@@ -56,9 +57,10 @@ class TerminalsController < BaseController
   # POST /terminals
   # POST /terminals.json
   def create
-    @port = Port.find(params[:port_id])
+    @port = port_by_id(params[:port_id])
     @terminal = Terminal.new(safe_params)
     @terminal.port_id = @port.id
+    @terminal.tenant_id = current_tenant.id
     port_breadcrumb
     add_breadcrumb "New Terminal", new_port_terminal_url(@port)
 
@@ -69,8 +71,8 @@ class TerminalsController < BaseController
   # PUT /terminals/1
   # PUT /terminals/1.json
   def update
-    @port = Port.find(params[:port_id])
-    @terminal = Terminal.find(params[:id])
+    @port = port_by_id(params[:port_id])
+    @terminal = terminal_by_id(params[:id])
     port_breadcrumb
     add_breadcrumb "Edit #{@terminal.name}", edit_port_terminal_url(@port, @terminal)
 
@@ -82,8 +84,8 @@ class TerminalsController < BaseController
   # DELETE /terminals/1
   # DELETE /terminals/1.json
   def destroy
-    @port = Port.find(params[:port_id])
-    @terminal = Terminal.find(params[:id])
+    @port = port_by_id(params[:port_id])
+    @terminal = terminal_by_id(params[:id])
     @terminal.destroy
 
     respond_to do |format|
@@ -105,5 +107,13 @@ class TerminalsController < BaseController
 
   def model
     Terminal
+  end
+
+  def port_by_id(id)
+    current_tenant.ports.find(id)
+  end
+
+  def terminal_by_id(id)
+    current_tenant.terminals.find(id)
   end
 end

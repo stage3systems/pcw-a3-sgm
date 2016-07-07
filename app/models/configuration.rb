@@ -1,4 +1,5 @@
 class Configuration < ActiveRecord::Base
+  belongs_to :tenant
 
   def crystalize(d)
     d['data'].merge!({

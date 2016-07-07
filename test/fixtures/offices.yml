@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  tenant: one
   name: MyString
   address_1: MyString
   address_2: MyString
@@ -10,6 +11,7 @@ one:
   ports: newcastle
 
 two:
+  tenant: one
   name: MyString
   address_1: MyString
   address_2: MyString

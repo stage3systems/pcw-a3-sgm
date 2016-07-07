@@ -1,6 +1,7 @@
 class Office < ActiveRecord::Base
   has_and_belongs_to_many :ports
   has_many :users
+  belongs_to :tenant
 
   extend Syncable
 
@@ -14,7 +15,8 @@ class Office < ActiveRecord::Base
     })
   end
 
-  def update_from_json(data)
+  def update_from_json(tenant, data)
+    self.tenant_id = tenant.id
     self.remote_id = data["id"]
     self.name = data["name"]
     if data["address"]

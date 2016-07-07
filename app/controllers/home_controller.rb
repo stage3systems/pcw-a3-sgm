@@ -5,16 +5,16 @@ class HomeController < ApplicationController
   def index
     @title = "Dashboard"
     ports_ids = current_user.authorized_ports.pluck :id
-    @drafts = Disbursement.where(
+    @drafts = current_tenant.disbursements.where(
                     status_cd: Disbursement.statuses[:draft],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
-    @inquiries = Disbursement.where(
+    @inquiries = current_tenant.disbursements.where(
                     status_cd: Disbursement.statuses[:inquiry],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
-    @initials = Disbursement.where(
+    @initials = current_tenant.disbursements.where(
                     status_cd: Disbursement.statuses[:initial],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
-    @closes = Disbursement.where(
+    @closes = current_tenant.disbursements.where(
                     status_cd: Disbursement.statuses[:close],
                     port_id: ports_ids).order("updated_at DESC").limit(10)
   end

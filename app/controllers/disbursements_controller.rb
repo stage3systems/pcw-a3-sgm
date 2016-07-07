@@ -17,14 +17,15 @@ class DisbursementsController < ApplicationController
   def search
     respond_to do |format|
       format.json {
-        render json: DisbursementSearch.new(params).results
+        render json: DisbursementSearch.new(current_tenant, params).results
       }
     end
   end
 
   def published
     @title = "Proforma DA"
-    @disbursement = Disbursement.find_by_publication_id(params[:id])
+    @disbursement = Disbursement.find_by(tenant_id: current_tenant.id,
+                                         publication_id: params[:id])
     setup_revision
     @document = DisbursementDocument.new(@disbursement, @revision)
     setup_view
@@ -37,7 +38,7 @@ class DisbursementsController < ApplicationController
   end
 
   def print
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     @revision = @disbursement.current_revision
     @document = DisbursementDocument.new(@disbursement, @revision)
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
@@ -48,7 +49,7 @@ class DisbursementsController < ApplicationController
 
 
   def status
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     set_disbursement_status(params[:status])
 
     respond_to do |format|
@@ -58,7 +59,7 @@ class DisbursementsController < ApplicationController
   end
 
   def revisions
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     @title = "Revision for #{@disbursement.full_title}"
     add_breadcrumb @title
     @revisions = @disbursement.disbursement_revisions
@@ -67,7 +68,7 @@ class DisbursementsController < ApplicationController
   # GET /disbursements/1
   # GET /disbursements/1.json
   def show
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -79,7 +80,7 @@ class DisbursementsController < ApplicationController
   # GET /disbursements/new.json
   def new
     @title = "New PDA"
-    @disbursement = Disbursement.new
+    @disbursement = Disbursement.new(tenant_id: current_tenant.id)
     prefill_disbursement
 
     respond_to do |format|
@@ -92,16 +93,16 @@ class DisbursementsController < ApplicationController
   # GET /disbursements/1/edit
   def edit
     @title = "Edit PDA"
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     @revision = @disbursement.current_revision
     @revision.eta = Date.today if @revision.eta.nil?
-    @cargo_types = CargoType.authorized
+    @cargo_types = CargoType.authorized(current_tenant)
   end
 
   # POST /disbursements
   def create
     @title = "New PDA"
-    @disbursement = Disbursement.new(disbursement_params)
+    @disbursement = Disbursement.new(disbursement_params.merge(tenant_id: current_tenant.id))
     set_user_and_office
 
     respond_to do |format|
@@ -139,7 +140,7 @@ class DisbursementsController < ApplicationController
   # DELETE /disbursements/1
   # DELETE /disbursements/1.json
   def destroy
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     @disbursement.delete
 
     respond_to do |format|
@@ -151,7 +152,7 @@ class DisbursementsController < ApplicationController
   def access_log
     @title = "Published PDA Access Log"
     @geoip = GeoIP.new(Rails.root.join('GeoLiteCity.dat').to_s)
-    @disbursement = Disbursement.find(params[:id])
+    @disbursement = disbursement_by_id(params[:id])
     add_breadcrumb "Access log for #{@disbursement.current_revision.reference}"
   end
 
@@ -187,7 +188,7 @@ class DisbursementsController < ApplicationController
 
   def setup_view
     @pfda_view = PfdaView.new
-    @pfda_view.setup(request, browser, @revision)
+    @pfda_view.setup(current_tenant, request, browser, @revision)
   end
 
   def handle_pdf
@@ -228,5 +229,9 @@ class DisbursementsController < ApplicationController
     params[:vessel_name] = @disbursement.vessel.name if @disbursement.vessel
     @disbursement.status_cd = params[:status_cd].to_i
     @disbursement.tbn = @disbursement.inquiry?
+  end
+
+  def disbursement_by_id(id)
+    Disbursement.where(tenant_id: current_tenant.id).find(id)
   end
 end

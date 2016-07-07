@@ -2,6 +2,7 @@ class Vessel < ActiveRecord::Base
   default_scope -> {order('name ASC')}
   validates_presence_of :dwt, :grt, :loa, :name, :nrt
   has_many :disbursements
+  belongs_to :tenant
 
   extend Syncable
 
@@ -18,9 +19,10 @@ class Vessel < ActiveRecord::Base
     })
   end
 
-  def update_from_json(data)
+  def update_from_json(tenant, data)
+    self.tenant_id = tenant.id
     if data['vesselTypeId']
-      api = AosApi.new
+      api = AosApi.new(tenant)
       t = api.find('vesselType', data['vesselTypeId'])
       self.maintype = t["type"] if t
       self.subtype = t["subtype"] if t
@@ -34,10 +36,10 @@ class Vessel < ActiveRecord::Base
     self.imo_code = data['imoCode'] if data['imoCode']
   end
 
-  def self.aos_modify(data)
-    i = Vessel.where(remote_id: data['id']).first
+  def self.aos_modify(tenant, data)
+    i = Vessel.where(tenant_id: tenant.id, remote_id: data['id']).first
     i = Vessel.new if i.nil? and valid_data(data)
-    i.update_from_json(data)
+    i.update_from_json(tenant, data)
     i.save
   end
 

@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 newcastle:
+  tenant: one
   remote_id: 654
   tax: :gst
   currency: :aud
@@ -10,6 +11,7 @@ newcastle:
   terminals_count: 2
 
 brisbane:
+  tenant: one
   remote_id: 987
   tax: :gst
   currency: :aud
@@ -19,11 +21,13 @@ brisbane:
   terminals_count: 0
 
 test:
+  tenant: one
   id: 123
   tax: :gst
   remote_id: 123
 
 dummy:
+  tenant: one
   tax: :gst
   currency: :aud
   name: Dummy

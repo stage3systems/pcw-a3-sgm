@@ -10,7 +10,7 @@ class CompaniesController < CommonController
 
   def index
     @title = "Companies"
-    @companies_grid = initialize_grid(Company,
+    @companies_grid = initialize_grid(current_tenant.companies,
                         order: 'companies.name',
                         order_direction: 'asc')
 
@@ -20,8 +20,9 @@ class CompaniesController < CommonController
   end
 
   def search
-    companies = Company.where('remote_id is not null and name ilike :name',
-                              name: "%#{params[:name]}%").map do |c|
+    companies = current_tenant.companies.where(
+                  'remote_id is not null and name ilike :name',
+                  name: "%#{params[:name]}%").map do |c|
       {id: c.id, remote_id: c.remote_id, name: c.name}
     end
     render json: companies

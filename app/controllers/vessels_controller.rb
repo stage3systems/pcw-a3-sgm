@@ -12,7 +12,7 @@ class VesselsController < CommonController
   # GET /vessels.json
   def index
     @title = "Vessels"
-    @vessels_grid = initialize_grid(Vessel,
+    @vessels_grid = initialize_grid(current_tenant.vessels,
                       order: 'vessels.name',
                       order_direction: 'asc')
 
@@ -22,8 +22,9 @@ class VesselsController < CommonController
   end
 
   def search
-    vessels = Vessel.where('name ilike :name',
-                            name: "%#{params[:name]}%").map do |v|
+    vessels = current_tenant.vessels
+                .where('name ilike :name',
+                       name: "%#{params[:name]}%").map do |v|
       {id: v.id, name: v.name}
     end
     render json: vessels

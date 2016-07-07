@@ -1,6 +1,6 @@
 class AosAgencyFees
-  def self.find(q)
-    api = AosApi.new
+  def self.find(tenant, q)
+    api = AosApi.new(tenant)
     fees = []
     api.each('agencyFee', q) do |f|
       fees << self.convert_fee(f)

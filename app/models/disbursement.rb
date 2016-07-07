@@ -5,6 +5,7 @@ class Disbursement < ActiveRecord::Base
     belongs_to k
   end
   belongs_to :current_revision, class_name: "DisbursementRevision"
+  belongs_to :tenant
   has_many :disbursement_revisions,
            -> {order 'updated_at DESC'},
            dependent: :destroy
@@ -40,14 +41,14 @@ class Disbursement < ActiveRecord::Base
   end
 
   def aos_url
-    Rails.application.config.x.aos["api"]["url"].sub(
+    self.tenant.aos_api_url.sub(
       '/api',
       '/disbursement/'+self.appointment_id.to_s)
   end
 
   def next_revision
     cur = self.current_revision
-    nxt = DisbursementRevision.new(disbursement_id: self.id)
+    nxt = DisbursementRevision.new(tenant_id: self.tenant.id, disbursement_id: self.id)
     nxt.number = cur.number+1
     # copy over the previous revision parameters
     ["cargo_qty", "days_alongside", "loadtime", "eta",
@@ -67,7 +68,7 @@ class Disbursement < ActiveRecord::Base
   end
 
   def fill_nomination_data(nomination_id)
-    nomination = AosNomination.from_aos_id(nomination_id)
+    nomination = AosNomination.from_tenant_and_aos_id(tenant, nomination_id)
     return unless nomination
     ['vessel', 'port', 'company',
      'appointment_id', 'nomination_reference'].each do |e|
@@ -94,6 +95,7 @@ class Disbursement < ActiveRecord::Base
   def create_initial_revision
     dr = DisbursementRevision.new
     dr.disbursement = self
+    dr.tenant_id = self.tenant_id
     dr.number = 0
     dr.user = self.user
     d = Crystalizer.new(self).run()

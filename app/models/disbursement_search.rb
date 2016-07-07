@@ -1,7 +1,8 @@
 class DisbursementSearch
-  def initialize(params)
+  def initialize(tenant, params)
+    @tenant = tenant
     @params = params
-    @disbursements = Disbursement.joins(:current_revision)
+    @disbursements = Disbursement.where(tenant_id: tenant.id).joins(:current_revision)
     filter_association(Port)
     filter_association(Terminal)
     filter_cargo_type

@@ -25,7 +25,7 @@ class AuthController < ApplicationController
     cfg = Rails.application.config.x.identity
     @domain = cfg["domain"]
     @client_id = cfg["auth0"]["client"]["id"]
-    @tenant = cfg["tenant"]
+    @tenant = current_tenant
     @connection = cfg["auth0"]["connection"]
     @identity_url = cfg["url"]
     if browser_valid?
@@ -55,7 +55,8 @@ class AuthController < ApplicationController
     identity_id = (token["sub"].split('|')[1]).to_i
     identity_user = IdentityApi.new.get_user(identity_id)
     return nil unless identity_user
-    user = User.where(rocket_id: identity_id, deleted: false).first rescue nil
+    user = User.where(tenant_id: current_tenant.id,
+                      rocket_id: identity_id, deleted: false).first rescue nil
     return nil unless user
     return {db: user, identity: identity_user, token: token}
   end

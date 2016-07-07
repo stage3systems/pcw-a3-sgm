@@ -4,14 +4,12 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= "#{@title} | " if defined?(@title) %><%= Rails.application.config.x.tenant["display"] %> | PDA Estimator</title>
+  <title><%= "#{@title} | " if defined?(@title) %><%= current_tenant.display %> | Port Cost Watch</title>
   <!--[if lt IE 9]>
   <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <%= stylesheet_link_tag "application", media: "all" %>
-  <%= stylesheet_link_tag Rails.application.config.x.tenant["name"], media: "all" %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= favicon_link_tag Rails.application.config.x.tenant["favicon"], :rel => 'shortcut icon' %>
   <%= csrf_meta_tags %>
   <%= render partial: 'common/piwik' %>
   <style>
@@ -39,11 +37,11 @@
       color: #fff;
     }
     .login-logo {
-      width: 260px; /* dimension specific to logo */
-      height: 27px;
+      width: 263px; /* dimension specific to logo */
+      height: 40px;
       margin: 40px auto 55px;
       background: url(<%= asset_path 'logo.png' %>) top left no-repeat;
-      background-size: 260px 27px;
+      background-size: 263px 40px;
     }
     .login > p {
       color: #8594a1;

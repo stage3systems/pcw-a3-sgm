@@ -2,6 +2,7 @@ require 'test_helper'
 
 class DisbursementTest < ActiveSupport::TestCase
   def setup
+    @one = tenants(:one)
     @newcastle = ports(:newcastle)
     @brisbane = ports(:brisbane)
     @coal = terminals(:coal)
@@ -30,7 +31,7 @@ class DisbursementTest < ActiveSupport::TestCase
   end
 
   def disbursement(port, terminal=nil, company=@stage3)
-    d = Disbursement.new
+    d = Disbursement.new(tenant_id: @one.id)
     d.port = port
     d.terminal = terminal
     d.company = company
@@ -191,6 +192,14 @@ class DisbursementTest < ActiveSupport::TestCase
     r.compute
     assert_equal "7000.00", r.data["total"]
     assert_equal "7700.00", r.data["total_with_tax"]
+  end
+
+  test "required inputs are handled" do
+    d = self.disbursement(@brisbane)
+    assert d.save
+    updater = DisbursementUpdater.new(d.id, nil)
+    updater.run({}, {"required_input_testinput" => "testdata"})
+    assert_equal "testdata", updater.revision.data['required_input_testinput']
   end
 
   test "blank disbursements have no charges" do

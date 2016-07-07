@@ -3,4 +3,4 @@
             target: '_blank',
             class: "btn btn-default btn-sm#{
                     disbursement.nomination_id ? '' : ' disabled'}",
-            title: "Open in #{Rails.application.config.x.tenant["aos_name"]}" %>
+            title: "Open in #{current_tenant.aos_name}" %>

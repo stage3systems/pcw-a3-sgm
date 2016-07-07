@@ -23,6 +23,53 @@ namespace :pce do
         end
       end
     end
+    desc "Migrate Monson tenant"
+    task monson_tenant: :environment do
+      m = Tenant.find_by(name: 'monson')
+      if m.nil?
+        m = Tenant.new({
+          name: 'monson',
+          display: 'Monson',
+          full_name: 'Monson Agencies Autralia Pty Ltd',
+          aos_name: 'Bridge',
+          favicon: 'favicon_monson.png',
+          default_email: 'accounts@monson.com.au',
+          logo: 'monson_agency.png',
+          terms: 'maa-terms.pdf',
+          piwik_id: 2
+        })
+        m.save!
+      end
+      connection = ActiveRecord::Base.connection
+      [ActivityCode, CargoType, Company, Configuration,
+       DisbursementRevision, Disbursement,
+       Office, PfdaView, Port, ServiceUpdate, Service,
+       Tariff, Terminal, User, Vessel].each do |o|
+         connection.execute("UPDATE #{o.table_name} SET tenant_id = #{m.id}")
+       end
+    end
+    desc "Migrate MariTeam tenant from json dump"
+    task mariteam_tenant: :environment do
+      m = Tenant.find_by(name: 'mariteam')
+      if m.nil?
+        m = Tenant.new({
+          name: 'mariteam',
+          display: 'MariTeam',
+          full_name: 'MariTeam Shipping Agencies',
+          aos_name: 'MariTeam AOS',
+          favicon: 'mariteam_favicon.ico',
+          default_email: 'agency.rotterdam@mariteam-shipping.com',
+          logo: 'mariteam.png',
+          terms: 'mariteam_agency_conditions.pdf',
+          piwik_id: 9
+        })
+        m.save!
+      end
+      if not File.exists? "mariteam-json"
+        puts "Missing mariteam-json import directory"
+        next
+      end
+    end
   end
   namespace :aos_sync do
     desc "Import Cargo Types from AOS"
@@ -272,6 +319,27 @@ namespace :pce do
             fields.each {|f| vessel.send("#{f}=", v[f])}
             vessel.save!
           end
+        end
+      end
+    end
+  end
+  namespace :export do
+    desc "Export to json"
+    task all: :environment do
+      dest = "pce-json-#{DateTime.now.to_i}"
+      Dir.mkdir dest
+      [ActivityCode, CargoType, Company, Configuration,
+       Currency, DisbursementRevision, Disbursement,
+       Office, OfficesPort, PfdaView, Port, ServiceUpdate, Service,
+       Tariff, Tax, Terminal, User, Vessel].each do |t|
+        File.open(File.join(dest, "#{t.table_name}.json"), "w") do |f|
+          last = t.count-1
+          f.write('[')
+          t.find_each.with_index do |o, i|
+            f.write(o.to_json)
+            f.write(',') unless i == last
+          end
+          f.write(']')
         end
       end
     end

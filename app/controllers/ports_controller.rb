@@ -28,7 +28,7 @@ class PortsController < CommonController
   # GET /ports/1.json
   def show
     @title = "View Port"
-    @instance = Port.find(params[:id])
+    @instance = current_tenant.ports.find(params[:id])
     add_breadcrumb "#{@instance.name}", port_url(@instance)
 
     respond_to do |format|

@@ -93,6 +93,10 @@
             $("div.login-form").fadeIn(100, setupLogin);
           });
         } else {
+          showError(
+            'The login details you entered were not '+
+            'found in the system or are incorrect.',
+            'Please contact Customer Support for assistance.');
           $("div.login-form").fadeIn(100, setupLogin);
         }
       });

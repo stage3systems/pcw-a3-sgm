@@ -1,7 +1,9 @@
 class PfdaView < ActiveRecord::Base
   belongs_to :disbursement_revision
+  belongs_to :tenant
 
-  def setup(request, browser, revision)
+  def setup(tenant, request, browser, revision)
+    self.tenant = tenant
     self.disbursement_revision = revision
     self.ip = request.remote_ip
     self.browser = browser.name

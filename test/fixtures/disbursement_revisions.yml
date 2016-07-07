@@ -1,5 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 revisionone:
+  tenant: one
   disbursement: draft
   eta: <%= Date.today.to_s(:db) %>
   data: {}
@@ -18,6 +19,7 @@ revisionone:
   reference: reference1
 
 revisiontwo:
+  tenant: one
   disbursement: published
   eta: <%= Date.today.to_s(:db) %>
   user: admin
@@ -49,6 +51,7 @@ revisiontwo:
   voyage_number: voyage123
 
 generic_revision:
+  tenant: one
   disbursement: generic
   eta: <%= Date.today.to_s(:db) %>
   user: admin
@@ -74,6 +77,7 @@ generic_revision:
   voyage_number: voyage123
 
 generic_revision_tax_exempt:
+  tenant: one
   disbursement: generic_tax_exempt
   eta: <%= Date.today.to_s(:db) %>
   user: admin

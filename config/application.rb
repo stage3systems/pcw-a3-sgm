@@ -51,13 +51,10 @@ module ProformaDA
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # AOS
-    config.x.aos = Rails.application.config_for(:aos)
-
     # Identity
     config.x.identity = Rails.application.config_for(:identity)
 
-    # Tenant
-    config.x.tenant = Rails.application.config_for(:tenant)
+    # S3
+    config.x.s3 = Rails.application.config_for(:s3)
   end
 end

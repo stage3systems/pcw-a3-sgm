@@ -2,6 +2,19 @@ require 'test_helper'
 
 class ApiControllerTest < ActionController::TestCase
 
+  test "ping" do
+    get :ping
+    assert_response :success
+    assert_equal "pong", response.body
+  end
+
+  test "ping even without tenant" do
+    request.host = 'unknown.test.host'
+    get :ping
+    assert_response :success
+    assert_equal "pong", response.body
+  end
+
   test "get nominations" do
     log_in :operator
     stub_request(:get, "https://test.agencyops.net/api/v1/search/nomination?action=nominations&controller=api&limit=10").

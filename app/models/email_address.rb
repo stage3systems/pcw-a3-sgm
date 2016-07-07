@@ -1,8 +1,8 @@
 class EmailAddress
 
-  def self.aos_create(data)
+  def self.aos_create(tenant, data)
     return true if not data['prime']
-    e = self.get_entity(data)
+    e = self.get_entity(tenant, data)
     if e
       e.email = data['address']
       e.save!
@@ -10,13 +10,13 @@ class EmailAddress
     true
   end
 
-  def self.aos_modify(data)
-    return self.aos_create(data)
+  def self.aos_modify(tenant, data)
+    return self.aos_create(tenant, data)
   end
 
-  def self.aos_delete(data)
+  def self.aos_delete(tenant, data)
     return true if not data['prime']
-    e = self.get_entity(data)
+    e = self.get_entity(tenant, data)
     if e
       e.email = nil
       e.save!
@@ -24,11 +24,11 @@ class EmailAddress
     true
   end
 
-  def self.get_entity(data)
+  def self.get_entity(tenant, data)
     if data['officeId']
-      Office.find_by(remote_id: data['officeId'])
+      Office.find_by(tenant_id: tenant.id, remote_id: data['officeId'])
     elsif data['companyId']
-      Company.find_by(remote_id: data['companyId'])
+      Company.find_by(tenant_id: tenant.id, remote_id: data['companyId'])
     else
       nil
     end

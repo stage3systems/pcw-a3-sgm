@@ -32,11 +32,23 @@ class DisbursementDocument
   end
 
   def office_email
-    @revision.data['office_email'] || Rails.application.config.x.tenant["default_email"]
+    @revision.data['office_email'] || @revision.tenant.default_email
   end
 
   def issued
     I18n.l @revision.updated_at.to_date
+  end
+
+  def logo
+    @disbursement.tenant.logo
+  end
+
+  def terms
+    @disbursement.tenant.terms
+  end
+
+  def tenant_full_name
+    @disbursement.tenant.full_name
   end
 
   def vessel_name

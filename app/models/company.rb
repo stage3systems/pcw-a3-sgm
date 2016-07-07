@@ -2,6 +2,7 @@ class Company < ActiveRecord::Base
   default_scope -> {order('name ASC')}
   validates_presence_of :name
   has_many :disbursements
+  belongs_to :tenant
 
   extend Syncable
 
@@ -12,7 +13,8 @@ class Company < ActiveRecord::Base
     d
   end
 
-  def update_from_json(data)
+  def update_from_json(tenant, data)
+    self.tenant_id = tenant.id
     self.remote_id = data['id']
     FIELDS.each do |f|
       d = data[f.camelize(:lower)]

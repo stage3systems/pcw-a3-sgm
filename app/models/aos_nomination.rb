@@ -1,12 +1,13 @@
 class AosNomination
-  def self.from_aos_id(id)
+  def self.from_tenant_and_aos_id(tenant, id)
     return nil unless id
-    self.new(id)
+    self.new(tenant, id)
   end
 
-  def initialize(id)
+  def initialize(tenant, id)
     @id = id
-    @api = AosApi.new
+    @tenant = tenant
+    @api = AosApi.new(tenant)
   end
 
   def vessel
@@ -72,7 +73,7 @@ class AosNomination
     field ||= "#{kls.name.downcase}Id"
     val = aos_nom[field]
     return unless val
-    kls.find_by(remote_id: val)
+    kls.find_by(tenant_id: @tenant.id, remote_id: val)
   end
 
   def aos_nom

@@ -17,7 +17,7 @@
       <%= f.input :cargo_type,
                   prompt: 'Select a Cargo Type', label: false,
                   class: 'cargo-type',
-                  collection: CargoType.authorized, label_method: :display %>
+                  collection: CargoType.authorized(current_tenant), label_method: :display %>
       <div class="form-group">
           <%= f.input_field :start_date_picker, placeholder: "Start Date",
                              class: 'form-control date reset' %>

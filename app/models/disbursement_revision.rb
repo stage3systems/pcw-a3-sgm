@@ -2,6 +2,7 @@ class DisbursementRevision < ActiveRecord::Base
   belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user
+  belongs_to :tenant
   has_many :views,
            -> {order 'created_at DESC'},
            class_name: "PfdaView"
@@ -87,7 +88,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def sync_with_aos
-    aos_nom = AosNomination.from_aos_id(self.disbursement.nomination_id)
+    aos_nom = AosNomination.from_tenant_and_aos_id(self.tenant, self.disbursement.nomination_id)
     return unless aos_nom
     aos_nom.sync_revision(self)
   end

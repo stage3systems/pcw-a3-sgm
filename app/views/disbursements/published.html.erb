@@ -20,10 +20,10 @@
             </a>
             <% end %>
             <% if current_user %>
-            <%= render "common/mailto_pfda_#{Rails.application.config.x.tenant["name"]}",
+            <%= render "common/mailto_pfda_#{current_tenant.customer_name}",
                        button: 'hint',
                        doc: @document,
-                       config: Configuration.last %>
+                       config: current_tenant.configurations.last %>
             <%= link_to icon(:pencil), edit_disbursement_path(@disbursement),
                         class: 'btn btn-default hint',
                         title: 'Edit' %>
@@ -58,7 +58,7 @@
             <% end %>
           </div>
           <div class="col-md-6">
-            <div class="pull-right"><%= image_tag Rails.application.config.x.tenant["logo"] %></div>
+            <div class="pull-right"><%= image_tag current_tenant.logo %></div>
           </div>
         </div>
         <div class="btn-group"></div>
@@ -164,7 +164,7 @@
             <%= format_list(@document.funding_data) %>
             <br />
             Download the full <%= link_to "Terms and Conditions" ,
-                                          "/#{Rails.application.config.x.tenant["terms"]}" %>.
+                                          "/#{current_tenant.terms}" %>.
           </div>
         </div>
       </div>

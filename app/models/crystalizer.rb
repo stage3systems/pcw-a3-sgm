@@ -10,7 +10,7 @@ class Crystalizer
     crystalize_vessel
     @disbursement.company.crystalize(@hash) if @disbursement.company
     @disbursement.office.crystalize(@hash) if @disbursement.office
-    Configuration.last.crystalize(@hash)
+    @disbursement.tenant.configurations.last.crystalize(@hash)
     crystalize_agency_fees
     @hash
   end
@@ -45,7 +45,7 @@ class Crystalizer
 
   def crystalize_agency_fees
     date = @disbursement.created_at.to_date
-    AosAgencyFees.find({
+    AosAgencyFees.find(@disbursement.tenant, {
       companyId: @disbursement.company.remote_id,
       portId: @disbursement.port.remote_id,
       dateEffectiveEnd: date,

@@ -27,4 +27,10 @@ class HomeControllerTest < ActionController::TestCase
     assert_select 'a[href="/port"]', 0
     log_out
   end
+
+  test "unknow tenants get redirected" do
+    request.host = 'foo.test.host'
+    get :index
+    assert_response :redirect
+  end
 end

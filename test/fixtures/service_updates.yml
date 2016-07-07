@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  tenant: one
   service_id: 1
   user_id: 1
   old_code: MyText
@@ -8,6 +9,7 @@ one:
   changelog: MyText
 
 two:
+  tenant: one
   service_id: 1
   user_id: 1
   old_code: MyText

@@ -15,7 +15,7 @@ class NestedCommonController < BaseController
 
   def show
     get_port_and_terminal
-    @instance = model.find(params[:id])
+    @instance = model_by_id(params[:id])
     port_breadcrumb
     add_breadcrumb @instance.name, show_url
 
@@ -27,8 +27,7 @@ class NestedCommonController < BaseController
 
   def new
     get_port_and_terminal
-    @instance = model.new
-    @instance = new_instance
+    new_instance
 
     port_breadcrumb
     add_breadcrumb "New #{model_name}", new_url
@@ -41,7 +40,7 @@ class NestedCommonController < BaseController
 
   def edit
     get_port_and_terminal
-    @instance = model.find(params[:id])
+    @instance = model_by_id(params[:id])
     port_breadcrumb
     add_breadcrumb "Edit #{@instance.name}", edit_url
   end
@@ -60,7 +59,7 @@ class NestedCommonController < BaseController
 
   def update
     get_port_and_terminal
-    @instance = model.find(params[:id])
+    @instance = model_by_id(params[:id])
     parse_params
     @instance.user = current_user if @instance.user.nil?
 
@@ -70,7 +69,7 @@ class NestedCommonController < BaseController
 
   def destroy
     get_port_and_terminal
-    @instance = model.find(params[:id])
+    @instance = model_by_id(params[:id])
     @instance.destroy
 
     respond_to do |format|
@@ -91,12 +90,18 @@ class NestedCommonController < BaseController
 
   def new_instance
     @instance = model.new
+    @instance.tenant_id = current_tenant.id
+  end
+
+  def model_by_id(id)
+    model.where(tenant_id: current_tenant).find(id)
   end
 
   def populate_instance
     @instance.port = @port
     @instance.terminal = @terminal
     @instance.user = current_user
+    @instance.tenant_id = current_tenant.id
   end
 
   def url_prefix
@@ -148,8 +153,8 @@ class NestedCommonController < BaseController
   end
 
   def get_port_and_terminal
-    @port = Port.find(params[:port_id])
-    @terminal = Terminal.find_by_id(params[:terminal_id])
+    @port = current_tenant.ports.find(params[:port_id])
+    @terminal = current_tenant.terminals.find_by(id: params[:terminal_id])
   end
 
 

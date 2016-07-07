@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 vesselone:
+  tenant: :one
   name: vesselone
   loa: 9.99
   grt: 9.99
@@ -8,6 +9,7 @@ vesselone:
   dwt: 9.99
 
 vesseltwo:
+  tenant: :one
   name: vesseltwo
   loa: 9.99
   grt: 9.99

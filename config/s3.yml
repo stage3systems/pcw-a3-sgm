@@ -1,0 +1,15 @@
+default: &default
+  aws_access_key_id: 'secret'
+  aws_secret_access_key: 'secret'
+  bucket: 's3s-dev-or'
+  region: 'us-west-2'
+  use_iam_profile: false
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

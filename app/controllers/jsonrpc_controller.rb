@@ -7,7 +7,7 @@ class JsonrpcController < ApplicationController
         return if !check_params
         return if !check_method
         return if !check_token
-        ret = self.send(params[:method], *params[:params]) rescue error(-32603, "Internal error")
+        ret = self.send(params[:method], *params[:params]) #rescue error(-32603, "Internal error")
         render json: ret
       }
     end
@@ -28,7 +28,7 @@ class JsonrpcController < ApplicationController
     }
     k = classes[entity]
     return error(-32001, "Unsupported entity") if k.nil?
-    if k.send("aos_#{action.downcase}", data)
+    if k.send("aos_#{action.downcase}", current_tenant, data)
       success("ok")
     else
       error(-32002, "Failed to apply action to entity")
@@ -52,7 +52,7 @@ class JsonrpcController < ApplicationController
 
   def check_token
     token = params[:params].shift rescue nil
-    return true if token == Rails.application.config.x.aos["api"]["psk"]
+    return true if current_tenant.aos_api_psk and token == current_tenant.aos_api_psk
     render json: error(-32000, "Invalid token")
     false
   end

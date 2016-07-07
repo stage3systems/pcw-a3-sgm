@@ -1,17 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  tenant: one
   port_id: 1
   name: MyString
 
 two:
+  tenant: one
   port_id: 1
   name: MyString
 
 coal:
+  tenant: one
   port: brisbane
   name: 'Brisbane Coal Terminal'
 
 dummy:
+  tenant: one
   port: dummy
   name: 'Dummy Terminal'

@@ -1,12 +1,13 @@
 class DisbursementsGrid
 
   def initialize(user, params)
+    @tenant = user.tenant
     @port_ids = user.authorized_ports.pluck :id
     joins_and_includes(params)
   end
 
   def relation
-    Disbursement.where(port_id: @port_ids)
+    Disbursement.where(tenant_id: @tenant.id, port_id: @port_ids)
   end
 
   def options

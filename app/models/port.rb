@@ -8,6 +8,7 @@ class Port < ActiveRecord::Base
   has_many :tariffs
   belongs_to :currency
   belongs_to :tax
+  belongs_to :tenant
   has_and_belongs_to_many :offices
 
   include ServiceHolderHelper

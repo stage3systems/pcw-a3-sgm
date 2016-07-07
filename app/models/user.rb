@@ -7,10 +7,11 @@ class User < ActiveRecord::Base
   has_many :disbursements
   has_many :disbursement_revisions
   belongs_to :office
+  belongs_to :tenant
   attr_accessor :login
 
   def authorized_ports
-    return Port if office.nil? or office.name == "Head Office"
+    return tenant.ports if office.nil? or office.name == "Head Office"
     return office.ports
   end
 
@@ -18,12 +19,13 @@ class User < ActiveRecord::Base
     "#{self.first_name} #{self.last_name}"
   end
 
-  def update_from_json(data)
+  def update_from_json(tenant, data)
+    self.tenant_id = tenant.id
     self.remote_id = data['id']
     self.uid = data['loginName']
     self.first_name = data['firstName']
     self.last_name = data['lastName']
-    o = Office.find_by(remote_id: data['officeId'])
+    o = Office.find_by(tenant_id: tenant.id, remote_id: data['officeId'])
     self.office_id = o.id if o
     if data['password']
       self.encrypted_password = data['password']
@@ -39,11 +41,11 @@ class User < ActiveRecord::Base
      'NAVARIK HIDDEN SUPERUSER'].member? t
   end
 
-  def self.from_token(token)
+  def self.from_tenant_and_token(tenant, token)
     return nil unless token
     valid = (Time.at(token["exp"]) > DateTime.now) rescue false
     return nil unless valid
     rocket_id = (token["sub"].split('|')[1]).to_i
-    self.where(rocket_id: rocket_id).first
+    self.where(tenant_id: tenant.id, rocket_id: rocket_id).first
   end
 end

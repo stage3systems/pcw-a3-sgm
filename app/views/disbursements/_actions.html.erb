@@ -1,8 +1,8 @@
 <div class="btn-toolbar da-actions">
           <div class="btn-group btn-group-sm">
-                    <%= render "common/mailto_pfda_#{Rails.application.config.x.tenant["name"]}",
+                    <%= render "common/mailto_pfda_#{current_tenant.customer_name}",
                               doc: DisbursementDocument.new(disbursement),
-                              config: Configuration.last %>
+                              config: current_tenant.configurations.last %>
                     <%= link_to icon(:list), access_log_disbursement_path(disbursement),
                               :class => 'btn btn-default btn-sm',
                               :title => 'Access Log' %>

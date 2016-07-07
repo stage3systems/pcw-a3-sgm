@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 marine_levy:
+  tenant: one
   port: :brisbane
   code: "{compute: function(ctx) {return 1000.0;},taxApplies: true}"
   item: Marine Navigation Levy
@@ -8,6 +9,7 @@ marine_levy:
   row_order: 1
 
 towage:
+  tenant: one
   port: :brisbane
   code: "{compute: function(ctx) {return 2000.0+1000.0*parseInt(ctx.estimate.tugs_in);},taxApplies: true}"
   item: Towage
@@ -15,6 +17,7 @@ towage:
   row_order: 2
 
 coal:
+  tenant: one
   port: brisbane
   terminal: coal
   code: "{compute: function(ctx) {return 0;},taxApplies: true}"

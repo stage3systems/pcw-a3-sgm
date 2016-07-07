@@ -21,6 +21,10 @@ end
 
 class ActionController::TestCase
 
+  setup do
+    request.host = 'monson.test.host'
+  end
+
   def log_in(user)
     u =  users(user)
     session[:token] = {

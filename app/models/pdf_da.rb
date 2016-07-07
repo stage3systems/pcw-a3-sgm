@@ -74,7 +74,7 @@ class PdfDA < Prawn::Document
     # title and logo
     self.fill_color = '000000'
     logo_path = Rails.root.join('app', 'assets', 'images',
-                                Rails.application.config.x.tenant["logo"])
+                                @document.logo)
     bounding_box([0, HEIGHT-MARGIN],
                  width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
@@ -228,7 +228,7 @@ class PdfDA < Prawn::Document
 
   def terms_and_conditions
     text "\nDownload the full <link href=\""+
-         "#{@root_url}#{Rails.application.config.x.tenant["terms"]}"+
+         "#{@root_url}#{@document.terms}"+
          "\">Terms and Conditions</link>",
          inline_format: true
   end

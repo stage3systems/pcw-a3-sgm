@@ -1,7 +1,7 @@
 class ServicesController < NestedCommonController
 
   def sort
-    @instance = Service.find(params[:id])
+    @instance = current_tenant.services.find(params[:id])
     @instance.row_order_position = params[:row_order_position]
     @instance.save
     render nothing: true
@@ -23,6 +23,7 @@ class ServicesController < NestedCommonController
 
   def successful_save
     update = ServiceUpdate.new()
+    update.tenant_id = current_tenant.id
     update.service = @instance
     update.user = current_user
     update.changelog = @changelog

@@ -40,6 +40,7 @@ class JsonrpcControllerTest < ActionController::TestCase
   end
 
   test "can create, modify and delete users" do
+    @tenant = tenants(:one)
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -56,8 +57,8 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert_equal "ok", body['result']
-    assert User.find_by(remote_id: 123)
-    assert User.find_by(rocket_id: 321)
+    assert @tenant.users.find_by(remote_id: 123)
+    assert @tenant.users.find_by(rocket_id: 321)
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -73,7 +74,7 @@ class JsonrpcControllerTest < ActionController::TestCase
                   ]}
     assert_response :success
     body = JSON.parse(response.body)
-    assert body['result'] == "ok"
+    assert_equal "ok", body['result']
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -236,6 +237,7 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert Company.find_by(remote_id: 123).nil?
   end
   test "offices and email addresses" do
+    @tenant = tenants(:one)
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -250,7 +252,7 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    office = Office.find_by(remote_id: 123)
+    office = @tenant.offices.find_by(remote_id: 123)
     assert office.name == 'Office One'
     assert office.address_1 == '123'
     assert office.address_2 == 'Street'
@@ -270,8 +272,8 @@ class JsonrpcControllerTest < ActionController::TestCase
                   ]}
     assert_response :success
     body = JSON.parse(response.body)
-    assert body['result'] == "ok"
-    assert Office.find_by(remote_id: 123).email == 'info@company.one'
+    assert_equal "ok", body['result']
+    assert @tenant.offices.find_by(remote_id: 123).email == 'info@company.one'
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -320,6 +322,10 @@ class JsonrpcControllerTest < ActionController::TestCase
   end
 
   test "MODIFY creates vessel workaround" do
+    aos_stub(:get, "vesselType/1", :vesselType, [{
+      type: "maintype",
+      subtype: "subtype"
+    }])
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -329,6 +335,7 @@ class JsonrpcControllerTest < ActionController::TestCase
                       id: 1234,
                       name: 'bar',
                       loa: 100,
+                      vesselTypeId: 1,
                       intlNetRegisteredTonnage: 10000,
                       intlGrossRegisteredTonnage: 20000,
                       fullSummerDeadweight: 30000
@@ -343,6 +350,8 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert v.nrt == 10000
     assert v.grt == 20000
     assert v.dwt == 30000
+    assert_equal "maintype", v.maintype
+    assert_equal "subtype", v.subtype
     v.destroy
   end
 

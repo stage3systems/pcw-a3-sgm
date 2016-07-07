@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  tenant: one
   company_name: MyString
   company_address1: MyString
   company_address2: MyString
@@ -13,6 +14,7 @@ one:
   ac_name: MyString
 
 two:
+  tenant: one
   company_name: MyString
   company_address1: MyString
   company_address2: MyString

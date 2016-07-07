@@ -6,15 +6,17 @@ class CargoTypesController < ApplicationController
 
   def index
     @title = "Cargo Types"
-    @cts = CargoType.all
+    @cts = current_tenant.cargo_types.all
   end
 
   def enabled
     if current_user.admin?
-      CargoType.where('id not in (:ids) AND enabled = true',
-                      ids: params[:ids]).update_all(enabled: false)
-      CargoType.where(id: params[:ids],
-                      enabled: false).update_all(enabled: true)
+      current_tenant.cargo_types.where(
+        'id not in (:ids) AND enabled = true',
+        ids: params[:ids]).update_all(enabled: false)
+      current_tenant.cargo_types.where(
+        id: params[:ids],
+        enabled: false).update_all(enabled: true)
     end
     render json: {status: 'ok'}
   end
