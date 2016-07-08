@@ -1,28 +1,5 @@
 namespace :pce do
   namespace :migrate do
-    desc "Migrate old style AOS mappings"
-    task :aos_mappings => :environment do
-      file = ENV['file'] || 'mappings.txt'
-      if not File::exists? file
-        puts "Couldn't open #{file}"
-        return
-      end
-      api = AosApi.new
-      File.readlines(file).each do |l|
-        eId, nId = l.split('|').map &:strip
-        d = Disbursement.find(eId) rescue nil
-        if d
-          n = api.find('nomination', nId.to_i)
-          if n['appointmentId']
-            d.appointment_id = n['appointmentId'].to_i
-            d.nomination_id = nId.to_i
-            d.save
-          end
-        else
-          puts "DA not found: #{eId}"
-        end
-      end
-    end
     desc "Migrate Monson tenant"
     task monson_tenant: :environment do
       m = Tenant.find_by(name: 'monson')
@@ -74,92 +51,113 @@ namespace :pce do
   namespace :aos_sync do
     desc "Import Cargo Types from AOS"
     task :cargo_types => :environment do
-      api = AosApi.new
-      api.each('cargoType') do |t|
-        ct = CargoType.where(remote_id: t['id']).first
-        ct = CargoType.where(
-          maintype: t['type'],
-          subtype: t['subtype'],
-          subsubtype: t['subsubtype'],
-          subsubsubtype: t['subsubsubtype']).first unless ct
-        ct = CargoType.new unless ct
-        ct.update_from_json(t)
-        ct.save!
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.each('cargoType') do |t|
+          ct = tenant.cargo_types.where(remote_id: t['id']).first
+          ct = tenant.cargo_types.where(
+            maintype: t['type'],
+            subtype: t['subtype'],
+            subsubtype: t['subsubtype'],
+            subsubsubtype: t['subsubsubtype']).first unless ct
+          ct = CargoType.new unless ct
+          ct.update_from_json(tenant, t)
+          ct.save!
+        end
       end
     end
     desc "Import Offices from AOS"
     task :offices => :environment do
-      api = AosApi.new
-      api.each('office', {agencyCompany: 1}) do |o|
-        office = Office.where('remote_id = :id OR name ilike :name',
-                              id: o['id'], name: "#{o["name"]}").first
-        office = Office.new unless office
-        office.update_from_json(o)
-        office.save!
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.each('office', {agencyCompany: 1}) do |o|
+          office = tenant.offices.where('remote_id = :id OR name ilike :name',
+                                        id: o['id'], name: "#{o["name"]}").first
+          office = Office.new unless office
+          office.update_from_json(tenant, o)
+          office.save!
+        end
       end
     end
     desc "Import Vessels from AOS"
     task :vessels => :environment do
-      api = AosApi.new
-      api.each('vessel') do |v|
-        next if v['name'] == 'TBN'
-        vessel = Vessel.where('remote_id = :id OR name ilike :name',
-                              id: v['id'], name: "#{v["name"]}").first
-        next unless v['loa'] or (vessel and vessel.loa)
-        next unless v['intlGrossRegisteredTonnage'] or (vessel and vessel.grt)
-        next unless v['intlNetRegisteredTonnage'] or (vessel and vessel.nrt)
-        next unless v['fullSummerDeadweight'] or (vessel and vessel.dwt)
-        vessel = Vessel.new unless vessel
-        vessel.update_from_json(v)
-        vessel.save!
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.each('vessel') do |v|
+          next if v['name'] == 'TBN'
+          vessel = tenant.vessels.where('remote_id = :id OR name ilike :name',
+                                        id: v['id'], name: "#{v["name"]}").first
+          next unless v['loa'] or (vessel and vessel.loa)
+          next unless v['intlGrossRegisteredTonnage'] or (vessel and vessel.grt)
+          next unless v['intlNetRegisteredTonnage'] or (vessel and vessel.nrt)
+          next unless v['fullSummerDeadweight'] or (vessel and vessel.dwt)
+          vessel = Vessel.new unless vessel
+          vessel.update_from_json(tenant, v)
+          vessel.save!
+        end
       end
     end
     desc "Import Companies from AOS"
     task :companies => :environment do
-      api = AosApi.new
-      api.companies.each do |c|
-        company = Company.where('remote_id = :id OR name ilike :name',
-                                id: c['id'], name: "#{c["name"]}").first
-        company = Company.new unless company
-        company.update_from_json(c)
-        company.save!
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.companies.each do |c|
+          company = tenant.companies.where('remote_id = :id OR name ilike :name',
+                                           id: c['id'], name: "#{c["name"]}").first
+          company = Company.new unless company
+          company.update_from_json(tenant, c)
+          company.save!
+        end
       end
     end
     desc "Import Users from AOS"
     task :users => :environment do
-      api = AosApi.new
-      api.users.each do |u|
-        user = User.where('remote_id = :id OR uid = :uid',
-                          id: u['id'], uid: u['loginName']).first
-        user = User.new unless user
-        user.update_from_json(u)
-        user.save!
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.users.each do |u|
+          user = tenant.users.where('remote_id = :id OR uid = :uid',
+                                    id: u['id'], uid: u['loginName']).first
+          user = User.new unless user
+          user.update_from_json(tenant, u)
+          user.save!
+        end
       end
     end
     desc "Import Ports from AOS"
     task :ports => :environment do
-      currency = Currency.find_by(code: 'AUD')
-      tax = Tax.find_by(code: 'GST')
-      api = AosApi.new
-      api.each('officePort') do |op|
-        aos_port = api.find("port", op['portId'])
-        aos_office = api.find("office", op['officeId'])
-        port = Port.where('remote_id = :id OR name ilike :name',
-                          id: op['portId'],
-                          name: "#{aos_port['name']}").first
-        unless port
-          port = Port.new
-          port.currency = currency
-          port.tax= tax
-        end
-        port.remote_id = aos_port['id']
-        port.name = aos_port['name']
-        port.save!
-        office = Office.where('remote_id = :id OR name ilike :name',
-                              id: op['officeId'],
-                              name: "#{aos_office['name']}").first
-        unless office.port_ids.member? port.id
-          office.ports << port
+      tax = Tax.find_by(code: '---')
+      if tax.nil?
+        tax = Tax.new(code: '---', name: 'Unset', rate: 0)
+        tax.save!
+      end
+      currency = Currency.find_by(code: '---')
+      if currency.nil?
+        currency = Currenty.new(code: '---', name: 'Unset', symbol: '-')
+        currency.save!
+      end
+      Tenant.all.each do |tenant|
+        api = AosApi.new(tenant)
+        api.each('officePort') do |op|
+          aos_port = api.find("port", op['portId'])
+          aos_office = api.find("office", op['officeId'])
+          port = tenant.ports.where('remote_id = :id OR name ilike :name',
+                                    id: op['portId'],
+                                    name: "#{aos_port['name']}").first
+          unless port
+            port = Port.new
+            port.tenant_id = tenant.id
+            port.currency = currency
+            port.tax = tax
+          end
+          port.remote_id = aos_port['id']
+          port.name = aos_port['name']
+          port.save!
+          office = tenant.office.where('remote_id = :id OR name ilike :name',
+                                       id: op['officeId'],
+                                       name: "#{aos_office['name']}").first
+          unless office.port_ids.member? port.id
+            office.ports << port
+          end
         end
       end
     end
