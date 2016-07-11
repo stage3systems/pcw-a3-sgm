@@ -1,5 +1,18 @@
 namespace :pce do
   namespace :migrate do
+    desc "Migrate AOS configurations"
+    task aos_configs: :environment do
+      config = Rails.application.config_for(:aos_api)
+      Tenant.all.each do |t|
+        c = config[t]
+        next unless c
+        t.aos_api_url = c['url']
+        t.aos_api_user = c['user']
+        t.aos_api_password = c['password']
+        t.aos_api_psk = c['psk']
+        t.save!
+      end
+    end
     desc "Migrate Monson tenant"
     task monson_tenant: :environment do
       m = Tenant.find_by(name: 'monson')
@@ -27,6 +40,14 @@ namespace :pce do
     end
     desc "Migrate MariTeam tenant from json dump"
     task mariteam_tenant: :environment do
+      maps = {}
+      def data_for_model(maps, klass, &blk)
+        maps[klass.name] = {} unless maps[klass.name]
+        klass.record_timestamps = false
+        f = File.open("mariteam-json/#{klass.table_name}.json", "r")
+        blk.call(JSON.parse(f.read()))
+        klass.record_timestamps = true
+      end
       m = Tenant.find_by(name: 'mariteam')
       if m.nil?
         m = Tenant.new({
@@ -45,6 +66,146 @@ namespace :pce do
       if not File.exists? "mariteam-json"
         puts "Missing mariteam-json import directory"
         next
+      end
+      # Straightforward models
+      [Tax, Currency, ActivityCode, CargoType, Company, Configuration,
+       Office, Port, User, Vessel].each do |klass|
+        data_for_model(maps, klass) do |data|
+          data.each do |d|
+            id = d.delete("id")
+            o = klass.new(d)
+            o.tenant_id = m.id if klass.columns_hash["tenant_id"]
+            o.save!
+            maps[klass.name][id] = o.id
+          end
+        end
+      end
+      # The following models require some id patching
+      # Ignore tariffs for now
+      # office ports
+      data_for_model(maps, OfficesPort) do |data|
+        data.each do |d|
+          office = m.offices.find(maps['Office'][d['office_id']])
+          port = m.ports.find(maps['Port'][d['port_id']])
+          unless office.port_ids.member? port.id
+            office.ports << port
+          end
+        end
+      end
+      # terminals
+      data_for_model(maps, Terminal) do |data|
+        data.each do |d|
+          port = m.ports.find(maps['Port'][d['port_id']])
+          id = d.delete("id")
+          d["port_id"] = port.id
+          t = Terminal.new(d)
+          t.tenant_id = m.id
+          t.save!
+          maps['Terminal'][id] = t.id
+        end
+      end
+      # services
+      data_for_model(maps, Service) do |data|
+        data.each do |d|
+          port = m.ports.find(maps['Port'][d['port_id']])
+          terminal = m.terminals.find_by(id: maps['Terminal'][d['terminal_id']])
+          user = m.users.find_by(id: maps['User'][d['user_id']])
+          activity_code = m.activity_codes.find_by(id: maps['ActivityCode'][d['activity_code_id']])
+          id = d.delete("id")
+          d["port_id"] = port.id
+          d["terminal_id"] = terminal.id if terminal
+          d["user_id"] = user.id if user
+          d["activity_code_id"] = activity_code.id if activity_code
+          s = Service.new(d)
+          s.tenant_id = m.id
+          s.save!
+          maps['Service'][id] = s.id
+        end
+      end
+      # service updates
+      data_for_model(maps, ServiceUpdate) do |data|
+        data.each do |d|
+          service = m.services.find_by(id: maps['Service'][d['service_id']])
+          next if service.nil?
+          user = m.users.find_by(id: maps['User'][d['user_id']])
+          id = d.delete("id")
+          d["service_id"] = service.id
+          d["user_id"] = user.id if user
+          su = ServiceUpdate.new(d)
+          su.tenant_id = m.id
+          su.save!
+          maps['ServiceUpdate'][id] = su.id
+        end
+      end
+      # disbursements
+      current_rev_map = {}
+      data_for_model(maps, Disbursement) do |data|
+        Disbursement.skip_callback(:create, :before, :generate_publication_id)
+        Disbursement.skip_callback(:create, :after, :create_initial_revision)
+        data.each do |d|
+          id = d.delete("id")
+          d.delete("disbursement_revisions")
+          d.delete("port")
+          d.delete("terminal")
+          d.delete("vessel")
+          d.delete("company")
+          d.delete("user")
+          d.delete("office")
+          port = m.ports.find(maps['Port'][d['port_id']])
+          terminal = m.terminals.find_by(id: maps['Terminal'][d['terminal_id']])
+          vessel = m.vessels.find_by(id: maps['Vessel'][d['vessel_id']])
+          company = m.companies.find_by(id: maps['Company'][d['company_id']])
+          user = m.users.find_by(id: maps['User'][d['user_id']])
+          office = m.offices.find_by(id: maps['Office'][d['office_id']])
+          current_revision_id = d.delete("current_revision_id")
+          da = Disbursement.new(d)
+          da.tenant_id = m.id
+          da.port_id = port.id
+          da.terminal_id = terminal.id if terminal
+          da.vessel_id = vessel.id if vessel
+          da.company_id = company.id if company
+          da.user_id = user.id if user
+          da.office_id = office.id if office
+          da.save!
+          current_rev_map[current_revision_id] = da.id
+          maps['Disbursement'][id] = da.id
+        end
+      end
+      # disbursement revisions
+      data_for_model(maps, DisbursementRevision) do |data|
+        data.each do |d|
+          id = d.delete("id")
+          disbursement = m.disbursements.find_by(id: maps['Disbursement'][d['disbursement_id']])
+          next unless disbursement
+          cargo_type = m.cargo_types.find_by(id: maps['CargoType'][d['cargo_type_id']])
+          user = m.users.find_by(id: maps['User'][d['user_id']])
+          dr = DisbursementRevision.new(d)
+          dr.tenant_id = m.id
+          dr.disbursement_id = disbursement.id
+          dr.cargo_type_id = cargo_type.id if cargo_type
+          dr.user_id = user.id if user
+          dr.save!
+          da_id = current_rev_map[id]
+          if da_id
+            Disbursement.record_timestamps = false
+            da = m.disbursements.find(da_id)
+            da.current_revision_id = dr.id
+            da.save!
+            Disbursement.record_timestamps = true
+          end
+          maps['DisbursementRevision'][id] = dr.id
+        end
+      end
+      # pfda_views
+      data_for_model(maps, PfdaView) do |data|
+        data.each do |d|
+          d.delete("id")
+          dr = m.disbursement_revisions.find(maps['DisbursementRevision'][d["disbursement_revision_id"]])
+          pv = PfdaView.new(d)
+          pv.tenant_id = m.id
+          pv.disbursement_revision_id = dr.id
+          pv.save!
+        end
       end
     end
   end
@@ -152,9 +313,9 @@ namespace :pce do
           port.remote_id = aos_port['id']
           port.name = aos_port['name']
           port.save!
-          office = tenant.office.where('remote_id = :id OR name ilike :name',
-                                       id: op['officeId'],
-                                       name: "#{aos_office['name']}").first
+          office = tenant.offices.where('remote_id = :id OR name ilike :name',
+                                        id: op['officeId'],
+                                        name: "#{aos_office['name']}").first
           unless office.port_ids.member? port.id
             office.ports << port
           end
