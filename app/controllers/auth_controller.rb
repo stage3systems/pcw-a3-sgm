@@ -25,7 +25,7 @@ class AuthController < ApplicationController
     cfg = Rails.application.config.x.identity
     @domain = cfg["domain"]
     @client_id = cfg["auth0"]["client"]["id"]
-    @tenant = current_tenant
+    @tenant = current_tenant.name
     @connection = cfg["auth0"]["connection"]
     @identity_url = cfg["url"]
     if browser_valid?
