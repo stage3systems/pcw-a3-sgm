@@ -1,11 +1,17 @@
 <div class="login">
-  <h1 class="text-center">PDA Estimator</h1>
+  <div class="login-logo"></div>
   <div class="spinner">
     <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
   </div>
+  <div class="login-footer">
+    <div><a href="http://stage3systems.com/tos.html">Terms of Service</a></div>
+    &copy; 2013-<%= Date.today.year %>
+    <a href="http://stage3systems.com" target="_blank"
+       class="company">Stage 3 Systems Inc.</a>
+  </div>
 </div>
 <script type="text/javascript">
-  var xdStorage = new CDStorage('<%= @rocket_url %>', '/crossdomain.html');
+  var xdStorage = new CDStorage('<%= @identity_url %>', '/crossdomain.html');
   getToken(xdStorage, function(key, token) {
     <% if @rocket_clear_token_on_logout %>
     if (token) {
