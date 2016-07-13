@@ -10,6 +10,7 @@
   <![endif]-->
   <%= stylesheet_link_tag "application", media: "all",
                           "data-turbolinks-track" => true %>
+  <%= render partial: 'common/head' %>
   <%= csrf_meta_tags %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= render partial: 'common/piwik' %>
