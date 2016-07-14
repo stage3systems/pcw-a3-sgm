@@ -6,7 +6,7 @@ var rebuildRequiredFields = function(ctx) {
   $requiredInputs.append('<h4>Required Inputs</h4>');
   var requiredInputs = {};
   _.each(ctx.services, function(k) {
-    var r = ctx.parsed_codes[k].requiredInputs;
+    var r = ctx.parsed_codes[k] && ctx.parsed_codes[k].requiredInputs;
     if (r) {
       _.each(r, function(val, key) {
         if (requiredInputs[key]) {
