@@ -20,7 +20,7 @@ class DisbursementRevisionTest < ActiveSupport::TestCase
           }
         }.to_json, :headers => {})
     stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
-      with(:body => "{\"id\":1,\"code\":\"MNL\",\"appointmentId\":null,\"nominationId\":1,\"payeeId\":321,\"creatorId\":1,\"estimatePdfUuid\":\"id2\",\"status\":\"INITIAL\",\"modifierId\":1,\"grossAmount\":\"1100.0\",\"netAmount\":\"1000.0\",\"estimateId\":675045400,\"description\":\"Marine Levy\",\"activityCode\":\"MISC\",\"reference\":\"reference2\",\"sort\":1,\"taxApplies\":true,\"comment\":\"Comment for Marine Levy\",\"disabled\":false}",
+      with(:body => "{\"id\":1,\"code\":\"MNL\",\"appointmentId\":null,\"nominationId\":1,\"payeeId\":321,\"creatorId\":1,\"estimatePdfUuid\":\"id2\",\"status\":\"INITIAL\",\"modifierId\":1,\"grossAmount\":\"1100.0\",\"netAmount\":\"1000.0\",\"estimateId\":675045400,\"description\":\"Marine Levy\",\"activityCode\":\"MISC\",\"reference\":\"reference2\",\"sort\":1,\"taxApplies\":true,\"comment\":\"Comment for Marine Levy\",\"disabled\":false,\"revisionNumber\":1}",
                   :headers => {'Content-Type'=>'application/json'},
                   :basic_auth => ['test', 'test']).
           to_return(:status => 200, :body => {

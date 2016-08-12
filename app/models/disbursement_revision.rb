@@ -106,7 +106,8 @@ class DisbursementRevision < ActiveRecord::Base
       "sort" => self.fields[k].to_i,
       "taxApplies" => self.tax_applies?(k),
       "comment" => self.comments[k],
-      "disabled" => self.disabled[k] == "1"
+      "disabled" => self.disabled[k] == "1",
+      "revisionNumber" => self.number
     }
   end
 
