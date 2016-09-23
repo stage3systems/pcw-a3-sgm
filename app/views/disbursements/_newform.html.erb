@@ -47,7 +47,9 @@
   <div class="form-group tbn_fields">
     <%= f.input :tbn_template,
                 label: 'Template',
-                collection: ['VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
+                collection: ['DWT 82000', 'DWT 93000', 'DWT 132000',
+                             'DWT 151000', 'DWT 180000',
+                             'VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
                              'HANDYMAX', 'SUPRAMAX', 'HANDYSIZE'],
                 prompt: 'Select TBN template...' %>
     <%= f.input :grt, label: 'GRT' %>
@@ -274,6 +276,36 @@
       nrt: 10849,
       dwt: 32000,
       loa: 183
+    },
+    'DWT 82000': {
+      grt: 45000,
+      nrt: 30000,
+      dwt: 82000,
+      loa: 240
+    },
+    'DWT 93000': {
+      grt: 50000,
+      nrt: 35000,
+      dwt: 93000,
+      loa: 245
+    },
+    'DWT 132000': {
+      grt: 70000,
+      nrt: 40000,
+      dwt: 132000,
+      loa: 270
+    },
+    'DWT 151000': {
+      grt: 80000,
+      nrt: 50000,
+      dwt: 151000,
+      loa: 280
+    },
+    'DWT 180000': {
+      grt: 92000,
+      nrt: 60000,
+      dwt: 180000,
+      loa: 295
     }
   };
   $("select#disbursement_vessel_id").on("change", function() {
