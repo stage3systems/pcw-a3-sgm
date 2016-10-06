@@ -21,7 +21,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
-    ['monson', 'mariteam'].each do |n|
+    ['monson', 'mariteam', 'casper', 'fillettegreen'].each do |n|
       return n if name.starts_with? n
     end
     "stage3"
