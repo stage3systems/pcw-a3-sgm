@@ -18,6 +18,8 @@
                   prompt: 'Select a Cargo Type', label: false,
                   class: 'cargo-type',
                   collection: CargoType.authorized(current_tenant), label_method: :display %>
+      <%= f.input :min_dwt, label: false, placeholder: 'Minimum DWT', class: 'form-control reset' %>
+      <%= f.input :max_dwt, label: false, placeholder: 'Maximum DWT', class: 'form-control reset' %>
       <div class="form-group">
           <%= f.input_field :start_date_picker, placeholder: "Start Date",
                              class: 'form-control date reset' %>
@@ -171,6 +173,8 @@
           terminal_id: $("select#search_terminal").val(),
           vessel_name: $("input#search_vessel_name").val(),
           cargo_type_id: $("select#search_cargo_type").val(),
+          min_dwt: $("input#search_min_dwt").val(),
+          max_dwt: $("input#search_max_dwt").val(),
           start_date: $("input#search_start_date").val(),
           end_date: $("input#search_end_date").val()
         },
@@ -178,7 +182,7 @@
         success: function(d) {
           $("div#searchresults").empty();
           if (d.count == 0) {
-            $("div#searchresults").append('<div class=""><p>No Results</p></div>'); 
+            $("div#searchresults").append('<div class=""><p>No Results</p></div>');
           } else {
             var prevLink = 'javascript:void(0)';
             var maxPage = parseInt(d.count/10.0+(d.count%10 == 0 ? 0 : 1));
