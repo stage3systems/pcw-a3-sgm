@@ -1,5 +1,66 @@
 $.fn.editable.defaults.mode = 'inline';
 
+var buildInput = function($requiredInputs, val, key, ctx) {
+  var value = ctx.data['required_input_'+key] || val.defaultValue;
+  $requiredInputs.append(
+    '<div class="col-md-4"><div class="form-group">'+
+    '<label class="control-label col-sm-3">'+val.label+'</label>'+
+    '<div class="col-sm-9">'+
+    '<input name="required_input_'+key+'" class="form-control" value="'+value+'"></input>'+
+    '<span class="help-block"></span>'+
+    '</div></div></div>');
+  var $input = $('input[name="required_input_'+key+'"]');
+  var $div = $input.parent().parent();
+  var $span = $input.next();
+  $input.on('change', function(e) {
+    var raw = $input.val();
+    var validation = val.validate(raw);
+    if (validation.error) {
+      $div.addClass('has-error');
+      $span.text(validation.error);
+    } else {
+      $div.removeClass('has-error');
+      $span.text('');
+      ctx.data['required_input_'+key] = validation.success;
+      setTimeout(function() { updateTable(ctx); }, 0);
+    }
+  });
+};
+
+var buildSelect = function($requiredInputs, val, key, ctx) {
+  var value = ctx.data['required_input_'+key] || val.defaultValue;
+  var options = _.map(val.options, function(o) {
+    return '<option value="'+o.value+'"'+
+            (o.value == value ? ' selected="selected"' : '')+'>'+
+            o.label+'</option>';
+  }).join('');
+  $requiredInputs.append(
+    '<div class="col-md-4"><div class="form-group">'+
+    '<label class="control-label col-sm-3">'+val.label+'</label>'+
+    '<div class="col-sm-9">'+
+    '<select name="required_input_'+key+'" class="form-control">'+
+    options+
+    '</select>'+
+    '<span class="help-block"></span>'+
+    '</div></div></div>');
+  var $select = $('select[name="required_input_'+key+'"]');
+  var $div = $select.parent().parent();
+  var $span = $select.next();
+  $select.on('change', function(e) {
+    var raw = $select.val();
+    var validation = val.validate(raw);
+    if (validation.error) {
+      $div.addClass('has-error');
+      $span.text(validation.error);
+    } else {
+      $div.removeClass('has-error');
+      $span.text('');
+      ctx.data['required_input_'+key] = validation.success;
+      setTimeout(function() { updateTable(ctx); }, 0);
+    }
+  });
+};
+
 var rebuildRequiredFields = function(ctx) {
   var $requiredInputs = $('div.required-inputs');
   $requiredInputs.empty();
@@ -19,30 +80,11 @@ var rebuildRequiredFields = function(ctx) {
   });
   var allValid = true;
   _.each(requiredInputs, function(val, key) {
-    var value = ctx.data['required_input_'+key] || val.defaultValue;
-    $requiredInputs.append(
-      '<div class="col-md-4"><div class="form-group">'+
-      '<label class="control-label col-sm-3">'+val.label+'</label>'+
-      '<div class="col-sm-9">'+
-      '<input name="required_input_'+key+'" class="form-control" value="'+value+'"></input>'+
-      '<span class="help-block"></span>'+
-      '</div></div></div>');
-    var $input = $('input[name="required_input_'+key+'"]');
-    var $div = $input.parent().parent();
-    var $span = $input.next();
-    $input.on('change', function(e) {
-      var raw = $input.val();
-      var validation = val.validate(raw);
-      if (validation.error) {
-        $div.addClass('has-error');
-        $span.text(validation.error);
-      } else {
-        $div.removeClass('has-error');
-        $span.text('');
-        ctx.data['required_input_'+key] = validation.success;
-        setTimeout(function() { updateTable(ctx); }, 0);
-      }
-    });
+    if (val.options) {
+      buildSelect($requiredInputs, val, key, ctx);
+    } else {
+      buildInput($requiredInputs, val, key, ctx);
+    }
   });
   $requiredInputs.append('<div class="clearfix"></div>');
 }
