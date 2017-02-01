@@ -1,0 +1,25 @@
+<div>
+Please click on the link below to view the requested <%= doc.title.titleize %> for <%= doc.vessel_name %> calling at <%= doc.port_name %>.<br>
+You can download a PDF file view of the estimate from this link (no log in required).<br>
+<br>
+<% url = "#{root_url}/pda/#{doc.disbursement.publication_id}" %>
+<a href="<%= url %>"><%= url %></a>
+<br>
+<br>
+<b>PREFUNDING STATUS</b><br>
+<% doc.funding_data(true).each do |d| %>
+  <%= d[:value] rescue d %><br>
+<% end %>
+<br>
+<a href="<%= "#{root_url}#{tenant.terms}" %>">
+Download the full Terms and Conditions
+</a>
+<br>
+<br>
+For enquires relating to this Estimate please contact our local Port Office:<br>
+<br>
+<% doc.from_data[0][1].each do |d| %>
+  <%=  d[:value] rescue d %><br>
+<% end %>
+<br>
+</div>

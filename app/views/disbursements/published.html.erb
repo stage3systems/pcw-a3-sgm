@@ -20,7 +20,15 @@
             </a>
             <% end %>
             <% if current_user %>
-            <%= render "common/mailto_pfda_#{current_tenant.customer_name}",
+            <%= render "common/mailto_pfda",
+                       tenant: current_tenant,
+                       sedna: false,
+                       button: 'hint',
+                       doc: @document,
+                       config: current_tenant.configurations.last %>
+            <%= render "common/mailto_pfda",
+                       tenant: current_tenant,
+                       sedna: true,
                        button: 'hint',
                        doc: @document,
                        config: current_tenant.configurations.last %>

@@ -1,0 +1,41 @@
+<a class="btn btn-default
+          <%= button rescue 'button-sm' %>
+          <%= " disabled" if doc.disbursement.draft? %>"
+   <% ctx = {doc: doc, config: config, root_url: root_url, tenant: tenant}
+      to = doc.company_email
+      subject = "#{doc.vessel_name} calling at #{doc.port_name}"
+      body = lambda do |base, ext|
+        t1 = "_#{base}_#{tenant.customer_name}.#{ext}.erb"
+        t2 = "_#{base}.#{ext}.erb"
+        LightTemplate.new(["common", t1], ctx).render() rescue
+          LightTemplate.new(["common", t2], ctx).render()
+      end
+   %>
+   <% if doc.disbursement.draft? %>
+   href="#"
+   <% elsif sedna %>
+   target="_blank"
+   title="Send with SEDNA"
+   href="https://www.sednanetwork.com/compose?<%=
+     URI.encode_www_form({
+       to: to,
+       subject: subject,
+       bodyHtml: body.call("mailto_sedna", "html")
+     }).gsub("%25", "%26%2337%3B") # work around send % double decode
+   %>"
+   <% else %>
+   title="Send a Link By Email"
+   href="mailto:<%= doc.company_email %>?<%=
+     URI.encode_www_form({
+       subject: subject,
+       body: body.call("mailto_text", "text")
+     })
+   %>"
+   <% end %>
+>
+  <% if sedna %>
+  <i><%= image_tag("sedna-icon.png") %></i>
+  <% else %>
+  <%= icon("envelope") %>
+  <% end %>
+</a>

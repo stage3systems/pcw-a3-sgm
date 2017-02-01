@@ -1,6 +1,13 @@
 <div class="btn-toolbar da-actions">
           <div class="btn-group btn-group-sm">
-                    <%= render "common/mailto_pfda_#{current_tenant.customer_name}",
+                    <%= render "common/mailto_pfda",
+                              tenant: current_tenant,
+                              sedna: false,
+                              doc: DisbursementDocument.new(disbursement),
+                              config: current_tenant.configurations.last %>
+                    <%= render "common/mailto_pfda",
+                              tenant: current_tenant,
+                              sedna: true,
                               doc: DisbursementDocument.new(disbursement),
                               config: current_tenant.configurations.last %>
                     <%= link_to icon(:list), access_log_disbursement_path(disbursement),
