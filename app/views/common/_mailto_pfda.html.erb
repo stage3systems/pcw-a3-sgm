@@ -29,7 +29,7 @@
      URI.encode_www_form({
        subject: subject,
        body: body.call("mailto_text", "text")
-     })
+     }).gsub("+", "%20")
    %>"
    <% end %>
 >
