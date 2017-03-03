@@ -7,6 +7,7 @@ class FundingAgreement
   end
 
   def conditions
+    return generic_conditions unless @revision.tenant.name.start_with? "monson"
     d = @revision.data
     pfpercent = d['company_prefunding_percent'].to_i
     case d['company_prefunding_type']
@@ -28,6 +29,11 @@ class FundingAgreement
   end
 
   private
+  def generic_conditions
+    "Please remit funds days prior to vessels arrival " +
+    "to the following Bank Account:"
+  end
+
   def default_conditions
     "Please remit funds at least two (2) days prior to "+
     "vessels arrival to the following Bank Account:"
