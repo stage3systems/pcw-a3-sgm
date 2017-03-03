@@ -188,10 +188,31 @@ class DisbursementDocument
   end
 
   def bank_account_details
+    details = []
     d = @revision.data
-    details = ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
-      {style: :bold,
-       value: "#{f}: #{d[f.downcase.gsub(' ','_').gsub('/', '')]}"}
+    case @revision.tenant.customer_name
+
+    when "mariteam"
+      details += [
+        {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
+        {style: :bold, value: "Account number: 1207.51.836"},
+        {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
+        {style: :bold, value: "Swift/BIC: RABONL2U"}
+      ]
+    when "casper"
+      details += [
+        {style: :bold, value: "Account Name: Casper Shipping Limited"},
+        {style: :bold, value: "Sort Code: 60/08/46"},
+        {style: :bold, value: "BIC Code: NWBKGB2L"},
+        {style: :bold, value: "GBP Account Number: 68645570"},
+        {style: :bold, value: "IBAN number (GBP): GB11Nwbk60084668645570"},
+        {style: :bold, value: "VAT Nr: 546807127"}
+      ]
+    else
+      details += ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
+        {style: :bold,
+         value: "#{f}: #{d[f.downcase.gsub(' ','_').gsub('/', '')]}"}
+      end
     end
     details += [
       {style: :bold, value: "Reference: #{wire_reference}"},
@@ -200,7 +221,7 @@ class DisbursementDocument
   end
 
   def funding_disclaimer
-    disclaimer = if @disbursement.inquiry?
+    disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
       "Monson Agencies Australia take every care to ensure that the figures "+
       "and information contained in the Inquiry are as accurate as possible, "+
@@ -214,6 +235,7 @@ class DisbursementDocument
   end
 
   def freight_tax_disclaimer
+    return [] unless @revision.tenant.is_monson?
     [
       "This #{@name} is exclusive of Australian Freight Tax (AFT) which, "+
       "if applicable, shall be paid by the freight beneficiary, "+
@@ -223,6 +245,7 @@ class DisbursementDocument
   end
 
   def tax_exempt_note
+    return [] unless @revision.tenant.is_monson?
     return [] unless @revision.tax_exempt?
     [
       "This #{@name} is exclusive of the Australian Goods "+
@@ -232,6 +255,7 @@ class DisbursementDocument
   end
 
   def towage_provider_note
+    return [] unless @revision.tenant.is_monson?
     [
       "Note: providers of towage services in Australia use their own amended "+
       "versions of the UK Standard Conditions for Towage and other Services, "+

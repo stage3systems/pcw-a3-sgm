@@ -26,4 +26,8 @@ class Tenant < ActiveRecord::Base
     end
     "stage3"
   end
+
+  def is_monson?
+    name.starts_with? 'monson'
+  end
 end
