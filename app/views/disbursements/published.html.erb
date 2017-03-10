@@ -170,9 +170,18 @@
         <div class="row">
           <div class="col-md-12">
             <%= format_list(@document.funding_data) %>
+            <% if current_tenant.name.starts_with? "mariteam" %>
+            <br />
+            Download our <%= link_to "Standard Port Agency Conditions",
+                                     "/mariteam_agency_conditions.pdf" %>.
+            <br />
+            Download our <%= link_to "General Conditions",
+                                     "/mariteam_general_conditions.pdf" %>.
+            <% else %>
             <br />
             Download the full <%= link_to "Terms and Conditions" ,
                                           "/#{current_tenant.terms}" %>.
+            <% end %>
           </div>
         </div>
       </div>
