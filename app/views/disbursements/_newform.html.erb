@@ -25,6 +25,7 @@
                       prompt: 'Please select a Port',
                       collection: current_user.authorized_ports.all.to_a %>
     <%= f.association :terminal,
+                      required: (current_tenant.name.starts_with? "mariteam"),
                       prompt: 'Please select a Terminal',
                       label: '<i class="fa terminal-spinner fa-spinner fa-spin"></i> Terminal'.html_safe %>
     <%= f.input :company_name, label: "Principal", placeholder: "Type to search for Principal",
