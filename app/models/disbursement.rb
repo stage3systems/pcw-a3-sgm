@@ -98,6 +98,7 @@ class Disbursement < ActiveRecord::Base
     dr.tenant_id = self.tenant_id
     dr.number = 0
     dr.user = self.user
+    dr.tax_exempt = (not self.tenant.is_monson?)
     d = Crystalizer.new(self).run()
     ['data', 'fields', 'descriptions', 'activity_codes',
      'compulsory', 'codes', 'hints'].each {|f| dr.send("#{f}=", d[f]) }
