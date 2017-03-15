@@ -220,7 +220,7 @@ class DisbursementsController < ApplicationController
 
   def set_user_and_office
     @disbursement.user = current_user
-    @disbursement.office = current_user.office || Office.find_by_name("Head Office")
+    @disbursement.office = current_user.office || Office.find_by(name: "Head Office", tenant_id: current_tenant.id)
   end
 
   def prefill_disbursement
