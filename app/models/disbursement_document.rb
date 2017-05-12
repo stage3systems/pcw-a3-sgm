@@ -216,6 +216,23 @@ class DisbursementDocument
         {style: :bold, value: "IBAN number (GBP): GB11Nwbk60084668645570"},
         {style: :bold, value: "VAT Nr: 546807127"}
       ]
+    when "transmarine"
+      details += [
+        {style: :bold, value: "Bank of America, Long Beach Branch No. 1457"},
+        {style: :bold, value: "150 Long Beach Blvd."},
+        {style: :bold, value: "Long Beach, CA 90802"},
+        {style: :bold, value: "Acct no. 14578-03336"},
+        {style: :bold, value: "ABA NO. 0260-0959-3"},
+        {style: :bold, value: "SWIFT: BOFAUS3N"},
+        {style: :bold, value: "CHIPS: 0959"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "Beneficiary:"},
+        {style: :bold, value: "TRANSMARINE NAVIGATION CORPORATION"},
+        {style: :bold, value: "SUITE 500"},
+        {style: :bold, value: "301 EAST OCEAN BOULEVARD"},
+        {style: :bold, value: "LONG BEACH"},
+        {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
+      ]
     else
       details += ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
