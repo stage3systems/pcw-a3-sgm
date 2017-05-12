@@ -194,10 +194,18 @@ class DisbursementDocument
 
     when "mariteam"
       details += [
+        {style: :bold, value: "Netherlands"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
-        {style: :bold, value: "Swift/BIC: RABONL2U"}
+        {style: :bold, value: "Swift/BIC: RABONL2U"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "Belgium"},
+        {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
+        {style: :bold, value: "Bank : BNP Paribas Fortis, Antwerpen, Londenstraat 6 - B-2000 ANTWERPEN"},
+        {style: :bold, value: "Account No. : 001-4819039-58"},
+        {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
+        {style: :bold, value: "Swiftcode : GEBABEBB"}
       ]
     when "casper"
       details += [

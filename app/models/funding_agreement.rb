@@ -7,6 +7,7 @@ class FundingAgreement
   end
 
   def conditions
+    return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
     return generic_conditions unless @revision.tenant.name.start_with? "monson"
     d = @revision.data
     pfpercent = d['company_prefunding_percent'].to_i
@@ -29,6 +30,11 @@ class FundingAgreement
   end
 
   private
+  def mariteam_conditions
+    "Please remit funds to the following Country Bank Account " +
+    "relative to your Port call:"
+  end
+
   def generic_conditions
     "Please remit funds days prior to vessels arrival " +
     "to the following Bank Account:"
