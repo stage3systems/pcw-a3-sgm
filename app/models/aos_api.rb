@@ -66,10 +66,10 @@ class AosApi
 
   def users
     uu = []
-    self.each('person', {companyId: 1}) do |u|
+    self.each('person', {companyId: stage3_company_id}) do |u|
       uu << u
     end
-    self.each('person', {companyId: 2}) do |u|
+    self.each('person', {companyId: tenant_company_id}) do |u|
       uu << u
     end
     uu
@@ -92,5 +92,15 @@ class AosApi
       ee << e
     end
     ee
+  end
+
+  def stage3_company_id
+      return 32 if @tenant.customer_name == "transmarine"
+      1
+  end
+
+  def tenant_company_id
+      return 67 if @tenant.customer_name == "transmarine"
+      return 2
   end
 end
