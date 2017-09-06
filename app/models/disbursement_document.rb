@@ -233,6 +233,16 @@ class DisbursementDocument
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
+    when "sturrockgrindrod"
+      details += [
+        {style: :bold, value: "BANKING DETAILS (ZAR)"},
+        {style: :bold, value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
+        {style: :bold, value: "Bank: Rand Merchant Bank"},
+        {style: :bold, value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
+        {style: :bold, value: "Branch Code: 223626"},
+        {style: :bold, value: "Account Number: 62380786940"},
+        {style: :bold, value: "Swift Code: FIRNZAJJ"},
+      ]
     else
       details += ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
