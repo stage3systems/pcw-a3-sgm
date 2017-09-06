@@ -11,6 +11,6 @@ For enquires relating to this Estimate please contact our local Port Office:<br>
 <%= doc.disbursement.office.address_1 rescue config.company_address1 %><br>
 <%= doc.disbursement.office.address_2 rescue config.company_address2 %><br>
 <%= doc.disbursement.office.address_3 rescue "" %><br>
-<% email = doc.disbursement.office.email rescue current_tenant.default_email %>
+<% email = doc.disbursement.office.email rescue tenant.default_email %>
 <a href="mailto:<%= email %>"><%= email %></a>
 <br>
