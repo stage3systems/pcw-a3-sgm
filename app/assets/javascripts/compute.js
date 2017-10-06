@@ -3,7 +3,19 @@ var parseCodes = function(ctx) {
       i = -1;
   while (++i < n) {
     var k = ctx.services[i];
-    ctx.parsed_codes[k] = eval("("+ctx.codes[k]+")");
+    var code = eval("("+ctx.codes[k]+")");
+    ctx.parsed_codes[k] = code;
+    if (code && code.requiredInputs) {
+      for (var key in code.requiredInputs) {
+        if (code.requiredInputs.hasOwnProperty(key)) {
+          var input = code.requiredInputs[key];
+          var dataKey = "required_input_" + key;
+          if (typeof ctx.data[dataKey] == "undefined") {
+            ctx.data[dataKey] = input.defaultValue;
+          }
+        }
+      }
+    }
   }
 };
 var normalizeValue = function(val) {
