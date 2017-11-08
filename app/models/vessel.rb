@@ -15,7 +15,8 @@ class Vessel < ActiveRecord::Base
       "vessel_nrt" => self.nrt.to_s,
       "vessel_imo" => self.imo_code.to_s,
       "vessel_type" => self.maintype.to_s,
-      "vessel_subtype" => self.subtype.to_s
+      "vessel_subtype" => self.subtype.to_s,
+      "vessel_sbt_certified" => self.sbt_certified
     })
   end
 
@@ -34,6 +35,7 @@ class Vessel < ActiveRecord::Base
     self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
     self.imo_code = data['imoCode'] if data['imoCode']
+    self.sbt_certified = data['sbtCertified']
   end
 
   def self.aos_modify(tenant, data)
