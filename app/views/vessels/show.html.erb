@@ -7,9 +7,10 @@
     <p id="notice"><%= notice %></p>
 
     <h2 class="title"><%= @instance.name %></h2>
-    <% ['dwt', 'grt', 'loa', 'nrt'].each do |k| %>
-      <p><strong><%= k.upcase %>:</strong> <%= @instance.send(k) %></p>
-    <% end %>
-
+    <p><strong>DWT:</strong> <%= @instance.dwt %></p>
+    <p><strong>GRT:</strong> <%= @instance.grt %></p>
+    <p><strong>LOA:</strong> <%= @instance.loa %></p>
+    <p><strong>NRT:</strong> <%= @instance.nrt %></p>
+    <p><strong>SBT Certified:</strong> <%= @instance.sbt_certified_display %></p>
   </div>
 </div>

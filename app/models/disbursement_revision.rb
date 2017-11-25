@@ -8,6 +8,10 @@ class DisbursementRevision < ActiveRecord::Base
            class_name: "PfdaView"
   after_save :schedule_sync
 
+  def sbt_certified_display
+    VesselsHelper.sbt_certified_display_from_string(self.data["vessel_sbt_certified"])
+  end
+
   def field_keys
     self.fields.sort_by {|k,v| v.to_i}.map {|k,i| k}
   end

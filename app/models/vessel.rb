@@ -6,6 +6,10 @@ class Vessel < ActiveRecord::Base
 
   extend Syncable
 
+  def sbt_certified_display
+    VesselsHelper.sbt_certified_display(self.sbt_certified)
+  end
+
   def crystalize(d)
     d['data'].merge!({
       "vessel_name" => self.name,
@@ -16,7 +20,7 @@ class Vessel < ActiveRecord::Base
       "vessel_imo" => self.imo_code.to_s,
       "vessel_type" => self.maintype.to_s,
       "vessel_subtype" => self.subtype.to_s,
-      "vessel_sbt_certified" => self.sbt_certified
+      "vessel_sbt_certified" => self.sbt_certified.to_s
     })
   end
 
@@ -34,6 +38,7 @@ class Vessel < ActiveRecord::Base
     self.nrt = data['intlNetRegisteredTonnage'] if data['intlNetRegisteredTonnage']
     self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
+    self.sbt_certified = data['sbtCertified'] if data['sbtCertified']
     self.imo_code = data['imoCode'] if data['imoCode']
     self.sbt_certified = data['sbtCertified']
   end
