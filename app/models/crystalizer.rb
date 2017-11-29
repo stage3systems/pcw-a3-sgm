@@ -36,7 +36,8 @@ class Crystalizer
         "vessel_dwt" => @disbursement.dwt,
         "vessel_grt" => @disbursement.grt,
         "vessel_nrt" => @disbursement.nrt,
-        "vessel_loa" => @disbursement.loa
+        "vessel_loa" => @disbursement.loa,
+        "vessel_sbt_certified" => @disbursement.sbt_certified,
       })
     else
       @disbursement.vessel.crystalize(@hash)

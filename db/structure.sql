@@ -344,7 +344,9 @@ CREATE TABLE disbursements (
     type_cd integer DEFAULT 0,
     nomination_id integer,
     appointment_id integer,
-    nomination_reference character varying(255)
+    nomination_reference character varying(255),
+    tenant_id integer,
+    sbt_certified boolean
 );
 
 
