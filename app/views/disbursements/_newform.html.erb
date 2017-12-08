@@ -57,7 +57,6 @@
     <%= f.input :nrt, label: 'NRT' %>
     <%= f.input :dwt, label: 'DWT' %>
     <%= f.input :loa, label: 'LOA' %>
-    <%= f.input :sbt_certified, label: "SBT Certified", as: :boolean %>
   </div>
   <input type="hidden" id="disbursement_nomination_id"
          name="disbursement[nomination_id]"
@@ -247,64 +246,55 @@
       grt: 112000,
       nrt: 55000,
       dwt: 228000,
-      loa: 325,
-      sbt_certified: false,
+      loa: 325
     },
     'CAPESIZE': {
       grt: 87500,
       nrt: 55000,
       dwt: 175000,
-      loa: 290,
-      sbt_certified: false,
+      loa: 290
     },
     'PANAMAX': {
       grt: 40600,
       nrt: 25000,
       dwt: 75000,
-      loa: 225,
-      sbt_certified: false,
+      loa: 225
     },
     'SUPRAMAX': {
       grt: 33500,
       nrt: 19000,
       dwt: 58000,
-      loa: 194,
-      sbt_certified: false,
+      loa: 194
     },
     'HANDYMAX': {
       grt: 30000,
       nrt: 16000,
       dwt: 45000,
-      loa: 190,
-      sbt_certified: false,
+      loa: 190
     },
     'HANDYSIZE': {
       grt: 19681,
       nrt: 10849,
       dwt: 32000,
-      loa: 183,
-      sbt_certified: false,
+      loa: 183
     },
     'DWT 82000': {
       grt: 45000,
       nrt: 30000,
       dwt: 82000,
-      loa: 240,
-      sbt_certified: false,
+      loa: 240
     },
     'DWT 93000': {
       grt: 50000,
       nrt: 35000,
       dwt: 93000,
-      loa: 245,
-      sbt_certified: false,
+      loa: 245
     },
     'DWT 132000': {
       grt: 70000,
       nrt: 40000,
       dwt: 132000,
-      loa: 270,
-      sbt_certified: false,
+      loa: 270
     },
     'DWT 151000': {
       grt: 80000,
@@ -316,8 +306,7 @@
       grt: 92000,
       nrt: 60000,
       dwt: 180000,
-      loa: 295,
-      sbt_certified: false,
+      loa: 295
     }
   };
   $("select#disbursement_vessel_id").on("change", function() {
@@ -330,7 +319,6 @@
     $.each(['grt', 'nrt', 'dwt', 'loa'], function(i, e) {
       $("input#disbursement_"+e).val(template[e]);
     });
-    $("input#disbursement_sbt_certified").prop('checked', template['sbt_certified']);
   });
   updateFields();
   updateTerminals();

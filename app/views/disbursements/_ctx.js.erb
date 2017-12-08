@@ -8,9 +8,10 @@ var ctx = {
     dwt: <%= revision.data["vessel_dwt"] %>,
     loa: <%= revision.data["vessel_loa"] %>,
     type: "<%= revision.data["vessel_type"] %>",
-    subtype: "<%= revision.data["vessel_subtype"] %>",
-    sbt_certified: "<%= revision.data["vessel_sbt_certified"] %>",
-
+    subtype: "<%= revision.data["vessel_subtype"] %>"
+<% if revision.data.key?("vessel_sbt_certified") %>
+    ,sbt_certified: <%= VesselsHelper.sbt_certified_from_string(revision.data["vessel_sbt_certified"]).to_s %>
+<% end %>
   },
   disbursement_type: "<%= revision.disbursement.type rescue "unknown" %>",
   estimate: {

@@ -1,6 +1,6 @@
 module VesselsHelper
   def self.sbt_certified_from_string(sbt_certified_string)
-    if sbt_certified_string.nil? or sbt_certified_string == ""
+    if sbt_certified_string.nil?
       nil
     elsif sbt_certified_string == "true"
       true
