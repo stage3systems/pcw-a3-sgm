@@ -9,7 +9,11 @@ var parseCodes = function(ctx) {
       for (var key in code.requiredInputs) {
         if (code.requiredInputs.hasOwnProperty(key)) {
           var input = code.requiredInputs[key];
-          var dataKey = "required_input_" + key;
+          var dataKey = "required_input_";
+          if (input.serviceSpecific) {
+            dataKey += k + "_";
+          }
+          dataKey += key;
           if (typeof ctx.data[dataKey] == "undefined") {
             ctx.data[dataKey] = input.defaultValue;
           }

@@ -1,96 +1,59 @@
 $.fn.editable.defaults.mode = 'inline';
 
-var buildInput = function($requiredInputs, val, key, ctx) {
-  var value = ctx.data['required_input_'+key] || val.defaultValue;
+var requiredInputDataKey = function(serviceKey, key, serviceSpecific) {
+  var dataKey = 'required_input_';
+  if (serviceSpecific) {
+    dataKey += serviceKey + '_';
+  }
+  return dataKey + key;
+}
+
+var buildInput = function($requiredInputs, serviceKey, val, key, ctx) {
+  var dataKey = requiredInputDataKey(serviceKey, key, val.serviceSpecific);
+  var value = ctx.data[dataKey] || val.defaultValue;
   $requiredInputs.append(
-    '<div class="col-md-4"><div class="form-group">'+
+    '<div class="form-group">'+
     '<label class="control-label col-sm-3">'+val.label+'</label>'+
     '<div class="col-sm-9">'+
-    '<input name="required_input_'+key+'" class="form-control" value="'+value+'"></input>'+
+    '<input name="'+dataKey+'" class="form-control" value="'+value+'"></input>'+
     '<span class="help-block"></span>'+
-    '</div></div></div>');
-  var $input = $('input[name="required_input_'+key+'"]');
-  var $div = $input.parent().parent();
-  var $span = $input.next();
-  $input.on('change', function(e) {
-    var raw = $input.val();
-    var validation = val.validate(raw);
-    if (validation.error) {
-      $div.addClass('has-error');
-      $span.text(validation.error);
-    } else {
-      $div.removeClass('has-error');
-      $span.text('');
-      ctx.data['required_input_'+key] = validation.success;
-      setTimeout(function() { updateTable(ctx); }, 0);
-    }
-  });
+    '</div></div>');
 };
 
-var buildSelect = function($requiredInputs, val, key, ctx) {
-  var value = ctx.data['required_input_'+key] || val.defaultValue;
+var buildSelect = function($requiredInputs, serviceKey, val, key, ctx) {
+  var dataKey = requiredInputDataKey(serviceKey, key, val.serviceSpecific);
+  var value = ctx.data[dataKey] || val.defaultValue;
   var options = _.map(val.options, function(o) {
     return '<option value="'+o.value+'"'+
             (o.value == value ? ' selected="selected"' : '')+'>'+
             o.label+'</option>';
   }).join('');
   $requiredInputs.append(
-    '<div class="col-md-4"><div class="form-group">'+
+    '<div class="form-group">'+
     '<label class="control-label col-sm-3">'+val.label+'</label>'+
     '<div class="col-sm-9">'+
-    '<select name="required_input_'+key+'" class="form-control">'+
+    '<select name="'+dataKey+'" class="form-control">'+
     options+
     '</select>'+
     '<span class="help-block"></span>'+
-    '</div></div></div>');
-  var $select = $('select[name="required_input_'+key+'"]');
-  var $div = $select.parent().parent();
-  var $span = $select.next();
-  $select.on('change', function(e) {
-    var raw = $select.val();
-    var validation = val.validate(raw);
-    if (validation.error) {
-      $div.addClass('has-error');
-      $span.text(validation.error);
+    '</div></div>');
+};
+
+var addRequiredFields = function($elem, ctx, s) {
+  var requiredInputs = ctx.parsed_codes[s].requiredInputs;
+  if (_.keys(requiredInputs).length > 0) {
+    $elem.append('<hr />');
+  }
+  return _.map(requiredInputs, function(val, key) {
+    if (val.options) {
+      buildSelect($elem, s, val, key, ctx);
     } else {
-      $div.removeClass('has-error');
-      $span.text('');
-      ctx.data['required_input_'+key] = validation.success;
-      setTimeout(function() { updateTable(ctx); }, 0);
+      buildInput($elem, s, val, key, ctx);
     }
   });
 };
 
-var rebuildRequiredFields = function(ctx) {
-  var $requiredInputs = $('div.required-inputs');
-  $requiredInputs.empty();
-  $requiredInputs.append('<h4>Required Inputs</h4>');
-  var requiredInputs = {};
-  _.each(ctx.services, function(k) {
-    var r = ctx.parsed_codes[k] && ctx.parsed_codes[k].requiredInputs;
-    if (r) {
-      _.each(r, function(val, key) {
-        if (requiredInputs[key]) {
-          console.log('Required input conflict on', key);
-          return;
-        }
-        requiredInputs[key] = val;
-      });
-    };
-  });
-  var allValid = true;
-  _.each(requiredInputs, function(val, key) {
-    if (val.options) {
-      buildSelect($requiredInputs, val, key, ctx);
-    } else {
-      buildInput($requiredInputs, val, key, ctx);
-    }
-  });
-  $requiredInputs.append('<div class="clearfix"></div>');
-}
-
 var rebuildTable = function(ctx) {
-  rebuildRequiredFields(ctx);
   var $tbody = $('table.disbursement tbody');
   $tbody.empty();
   _.each(ctx.services, function(s) {
@@ -110,12 +73,57 @@ var rebuildTable = function(ctx) {
   setTimeout(function() {
     displayTaxExempt();
     updateTable(ctx);
+    setupRequiredFieldsListeners(ctx);
     setupDisableListeners(ctx);
     setupSortable();
     computeOrder();
   }, 0);
 };
 
+var setupRequiredFieldsListeners = function(ctx) {
+  _.each(ctx.services, function(s) {
+    var requiredInputs = ctx.parsed_codes[s].requiredInputs;
+    return _.map(requiredInputs, function(val, key) {
+      var dataKey = requiredInputDataKey(s, key, val.serviceSpecific);
+      if (val.options) {
+        var $select = $('select[name="'+dataKey+'"]');
+        var $div = $select.parent().parent();
+        var $span = $select.next();
+        $select.on('change', function(e) {
+          var raw = $(e.target).val();
+          var validation = val.validate(raw);
+          if (validation.error) {
+            $div.addClass('has-error');
+            $span.text(validation.error);
+          } else {
+            $div.removeClass('has-error');
+            $span.text('');
+            ctx.data[dataKey] = validation.success;
+            setTimeout(function() { updateTable(ctx); }, 0);
+          }
+        });
+      } else {
+        var $input = $('input[name="'+dataKey+'"]');
+        var $div = $input.parent().parent();
+        var $span = $input.next();
+        $input.on('change', function(e) {
+          var raw = $(e.target).val();
+          var validation = val.validate(raw);
+          if (validation.error) {
+            $div.addClass('has-error');
+            $span.text(validation.error);
+          } else {
+            $div.removeClass('has-error');
+            $span.text('');
+            ctx.data[dataKey] = validation.success;
+            setTimeout(function() { updateTable(ctx); }, 0);
+          }
+        });
+      }
+    });
+
+  });
+};
 
 var setupSortable = function(ctx) {
   $('table.disbursement tbody').sortable({
@@ -168,6 +176,14 @@ var updateTable = function(ctx) {
         $("td#service_"+key+" i").removeClass("hidden");
         $("td#service_"+key+" a").addClass("editable-unsaved");
       }
+      var requiredInputs = ctx.parsed_codes[key].requiredInputs;
+      _.each(requiredInputs, function(val, riKey) {
+        var dataKey = requiredInputDataKey(key, riKey, val.serviceSpecific);
+        var value = ctx.data[dataKey];
+        var elem = val.options ? 'select' : 'input';
+        $(elem+'[name="'+dataKey+'"]').val(value);
+      });
+
     }
     $("th.total").html(convert(ctx.total));
     $("th.total_tax_inc").html(convert(ctx.totalTaxInc));
@@ -274,6 +290,7 @@ var nameCell = function(ctx, s) {
   if (hint) {
     $th.append('<div class="hint">'+hint+'</div>');
   }
+  addRequiredFields($th, ctx, s);
   return $th;
 };
 
