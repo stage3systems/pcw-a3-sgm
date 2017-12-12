@@ -53,7 +53,8 @@ CREATE TABLE activity_codes (
     name character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    remote_id integer
+    remote_id integer,
+    tenant_id integer
 );
 
 
@@ -89,7 +90,8 @@ CREATE TABLE cargo_types (
     subsubsubtype character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    enabled boolean DEFAULT false
+    enabled boolean DEFAULT false,
+    tenant_id integer
 );
 
 
@@ -124,7 +126,8 @@ CREATE TABLE companies (
     updated_at timestamp without time zone NOT NULL,
     remote_id integer,
     prefunding_type character varying(255),
-    prefunding_percent integer
+    prefunding_percent integer,
+    tenant_id integer
 );
 
 
@@ -164,7 +167,8 @@ CREATE TABLE configurations (
     ac_number character varying(255),
     ac_name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    tenant_id integer
 );
 
 
@@ -295,7 +299,8 @@ CREATE TABLE disbursement_revisions (
     amount numeric,
     currency_symbol character varying(255),
     hints hstore,
-    activity_codes hstore
+    activity_codes hstore,
+    tenant_id integer
 );
 
 
@@ -461,7 +466,8 @@ CREATE TABLE offices (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     email character varying(255),
-    remote_id integer
+    remote_id integer,
+    tenant_id integer
 );
 
 
@@ -491,7 +497,8 @@ ALTER SEQUENCE offices_id_seq OWNED BY offices.id;
 CREATE TABLE offices_ports (
     id integer NOT NULL,
     office_id integer,
-    port_id integer
+    port_id integer,
+    tenant_id integer
 );
 
 
@@ -527,7 +534,8 @@ CREATE TABLE pfda_views (
     pdf boolean,
     disbursement_revision_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    tenant_id integer
 );
 
 
@@ -565,7 +573,9 @@ CREATE TABLE ports (
     services_count integer DEFAULT 0,
     terminals_count integer DEFAULT 0,
     tariffs_count integer DEFAULT 0,
-    remote_id integer
+    remote_id integer,
+    metadata hstore,
+    tenant_id integer
 );
 
 
@@ -610,7 +620,8 @@ CREATE TABLE service_updates (
     changelog text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    document character varying(255)
+    document character varying(255),
+    tenant_id integer
 );
 
 
@@ -650,7 +661,8 @@ CREATE TABLE services (
     user_id integer,
     document character varying(255),
     compulsory boolean DEFAULT true,
-    activity_code_id integer
+    activity_code_id integer,
+    tenant_id integer
 );
 
 
@@ -687,7 +699,8 @@ CREATE TABLE tariffs (
     validity_start date,
     validity_end date,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    tenant_id integer
 );
 
 
@@ -744,6 +757,49 @@ ALTER SEQUENCE taxes_id_seq OWNED BY taxes.id;
 
 
 --
+-- Name: tenants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tenants (
+    id integer NOT NULL,
+    name character varying,
+    display character varying,
+    full_name character varying,
+    aos_name character varying,
+    favicon character varying,
+    default_email character varying,
+    logo character varying,
+    terms character varying,
+    piwik_id integer,
+    aos_api_url character varying,
+    aos_api_user character varying,
+    aos_api_password character varying,
+    aos_api_psk character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tenants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE tenants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE tenants_id_seq OWNED BY tenants.id;
+
+
+--
 -- Name: terminals; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -753,7 +809,9 @@ CREATE TABLE terminals (
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    remote_id integer
+    remote_id integer,
+    metadata hstore,
+    tenant_id integer
 );
 
 
@@ -802,7 +860,8 @@ CREATE TABLE users (
     office_id integer,
     remote_id integer,
     deleted boolean DEFAULT false,
-    rocket_id integer
+    rocket_id integer,
+    tenant_id integer
 );
 
 
@@ -839,7 +898,11 @@ CREATE TABLE vessels (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     remote_id integer,
-    imo_code integer
+    imo_code integer,
+    maintype character varying,
+    subtype character varying,
+    tenant_id integer,
+    sbt_certified boolean
 );
 
 
@@ -986,6 +1049,13 @@ ALTER TABLE ONLY tariffs ALTER COLUMN id SET DEFAULT nextval('tariffs_id_seq'::r
 --
 
 ALTER TABLE ONLY taxes ALTER COLUMN id SET DEFAULT nextval('taxes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tenants ALTER COLUMN id SET DEFAULT nextval('tenants_id_seq'::regclass);
 
 
 --
@@ -1151,6 +1221,14 @@ ALTER TABLE ONLY tariffs
 
 ALTER TABLE ONLY taxes
     ADD CONSTRAINT taxes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tenants
+    ADD CONSTRAINT tenants_pkey PRIMARY KEY (id);
 
 
 --
@@ -1384,4 +1462,16 @@ INSERT INTO schema_migrations (version) VALUES ('20150424125206');
 INSERT INTO schema_migrations (version) VALUES ('20150504100551');
 
 INSERT INTO schema_migrations (version) VALUES ('20150506155442');
+
+INSERT INTO schema_migrations (version) VALUES ('20160624162843');
+
+INSERT INTO schema_migrations (version) VALUES ('20160627133650');
+
+INSERT INTO schema_migrations (version) VALUES ('20160704071405');
+
+INSERT INTO schema_migrations (version) VALUES ('20160704072219');
+
+INSERT INTO schema_migrations (version) VALUES ('20171025180000');
+
+INSERT INTO schema_migrations (version) VALUES ('20171125002900');
 
