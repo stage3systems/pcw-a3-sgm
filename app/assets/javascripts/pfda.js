@@ -67,6 +67,7 @@ var rebuildTable = function(ctx) {
     $tr.append('<td><span class="fa fa-sort"></span></td>');
     $tr.append(typeCell(ctx, s));
     $tr.append(nameCell(ctx, s));
+    $tr.append(supplierCell(ctx, s));
     $tr.append(amountCell(ctx, s));
     $tr.append(taxAmountCell(ctx, s));
     $tr.append(disableCell(ctx, s));
@@ -265,6 +266,13 @@ var isAgencyFee = function(s) {
 var isNamedService = function(s) {
   return s.indexOf('NAMED-SERVICE') === 0;
 };
+
+function supplierCell(ctx, s) {
+  var $td = $('<td></td>'), $span = $('<span></span>');
+  var supplierText = ctx['supplier_name'][s] || '';
+  $span.text(supplierText)
+  return $td.append($span);
+}
 
 var nameCell = function(ctx, s) {
   var $th = $('<th></th>');

@@ -33,6 +33,8 @@ var ctx = {
   parsed_codes: {},
   values: <%= revision.values.to_json %>,
   values_with_tax: <%= revision.values_with_tax.to_json %>,
+  supplier_id: <%= revision.supplier_id.to_json %>,
+  supplier_name: <%= revision.supplier_name.to_json %>,
   comments: <%= revision.comments.to_json %>,
   compulsory: <%= Hash[revision.compulsory.map{|k,v| [k,v=="1"]}].to_json %>,
   disabled: <%= Hash[revision.disabled.map{|k,v| [k,v=="1"]}].to_json %>,

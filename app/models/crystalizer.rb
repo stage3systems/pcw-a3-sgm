@@ -25,6 +25,8 @@ class Crystalizer
       "activity_codes" => {},
       "compulsory" => {},
       "hints" => {},
+      "supplier_id" => {},
+      "supplier_name" => {},
       "index" => 0
     }
   end
