@@ -39,7 +39,7 @@ class ServicesController < NestedCommonController
 
   def safe_params
     params.require(:service).permit(:code, :item, :key, :row_order,
-                                    :activity_code_id,
+                                    :activity_code_id, :company_id,
                                     :document, :compulsory)
   end
 end
