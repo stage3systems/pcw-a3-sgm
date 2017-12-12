@@ -30,6 +30,6 @@ class CompaniesController < CommonController
 
   private
   def safe_params
-    params.require(:company).permit(:email, :name)
+    params.require(:company).permit(:email, :name, :is_supplier)
   end
 end
