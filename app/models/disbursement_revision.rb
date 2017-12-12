@@ -17,7 +17,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def delete_field(k)
-    ['fields', 'codes', 'descriptions',
+    ['fields', 'codes', 'descriptions', 'supplier_id', 'supplier_name',
      'values', 'values_with_tax', 'hints', 'comments'].each do |s|
       self.send(s).delete(k)
     end
@@ -87,7 +87,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def self.hstore_fields
-    [:data, :fields, :descriptions, :activity_codes, :comments, :compulsory,
+    [:data, :fields, :descriptions, :activity_codes, :comments, :compulsory, :supplier_id, :supplier_name,
      :disabled, :hints, :codes, :overriden, :values, :values_with_tax]
   end
 
@@ -105,6 +105,8 @@ class DisbursementRevision < ActiveRecord::Base
       "netAmount" => self.values[k],
       "estimateId" => self.disbursement_id,
       "description" => self.descriptions[k],
+      "supplierId" => self.supplier_id[k],
+      "supplierName" => self.supplier_name[k],
       "code" => k,
       "activityCode" => (self.activity_codes[k] rescue 'MISC'),
       "reference" => self.reference,
