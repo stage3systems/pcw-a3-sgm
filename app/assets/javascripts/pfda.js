@@ -40,17 +40,19 @@ var buildSelect = function($requiredInputs, serviceKey, val, key, ctx) {
 };
 
 var addRequiredFields = function($elem, ctx, s) {
-  var requiredInputs = ctx.parsed_codes[s].requiredInputs;
-  if (_.keys(requiredInputs).length > 0) {
-    $elem.append('<hr />');
-  }
-  return _.map(requiredInputs, function(val, key) {
-    if (val.options) {
-      buildSelect($elem, s, val, key, ctx);
-    } else {
-      buildInput($elem, s, val, key, ctx);
+  var requiredInputs = ctx.parsed_codes[s] && ctx.parsed_codes[s].requiredInputs;
+  if (requiredInputs) {
+    if (_.keys(requiredInputs).length > 0) {
+      $elem.append('<hr />');
     }
-  });
+    return _.map(requiredInputs, function(val, key) {
+      if (val.options) {
+        buildSelect($elem, s, val, key, ctx);
+      } else {
+        buildInput($elem, s, val, key, ctx);
+      }
+    });
+  }
 };
 
 var rebuildTable = function(ctx) {
