@@ -262,6 +262,11 @@ class DisbursementDocument
       "and information contained in the Inquiry are as accurate as possible, "+
       "the actual Proforma Estimate may, and often does, for various reasons "+
       "beyond our control, vary from the Inquiry"
+    elsif @revision.tenant.is_sgm?
+      "<b>Disclaimer</b><br/>" + 
+      "Sturrock Grindrod Maritime (Pty) Ltd, as agents only. <br>" + 
+      "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel.<br>" +
+      "Any additional/amended costs will be invoiced on Supplementary DA.<br>"
     else
       "Disclaimer: this is only an estimate and any additional costs "+
       "incurred for this vessel will be accounted for in our Final D/A."
