@@ -9,7 +9,7 @@ var ctx = {
     loa: <%= revision.data["vessel_loa"] %>,
     type: "<%= revision.data["vessel_type"] %>",
     subtype: "<%= revision.data["vessel_subtype"] %>",
-    sbt_certified: "<%= revision.data["vessel_sbt_certified"] %>",
+    sbt_certified: <%= (revision.data["vessel_sbt_certified"] == "true") %>,
 
   },
   disbursement_type: "<%= revision.disbursement.type rescue "unknown" %>",

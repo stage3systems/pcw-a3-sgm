@@ -20,7 +20,7 @@ class Vessel < ActiveRecord::Base
       "vessel_imo" => self.imo_code.to_s,
       "vessel_type" => self.maintype.to_s,
       "vessel_subtype" => self.subtype.to_s,
-      "vessel_sbt_certified" => self.sbt_certified.to_s
+      "vessel_sbt_certified" => self.sbt_certified.to_s,
     })
   end
 
