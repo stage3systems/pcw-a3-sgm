@@ -78,7 +78,7 @@
         <% unless ['home', 'disbursements'].member? controller_name %>
           <ul class="nav nav-tabs sub-tabs"><!--
             --><li class="<%= "active" if ['ports', 'terminals', 'tariffs'].member? controller_name %>"><a href="<%= ports_path %>">PORTS</a></li><!--
-            <% unless current_tenant.supports_named_services? %>
+            <% if current_tenant.supports_named_services? %>
             --><li class="<%= "active" if controller_name == 'named_services' %>"><a href="<%= named_services_path %>">SERVICES</a></li><!--
             <% end %>
             --><li class="<%= "active" if controller_name == 'taxes' %>"><a href="<%= taxes_path %>">TAXES</a></li><!--
