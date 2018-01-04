@@ -136,10 +136,45 @@
         <tr>
           <td></td>
           <td></td>
-          <td class="form-inline">
+          <% if current_tenant.supports_named_services? %>
+          <td>
             <div class="form-group">
-              <input id="extra_item" class="form-control extra-item" />
+              <div class="col-sm-9">
+                <select id="named_items" class="form-control">
+                  <option value=""></option>
+                  <% current_tenant.named_services.map do |s| %>
+                  <option value="<%= s.key %>"><%= s.item %></option>
+                  <% end %>
+                </select>
+                <script>
+                  $("select#named_items").select2({
+                    <% if current_tenant.supports_free_text_items? %>
+                    placeholder: "Select a Named Item or enter a Free Text Label",
+                    language: {
+                      noResults: function() {
+                        setTimeout(function() {
+                          $('button.js-add-item').on('click', function() {
+                            var term = $("input.select2-search__field").val();
+                            console.log("Triggering", term);
+                            $('select#named_items').trigger('add-extra-item', term);
+                          });
+                        }, 0);
+                        return $('<button class="btn btn-primary js-add-item">Add Free Text Item</button>');
+                      }
+                    },
+                    <% else %>
+                    placeholder: "Select a Named Service",
+                    <% end %>
+                    width: 'element'
+                  });
+                </script>
+              </div>
             </div>
+          </td>
+          <td><a id="add_named_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
+          <% else %>
+          <td class="form-inline">
+            <input id="extra_item" class="form-control extra-item" />
             <div class="checkbox">
               <label>
                 Tax Applies: <input type="checkbox" id="extra_tax_applies" />
@@ -147,6 +182,7 @@
             </div>
           </td>
           <td><a id="add_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
+          <% end %>
           <td class="tax"></td>
           <td></td>
         </tr>

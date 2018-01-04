@@ -38,5 +38,6 @@ var ctx = {
   disabled: <%= Hash[revision.disabled.map{|k,v| [k,v=="1"]}].to_json %>,
   overriden: <%= revision.overriden.to_json %>,
   computed: {},
-  computed_with_tax: {}
+  computed_with_tax: {},
+  named_services: <%= Service.where(tenant_id: revision.tenant_id, port_id: nil, terminal_id: nil).map{|s| s.as_json}.to_json %>
 };

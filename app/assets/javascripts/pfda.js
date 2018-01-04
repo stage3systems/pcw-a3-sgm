@@ -262,6 +262,10 @@ var isAgencyFee = function(s) {
   return s.indexOf('AGENCY-FEE') === 0;
 };
 
+var isNamedService = function(s) {
+  return s.indexOf('NAMED-SERVICE') === 0;
+};
+
 var nameCell = function(ctx, s) {
   var $th = $('<th></th>');
   var $descriptionSpan = $('<span class="description">'+
@@ -276,6 +280,8 @@ var nameCell = function(ctx, s) {
                '<input onchange="toggleTaxApplies(\''+s+'\')" '+
                'id="tax_applies_'+s+'" type="checkbox"'+
                checked+'>)</small>');
+  }
+  if (isExtraItem(s) || isNamedService(s)) {
     $th.append('&nbsp;');
     $th.append('<i class="glyphicon glyphicon-remove-circle" '+
                'onClick="removeExtra(\''+s+'\')"></i>');
@@ -305,6 +311,9 @@ var typeCell = function(ctx, s) {
   } else if (isAgencyFee(s)) {
     $span.addClass('label-primary');
     $span.text('Agency Fee');
+  } else if (isNamedService(s)) {
+    $span.addClass('label-success');
+    $span.text('Named Extra Item');
   } else {
     $span.addClass('label-default');
     $span.text('Port/Terminal Charge');
@@ -439,24 +448,46 @@ var setupDA = function(pfda, ctx) {
       }
       update();
   });
-  $("a#add_item").on("click", function(e) {
-      var item = $("input#extra_item").val();
-      if (item) {
-        var key = 'EXTRAITEM'+uuid();
-        var taxApplies = $("input#extra_tax_applies").is(":checked");
-        var index = ctx.services.length;
-        ctx.services[index] = key;
-        ctx.codes[key] = '{compute: function(ctx) {return 0;},'+
-                         'taxApplies: '+taxApplies+'}';
-        ctx.values[key] = 0;
-        ctx.descriptions[key] = item;
-        ctx.compulsory[key] = false;
-        ctx.computed[key] = "0";
-        ctx.overriden[key] = "0";
-        rebuildTable(ctx);
-        $("input#extra_item").val('');
-      }
+  $("a#add_named_item").on("click", function() {
+    var key = $("select#named_items").val();
+    var namedService = _.find(ctx.named_services, function(ns) { return ns.key == key; });
+    $("select#named_items").select2('close');
+    $("select#named_items").val(null);
+    if (namedService) {
+      var key = 'NAMED-SERVICE-'+key;
+      addExtraItem(key, namedService.item, namedService.tax_applies, namedService.compulsory);
+    }
   });
+  $("select#named_items").on('add-extra-item', function(src, item) {
+    $("select#named_items").select2('close');
+    $("select#named_items").val(null);
+    if (item) {
+      var key = 'EXTRAITEM'+uuid();
+      var taxApplies = $("input#extra_tax_applies").is(":checked");
+      addExtraItem(key, item, taxApplies);
+    }
+  });
+  $("a#add_item").on("click", function() {
+    var item = $("input#extra_item").val();
+    if (item) {
+      var key = 'EXTRAITEM'+uuid();
+      var taxApplies = $("input#extra_tax_applies").is(":checked");
+      addExtraItem(key, item, taxApplies);
+      $("input#extra_item").val('');
+    }
+  });
+  function addExtraItem(key, item, taxApplies, compulsory) {
+    var index = ctx.services.length;
+    ctx.services[index] = key;
+    ctx.codes[key] = '{compute: function(ctx) {return 0;},'+
+                     'taxApplies: '+taxApplies+'}';
+    ctx.values[key] = 0;
+    ctx.descriptions[key] = item;
+    ctx.compulsory[key] = !!compulsory;
+    ctx.computed[key] = "0";
+    ctx.overriden[key] = "0";
+    rebuildTable(ctx);
+  }
   $("select.date").on("change", update);
   $("input#eta_picker").datepicker({
     dateFormat: "dd M yy",

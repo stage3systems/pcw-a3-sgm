@@ -14,7 +14,8 @@ class DisbursementUpdater
     @params = all_params
     update_status
     handle_required_inputs
-    cleanup_extra_items
+    cleanup_extra_items("EXTRAITEM")
+    cleanup_extra_items("NAMED-SERVICES")
     reorder_field_keys
     add_new_items
     update_extra_items
@@ -48,10 +49,10 @@ class DisbursementUpdater
       end
   end
 
-  def cleanup_extra_items
-    # handle extra items
-    @old_extras = @revision.field_keys.select{|k| k.starts_with?("EXTRAITEM") }
-    @extras = @params.keys.select {|k| k.starts_with?("value_EXTRAITEM") }
+  def cleanup_extra_items(prefix)
+    # handle extra itemsa
+    @old_extras = @revision.field_keys.select{|k| k.starts_with?(prefix) }
+    @extras = @params.keys.select {|k| k.starts_with?("value_#{prefix}") }
                           .map {|k| k.split('_')[1] }
     # remove keys that do not exist anymore
     (@old_extras-@extras).each {|k| @revision.delete_field(k)}
@@ -116,6 +117,10 @@ class DisbursementUpdater
       @revision.activity_codes[k] = 'AFEE'
     elsif k.start_with? 'EXTRAITEM'
       @revision.activity_codes[k] = 'MISC'
+    elsif k.start_with? 'NAMED-SERVICE'
+      key = k.sub('NAMED-SERVICE-', '')
+      service = @disbursement.tenant.named_services.find_by(key: key)
+      @revision.activity_codes[k] = (service.activity_code.code rescue 'MISC')
     else
       s = @disbursement.terminal.services.find_by(key: k) rescue nil
       s = @disbursement.port.services.find_by(key: k) if s.nil?
