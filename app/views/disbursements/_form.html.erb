@@ -155,7 +155,6 @@
                         setTimeout(function() {
                           $('button.js-add-item').on('click', function() {
                             var term = $("input.select2-search__field").val();
-                            console.log("Triggering", term);
                             $('select#named_items').trigger('add-extra-item', term);
                           });
                         }, 0);

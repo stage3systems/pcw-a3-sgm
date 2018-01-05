@@ -14,11 +14,11 @@ class DisbursementUpdater
     @params = all_params
     update_status
     handle_required_inputs
-    cleanup_extra_items("EXTRAITEM")
-    cleanup_extra_items("NAMED-SERVICES")
+    cleanup_extra_items
+    cleanup_named_services
     reorder_field_keys
     add_new_items
-    update_extra_items
+    update_extra_and_named_items
     process_fields
     compute_and_save_revision
   end
@@ -49,13 +49,21 @@ class DisbursementUpdater
       end
   end
 
-  def cleanup_extra_items(prefix)
+  def cleanup_extra_items
     # handle extra itemsa
-    @old_extras = @revision.field_keys.select{|k| k.starts_with?(prefix) }
-    @extras = @params.keys.select {|k| k.starts_with?("value_#{prefix}") }
+    @old_extras = @revision.field_keys.select{|k| k.starts_with?("EXTRAITEM") }
+    @extras = @params.keys.select {|k| k.starts_with?("value_EXTRAITEM") }
                           .map {|k| k.split('_')[1] }
     # remove keys that do not exist anymore
     (@old_extras-@extras).each {|k| @revision.delete_field(k)}
+  end
+
+  def cleanup_named_services
+    @old_named_services = @revision.field_keys.select{|k| k.starts_with?("NAMED-SERVICE") }
+    @named_services = @params.keys.select {|k| k.starts_with?("value_NAMED-SERVICE") }
+                          .map {|k| k.split('_')[1] }
+    # remove keys that do not exist anymore
+    (@old_named_services-@named_services).each {|k| @revision.delete_field(k)}
   end
 
   def reorder_field_keys
@@ -69,6 +77,9 @@ class DisbursementUpdater
     (@extras-@old_extras).each do |k|
       add_item(k)
     end
+    (@named_services-@old_named_services).each do |k|
+      add_item(k)
+    end
   end
 
   def add_item(k)
@@ -77,8 +88,8 @@ class DisbursementUpdater
     @revision.descriptions[k] = @params["description_#{k}"]
   end
 
-  def update_extra_items
-    @extras.each {|k| update_tax_applies(k)}
+  def update_extra_and_named_items
+    (@extras+@named_services).each {|k| update_tax_applies(k)}
   end
 
   def update_tax_applies(k)

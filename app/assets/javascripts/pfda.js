@@ -271,7 +271,7 @@ var nameCell = function(ctx, s) {
   var $descriptionSpan = $('<span class="description">'+
                            ctx.descriptions[s]+'</span>');
   $th.append($descriptionSpan);
-  if (isExtraItem(s)) {
+  if (isExtraItem(s) || isNamedService(s)) {
     $th.append('&nbsp;');
     var checked = '';
     var m = ctx.codes[s].match(/taxApplies: *(.*)}/);
@@ -280,8 +280,6 @@ var nameCell = function(ctx, s) {
                '<input onchange="toggleTaxApplies(\''+s+'\')" '+
                'id="tax_applies_'+s+'" type="checkbox"'+
                checked+'>)</small>');
-  }
-  if (isExtraItem(s) || isNamedService(s)) {
     $th.append('&nbsp;');
     $th.append('<i class="glyphicon glyphicon-remove-circle" '+
                'onClick="removeExtra(\''+s+'\')"></i>');
@@ -344,7 +342,7 @@ var amountCell = function(ctx, s) {
   $td.append('<input type="hidden" name="value_'+s+'">');
   $td.append('<input type="hidden" name="order_'+s+'">');
   $td.append('<input type="hidden" name="value_with_tax_'+s+'">');
-  if (isExtraItem(s)) {
+  if (isExtraItem(s) || isNamedService(s)) {
     $td.append('<input type="hidden" name="description_'+s+'" '+
                'value="'+ctx.descriptions[s]+'">');
   }
