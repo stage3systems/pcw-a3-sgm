@@ -67,6 +67,11 @@ ProformaDA::Application.routes.draw do
       post 'enabled'
     end
   end
+  resources :named_services do
+    collection do
+      post 'sort', to: "services#sort"
+    end
+  end
 
   # Sample resource route with options:
   #   resources :products do

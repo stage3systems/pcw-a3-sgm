@@ -59,4 +59,12 @@ CTX
   def name
     item
   end
+
+  def as_json
+    { "item" => self.item,
+      "key" => self.key,
+      "compulsory" => self.compulsory
+    }
+  end
+
 end

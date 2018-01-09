@@ -32,6 +32,18 @@ class Tenant < ActiveRecord::Base
     name.starts_with? 'monson'
   end
 
+  def named_services
+    Service.where(tenant_id: self.id, port_id: nil, terminal_id: nil)
+  end
+
+  def supports_named_services?
+    name.starts_with? "sgm"
+  end
+
+  def supports_free_text_items?
+    name.starts_with? "sgm"
+  end
+
   def sync_with_aos
     sync_cargo_types()
     sync_vessels()
