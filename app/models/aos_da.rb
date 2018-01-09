@@ -35,13 +35,15 @@ class AosDa
   end
 
   def current_revision(revision)
+    amount = revision_amount(revision.values)
+    amount_with_tax = revision_amounts_with_tax(revision.values_with_tax)
     {
       "status" => STATUSES[revision.disbursement.status_cd],
       "revisionNumber" => revision.number,
       "reference" => revision.reference,
       "taxExempt" => revision.tax_exempt,
-      "amount" => revision_amount(revision.values),
-      "amountWithTax" => revision_amounts_with_tax(revision.values_with_tax),
+      "amount" => amount,
+      "amountWithTax" => revision.tax_exempt? ? amount : amount_with_tax,
       "daData" => revision_data(revision),
       "createdBy" => revision.user.remote_id,
       "updatedBy" => revision.user.remote_id,
