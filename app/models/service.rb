@@ -7,6 +7,7 @@ class Service < ActiveRecord::Base
   belongs_to :user
   belongs_to :activity_code
   belongs_to :tenant
+  belongs_to :company
   has_many :service_updates
   mount_uploader :document, TariffUploader
   ranks :row_order, :with_same => [:port_id, :terminal_id]

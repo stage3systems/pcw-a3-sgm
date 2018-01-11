@@ -4,6 +4,9 @@
   <div class="form-inputs">
     <%= f.input :item %>
     <%= f.input :key %>
+    <%= f.association :company, :as => :collection_select, 
+    collection: Company.where(is_supplier: true),
+    label: "Supplier" %>
     <%= f.association :activity_code,
                       label: "On Account Activity Code",
                       label_method: :display %>
@@ -18,5 +21,6 @@
   </div>
   <script type="text/javascript">
     $('select#service_activity_code_id').select2();
+    $('select#service_company_id').select2();
   </script>
 <% end %>

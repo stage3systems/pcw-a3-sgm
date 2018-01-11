@@ -2,11 +2,12 @@ class Company < ActiveRecord::Base
   default_scope -> {order('name ASC')}
   validates_presence_of :name
   has_many :disbursements
+  has_many :services
   belongs_to :tenant
 
   extend Syncable
 
-  FIELDS=['name', 'email', 'prefunding_type', 'prefunding_percent']
+  FIELDS=['name', 'email', 'prefunding_type', 'prefunding_percent', 'is_supplier']
 
   def crystalize(d)
     FIELDS.inject(d['data']) {|data,f| data["company_#{f}"] = self.send(f); data }

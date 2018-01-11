@@ -169,7 +169,7 @@ class DisbursementsController < ApplicationController
   def disbursement_revision_params
     params.require(:disbursement_revision).permit(
       :cargo_qty, :data, :days_alongside, :descriptions,
-      :disbursement_id, :loadtime,
+      :disbursement_id, :loadtime, :supplier_name, :supplier_id,
       :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
       :cargo_type_id, :comments, :eta, :disabled,
       :overriden, :voyage_number, :amount

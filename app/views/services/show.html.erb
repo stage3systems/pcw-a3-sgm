@@ -13,6 +13,7 @@
     <% ['item', 'key'].each do |k| %>
       <p><strong><%= k.capitalize %>:</strong> <%= @instance.send(k) %></p>
     <% end %>
+    <p><strong>Supplier:</strong> <%= @instance.company.name rescue 'N/A' %></p>
     <p><strong>Compulsory:</strong> <%= @instance.compulsory ? 'Yes' : 'No' %></p>
     <p><strong>Reference Document:</strong> <%= link_to(File.basename(@instance.document.path), @instance.document.url) rescue 'N/A' %></p>
 

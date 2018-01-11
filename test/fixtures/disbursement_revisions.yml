@@ -39,6 +39,8 @@ revisiontwo:
   disabled: {}
   compulsory: {}
   overriden: {}
+  supplier_id: {}
+  supplier_name: {}
   tax_exempt: false
   number: 1
   cargo_qty: 1
