@@ -19,7 +19,6 @@ class DisbursementUpdater
     reorder_field_keys
     add_new_items
     update_extra_and_named_items
-    update_suppliers
     process_fields
     compute_and_save_revision
   end
@@ -81,24 +80,6 @@ class DisbursementUpdater
     (@named_services-@old_named_services).each do |k|
       add_item(k)
     end
-  end
-
-  def update_suppliers
-    @revision.supplier_name = {}
-    @revision.supplier_id = {}
-
-    (@fields).each do |k|
-      add_supplier_name(k)
-      add_supplier_id(k)
-    end
-  end
-
-  def add_supplier_name(k)
-    @revision.supplier_name[k] = @params["supplier_name"] # to replace with data from service
-  end
-
-  def add_supplier_id(k)
-    @revision.supplier_id[k] = @params["supplier_name"] # to replace with data from service
   end
 
   def add_item(k)
