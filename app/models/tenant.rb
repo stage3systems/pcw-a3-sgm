@@ -41,7 +41,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def supports_free_text_items?
-    name.starts_with? "sgm"
+    false
   end
 
   def sync_with_aos
