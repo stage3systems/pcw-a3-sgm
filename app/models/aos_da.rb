@@ -42,22 +42,14 @@ class AosDa
       "revisionNumber" => revision.number,
       "reference" => revision.reference,
       "taxExempt" => revision.tax_exempt,
-      "amount" => amount,
-      "amountWithTax" => revision.tax_exempt? ? amount : amount_with_tax,
+      "amount" => revision.data["total"].to_f,
+      "amountWithTax" => revision.compute_amount.to_f,
       "daData" => revision_data(revision),
       "createdBy" => revision.user.remote_id,
       "updatedBy" => revision.user.remote_id,
       "createdAt" => revision.created_at,
       "updatedAt" => revision.updated_at,
     }
-  end
-
-  def revision_amount(amounts)
-    amounts.reduce(0.0){|acc, obj| acc + obj[1].to_f }
-  end
-
-  def revision_amounts_with_tax(amounts_with_tax)
-    amounts_with_tax.reduce(0.0){|acc, obj| acc + obj[1].to_f }
   end
 
   def revision_data(revision)
