@@ -460,7 +460,7 @@ var setupDA = function(pfda, ctx) {
     $("select#named_items").select2('close');
     $("select#named_items").val(null);
     if (namedService) {
-      var key = 'NAMED-SERVICE-'+key;
+      var key = 'NAMED-SERVICE-'+key+'-'+uuid();
       addExtraItem(key, namedService.item, namedService.tax_applies, namedService.compulsory);
     }
   });
