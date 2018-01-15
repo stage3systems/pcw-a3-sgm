@@ -76,7 +76,7 @@ class AosDa
       "description" => revision.descriptions[key],
       "externalReference" => nil,
       "category" => nil,
-      "supplierId" => nil,
+      "supplierId" => revision.supplier_id[key].to_i,
       "requesterId" => nil,
       "activityCode" => revision.activity_codes[key],
       "compulsory" => revision.compulsory[key].to_i == 1,
