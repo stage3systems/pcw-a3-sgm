@@ -35,8 +35,6 @@ class AosDa
   end
 
   def current_revision(revision)
-    amount = revision_amount(revision.values)
-    amount_with_tax = revision_amounts_with_tax(revision.values_with_tax)
     {
       "status" => STATUSES[revision.disbursement.status_cd],
       "revisionNumber" => revision.number,
