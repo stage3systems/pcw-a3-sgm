@@ -129,7 +129,7 @@ class DisbursementUpdater
     elsif k.start_with? 'EXTRAITEM'
       @revision.activity_codes[k] = 'MISC'
     elsif k.start_with? 'NAMED-SERVICE'
-      key = k.sub('NAMED-SERVICE-', '')
+      key = k.split('-')[2] || 'UNKNOWN'
       service = @disbursement.tenant.named_services.find_by(key: key)
       @revision.activity_codes[k] = (service.activity_code.code rescue 'MISC')
     else
