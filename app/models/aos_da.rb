@@ -8,6 +8,7 @@ class AosDa
   }
 
   def sync(revision)
+    return unless [1, 3].include?(revision.disbursement.status_cd)
     api = AosApi.new(revision.tenant)
     api.save("pcwDaRevision", da_container(revision))
   end
