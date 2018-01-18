@@ -12,6 +12,16 @@ class NamedServicesController < BaseController
     end
   end
 
+  def show
+    @instance = Service.where(tenant_id: current_tenant.id).find(params[:id])
+    add_breadcrumb @instance.name, named_service_url(@instance)
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @instance }
+    end
+  end
+
   def new
     @instance = Service.new(tenant_id: current_tenant.id)
     add_breadcrumb "New Named Service", new_named_service_path()
