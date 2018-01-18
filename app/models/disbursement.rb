@@ -57,7 +57,7 @@ class Disbursement < ActiveRecord::Base
       nxt.send("#{k}=", cur.send(k))
     end
     DisbursementRevision.hstore_fields.each do |f|
-      nxt.send("#{f}=", cur.send(f))
+      nxt.send("#{f}=", cur.send(f) || {})
     end
     nxt.activity_codes = {} unless nxt.activity_codes
     nxt
