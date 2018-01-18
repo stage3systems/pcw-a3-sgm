@@ -131,4 +131,10 @@ class DisbursementRevision < ActiveRecord::Base
     self.disbursement.status.upcase rescue "DELETED"
   end
 
+  def supplier_aos_id(key)
+    id_string = self.supplier_id[key]
+    id = id_string.nil? ? id_string : id_string.to_i
+    Company.find(id).remote_id rescue nil
+  end
+
 end
