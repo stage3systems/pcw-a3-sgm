@@ -32,6 +32,9 @@ class User < ActiveRecord::Base
     end
     self.admin = is_admin_type(data['personType'])
     self.deleted = (data['personType'] == '(DELETED)')
+    if tenant.name.starts_with? "sgm" and (data['personType'] == 'ACCOUNTING')
+      self.deleted = true
+    end
     self.rocket_id = data['rocketId']
   end
 
