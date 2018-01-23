@@ -23,4 +23,10 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def self.aos_modify(tenant, data)
+    c = Company.where(tenant_id: tenant.id, remote_id: data['id']).first
+    c = Company.new if c.nil?
+    c.update_from_json(tenant, data)
+    c.save
+  end
 end
