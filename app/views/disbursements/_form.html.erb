@@ -47,6 +47,12 @@
             <th>Vessel Type</th>
             <td><%= @revision.data["vessel_type"] %></td>
           </tr>
+          <% if @revision.data["vessel_subtype"].length > 0 %>
+            <tr>
+              <th>Vessel Subtype</th>
+              <td><%= @revision.data["vessel_subtype"] %></td>
+            </tr>
+          <%end%>
           <tr>
             <th>GRT</th>
             <td><%= @revision.data["vessel_grt"] %></td>

@@ -1,6 +1,6 @@
 class Disbursement < ActiveRecord::Base
   default_scope -> {where("status_cd != 2")}
-  attr_accessor :tbn_template
+  attr_accessor :tbn_template, :vessel_type, :vessel_subtype
   [:port, :terminal, :office, :vessel, :company, :user].each do |k|
     belongs_to k
   end

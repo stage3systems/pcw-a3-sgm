@@ -53,6 +53,12 @@
                              'VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
                              'HANDYMAX', 'SUPRAMAX', 'HANDYSIZE'],
                 prompt: 'Select TBN template...' %>
+    <%= f.input :vessel_type, label: "Vessel Type", 
+          prompt: '',
+          collection: VesselType.order("vessel_type").select("DISTINCT(vessel_type)").map { |vt| vt.vessel_type } %>
+    <%= f.input :vessel_subtype,
+      label: 'Vessel Subtype', 
+      collection: [] %>
     <%= f.input :grt, label: 'GRT' %>
     <%= f.input :nrt, label: 'NRT' %>
     <%= f.input :dwt, label: 'DWT' %>
@@ -237,6 +243,24 @@
       }
     });
   }
+  var updateVesselSubtypes = function() {
+    $("div.disbursement_vessel_subtype").attr("hidden", "hidden");
+    $("select#disbursement_vessel_subtype").val(null);
+    var vesselType = $("select#disbursement_vessel_type").val();
+    $.ajax('/vessel_types/vessel_subtype?vessel_type='+vesselType, {
+      type: 'GET',
+      dataType: 'json',
+      success: function(subTypes) {
+        $.each(subTypes, function(i, subType) {
+          $("select#disbursement_vessel_subtype").append(
+            '<option value="' + subType + '">' + subType + '</option>');
+        })
+        if (subTypes.length > 0) {
+          $("div.disbursement_vessel_subtype").removeAttr("hidden");
+        }
+      },
+    });
+  }
   $("select#disbursement_port_id").on("change", function() {
     updateTerminals();
     page = 1;
@@ -332,8 +356,12 @@
     });
     $("input#disbursement_sbt_certified").prop('checked', template['sbt_certified']);
   });
+  $("select#disbursement_vessel_type").on("change", function() {
+    updateVesselSubtypes();
+  });
   updateFields();
   updateTerminals();
+  updateVesselSubtypes();
   updateNominations();
   $("#company_name").typeahead(null, {
     name: 'principal',

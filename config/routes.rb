@@ -117,6 +117,8 @@ ProformaDA::Application.routes.draw do
   get "home/index"
   get "landing/index"
 
+  get "vessel_types/vessel_subtype", to: "vessel_types#vessel_subtype"
+
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   root :to => 'home#index'

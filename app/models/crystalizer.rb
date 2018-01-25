@@ -35,6 +35,8 @@ class Crystalizer
     if @disbursement.tbn?
       @hash['data'].merge!({
         "vessel_name" => "TBN-#{@disbursement.company.name rescue "NoPrincipal"}",
+        "vessel_type" => @disbursement.vessel_type,
+        "vessel_subtype" => @disbursement.vessel_subtype,
         "vessel_dwt" => @disbursement.dwt,
         "vessel_grt" => @disbursement.grt,
         "vessel_nrt" => @disbursement.nrt,
