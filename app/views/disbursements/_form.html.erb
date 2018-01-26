@@ -47,7 +47,7 @@
             <th>Vessel Type</th>
             <td><%= @revision.data["vessel_type"] %></td>
           </tr>
-          <% if @revision.data["vessel_subtype"].length > 0 %>
+          <% unless @revision.data["vessel_subtype"].blank? %>
             <tr>
               <th>Vessel Subtype</th>
               <td><%= @revision.data["vessel_subtype"] %></td>
