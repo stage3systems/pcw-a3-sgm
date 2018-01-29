@@ -15,6 +15,10 @@ div.pfda-header {
   box-shadow: 0 3px 8px #aaa;
   margin-bottom: 40px;}
 
+  div.pfda-inner .sgm-bank-details > div.col-md-6 + br {
+    display: none;
+  }
+
 div.pfda-logo {margin: 0 auto; float: none; text-align: center; padding: 20px; }
 div.pfda-header div.amount {
   /* IE7 workaround, replaces margin-top: 8px;

@@ -235,6 +235,8 @@ class DisbursementDocument
       ]
       when "sgm", "sturrockgrindrod"
         details += [
+          {value: '<div class="row sgm-bank-details">'},
+          {value: '<div class="col-md-6">'},
           {style: :bold, value: "BANKING DETAILS (ZAR)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
           {value: "Bank: Rand Merchant Bank"},
@@ -242,9 +244,8 @@ class DisbursementDocument
           {value: "Branch Code: 223626"},
           {value: "Account Number: 62380786940"},
           {value: "Swift Code: FIRNZAJJ"},
-        ]
-        details += [{}]
-        details += [
+          {value: '</div>'},
+          {value: '<div class="col-md-6">'},
           {style: :bold, value: "BANKING DETAILS (USD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
           {value: "Bank: Rand Merchant Bank"},
@@ -252,6 +253,8 @@ class DisbursementDocument
           {value: "Branch Code: 223626"},
           {value: "Account Number: 0292842"},
           {value: "Swift Code: FIRNZAJJ"},
+          {value: '</div>'},
+          {value: '</div>'}
         ]
     else
       details += ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|

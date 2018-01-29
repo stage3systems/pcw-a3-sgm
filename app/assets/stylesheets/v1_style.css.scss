@@ -114,6 +114,9 @@ td.eta { min-width: 80px; text-transform: uppercase;}
 
 div.pfda-container { background: url(published_bg.png); };
 div.pfda-inner {padding: 5em;}
+div.pfda-inner .sgm-bank-details > div.col-md-6 + br {
+  display: none;
+}
 div.pfda {
   background-color: #ffffff;
   border: 1px solid #ccc;
