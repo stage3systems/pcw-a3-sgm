@@ -9,5 +9,6 @@
       <p><strong><%= k.capitalize %>:</strong> <%= @instance.send(k) %></p>
     <% end %>
     <p><strong>Compulsory:</strong> <%= @instance.compulsory ? 'Yes' : 'No' %></p>
+    <p><strong>Tax Applies:</strong> <%= @instance.tax_applies ? 'Yes' : 'No' %></p>
   </div>
 </div>

@@ -1,6 +1,7 @@
 class Service < ActiveRecord::Base
   include RankedModel
   attr_accessor :changelog
+  attr_accessor :tax_applies
   validate :code_checks
   belongs_to :port, counter_cache: true
   belongs_to :terminal
@@ -61,9 +62,14 @@ CTX
     item
   end
 
+  def tax_applies
+    self.code.include? "taxApplies: true"
+  end
+
   def as_json
     { "item" => self.item,
       "key" => self.key,
+      "taxApplies" => self.tax_applies,
       "compulsory" => self.compulsory
     }
   end
