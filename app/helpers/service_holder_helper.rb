@@ -8,6 +8,7 @@ module ServiceHolderHelper
       d['codes'][s.key] = s.code
       d['activity_codes'][s.key] = s.activity_code.code rescue "MISC"
       d['compulsory'][s.key] = s.compulsory ? '1': '0'
+      d['disabled'][s.key] = (s.disabled and not s.compulsory) ? '1': '0'
       d['hints'][s.key] = "#{self.class.name} specific service"
       d['index'] += 1
     end

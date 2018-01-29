@@ -102,8 +102,12 @@ class Disbursement < ActiveRecord::Base
     d = Crystalizer.new(self).run()
     ['data', 'fields', 'descriptions', 'activity_codes',
      'compulsory', 'codes', 'hints', 'supplier_id', 'supplier_name'].each {|f| dr.send("#{f}=", d[f]) }
-    ['disabled', 'overriden', 'values',
+    ['overriden', 'values',
      'values_with_tax', 'comments'].each {|f| dr.send("#{f}=", {}) }
+    disabled = {}
+    self.port.services.each {|s| disabled[s.key] = "1" if s.disabled and not s.compulsory} if self.port
+    self.terminal.services.each {|s| disabled[s.key] = "1" if s.disabled  and not s.compulsory} if self.terminal
+    dr.disabled = disabled
     dr.compute
     dr.save
     self.current_revision_id = dr.id

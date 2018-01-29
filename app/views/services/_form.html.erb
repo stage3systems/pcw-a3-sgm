@@ -11,6 +11,9 @@
                       label: "On Account Activity Code",
                       label_method: :display %>
     <%= f.input :compulsory %>
+    <div class="disabled-field">
+      <%= f.input :disabled, label: "Disabled by default" %>
+    </div>
     <%= f.input :code, :as => :editor_ace %>
     <%= f.input :document %>
     <%= f.input :changelog, label: 'Change Log Message' %>
@@ -22,5 +25,17 @@
   <script type="text/javascript">
     $('select#service_activity_code_id').select2();
     $('select#service_company_id').select2();
+
+    $('input#service_compulsory').change(onCompulsoryCheckboxChange);
+
+    function onCompulsoryCheckboxChange(event) {
+      if ($("input#service_compulsory").is(':checked')) {
+        $("div.disabled-field").hide();
+        $("input#service_disabled").prop('checked', false);
+       } else {
+        $("div.disabled-field").show();
+       }
+    }
+
   </script>
 <% end %>
