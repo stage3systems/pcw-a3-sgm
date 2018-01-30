@@ -8,7 +8,7 @@ class FundingAgreement
 
   def conditions
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
-    return generic_conditions unless @revision.tenant.name.start_with? "monson"
+    return generic_conditions unless @revision.tenant.name.start_with? "monson" or @revision.tenant.name.start_with? "sgm"
     d = @revision.data
     pfpercent = d['company_prefunding_percent'].to_i
     case d['company_prefunding_type']
