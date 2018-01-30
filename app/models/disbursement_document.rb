@@ -233,7 +233,7 @@ class DisbursementDocument
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
-      when "sgm", "sturrockgrindrod"
+      when "sgm", "sturrockgrindrod", "monson"
         details += [
           {value: '<div class="row sgm-bank-details">'},
           {value: '<div class="col-md-6">'},
@@ -278,7 +278,7 @@ class DisbursementDocument
     elsif @revision.tenant.is_sgm?
       "<b>Disclaimer</b><br/>" + 
       "Sturrock Grindrod Maritime (Pty) Ltd, as agents only. <br>" + 
-      "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel.<br>" +
+      "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel." +
       "Any additional/amended costs will be invoiced on Supplementary DA.<br>"
     else
       "Disclaimer: this is only an estimate and any additional costs "+
