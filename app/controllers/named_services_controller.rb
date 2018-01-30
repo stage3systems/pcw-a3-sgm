@@ -24,6 +24,7 @@ class NamedServicesController < BaseController
 
   def new
     @instance = Service.new(tenant_id: current_tenant.id)
+    @instance.code = "{compute: function(ctx) { return 0; }, taxApplies: true}"
     add_breadcrumb "New Named Service", new_named_service_path()
 
     respond_to do |format|
@@ -40,7 +41,8 @@ class NamedServicesController < BaseController
   def create
     @instance = Service.new(safe_params)
     @instance.tenant_id = current_tenant.id
-    @instance.code = "{compute: function(ctx) { return 0; }, taxApplies: true}"
+    tax_applies = params["service"]["tax_applies"] == "1"
+    @instance.code = "{compute: function(ctx) { return 0; }, taxApplies: #{tax_applies}}"
 
     form_response(@instance.save, named_services_path(), "created", "new")
   end
@@ -49,6 +51,8 @@ class NamedServicesController < BaseController
     @instance = Service.where(tenant_id: current_tenant.id).find(params[:id])
     @instance.tenant_id = current_tenant.id
     @instance.user = current_user if @instance.user.nil?
+    tax_applies = params["service"]["tax_applies"] == "1"
+    @instance.code = "{compute: function(ctx) { return 0; }, taxApplies: #{tax_applies}}"
 
     form_response(@instance.update_attributes(safe_params),
                   named_services_path(), "updated", "edit")

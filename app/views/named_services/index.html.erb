@@ -13,6 +13,7 @@
           <th>Key</th>
           <th>Activity Code</th>
           <th>Compulsory</th>
+          <th>Tax Applies</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -24,6 +25,7 @@
           <td><%= service.key %></td>
           <td><%= service.activity_code.code rescue "" %></td>
           <td><%= service.compulsory ? 'Yes' : 'No' %></td>
+          <td><%= service.tax_applies ? 'Yes' : 'No' %></td>
           <td>
             <div class="btn-group" style="whitespace: no-wrap;">
               <%= link_to icon('eye-open'), named_service_path(service),
