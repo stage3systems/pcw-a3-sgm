@@ -24,6 +24,7 @@ class NamedServicesController < BaseController
 
   def new
     @instance = Service.new(tenant_id: current_tenant.id)
+    @instance.code = "{compute: function(ctx) { return 0; }, taxApplies: true}"
     add_breadcrumb "New Named Service", new_named_service_path()
 
     respond_to do |format|
