@@ -4,6 +4,7 @@ class PdfDA < Prawn::Document
 
   include DisbursementsHelper
   include FileReport
+  include SgmHelper
 
   BLACK = '000000'
   WHITE = 'ffffff'
@@ -31,13 +32,18 @@ class PdfDA < Prawn::Document
       inline_format: true,
       border_color: LIGHT_GREY
     }
+    @cell_style_bank_details = {
+      border_widths: [0, 0, 0, 0],
+      inline_format: true,
+      border_color: NO_BORDER
+    }
     to_table
     from_table
     services_table
     final_figure
     move_down(72)
     stroke_line [0,y], [USABLE_WIDTH,y]
-    funding_details
+    funding_details(@revision.tenant.customer_name)
     terms_and_conditions
   end
 
@@ -218,12 +224,53 @@ class PdfDA < Prawn::Document
     table.draw
   end
 
-  def funding_details
-    txt = format_list(@document.funding_data,
-                      method(:make_bold),
-                      method(:make_small),
-                      "\n")
+  def funding_details(tenant)
+    if tenant == "sgm"
+      sgm_funding_details
+    else
+      default_funding_details
+    end
+  end
+
+  def sgm_funding_details
+    footerdata = @document.funding_data_footer.reduce(:concat)
+    headerdata = @document.funding_data_header.reduce(:concat)
+
+    quick_render(headerdata)
+    bank_details_sgm
+    quick_render(footerdata)
+  end
+
+  def quick_format_data(data)
+    format_list(data,
+        method(:make_bold),
+        method(:make_small),
+        "\n")
+  end
+
+  def quick_render(data)
+    txt = quick_format_data(data)
     text txt, inline_format: true
+  end
+
+  def default_funding_details
+    txt = quick_format_data(@document.funding_data)
+    text txt, inline_format: true
+  end
+
+  def bank_details_sgm
+    bounding_box([0, HEIGHT-MARGIN-HEADER_HEIGHT],
+                 width: 270, height: 140) do
+      table table_format(sgm_zar_banking_details),
+            cell_style: @cell_style_bank_details,
+            column_widths: [100, 170]
+    end
+    bounding_box([280, HEIGHT-MARGIN-HEADER_HEIGHT],
+                 width: 270, height: 140) do
+      table table_format(sgm_usd_banking_details),
+            cell_style: @cell_style_bank_details,
+            column_widths: [100, 170]
+    end
   end
 
   def terms_and_conditions

@@ -1,6 +1,7 @@
 class DisbursementDocument
   attr_reader :disbursement, :revision
   include ActionView::Helpers::NumberHelper
+  include DisbursementsHelper
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
@@ -160,15 +161,23 @@ class DisbursementDocument
     ]
   end
 
-  def funding_data(mail=false)
+  def funding_data(mail=false, with_bank_account_details=true)
+    d = funding_data_footer(mail)
+    d.unshift(bank_account_details) unless @disbursement.inquiry?
+    d.unshift(prefunding,
+              bank_details) unless @disbursement.inquiry?
+    d.reduce(:concat)
+  end
+
+  def funding_data_footer(mail=false)
     d = [funding_disclaimer,
          (mail ? nil : freight_tax_disclaimer),
          tax_exempt_note].compact
     d << towage_provider_note unless mail
-    d.unshift(prefunding,
-              bank_details,
-              bank_account_details) unless @disbursement.inquiry?
-    d.reduce(:concat)
+  end
+
+  def funding_data_header()
+    [prefunding, bank_details]
   end
 
   private
@@ -233,7 +242,7 @@ class DisbursementDocument
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
-      when "sgm", "sturrockgrindrod", "monson"
+      when "sgm", "sturrockgrindrod"
         details += [
           {value: '<div class="row sgm-bank-details">'},
           {value: '<div class="col-md-6">'},
