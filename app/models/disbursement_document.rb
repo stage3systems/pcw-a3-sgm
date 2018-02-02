@@ -156,6 +156,7 @@ class DisbursementDocument
     data = office_address_lines
     data.unshift({style: :bold, value: from})
     data << office_email
+    data << @disbursement.office.phone
     [
       ['From', data]
     ]
