@@ -2,6 +2,7 @@ class DisbursementDocument
   attr_reader :disbursement, :revision
   include ActionView::Helpers::NumberHelper
   include DisbursementsHelper
+  include ApplicationHelper
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
@@ -157,6 +158,7 @@ class DisbursementDocument
     data.unshift({style: :bold, value: from})
     data << office_email
     data << @disbursement.office.phone
+    data << "Contact: #{current_user.first_name} #{current_user.last_name}"
     [
       ['From', data]
     ]
