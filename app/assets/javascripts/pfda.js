@@ -209,7 +209,12 @@ var updateTable = function(ctx) {
       $(this).html(convert(val));
       setTimeout(function() { updateTable(ctx); }, 0);
     };
-    $("td a.editable_value").editable({display: valueDisplay, defaultValue: 0});
+    $("td a.editable_value").editable({display: valueDisplay, defaultValue: 0})
+      .on('shown', function (e, editable) {
+        setTimeout(function () {
+          editable.input.$input.select();
+        }, 0);
+      });
 };
 
 var deleteService = function(ctx, k) {
