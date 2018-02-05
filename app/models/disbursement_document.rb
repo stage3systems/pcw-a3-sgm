@@ -157,8 +157,8 @@ class DisbursementDocument
     data = office_address_lines
     data.unshift({style: :bold, value: from})
     data << office_email
-    data << @disbursement.office.phone
-    data << "Contact: #{current_user.first_name} #{current_user.last_name}"
+    data << @disbursement.office.phone if @disbursement.office
+    data << "Contact: #{@disbursement.user.first_name} #{@disbursement.user.last_name}"
     [
       ['From', data]
     ]

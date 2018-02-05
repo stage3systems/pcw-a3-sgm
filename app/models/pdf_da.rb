@@ -236,9 +236,16 @@ class PdfDA < Prawn::Document
     footerdata = @document.funding_data_footer.reduce(:concat)
     headerdata = @document.funding_data_header.reduce(:concat)
 
-    quick_render(headerdata)
-    bank_details_sgm
-    quick_render(footerdata)
+    formatted_header_data = quick_format_data(headerdata)
+    formatted_footer_data = quick_format_data(footerdata)
+
+    header_height = height_of(formatted_header_data)
+    footer_height = height_of(formatted_footer_data)
+
+    start_new_page
+    quick_render(formatted_header_data)
+    bank_details_sgm(650)
+    quick_render(formatted_footer_data)
   end
 
   def quick_format_data(data)
@@ -248,9 +255,12 @@ class PdfDA < Prawn::Document
         "\n")
   end
 
-  def quick_render(data)
-    txt = quick_format_data(data)
-    text txt, inline_format: true
+  def quick_render(formatted_data, use_draw_text = false, height = 0)
+    if use_draw_text
+      draw_text formatted_data, inline_format: true, :at => [0, height]
+    else
+      text formatted_data, inline_format: true
+    end
   end
 
   def default_funding_details
@@ -258,14 +268,14 @@ class PdfDA < Prawn::Document
     text txt, inline_format: true
   end
 
-  def bank_details_sgm
-    bounding_box([0, HEIGHT-MARGIN-HEADER_HEIGHT],
+  def bank_details_sgm(height = 0)
+    bounding_box([0, height],
                  width: 270, height: 140) do
       table table_format(sgm_zar_banking_details),
             cell_style: @cell_style_bank_details,
             column_widths: [100, 170]
     end
-    bounding_box([280, HEIGHT-MARGIN-HEADER_HEIGHT],
+    bounding_box([280, height],
                  width: 270, height: 140) do
       table table_format(sgm_usd_banking_details),
             cell_style: @cell_style_bank_details,

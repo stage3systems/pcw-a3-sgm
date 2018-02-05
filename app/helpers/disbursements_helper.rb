@@ -5,6 +5,7 @@ module DisbursementsHelper
                         nl="<br />")
     return d if d.class == String
     (d.map do |e|
+      next "" if e == nil
       next e if e.class == String
       case e[:style]
         when :bold
