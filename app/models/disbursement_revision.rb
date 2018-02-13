@@ -94,8 +94,8 @@ class DisbursementRevision < ActiveRecord::Base
   def sync_with_aos
     aos_nom = AosNomination.from_tenant_and_aos_id(self.tenant, self.disbursement.nomination_id)
     return unless aos_nom
-    aos_nom.sync_revision(self) unless ["sgm", "sgmtest"].member?(self.tenant.name)
-    AosDa.new.sync(self) if ["sgm", "sgmtest"].member?(self.tenant.name)
+    aos_nom.sync_revision(self) unless ["sgm", "sgmtest", "biehl"].member?(self.tenant.name)
+    AosDa.new.sync(self) if ["sgm", "sgmtest", "biehl"].member?(self.tenant.name)
   end
 
   def charge_to_json(k)
