@@ -74,4 +74,8 @@ CTX
     }
   end
 
+  def get_activity_code
+    return self.key if self.tenant.use_service_key_as_activity_code?
+    self.activity_code.code rescue 'MISC'
+  end
 end

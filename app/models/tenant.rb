@@ -153,4 +153,8 @@ class Tenant < ActiveRecord::Base
       end
     end
   end
+
+  def use_service_key_as_activity_code?
+    self.name.starts_with?("sgm")
+  end
 end
