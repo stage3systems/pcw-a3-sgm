@@ -100,7 +100,10 @@ class DisbursementDocument
   end
 
   def wire_reference
-    "#{@revision.data['vessel_name']} #{@revision.data['vessel_imo']} #{@disbursement.nomination_reference}"
+    [ @revision.data['vessel_name'],
+      (@revision.data['vessel_imo'] unless @disbursement.tenant.is_sgm?),
+      @disbursement.nomination_reference
+    ].compact.join(" ")
   end
 
   def value_for(k)
