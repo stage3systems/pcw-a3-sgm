@@ -4,7 +4,6 @@ class PdfDA < Prawn::Document
 
   include DisbursementsHelper
   include FileReport
-  include SgmHelper
 
   BLACK = '000000'
   WHITE = 'ffffff'
@@ -43,7 +42,7 @@ class PdfDA < Prawn::Document
     final_figure
     move_down(72)
     stroke_line [0,y], [USABLE_WIDTH,y]
-    funding_details(@revision.tenant.customer_name)
+    funding_details
     terms_and_conditions
   end
 
@@ -68,7 +67,7 @@ class PdfDA < Prawn::Document
 
   def title(title, subtitle=nil)
     text title,
-         size: 20, style: :bold,
+         size: 16, style: :bold,
          align: :left, valign: :center
     return unless subtitle
     text "\n#{subtitle}",
@@ -84,7 +83,8 @@ class PdfDA < Prawn::Document
     bounding_box([0, HEIGHT-MARGIN],
                  width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
-      image logo_path, width: 60, position: :right, vposition: :center
+      logo_width = @disbursement.tenant.is_sgm?  ? 120 : 60
+      image logo_path, width: logo_width, position: :right, vposition: :center
     end
   end
 
@@ -224,28 +224,35 @@ class PdfDA < Prawn::Document
     table.draw
   end
 
-  def funding_details(tenant)
-    if tenant == "sgm"
-      sgm_funding_details
+  def funding_details
+    funding_details_item(@document.prefunding)
+    funding_details_item(@document.bank_details)
+    if @disbursement.tenant.is_sgm?
+        details = @document.bank_account_details
+        move_down(10)
+        start_y = y
+        bounding_box([0, start_y],
+                     width: 270, height: 90) do
+          funding_details_item(details[0])
+        end
+        y = start_y
+        bounding_box([262, y],
+                     width: 262, height: 90) do
+          funding_details_item(details[1])
+        end
     else
-      default_funding_details
+      funding_details_item(@document.bank_account_details)
     end
+    funding_details_item(@document.wire_reference)
+    funding_details_item(@document.funding_disclaimer)
+    funding_details_item(@document.freight_tax_disclaimer)
+    funding_details_item(@document.tax_exempt_note)
+    funding_details_item(@document.towage_provider_note)
   end
 
-  def sgm_funding_details
-    footerdata = @document.funding_data_footer.reduce(:concat)
-    headerdata = @document.funding_data_header.reduce(:concat)
-
-    formatted_header_data = quick_format_data(headerdata)
-    formatted_footer_data = quick_format_data(footerdata)
-
-    header_height = height_of(formatted_header_data)
-    footer_height = height_of(formatted_footer_data)
-
-    start_new_page
-    quick_render(formatted_header_data)
-    bank_details_sgm(650)
-    quick_render(formatted_footer_data)
+  def funding_details_item(data)
+    txt = quick_format_data(data)
+    text txt, inline_format: true
   end
 
   def quick_format_data(data)
@@ -260,26 +267,6 @@ class PdfDA < Prawn::Document
       draw_text formatted_data, inline_format: true, :at => [0, height]
     else
       text formatted_data, inline_format: true
-    end
-  end
-
-  def default_funding_details
-    txt = quick_format_data(@document.funding_data)
-    text txt, inline_format: true
-  end
-
-  def bank_details_sgm(height = 0)
-    bounding_box([0, height],
-                 width: 270, height: 140) do
-      table table_format(sgm_zar_banking_details),
-            cell_style: @cell_style_bank_details,
-            column_widths: [100, 170]
-    end
-    bounding_box([280, height],
-                 width: 270, height: 140) do
-      table table_format(sgm_usd_banking_details),
-            cell_style: @cell_style_bank_details,
-            column_widths: [100, 170]
     end
   end
 

@@ -4,7 +4,7 @@ module DisbursementsHelper
                         make_small=method(:make_small),
                         nl="<br />")
     return d if d.class == String
-    (d.map do |e|
+    entries = (d.map do |e|
       next "" if e == nil
       next e if e.class == String
       case e[:style]
@@ -14,7 +14,9 @@ module DisbursementsHelper
           make_small.call(e[:value])
         else e[:value]
       end
-    end).join(nl).html_safe
+    end)
+    return "" if entries.empty?
+    (entries.join(nl) + nl).html_safe
   end
 
   def make_bold(v)
