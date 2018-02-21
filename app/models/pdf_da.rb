@@ -31,6 +31,11 @@ class PdfDA < Prawn::Document
       inline_format: true,
       border_color: LIGHT_GREY
     }
+    @cell_style_bank_details = {
+      border_widths: [0, 0, 0, 0],
+      inline_format: true,
+      border_color: NO_BORDER
+    }
     to_table
     from_table
     services_table
@@ -62,7 +67,7 @@ class PdfDA < Prawn::Document
 
   def title(title, subtitle=nil)
     text title,
-         size: 20, style: :bold,
+         size: 16, style: :bold,
          align: :left, valign: :center
     return unless subtitle
     text "\n#{subtitle}",
@@ -78,7 +83,8 @@ class PdfDA < Prawn::Document
     bounding_box([0, HEIGHT-MARGIN],
                  width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
-      image logo_path, width: 60, position: :right, vposition: :center
+      logo_width = @disbursement.tenant.is_sgm?  ? 120 : 60
+      image logo_path, width: logo_width, position: :right, vposition: :center
     end
   end
 
@@ -219,11 +225,49 @@ class PdfDA < Prawn::Document
   end
 
   def funding_details
-    txt = format_list(@document.funding_data,
-                      method(:make_bold),
-                      method(:make_small),
-                      "\n")
+    funding_details_item(@document.prefunding)
+    funding_details_item(@document.bank_details)
+    if @disbursement.tenant.is_sgm?
+        details = @document.bank_account_details
+        move_down(10)
+        start_y = y
+        bounding_box([0, start_y],
+                     width: 270, height: 90) do
+          funding_details_item(details[0])
+        end
+        y = start_y
+        bounding_box([262, y],
+                     width: 262, height: 90) do
+          funding_details_item(details[1])
+        end
+    else
+      funding_details_item(@document.bank_account_details)
+    end
+    funding_details_item(@document.wire_reference)
+    funding_details_item(@document.funding_disclaimer)
+    funding_details_item(@document.freight_tax_disclaimer)
+    funding_details_item(@document.tax_exempt_note)
+    funding_details_item(@document.towage_provider_note)
+  end
+
+  def funding_details_item(data)
+    txt = quick_format_data(data)
     text txt, inline_format: true
+  end
+
+  def quick_format_data(data)
+    format_list(data,
+        method(:make_bold),
+        method(:make_small),
+        "\n")
+  end
+
+  def quick_render(formatted_data, use_draw_text = false, height = 0)
+    if use_draw_text
+      draw_text formatted_data, inline_format: true, :at => [0, height]
+    else
+      text formatted_data, inline_format: true
+    end
   end
 
   def terms_and_conditions

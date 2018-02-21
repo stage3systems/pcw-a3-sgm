@@ -1,6 +1,8 @@
 class DisbursementDocument
   attr_reader :disbursement, :revision
   include ActionView::Helpers::NumberHelper
+  include DisbursementsHelper
+  include ApplicationHelper
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
@@ -97,8 +99,11 @@ class DisbursementDocument
     @revision.tax_exempt? ? total : total_with_tax
   end
 
-  def wire_reference
-    "#{@revision.data['vessel_name']} #{@revision.data['vessel_imo']} #{@disbursement.nomination_reference}"
+  def compute_wire_reference
+    [ @revision.data['vessel_name'],
+      (@revision.data['vessel_imo'] unless @disbursement.tenant.is_sgm?),
+      @disbursement.nomination_reference
+    ].compact.join(" ")
   end
 
   def value_for(k)
@@ -155,46 +160,36 @@ class DisbursementDocument
     data = office_address_lines
     data.unshift({style: :bold, value: from})
     data << office_email
+    data << @disbursement.office.phone if @disbursement.office
+    data << "Contact: #{@disbursement.user.first_name} #{@disbursement.user.last_name}"
     [
       ['From', data]
     ]
   end
 
-  def funding_data(mail=false)
-    d = [funding_disclaimer,
-         (mail ? nil : freight_tax_disclaimer),
-         tax_exempt_note].compact
-    d << towage_provider_note unless mail
-    d.unshift(prefunding,
-              bank_details,
-              bank_account_details) unless @disbursement.inquiry?
-    d.reduce(:concat)
-  end
-
-  private
   def prefunding
-    [
-      FundingAgreement.new(self).conditions,
-      ""
-    ]
+    return [] if @disbursement.inquiry?
+    txt = FundingAgreement.new(self).conditions
+    return [] if txt.blank?
+    [txt, ""]
   end
 
   def bank_details
     d = @revision.data
     details = ['bank_name', 'bank_address1', 'bank_address2'].map do |f|
-      {style: :bold, value: d[f]}
+      {style: :bold, value: d[f]} if d[f]
     end
+    details = details.compact
+    return [] if details.empty?
     details << ""
   end
 
   def bank_account_details
-    details = []
     d = @revision.data
     case @revision.tenant.customer_name
 
     when "mariteam"
-      details += [
-        {style: :bold, value: "Netherlands"},
+      [ {style: :bold, value: "Netherlands"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
@@ -205,11 +200,9 @@ class DisbursementDocument
         {style: :bold, value: "Bank : BNP Paribas Fortis, Antwerpen, Londenstraat 6 - B-2000 ANTWERPEN"},
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
-        {style: :bold, value: "Swiftcode : GEBABEBB"}
-      ]
+        {style: :bold, value: "Swiftcode : GEBABEBB"} ]
     when "casper"
-      details += [
-        {style: :bold, value: "Account Name: Casper Shipping Limited"},
+      [ {style: :bold, value: "Account Name: Casper Shipping Limited"},
         {style: :bold, value: "Sort Code: 60/08/46"},
         {style: :bold, value: "BIC Code: NWBKGB2L"},
         {style: :bold, value: "GBP Account Number: 68645570"},
@@ -217,8 +210,7 @@ class DisbursementDocument
         {style: :bold, value: "VAT Nr: 546807127"}
       ]
     when "transmarine"
-      details += [
-        {style: :bold, value: "Bank of America, Long Beach Branch No. 1457"},
+      [ {style: :bold, value: "Bank of America, Long Beach Branch No. 1457"},
         {style: :bold, value: "150 Long Beach Blvd."},
         {style: :bold, value: "Long Beach, CA 90802"},
         {style: :bold, value: "Acct no. 14578-03336"},
@@ -233,26 +225,35 @@ class DisbursementDocument
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
-    when "sturrockgrindrod"
-      details += [
-        {style: :bold, value: "BANKING DETAILS (ZAR)"},
-        {style: :bold, value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
-        {style: :bold, value: "Bank: Rand Merchant Bank"},
-        {style: :bold, value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
-        {style: :bold, value: "Branch Code: 223626"},
-        {style: :bold, value: "Account Number: 62380786940"},
-        {style: :bold, value: "Swift Code: FIRNZAJJ"},
+    when "sgm", "sturrockgrindrod"
+      [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
+          {value: "Bank: Rand Merchant Bank"},
+          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
+          {value: "Branch Code: 223626"},
+          {value: "Account Number: 62380786940"},
+          {value: "Swift Code: FIRNZAJJ"},
+          {value: ""} ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
+          {value: "Bank: Rand Merchant Bank"},
+          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
+          {value: "Branch Code: 223626"},
+          {value: "Account Number: 0292842"},
+          {value: "Swift Code: FIRNZAJJ"},
+          {value: ""}
+        ]
       ]
     else
-      details += ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
+      ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
          value: "#{f}: #{d[f.downcase.gsub(' ','_').gsub('/', '')]}"}
       end
     end
-    details += [
-      {style: :bold, value: "Reference: #{wire_reference}"},
-      ""
-    ]
+  end
+
+  def wire_reference
+    [{style: :bold, value: "Reference: #{compute_wire_reference}"}, ""]
   end
 
   def funding_disclaimer
@@ -262,6 +263,11 @@ class DisbursementDocument
       "and information contained in the Inquiry are as accurate as possible, "+
       "the actual Proforma Estimate may, and often does, for various reasons "+
       "beyond our control, vary from the Inquiry"
+    elsif @revision.tenant.is_sgm?
+      "<b>Disclaimer</b><br/>" +
+      "Sturrock Grindrod Maritime (Pty) Ltd, as agents only. <br>" +
+      "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel." +
+      "Any additional/amended costs will be invoiced on Supplementary DA.<br>"
     else
       "Disclaimer: this is only an estimate and any additional costs "+
       "incurred for this vessel will be accounted for in our Final D/A."
@@ -300,6 +306,7 @@ class DisbursementDocument
     ]
   end
 
+  private
   def terms_and_conditions
   end
 

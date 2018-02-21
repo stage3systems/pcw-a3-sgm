@@ -44,6 +44,10 @@ class Tenant < ActiveRecord::Base
     false
   end
 
+  def is_sgm?
+    name.starts_with? 'sgm' or name.starts_with? 'sturrockgrindrod'
+  end
+
   def sync_with_aos
     sync_cargo_types()
     sync_vessels()

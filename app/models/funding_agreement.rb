@@ -7,6 +7,7 @@ class FundingAgreement
   end
 
   def conditions
+    return "" if @revision.tenant.name.start_with? "sgm"
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
     return generic_conditions unless @revision.tenant.name.start_with? "monson"
     d = @revision.data

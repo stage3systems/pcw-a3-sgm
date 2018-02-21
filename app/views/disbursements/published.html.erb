@@ -169,7 +169,26 @@
         <hr class="published" />
         <div class="row">
           <div class="col-md-12">
-            <%= format_list(@document.funding_data) %>
+            <%= format_list(@document.prefunding) %>
+            <%= format_list(@document.bank_details) %>
+            <% if @disbursement.tenant.is_sgm? %>
+            <div class="row sgm-bank-details">
+              <div class="col-md-6">
+                <%= format_list(@document.bank_account_details()[0]) %>
+              </div>
+              <div class="col-md-6">
+                <%= format_list(@document.bank_account_details()[1]) %>
+              </div>
+            </div>
+            <% else %>
+            <%= format_list(@document.bank_account_details) %>
+            <% end %>
+            <%= format_list(@document.wire_reference) %>
+            <%= format_list(@document.funding_disclaimer) %>
+            <%= format_list(@document.freight_tax_disclaimer) %>
+            <%= format_list(@document.tax_exempt_note) %>
+            <%= format_list(@document.towage_provider_note) %>
+
             <% if current_tenant.name.starts_with? "mariteam" %>
             <br />
             Download our <%= link_to "Standard Port Agency Conditions",
