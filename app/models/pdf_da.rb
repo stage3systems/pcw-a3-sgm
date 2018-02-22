@@ -66,8 +66,9 @@ class PdfDA < Prawn::Document
   end
 
   def title(title, subtitle=nil)
+    title_size = @disbursement.tenant.is_sgm?  ? 16 : 20
     text title,
-         size: 16, style: :bold,
+         size: title_size, style: :bold,
          align: :left, valign: :center
     return unless subtitle
     text "\n#{subtitle}",
