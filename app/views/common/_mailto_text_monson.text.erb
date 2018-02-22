@@ -4,8 +4,18 @@ You can download a PDF file view of the estimate from this link (no log in requi
 <%= "#{root_url}/pda/#{doc.disbursement.publication_id}" %>
 
 PREFUNDING STATUS
-<% doc.funding_data(true).each do |d| %>
-<%= d[:value] rescue d %>
+<% unless doc.disbursement.inquiry? %>
+<% ["prefunding", "bank_details",
+    "bank_account_details", "wire_reference"].each do |fun| %>
+<% doc.send(fun).each do |l| %>
+<%= l[:value] rescue l %>
+<% end %>
+<% end %>
+<% end %>
+<% ["funding_disclaimer", "tax_exempt_note"].each do |fun| %>
+<% doc.send(fun).each do |l| %>
+<%= l[:value] rescue l %>
+<% end %>
 <% end %>
 
 Download the full Terms and Conditions:
