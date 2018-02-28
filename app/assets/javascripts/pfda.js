@@ -11,8 +11,12 @@ var requiredInputDataKey = function(serviceKey, key, serviceSpecific) {
 var buildInput = function($requiredInputs, serviceKey, val, key, ctx) {
   var dataKey = requiredInputDataKey(serviceKey, key, val.serviceSpecific);
   var value = ctx.data[dataKey] || val.defaultValue;
+  var shouldDisplay = true;
+  if  (typeof val.display == 'function'){
+    shouldDisplay = val.display(ctx);
+  }
   $requiredInputs.append(
-    '<div class="form-group">'+
+    '<div id="'+ dataKey + '" style="display: ' + (shouldDisplay? '' : 'none') + '" class="form-group">'+
     '<label class="control-label col-sm-3">'+val.label+'</label>'+
     '<div class="col-sm-9">'+
     '<input name="'+dataKey+'" class="form-control" value="'+value+'"></input>'+
@@ -28,8 +32,12 @@ var buildSelect = function($requiredInputs, serviceKey, val, key, ctx) {
             (o.value == value ? ' selected="selected"' : '')+'>'+
             o.label+'</option>';
   }).join('');
+  var shouldDisplay = true;
+  if  (typeof val.display == 'function'){
+    shouldDisplay = val.display(ctx);
+  }
   $requiredInputs.append(
-    '<div class="form-group">'+
+    '<div id="'+ dataKey + '" style="display: ' + (shouldDisplay? '' : 'none') + '" class="form-group">'+
     '<label class="control-label col-sm-3">'+val.label+'</label>'+
     '<div class="col-sm-9">'+
     '<select name="'+dataKey+'" class="form-control">'+
@@ -215,6 +223,31 @@ var updateTable = function(ctx) {
           editable.input.$input.select();
         }, 0);
       });
+      setTimeout(function() {
+        var n = ctx.services.length,
+            i = -1;
+        while (++i < n) {
+          var key = ctx.services[i];
+          var requiredInputs = ctx.parsed_codes[key].requiredInputs;
+
+          _.each(requiredInputs, function(val, riKey) {
+            var dataKey = requiredInputDataKey(key, riKey, val.serviceSpecific);
+            if  (typeof val.display == 'function'){
+              var $container = $('#' + dataKey);
+              var isDisplayed = ($container.css('display') !== 'none');
+              var shouldDisplay = val.display(ctx);
+
+              if (shouldDisplay && !isDisplayed){
+                $("#"+dataKey).show();
+              } else if (!shouldDisplay && isDisplayed) {
+                $("#"+dataKey).hide();
+                ctx.data[dataKey] = undefined;
+                updateTable(ctx);
+              }
+            } 
+          });
+        }
+      }, 0);
 };
 
 var deleteService = function(ctx, k) {
