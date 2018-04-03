@@ -48,6 +48,14 @@ class Tenant < ActiveRecord::Base
     name.starts_with? 'sgm' or name.starts_with? 'sturrockgrindrod'
   end
 
+  def terms_url(root_url)
+    if terms and terms.start_with? 'http'
+      terms
+    else
+      "#{root}#{terms}"
+    end
+  end
+
   def sync_with_aos
     sync_cargo_types()
     sync_vessels()

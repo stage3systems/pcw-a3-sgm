@@ -45,8 +45,8 @@ class DisbursementDocument
     @disbursement.tenant.logo
   end
 
-  def terms
-    @disbursement.tenant.terms
+  def terms_url(root)
+    @disbursement.tenant.terms_url(root)
   end
 
   def tenant_full_name
