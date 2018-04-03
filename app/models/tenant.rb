@@ -21,7 +21,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
-    ['monson', 'mariteam', 'casper', 'fillettegreen',
+    ['monson', 'mariteam', 'biehl', 'casper', 'fillettegreen',
      'transmarine', 'sgm', 'sturrockgrindrod', 'robertreford'].each do |n|
       return n if name.starts_with? n
     end
@@ -48,7 +48,7 @@ class Tenant < ActiveRecord::Base
     name.starts_with? 'sgm' or name.starts_with? 'sturrockgrindrod'
   end
 
-  def terms_url(root_url)
+  def terms_url(root)
     if terms and terms.start_with? 'http'
       terms
     else
