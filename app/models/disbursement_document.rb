@@ -45,8 +45,8 @@ class DisbursementDocument
     @disbursement.tenant.logo
   end
 
-  def terms
-    @disbursement.tenant.terms
+  def terms_url(root)
+    @disbursement.tenant.terms_url(root)
   end
 
   def tenant_full_name
@@ -201,6 +201,17 @@ class DisbursementDocument
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
+    when "biehl"
+      [ {style: :bold, value: "CHASE BANK N.A."},
+        {style: :bold, value: "New York, New York"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "SWIFT Code: CHASUS33"},
+        {style: :bold, value: "Wire Transfer ABA No. 021000021"},
+        {style: :bold, value: "ACH ABA No: 111000614"},
+        {style: :bold, value: "For The Account Of: BIEHL & CO, TEXAS L.L.C."},
+        {style: :bold, value: "Account No: 199589752"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"} ]
     when "casper"
       [ {style: :bold, value: "Account Name: Casper Shipping Limited"},
         {style: :bold, value: "Sort Code: 60/08/46"},

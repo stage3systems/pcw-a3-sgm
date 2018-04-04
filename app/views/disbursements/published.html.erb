@@ -199,7 +199,7 @@
             <% else %>
             <br />
             Download the full <%= link_to "Terms and Conditions" ,
-                                          "/#{current_tenant.terms}" %>.
+                                          current_tenant.terms_url(root_url) %>.
             <% end %>
           </div>
         </div>

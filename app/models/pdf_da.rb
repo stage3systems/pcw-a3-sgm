@@ -273,7 +273,7 @@ class PdfDA < Prawn::Document
 
   def terms_and_conditions
     text "\nDownload the full <link href=\""+
-         "#{@root_url}#{@document.terms}"+
+         "#{@document.terms_url(@root_url)}"+
          "\">Terms and Conditions</link>",
          inline_format: true
   end

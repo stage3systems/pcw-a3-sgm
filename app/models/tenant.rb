@@ -21,7 +21,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
-    ['monson', 'mariteam', 'casper', 'fillettegreen',
+    ['monson', 'mariteam', 'biehl', 'casper', 'fillettegreen',
      'transmarine', 'sgm', 'sturrockgrindrod', 'robertreford'].each do |n|
       return n if name.starts_with? n
     end
@@ -46,6 +46,14 @@ class Tenant < ActiveRecord::Base
 
   def is_sgm?
     name.starts_with? 'sgm' or name.starts_with? 'sturrockgrindrod'
+  end
+
+  def terms_url(root)
+    if terms and terms.start_with? 'http'
+      terms
+    else
+      "#{root}#{terms}"
+    end
   end
 
   def sync_with_aos
