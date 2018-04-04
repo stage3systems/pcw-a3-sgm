@@ -202,11 +202,7 @@ class DisbursementDocument
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
     when "biehl"
-      [ {value: "Per our company policy, we require 100% funding of the estimated expenses below prior to vessels arrival."},
-        {style: :bold, value: ""},
-        {value: "Our Banking Details as follows:"},
-        {style: :bold, value: ""},
-        {style: :bold, value: "CHASE BANK N.A."},
+      [ {style: :bold, value: "CHASE BANK N.A."},
         {style: :bold, value: "New York, New York"},
         {style: :bold, value: ""},
         {style: :bold, value: "SWIFT Code: CHASUS33"},

@@ -9,6 +9,7 @@ class FundingAgreement
   def conditions
     return "" if @revision.tenant.name.start_with? "sgm"
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
+    return biehl_conditions if @revision.tenant.customer_name == "biehl"
     return generic_conditions unless @revision.tenant.name.start_with? "monson"
     d = @revision.data
     pfpercent = d['company_prefunding_percent'].to_i
@@ -34,6 +35,12 @@ class FundingAgreement
   def mariteam_conditions
     "Please remit funds to the following Country Bank Account " +
     "relative to your Port call:"
+  end
+
+  def biehl_conditions
+    "Per our company policy, we require 100% funding of the estimated " +
+    "expenses below prior to vessels arrival. "+
+    "Our Banking Details as follows:"
   end
 
   def generic_conditions
