@@ -21,15 +21,14 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
-    ['monson', 'mariteam', 'biehl', 'casper', 'fillettegreen',
-     'transmarine', 'sgm', 'sturrockgrindrod', 'robertreford', 'nabsa'].each do |n|
-      return n if name.starts_with? n
+    if name.end_with? 'test'
+      return name[0..-5]
     end
     "stage3"
   end
 
   def uses_new_da_sync?
-    ["sgm", "biehl", "nabsa"].member? self.customer_name
+    ["sgm", "biehl", "nabsa", "argelan", "marval"].member? self.customer_name
   end
 
   def is_monson?
