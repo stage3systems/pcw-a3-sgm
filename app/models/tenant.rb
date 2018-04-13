@@ -24,7 +24,7 @@ class Tenant < ActiveRecord::Base
     if name.end_with? 'test'
       return name[0..-5]
     end
-    "stage3"
+    name
   end
 
   def uses_new_da_sync?
