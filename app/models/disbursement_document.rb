@@ -256,6 +256,14 @@ class DisbursementDocument
           {value: ""}
         ]
       ]
+    when "nabsa"
+      [ {style: :bold, value: "HSBC Private Bank International"},
+        {style: :bold, value: "1.441, Brickell Av, 17th floor"},
+        {style: :bold, value: "Miami FL 33131"},
+        {style: :bold, value: "ABA Nbr.: 066010445 - Swift: HSBCUS3M"},
+        {style: :bold, value: "Account: 337-289-657"},
+        {style: :bold, value: "Favour: AGENCIA MARITIMA NABSA S.A."}
+      ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
