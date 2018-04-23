@@ -264,6 +264,15 @@ class DisbursementDocument
         {style: :bold, value: "Account: 337-289-657"},
         {style: :bold, value: "Favour: AGENCIA MARITIMA NABSA S.A."}
       ]
+    when "marval"
+      [  {style: :bold, value: "BENEFICIARY BANK: CITIBANK N.A."},
+         {style: :bold, value: "666 5TH AVENUE, 7TH, FLOOR"},
+         {style: :bold, value: "NY, NY10103"},
+         {style: :bold, value: "ABA: 021000089"},
+         {style: :bold, value: "SWIFT CODE: CITIUS33"},
+         {style: :bold, value: "BENEFICIARY ACCT NBR: 36893146"},
+         {style: :bold, value: "BENEFICIARY FULL NAME: MARITIMA VALPARAISO CHILE SA."}
+      ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
