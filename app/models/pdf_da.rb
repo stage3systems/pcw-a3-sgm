@@ -230,7 +230,12 @@ class PdfDA < Prawn::Document
     funding_details_item(@document.bank_details)
     if @disbursement.tenant.is_sgm?
         details = @document.bank_account_details
-        move_down(10)
+        if y < 100+MARGIN
+            start_new_page
+            move_down(MARGIN)
+        else
+          move_down(10)
+        end
         start_y = y
         bounding_box([0, start_y],
                      width: 270, height: 90) do
