@@ -228,8 +228,8 @@ class PdfDA < Prawn::Document
   def funding_details
     funding_details_item(@document.prefunding)
     funding_details_item(@document.bank_details)
-    if @disbursement.tenant.is_sgm?
-        details = @document.bank_account_details
+    details = @document.bank_account_details
+    if @disbursement.tenant.is_sgm? and details.length == 2
         if y < 100+MARGIN
             start_new_page
             move_down(MARGIN)
@@ -247,7 +247,7 @@ class PdfDA < Prawn::Document
           funding_details_item(details[1])
         end
     else
-      funding_details_item(@document.bank_account_details)
+      funding_details_item(details)
     end
     funding_details_item(@document.wire_reference)
     funding_details_item(@document.funding_disclaimer)
