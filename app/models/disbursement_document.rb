@@ -42,6 +42,9 @@ class DisbursementDocument
   end
 
   def logo
+    if @disbursement.tenant.is_sgm? and ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+      return "logo_sgm2.png"
+    end
     @disbursement.tenant.logo
   end
 
