@@ -66,7 +66,7 @@
             <% end %>
           </div>
           <div class="col-md-6">
-            <div class="pull-right"><%= image_tag current_tenant.logo %></div>
+            <div class="pull-right"><%= image_tag @document.logo %></div>
           </div>
         </div>
         <div class="btn-group"></div>
@@ -171,17 +171,18 @@
           <div class="col-md-12">
             <%= format_list(@document.prefunding) %>
             <%= format_list(@document.bank_details) %>
-            <% if @disbursement.tenant.is_sgm? %>
+            <% bank_details = @document.bank_account_details() %>
+            <% if @disbursement.tenant.is_sgm? and bank_details.length == 2 %>
             <div class="row sgm-bank-details">
               <div class="col-md-6">
-                <%= format_list(@document.bank_account_details()[0]) %>
+                <%= format_list(bank_details[0]) %>
               </div>
               <div class="col-md-6">
-                <%= format_list(@document.bank_account_details()[1]) %>
+                <%= format_list(bank_details[1]) %>
               </div>
             </div>
             <% else %>
-            <%= format_list(@document.bank_account_details) %>
+            <%= format_list(bank_details) %>
             <% end %>
             <%= format_list(@document.wire_reference) %>
             <%= format_list(@document.funding_disclaimer) %>

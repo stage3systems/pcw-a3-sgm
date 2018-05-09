@@ -42,6 +42,9 @@ class DisbursementDocument
   end
 
   def logo
+    if @disbursement.tenant.is_sgm? and ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+      return "logo_sgm2.png"
+    end
     @disbursement.tenant.logo
   end
 
@@ -238,24 +241,7 @@ class DisbursementDocument
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
     when "sgm", "sturrockgrindrod"
-      [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
-          {value: "Bank: Rand Merchant Bank"},
-          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
-          {value: "Branch Code: 223626"},
-          {value: "Account Number: 62380786940"},
-          {value: "Swift Code: FIRNZAJJ"},
-          {value: ""} ],
-        [ {style: :bold, value: "BANKING DETAILS (USD)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
-          {value: "Bank: Rand Merchant Bank"},
-          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
-          {value: "Branch Code: 223626"},
-          {value: "Account Number: 0292842"},
-          {value: "Swift Code: FIRNZAJJ"},
-          {value: ""}
-        ]
-      ]
+      sgm_bank_details
     when "nabsa"
       [ {style: :bold, value: "HSBC Private Bank International"},
         {style: :bold, value: "1.441, Brickell Av, 17th floor"},
@@ -281,6 +267,49 @@ class DisbursementDocument
     end
   end
 
+  def sgm_bank_details
+    if @disbursement.port.name == "MOMBASA"
+      [ {style: :bold, value: "BANKING DETAILS (USD)"},
+        {value: "Account Name: Sturrock Shipping Kenya Limited"},
+        {value: "Bank Name: Stanbic Bank Kenya Limited"},
+        {value: "Branch Name: Digo Road, Mombasa"},
+        {value: "Bank Account No.: 0100000431618"},
+        {value: "Swift Address: SBICKENX"},
+        {value: "Correspondent Bank: Deutsche Bank Trust Company Americas - New York"},
+        {value: "Account No: 04096505"},
+        {value: "Swift: BKTRUS 33"}
+      ]
+    elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+      [ {style: :bold, value: "BANKING DETAILS (USD)"},
+        {value: "Beneficiary Bank: Barclays Bank Tanzania Limited, TDFL Building Ohio Street, Dar Es Salaam, Tanzania"},
+        {value: "Swift Code: BARCTZTZ"},
+        {value: "Beneficiary: Sturrock Flex Shipping Ltd"},
+        {value: "Account No: 8003848"},
+        {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
+        {value: "Swift Code: CHASUS33"}
+      ]
+    else
+      [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
+          {value: "Bank: Rand Merchant Bank"},
+          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
+          {value: "Branch Code: 223626"},
+          {value: "Account Number: 62380786940"},
+          {value: "Swift Code: FIRNZAJJ"},
+          {value: ""} ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
+          {value: "Bank: Rand Merchant Bank"},
+          {value: "Bank Address: Acacia House, 2 Kikembe Drive, Umhlanga Rocks, 4320, South Africa"},
+          {value: "Branch Code: 223626"},
+          {value: "Account Number: 0292842"},
+          {value: "Swift Code: FIRNZAJJ"},
+          {value: ""}
+        ]
+      ]
+    end
+  end
+
   def wire_reference
     [{style: :bold, value: "Reference: #{compute_wire_reference}"}, ""]
   end
@@ -293,8 +322,14 @@ class DisbursementDocument
       "the actual Proforma Estimate may, and often does, for various reasons "+
       "beyond our control, vary from the Inquiry"
     elsif @revision.tenant.is_sgm?
-      "<b>Disclaimer</b><br/>" +
-      "Sturrock Grindrod Maritime (Pty) Ltd, as agents only. <br>" +
+      company = "Sturrock Grindrod Maritime (Pty) Ltd"
+      if @disbursement.port.name == "MOMBASA"
+        company = "Sturrock Shipping (Kenya) Ltd"
+      elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+        company = "Sturrock Flex Shipping Ltd"
+      end
+      "<b>Disclaimer</b><br/>" + company +
+      ", as agents only. <br>" +
       "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel." +
       "Any additional/amended costs will be invoiced on Supplementary DA.<br>"
     else
