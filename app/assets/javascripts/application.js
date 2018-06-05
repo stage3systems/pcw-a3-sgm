@@ -11,7 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require auth0
+//= require auth0.min
 //= require cross-domain-storage
 //= require rocket
 //= require bootstrap-sprockets
