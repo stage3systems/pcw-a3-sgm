@@ -13,4 +13,5 @@ else
     export RAILS_ENV=production
     # PCW_DB_HOST should be set through an environment variable
 fi
+cd /pcw
 bundle exec rails s -b 0.0.0.0

@@ -12,6 +12,8 @@ RUN apt-get install -y python3-pip
 
 RUN pip3 install awscli
 
+RUN apt-get install -y jq
+
 ENV APP_HOME /pcw
 
 RUN mkdir $APP_HOME
@@ -29,4 +31,4 @@ RUN bundle install
 ADD . $APP_HOME
 RUN RAILS_ENV=production bundle exec rake assets:precompile
 
-CMD start_server.sh
+CMD ["/pcw/start_server.sh"]
