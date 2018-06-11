@@ -8,6 +8,9 @@ RUN apt-get install -y libxml2-dev libxslt1-dev
 
 RUN apt-get install -y nodejs
 
+RUN apt-get install -y python3-pip
+
+RUN pip3 install awscli
 
 ENV APP_HOME /pcw
 
