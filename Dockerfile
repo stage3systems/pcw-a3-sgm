@@ -28,6 +28,8 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
+EXPOSE 3000
+
 ADD . $APP_HOME
 RUN RAILS_ENV=production bundle exec rake assets:precompile
 
