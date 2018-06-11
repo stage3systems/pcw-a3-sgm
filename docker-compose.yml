@@ -7,7 +7,7 @@ services:
 
   pcw:
     build: .
-    command: bundle exec rails server --port 3000 --binding 0.0.0.0
+    command: /pcw/start_server.sh
     ports:
       - "3000:3000"
     links:
