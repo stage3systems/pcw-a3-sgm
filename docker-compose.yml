@@ -1,0 +1,16 @@
+version: '3.2'
+services:
+  db:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+
+  pcw:
+    build: .
+    command: bundle exec rails server --port 3000 --binding 0.0.0.0
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    volumes:
+      - .:/pcw
