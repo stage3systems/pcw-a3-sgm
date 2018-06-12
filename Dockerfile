@@ -38,4 +38,6 @@ EXPOSE 3000
 ADD . $APP_HOME
 RUN RAILS_ENV=production bundle exec rake assets:precompile
 
+VOLUME ["/pcw/public"]
+
 CMD ["/pcw/start_server.sh"]
