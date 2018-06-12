@@ -14,6 +14,11 @@ RUN pip3 install awscli
 
 RUN apt-get install -y jq
 
+# Cleanup
+RUN apt-get clean autoclean
+RUN apt-get autoremove -y
+RUN rm -rf /var/lib/apt /var/lib/dpkg /var/lib/cache /var/lib/log
+
 ENV APP_HOME /pcw
 
 RUN mkdir $APP_HOME
