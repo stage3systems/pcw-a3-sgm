@@ -1,3 +1,4 @@
+---
 version: 0.2
 
 phases:
@@ -18,11 +19,19 @@ phases:
     commands:
       - echo Post-Build phase - tagging and uploading the images to ECR - `date`
       - $(aws ecr get-login --region us-west-2 --no-include-email)
-      - docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - >
+        docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
+        949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - >
+        docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
+        949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - printf '{"Parameters" : {"PCWRevision" : "%s"}, "StackPolicy" : {"Statement" : [{"Effect" : "Allow", "NotAction" : "Update:Delete", "Principal": "*", "Resource" : "*"}]}}' $CODEBUILD_RESOLVED_SOURCE_VERSION > configuration.json
+      - >
+        printf '{"Parameters" : {"PCWRevision" : "%s"}, "StackPolicy" :
+        {"Statement" : [{"Effect" : "Allow", "NotAction" : "Update:Delete",
+        "Principal": "*", "Resource" : "*"}]}}'
+        "$CODEBUILD_RESOLVED_SOURCE_VERSION" > configuration.json
       - echo Build completed - `date`
 
 artifacts:
