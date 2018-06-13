@@ -25,15 +25,19 @@ phases:
       - >
         docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
         949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/\
+         pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/\
+         pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION"
       - >
         printf '{"Parameters" : {"PCWRevision" : "%s"}, "StackPolicy" :
         {"Statement" : [{"Effect" : "Allow", "NotAction" : "Update:Delete",
         "Principal": "*", "Resource" : "*"}]}}'
         "$CODEBUILD_RESOLVED_SOURCE_VERSION" > configuration.json
+      - aws s3 cp s3://a3-templates/master.yaml .
       - echo Build completed - `date`
 
 artifacts:
   files:
     - configuration.json
+    - master.yaml
