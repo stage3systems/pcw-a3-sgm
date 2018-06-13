@@ -4,6 +4,8 @@ phases:
   install:
     commands:
       - echo Install phase - building test setup - `date`
+      - docker pull postgres:9.6
+      - docker pull ruby:2.3
       - docker-compose build
   pre_build:
     commands:
