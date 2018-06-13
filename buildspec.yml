@@ -4,8 +4,6 @@ phases:
   install:
     commands:
       - echo Install phase - building test setup - `date`
-      - docker pull postgres:9.6
-      - docker pull ruby:2.3
       - docker-compose build
   pre_build:
     commands:
@@ -20,7 +18,8 @@ phases:
     commands:
       - echo Post-Build phase - tagging and uploading the images to ECR - `date`
       - $(aws ecr get-login --region us-west-2 --no-include-email)
-      - docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push
+      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-pcw:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build completed - `date`

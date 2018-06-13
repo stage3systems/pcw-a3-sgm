@@ -15,9 +15,4 @@ GeoLiteCity.dat:
 	@gunzip GeoLiteCity.dat.gz
 
 t: GeoLiteCity.dat
-	@docker-compose run pcw psql -U postgres -h db -c 'drop database pcw_test;'
-	@docker-compose run pcw psql -U postgres -h db -c 'create database pcw_test;'
-	@docker-compose run pcw psql -U postgres -h db -c 'create extension hstore;' -d pcw_test
-	@docker-compose run -e RAILS_ENV=test pcw bundle exec rake db:structure:load
-	@docker-compose run -e RAILS_ENV=test pcw bundle exec rake db:migrate
-	@docker-compose run pcw bundle exec rake
+	@docker-compose run pcw ./wait-for-it.sh db:5432 -- ./run_tests.sh
