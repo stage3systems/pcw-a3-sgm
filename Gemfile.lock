@@ -127,6 +127,11 @@ GEM
     libv8 (3.16.14.15)
     lodash-rails (4.11.2)
       railties (>= 3.1)
+    lograge (0.10.0)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -190,6 +195,8 @@ GEM
     ranked-model (0.4.0)
       activerecord (>= 3.1.12)
     ref (2.0.0)
+    request_store (1.4.1)
+      rack (>= 1.4)
     roo (2.4.0)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
@@ -278,6 +285,7 @@ DEPENDENCIES
   jwt
   kaminari
   lodash-rails
+  lograge
   newrelic_rpm
   nprogress-rails
   omniauth
@@ -303,4 +311,4 @@ DEPENDENCIES
   wice_grid
 
 BUNDLED WITH
-   1.12.3
+   1.16.2
