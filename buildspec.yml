@@ -11,15 +11,15 @@ phases:
       - make t
   build:
     commands:
-      - echo Buil phase - building the rails and nginx containers - `date`
-      - docker build -t pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker build -t pcw-nging:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Build phase - building the rails and nginx containers - `date`
+      - docker build -t pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker build -t pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION .
   post_build:
     commands:
       - echo Post-Build phase - tagging and uploading the images to ECR - `date`
       - $(aws ecr get-login --region us-west-2 --no-include-email)
       - docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-pcw:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Build completed - `date`
