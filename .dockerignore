@@ -1,0 +1,16 @@
+appspec.uml
+build_and_push.sh
+buildspec.yml
+codedeploy
+coverage
+doc
+docker-compose.yml
+Dockerfile
+Dockerfile.nginx
+log
+nginx.conf
+pdfs
+README.rdoc
+run_tests
+sheets
+tmp

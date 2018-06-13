@@ -13,3 +13,10 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+GeoLiteCity.dat
+
+pdfs/*
+sheets/*
+pcw.sql
+coverage

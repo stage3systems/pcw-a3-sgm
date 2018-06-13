@@ -48,7 +48,6 @@ class DisbursementSearch
   def filter_dwt
     min_dwt = @params[:min_dwt].to_f unless @params[:min_dwt].blank?
     max_dwt = @params[:max_dwt].to_f unless @params[:max_dwt].blank?
-    puts "MAX MIN #{min_dwt}, #{max_dwt} #{@params}"
     @disbursements = @disbursements.where("(disbursement_revisions.data -> 'vessel_dwt')::float >= :min_dwt", min_dwt: min_dwt) if min_dwt
     @disbursements = @disbursements.where("(disbursement_revisions.data -> 'vessel_dwt')::float <= :max_dwt", max_dwt: max_dwt) if max_dwt
   end

@@ -14,6 +14,7 @@ else
     # PCW_DB_HOST should be set through an environment variable
 fi
 cd /pcw
+rm -f /pcw/tmp/pids/server.pid
 echo "Starting Rails"
 echo "ENVIRON=$ENVIRON"
 echo "RAILS_ENV=$RAILS_ENV"
