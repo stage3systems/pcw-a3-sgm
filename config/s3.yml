@@ -1,9 +1,9 @@
 default: &default
-  aws_access_key_id: 'secret'
-  aws_secret_access_key: 'secret'
-  bucket: 's3s-dev-or'
-  region: 'us-west-2'
-  use_iam_profile: false
+  aws_access_key_id: <%= ENV['PCW_AWS_ACCESS_KEY_ID'] || 'secret' %>
+  aws_secret_access_key: <%= ENV['PCW_AWS_SECRET_ACCESS_KEY'] || 'secret' %>
+  bucket: <%= ENV['PCW_AWS_BUCKET'] || 'a3-customer-data' %>
+  region: <%= ENV['PCW_AWS_REGION'] || 'us-west-2' %>
+  use_iam_profile: <%= ENV['PCW_AWS_USE_IAM_PROFILE'] || 'false' %>
 
 development:
   <<: *default

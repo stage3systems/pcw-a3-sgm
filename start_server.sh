@@ -17,6 +17,7 @@ else
     export PCW_AUTH0_CLIENT_ID=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-auth0-client-id" | jq -r .Parameter.Value`
     export PCW_DB_USER=pcw
     export RAILS_ENV=production
+    export PCW_AWS_USE_IAM_PROFILE=true
     # PCW_DB_HOST should be set through an environment variable
 fi
 cd /pcw
