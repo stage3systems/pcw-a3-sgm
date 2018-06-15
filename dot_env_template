@@ -1,4 +1,3 @@
 # Fill in the values and copy to .env
 export PCW_AUTH0_DOMAIN=
 export PCW_AUTH0_CLIENT_ID=
-export PCW_AUTH0_CLIENT_SECRET=

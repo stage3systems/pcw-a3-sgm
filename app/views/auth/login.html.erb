@@ -1,10 +1,13 @@
 <div class="login">
   <div class="login-logo"></div>
+  <div class="spinner">
+    <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+  </div>
   <div class="login-error" style="display: none;">
     <p><strong class="js-error-title"></strong></p>
     <span class="js-error-msg"></span>
   </div>
-  <div class="login-form">
+  <div class="login-form" style="display: none;">
     <form id="login">
       <input type="text" name="username" class="input login-username"
              placeholder="Username" autocomplete="off"
@@ -25,6 +28,7 @@
 </div>
 <script type="text/javascript">
   var setupLogin = function() {
+    $('input.login-username').focus();
     $('input.input').val('');
     $('input.input').on('keypress', function(e) {
       var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -45,13 +49,14 @@
     }
   }
   if (authResults.id_token) {
+    console.log(authResults);
     $.post('/auth/register', {token: authResults.id_token})
     .done(function() {
-      setToken(xdStorage, authResults.id_token);
       window.location = "<%= root_path %>";
      })
   } else {
-      setupLogin();
+    $('div.spinner').fadeOut(100);
+    $("div.login-form").fadeIn(100, setupLogin);
   }
   var WebAuth = new auth0.WebAuth({
     domain: '<%= @domain %>',
@@ -96,7 +101,6 @@
       $.post('/auth/register',
              {token: auth.idToken})
         .done(function(r) {
-          setToken(xdStorage, auth.idToken);
           window.location = "<%= root_path %>";
         })
         .fail(function() {

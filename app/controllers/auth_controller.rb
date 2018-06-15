@@ -33,13 +33,34 @@ class AuthController < ApplicationController
   end
 
   private
-  def client_secret
-    @client_secret ||= Base64::urlsafe_decode64(
-      Rails.application.config.x.auth0["client_secret"])
-  end
+	def jwks_hash
+		@jwks_hash ||= compute_jwks_hash
+	end
+
+	def compute_jwks_hash
+    jwks_raw = Net::HTTP.get URI("https://#{Rails.application.config.x.auth0['domain']}/.well-known/jwks.json")
+    jwks_keys = Array(JSON.parse(jwks_raw)['keys'])
+    Hash[
+      jwks_keys
+      .map do |k|
+        [
+          k['kid'],
+          OpenSSL::X509::Certificate.new(
+            Base64.decode64(k['x5c'].first)
+          ).public_key
+        ]
+      end
+    ]
+	end
 
   def get_user
-    token = JWT.decode(params[:token], client_secret).first rescue nil
+    auth0 = Rails.application.config.x.auth0
+    token = JWT.decode(params[:token], nil, true,
+                       algorithm: 'RS256',
+                       iss: "https://#{auth0['domain']}/", verify_iss: true,
+                       aud: auth0['client_id'], verify_aud: true) do |header|
+			jwks_hash()[header['kid']]
+    end.first rescue nil
     return nil unless token
     auth0_id = token["sub"]
     user = User.where(tenant_id: current_tenant.id,
