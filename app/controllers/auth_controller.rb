@@ -28,6 +28,10 @@ class AuthController < ApplicationController
   end
 
   def logout
+    cfg = Rails.application.config.x.auth0
+    @domain = cfg["domain"]
+    @client_id = cfg["client_id"]
+    @connection = cfg["connection"]
     session[:token] = nil
     render layout: "auth"
   end

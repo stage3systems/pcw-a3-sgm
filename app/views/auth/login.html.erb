@@ -39,30 +39,29 @@
         e.preventDefault();
         logIn();
     });
-  }
-  var authResults = {};
-  if (window.location.hash) {
-    var params = (window.location.hash.substr(1)).split("&");
-    for (var i = 0; i < params.length; i++) {
-      var a = params[i].split("=");
-      authResults[a[0]] = a[1];
+  };
+
+  var saveAuth = function(authResults) {
+    localStorage.setItem('idToken', authResults.idToken);
+    localStorage.setItem('expirationDate', Date.now() + Number.parseInt(authResults.expiresIn) * 1000);
+  };
+
+  var checkState = function() {
+    var token = localStorage.getItem('idToken');
+    var expirationDate = new Date(Number.parseInt(localStorage.getItem('expirationDate')));
+    var isExpired = expirationDate < new Date();
+
+    if (!token || isExpired) {
+      $('div.spinner').fadeOut(100);
+      $("div.login-form").fadeIn(100, setupLogin);
+    } else {
+        $.post('/auth/register', {token: token})
+        .done(function() {
+            window.location = "<%= root_path %>";
+        })
     }
-  }
-  if (authResults.id_token) {
-    console.log(authResults);
-    $.post('/auth/register', {token: authResults.id_token})
-    .done(function() {
-      window.location = "<%= root_path %>";
-     })
-  } else {
-    $('div.spinner').fadeOut(100);
-    $("div.login-form").fadeIn(100, setupLogin);
-  }
-  var WebAuth = new auth0.WebAuth({
-    domain: '<%= @domain %>',
-    clientID: '<%= @client_id %>',
-    responseType: 'token id_token'
-  });
+  };
+
   var clearError = function() {
     $('div.login-error').hide();
   };
@@ -71,7 +70,6 @@
     $('.js-error-msg').html(msg);
     $('div.login-error').show();
   };
-
 
   var logIn = function() {
     var button = $('a.login-submit');
@@ -110,5 +108,25 @@
             'if the problem persists.');
         });
     });
-  }
+  };
+
+  var WebAuth = new auth0.WebAuth({
+    domain: '<%= @domain %>',
+    clientID: '<%= @client_id %>',
+    responseType: 'token id_token',
+    redirectUri: '<%= auth_login_url %>'
+  });
+  WebAuth.parseHash(window.location.hash, function(err, results) {
+    if (!err && results) {
+      saveAuth(results);
+      checkState();
+    } else {
+      WebAuth.checkSession({}, function (err, results) {
+        if (!err && results) {
+          saveAuth(results);
+        }
+        checkState();
+      });
+    }
+  });
 </script>

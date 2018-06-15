@@ -11,5 +11,12 @@
   </div>
 </div>
 <script type="text/javascript">
-  window.location = '<%= auth_login_path %>';
+  localStorage.removeItem('idToken');
+  var WebAuth = new auth0.WebAuth({
+    domain: '<%= @domain %>',
+    clientID: '<%= @client_id %>',
+    responseType: 'token id_token',
+    redirectUri: '<%= auth_login_url %>'
+  });
+  WebAuth.logout({returnTo: '<%= auth_login_url %>'});
 </script>
