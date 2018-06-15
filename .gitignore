@@ -18,5 +18,7 @@ GeoLiteCity.dat
 
 pdfs/*
 sheets/*
-pcw.sql
+pcw.stg.sql
 coverage
+
+.env

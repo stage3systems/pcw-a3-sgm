@@ -871,7 +871,8 @@ CREATE TABLE users (
     remote_id integer,
     deleted boolean DEFAULT false,
     rocket_id integer,
-    tenant_id integer
+    tenant_id integer,
+    auth0_id character varying
 );
 
 
@@ -1542,4 +1543,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171205150000');
 INSERT INTO schema_migrations (version) VALUES ('20171222195804');
 
 INSERT INTO schema_migrations (version) VALUES ('20180125113825');
+
+INSERT INTO schema_migrations (version) VALUES ('20180615044550');
 

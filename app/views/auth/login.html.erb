@@ -4,18 +4,7 @@
     <p><strong class="js-error-title"></strong></p>
     <span class="js-error-msg"></span>
   </div>
-  <div class="spinner">
-    <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
-  </div>
-  <div class="logged-in" style="display: none;">
-    <a href="#" class="lets-go js-login-as">
-      Continue as <span class="username">...</span>
-    </a>
-    <a href="#" class="switch-user js-switch-user">
-      Sign in with a different account
-    </a>
-  </div>
-  <div class="login-form" style="display: none;">
+  <div class="login-form">
     <form id="login">
       <input type="text" name="username" class="input login-username"
              placeholder="Username" autocomplete="off"
@@ -35,6 +24,18 @@
   </div>
 </div>
 <script type="text/javascript">
+  var setupLogin = function() {
+    $('input.input').val('');
+    $('input.input').on('keypress', function(e) {
+      var keycode = (e.keyCode ? e.keyCode : e.which);
+      if (keycode === 13) logIn();
+    });
+    $('a.login-submit').removeAttr('disabled');
+    $('a.login-submit').on('click', function(e) {
+        e.preventDefault();
+        logIn();
+    });
+  }
   var authResults = {};
   if (window.location.hash) {
     var params = (window.location.hash.substr(1)).split("&");
@@ -49,6 +50,8 @@
       setToken(xdStorage, authResults.id_token);
       window.location = "<%= root_path %>";
      })
+  } else {
+      setupLogin();
   }
   var WebAuth = new auth0.WebAuth({
     domain: '<%= @domain %>',
@@ -64,59 +67,6 @@
     $('div.login-error').show();
   };
 
-  var setupLogin = function() {
-    $('input.input').val('');
-    $('input.input').on('keypress', function(e) {
-      var keycode = (e.keyCode ? e.keyCode : e.which);
-      if (keycode === 13) logIn();
-    });
-    $('a.login-submit').removeAttr('disabled');
-    $('a.login-submit').on('click', function(e) {
-        e.preventDefault();
-        logIn();
-    });
-  }
-
-  var xdStorage = new CDStorage('<%= @identity_url %>', '/crossdomain.html');
-  getToken(xdStorage, function(err, token) {
-    $.post('/auth/check', {token: token})
-      .done(function(data) {
-        $("div.spinner").fadeOut(100);
-        if (data.user) {
-          $("span.username").html(data.user.name+' ('+
-                                  data.user.identity_name+')');
-          $("div.logged-in").fadeIn(100);
-          $("a.js-login-as").on("click", function(e) {
-            e.preventDefault();
-            $(this).html($('<span class="fa fa-spinner fa-spin"></span>'));
-            $(this).attr('disabled', 'disabled');
-            $.post('/auth/register',
-                   {token: token})
-              .done(function() {
-                setToken(xdStorage, token);
-                window.location = "<%= root_path %>";
-              })
-              .fail(function() {
-                showError(
-                  'The login details you entered were not '+
-                  'found in the system or are incorrect.',
-                  'Please contact Customer Support for assistance.');
-              });
-          });
-          $("a.js-switch-user").on("click", function(e) {
-            e.preventDefault();
-            $("div.logged-in").fadeOut(100);
-            $("div.login-form").fadeIn(100, setupLogin);
-          });
-        } else {
-          showError(
-            'The login details you entered were not '+
-            'found in the system or are incorrect.',
-            'Please contact Customer Support for assistance.');
-          $("div.login-form").fadeIn(100, setupLogin);
-        }
-      });
-  });
 
   var logIn = function() {
     var button = $('a.login-submit');

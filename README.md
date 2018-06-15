@@ -4,14 +4,16 @@ A flexible system for proforma disbursements estimates.
 
 ## Docker based development
 
+Copy the `dot_env_template` file to `.env` and fill in the secrets
+
 `make dev` will start the development
 environment.
 
-`make restore-dump` will setup the database with a production dump
+`make restore-dump` will setup the database with a staging dump
 
-You'll need to add entries to your `/etc/hosts` file to access the service, e.g. `127.0.0.1 localhost monson.pcw.a3`
+You'll need to add entries to your `/etc/hosts` file to access the service, e.g. `127.0.0.1 localhost monsontest.pcw.a3`
 
-After that you'll be able to access the service at http://monson.pcw.a3:3000
+After that you'll be able to access the service at http://monsontest.pcw.a3:3000
 
 ## Running the test suite
 

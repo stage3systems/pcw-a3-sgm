@@ -51,8 +51,8 @@ module ProformaDA
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # Identity
-    config.x.identity = Rails.application.config_for(:identity)
+    # auth0
+    config.x.auth0 = Rails.application.config_for(:auth0)
 
     # S3
     config.x.s3 = Rails.application.config_for(:s3)
