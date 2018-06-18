@@ -1,4 +1,4 @@
-appspec.uml
+appspec.yml
 build_and_push.sh
 buildspec.yml
 codedeploy
@@ -8,7 +8,6 @@ docker-compose.yml
 Dockerfile
 Dockerfile.nginx
 log
-nginx.conf
 pdfs
 README.rdoc
 run_tests
