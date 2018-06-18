@@ -14,7 +14,7 @@ phases:
     commands:
       - echo Build phase - building the rails and nginx containers - `date`
       - docker build -t pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker build -t pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - docker build -f Dockerfile.nginx -t pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION .
   post_build:
     commands:
       - echo Post-Build phase - tagging and uploading the images to ECR - `date`
