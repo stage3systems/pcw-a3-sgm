@@ -22,5 +22,6 @@ else
 fi
 cd /pcw
 rm -f /pcw/tmp/pids/server.pid
+echo "DB host: $PCW_DB_HOST"
 bundle exec rake db:migrate
 bundle exec rails s -b 0.0.0.0
