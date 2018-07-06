@@ -35,9 +35,25 @@
   </div>
 </div>
 <script type="text/javascript">
-  var auth0 = new Auth0({
+  var authResults = {};
+  if (window.location.hash) {
+    var params = (window.location.hash.substr(1)).split("&");
+    for (var i = 0; i < params.length; i++) {
+      var a = params[i].split("=");
+      authResults[a[0]] = a[1];
+    }
+  }
+  if (authResults.id_token) {
+    $.post('/auth/register', {token: authResults.id_token})
+    .done(function() {
+      setToken(xdStorage, authResults.id_token);
+      window.location = "<%= root_path %>";
+     })
+  }
+  var WebAuth = new auth0.WebAuth({
     domain: '<%= @domain %>',
-    clientID: '<%= @client_id %>'
+    clientID: '<%= @client_id %>',
+    responseType: 'token id_token'
   });
   var clearError = function() {
     $('div.login-error').hide();
@@ -112,11 +128,10 @@
     if (!username.match(/\.<%= @tenant %>$/)) {
       username += '.<%= @tenant %>';
     }
-    auth0.login({
-      connection: '<%= @connection %>',
-      popup: false,
-      sso: false,
+    WebAuth.login({
+      realm: '<%= @connection %>',
       username: username,
+      redirect_uri: '<%= auth_login_url %>',
       password: password
     }, function (err, auth) {
       if (err) {
