@@ -279,15 +279,25 @@ class DisbursementDocument
         {value: "Account No: 04096505"},
         {value: "Swift: BKTRUS 33"}
       ]
-    elsif @disbursement.port.name == "SINGAPORE"
-      [ {style: :bold, value: "BANKING DETAILS (SGD/USD)"},
-        {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-        {value: "Bank: Standard Chartered"},
-        {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-        {value: "Bank Code: 7144"},
-        {value: "Account Number SGD: 0106355465"},
-        {value: "Account Number USD: 0104970324"},
-        {value: "Swift Code: SCBLSGSG"}
+    elsif ["SEMARANG", "SUNGAI", "PAKNING", "CILACAP",
+           "JAKARTA SURABAYA", "LUOJING", "ZHOUSHAN",
+           "RIZHAO", "HAINAN", "LANQIAO", "SINGAPORE"].member? @disbursement.port.name
+      [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Bank: Standard Chartered"},
+          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
+          {value: "Bank Code: 7144"},
+          {value: "Account Number: 0106355465"},
+          {value: "Swift Code: SCBLSGSG"}
+        ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Bank: Standard Chartered"},
+          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
+          {value: "Bank Code: 7144"},
+          {value: "Account Number: 0104970324"},
+          {value: "Swift Code: SCBLSGSG"}
+        ]
       ]
     elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
@@ -297,6 +307,24 @@ class DisbursementDocument
         {value: "Account No: 8003848"},
         {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
         {value: "Swift Code: CHASUS33"}
+      ]
+    elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+      [ [ {style: :bold, value: "Banking Details (MZN)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime [Mozambique] Lda"},
+          {value: "Bank: Standard Bank S.A.R.L"},
+          {value: "Bank Address: Praça 25 De Junho, No. 1"},
+          {value: "Branch Code: Main Branch - Maputo - No. 1"},
+          {value: "Account Number: 1081847971006"},
+          {value: "Swift Code: SBICMZMX"}
+        ],
+        [ {style: :bold, value: "Banking Details (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime [Mozambique] Lda"},
+          {value: "Bank: Standard Bank S.A.R.L"},
+          {value: "Bank Address: Praça 25 De Junho, No. 1"},
+          {value: "Branch Code: Main Branch - Maputo - No. 1"},
+          {value: "Account Number: 1088053251003"},
+          {value: "Swift Code: SBICMZMX"}
+        ]
       ]
     else
       [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
@@ -335,8 +363,12 @@ class DisbursementDocument
       company = "Sturrock Grindrod Maritime (Pty) Ltd"
       if @disbursement.port.name == "MOMBASA"
         company = "Sturrock Shipping (Kenya) Ltd"
-      elsif @disbursement.port.name == "SINGAPORE"
+      elsif ["SEMARANG", "SUNGAI", "PAKNING", "CILACAP",
+             "JAKARTA SURABAYA", "LUOJING", "ZHOUSHAN",
+             "RIZHAO", "HAINAN", "LANQIAO", "SINGAPORE"].member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
+      elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+        company = "Sturrock Grindrod Maritime [Mozambique] Lda"
       elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
         company = "Sturrock Flex Shipping Ltd"
       end
