@@ -143,6 +143,20 @@
     </div>
   </div>
 </div>
+<script src="//fast.appcues.com/35529.js"></script>
+<script>
+      Appcues.identify('<%= current_user.remote_id %>', { // Replace with unique identifier for current user
+        username: '<%= current_user.uid %>', 
+        name: '<%= current_user.full_name %>',   // Current user's name
+        email: null, // Current user's email, leave it null for now
+        created_at: '<%= (DateTime.now.utc).strftime('%d %b %Y - %H%M%S').upcase %>',    // ser signup date
+        tenantshort: '<%= current_tenant.name %>',
+        tenant: '<%= current_tenant.name %>',
+        // Additional user properties.
+        // is_trial: false,
+        // plan: "enterprise"
+      });
+    </script>
 <script type="text/javascript">
   $("input[name='reset']").on("click", function(e) {
       e.stopPropagation();
