@@ -338,7 +338,8 @@ class DisbursementDocument
           {value: "Bank Address: 133 Liverpool St, Sydney, NSW 2000"},
           {value: "Branch Code: 062 016"},
           {value: "Account Number: 11704980"},
-          {value: "Swift Code: CTBAAU2S"}
+          {value: "Swift Code: CTBAAU2S"},
+          {value: "ABN: 35 143148350"}
         ],
         [ {style: :bold, value: "Banking Details (USD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
@@ -346,7 +347,8 @@ class DisbursementDocument
           {value: "Bank Address: 255 George Street, Sydney, NSW 2000"},
           {value: "Branch Code: 082 057"},
           {value: "Account Number: STURRUSD01"},
-          {value: "Swift Code: NATAAU3302S"}
+          {value: "Swift Code: NATAAU3302S"},
+          {value: "ABN: 35 143148350"}
         ]
       ]
 
@@ -356,7 +358,8 @@ class DisbursementDocument
         {value: "Bank: Westpack Bank - PNG - Limited"},
         {value: "Bank Address: Waigani, Waigani Drive, Port Moresby"},
         {value: "Branch Code: 038 007"},
-        {value: "Account Number: 6006402561"}
+        {value: "Account Number: 6006402561"},
+        {value: "ABN: 35 143148350"}
       ],
       [ {style: :bold, value: "Banking Details (USD)"},
         {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
@@ -364,7 +367,8 @@ class DisbursementDocument
         {value: "Bank Address: 255 George Street, Sydney, NSW 2000"},
         {value: "Branch Code: 082 057"},
         {value: "Account Number: STURRUSD01"},
-        {value: "Swift Code: NATAAU3302S"}
+        {value: "Swift Code: NATAAU3302S"},
+        {value: "ABN: 35 143148350"}
       ]
     ]
 
