@@ -398,6 +398,13 @@ class DisbursementDocument
     [{style: :bold, value: "Reference: #{compute_wire_reference}"}, ""]
   end
 
+  def is_aus_or_png
+    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND"]
+    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+
+    australian_ports.member? @disbursement.port.name or png_ports.member? @disbursement.port.name
+  end
+
   def funding_disclaimer
     disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
@@ -417,6 +424,8 @@ class DisbursementDocument
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
       elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
         company = "Sturrock Flex Shipping Ltd"
+      elsif is_aus_or_png
+        company = "Sturrock Grindrod Maritime (Australia) Pty Ltd"
       end
       "<b>Disclaimer</b><br/>" + company +
       ", as agents only. <br>" +
