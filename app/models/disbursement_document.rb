@@ -268,6 +268,12 @@ class DisbursementDocument
   end
 
   def sgm_bank_details
+    asian_ports = ["SEMARANG","SUNGAI","PAKNING","CILACAP","JAKARTA","SURABAYA","LUOJING","ZHOUSHAN","RIZHAO","HAINAN","LANQIAO","SINGAPORE"]
+
+    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND"]
+
+    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Account Name: Sturrock Shipping Kenya Limited"},
@@ -279,9 +285,7 @@ class DisbursementDocument
         {value: "Account No: 04096505"},
         {value: "Swift: BKTRUS 33"}
       ]
-    elsif ["SEMARANG", "SUNGAI", "PAKNING", "CILACAP",
-           "JAKARTA SURABAYA", "LUOJING", "ZHOUSHAN",
-           "RIZHAO", "HAINAN", "LANQIAO", "SINGAPORE"].member? @disbursement.port.name
+    elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
           {value: "Bank: Standard Chartered"},
@@ -326,6 +330,44 @@ class DisbursementDocument
           {value: "Swift Code: SBICMZMX"}
         ]
       ]
+
+    elsif australian_ports.member? @disbursement.port.name
+      [ [ {style: :bold, value: "Banking Details (AUD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
+          {value: "Bank: Commonwealth Bank of Australia (CBA)"},
+          {value: "Bank Address: 133 Liverpool St, Sydney, NSW 2000"},
+          {value: "Branch Code: 062 016"},
+          {value: "Account Number: 11704980"},
+          {value: "Swift Code: CTBAAU2S"}
+        ],
+        [ {style: :bold, value: "Banking Details (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
+          {value: "Bank: National Australia Bank"},
+          {value: "Bank Address: 255 George Street, Sydney, NSW 2000"},
+          {value: "Branch Code: 082 057"},
+          {value: "Account Number: STURRUSD01"},
+          {value: "Swift Code: NATAAU3302S"}
+        ]
+      ]
+
+  elsif png_ports.member? @disbursement.port.name
+    [ [ {style: :bold, value: "Banking Details (PGK)"},
+        {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
+        {value: "Bank: Westpack Bank - PNG - Limited"},
+        {value: "Bank Address: Waigani, Waigani Drive, Port Moresby"},
+        {value: "Branch Code: 038 007"},
+        {value: "Account Number: 6006402561"}
+      ],
+      [ {style: :bold, value: "Banking Details (USD)"},
+        {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
+        {value: "Bank: National Australia Bank"},
+        {value: "Bank Address: 255 George Street, Sydney, NSW 2000"},
+        {value: "Branch Code: 082 057"},
+        {value: "Account Number: STURRUSD01"},
+        {value: "Swift Code: NATAAU3302S"}
+      ]
+    ]
+
     else
       [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
