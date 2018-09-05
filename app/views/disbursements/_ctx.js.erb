@@ -27,6 +27,7 @@ var ctx = {
     subsubtype: "<%= revision.data["cargo_subsubtype"] %>",
     subsubsubtype: "<%= revision.data["cargo_subsubsubtype"] %>"
   },
+  currencies: <%= Currency.all.map {|c| [c.id, c]}.to_h.to_json %>,
   tax_rate: <%= revision.data["tax_rate"] %>,
   data: <%= revision.data.to_json %>,
   codes: <%= revision.codes.to_json %>,

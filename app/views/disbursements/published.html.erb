@@ -109,6 +109,17 @@
                     Including Taxes
                   </th>
                   <% end %>
+                  <% if @revision.conversion_currency %>
+                  <th class="text-right">
+                    Amount (<%= @revision.conversion_currency.code %>)
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    Amount (<%= @revision.conversion_currency.code %>)
+                    Including Taxes
+                  </th>
+                  <% end %>
+                  <% end %>
                 </tr>
               </thead>
               <tbody>
@@ -132,6 +143,16 @@
                       <%= @document.value_with_tax_for(f) %>
                     </td>
                     <% end %>
+                    <% if @revision.conversion_currency %>
+                    <td class="text-right">
+                      <%= @document.converted_value_for(f) %>
+                    </td>
+                    <% unless @revision.tax_exempt? %>
+                    <td class="text-right">
+                      <%= @document.converted_value_with_tax_for(f) %>
+                    </td>
+                    <% end %>
+                    <% end %>
                   </tr>
                   <%end %>
                 <% end %>
@@ -146,6 +167,16 @@
                   <th class="text-right">
                     <%= @document.total_with_tax %>
                   </th>
+                  <% end %>
+                  <% if @revision.conversion_currency %>
+                  <th class="text-right">
+                    <%= @document.converted_total %>
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    <%= @document.converted_total_with_tax %>
+                  </th>
+                  <% end %>
                   <% end %>
                 </tr>
               </tfoot>
@@ -163,6 +194,28 @@
                 </span>
               </div>
             </div>
+            <% if @revision.conversion_currency %>
+            <div class="clearfix"></div>
+            <div class="final-figure">
+              <div class="final-figure-title">
+                <p>CONVERTED AMOUNT</p>
+              </div>
+              <div class="final-figure-amount">
+                <span class="amount">
+                  <%= @document.converted_amount %>
+                </span>
+                <span class="currency">
+                  <%= @document.converted_currency_code %>
+                </span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="finale-figure">
+              <div class="conversion-rate">
+                1 <%= @document.currency_code %> = <%= @document.conversion_rate %> <%= @document.converted_currency_code %>
+              </div>
+            </div>
+            <% end %>
           </div>
         </div>
         <div class="btn-group"></div>

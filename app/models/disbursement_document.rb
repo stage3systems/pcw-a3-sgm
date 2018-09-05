@@ -90,16 +90,38 @@ class DisbursementDocument
     @revision.data["currency_code"]
   end
 
+  def conversion_rate
+    @revision.data["target_currency_rate"] || 1
+  end
+
   def total
     number_to_currency @revision.data['total'], unit: ""
+  end
+
+  def converted_total
+    number_to_currency convert(@revision.data['total']), unit: ""
   end
 
   def total_with_tax
     number_to_currency @revision.data['total_with_tax'], unit: ""
   end
 
+  def converted_total_with_tax
+    number_to_currency convert(@revision.data['total_with_tax']), unit: ""
+  end
+
   def amount
     @revision.tax_exempt? ? total : total_with_tax
+  end
+
+  def converted_amount
+    total_key = @revision.tax_exempt? ? 'total' : 'total_with_tax'
+    converted = convert(@revision.data[total_key])
+    number_to_currency converted, unit: ""
+  end
+
+  def converted_currency_code
+    @revision.conversion_currency.code rescue ''
   end
 
   def compute_wire_reference
@@ -115,6 +137,14 @@ class DisbursementDocument
 
   def value_with_tax_for(k)
     as_currency(@revision.values_with_tax[k])
+  end
+
+  def converted_value_for(k)
+    as_converted_currency(@revision.values[k])
+  end
+
+  def converted_value_with_tax_for(k)
+    as_converted_currency(@revision.values_with_tax[k])
   end
 
   def has_comment?(k)
@@ -416,6 +446,16 @@ class DisbursementDocument
 
   private
   def terms_and_conditions
+  end
+
+  def convert(n)
+    n.to_f*@revision.data["target_currency_rate"].to_f
+  end
+
+  def as_converted_currency(n)
+    n = convert(n)
+    unit = @revision.convertion_currency.unit rescue ''
+    number_to_currency(nan_to_zero(n), unit: unit)
   end
 
   def as_currency(n, unit: "")
