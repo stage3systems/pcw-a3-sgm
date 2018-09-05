@@ -27,7 +27,7 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def conversion_currency
-    currency_id = self.data["target_currency"] || Currency.find(self.data["target_currency"].to_i)
+    currency_id = self.data["target_currency"]
     Currency.find(currency_id) rescue nil
   end
 
