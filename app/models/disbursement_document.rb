@@ -280,6 +280,14 @@ class DisbursementDocument
         {style: :bold, value: "Account: 337-289-657"},
         {style: :bold, value: "Favour: AGENCIA MARITIMA NABSA S.A."}
       ]
+    when "mta"
+      [ {style: :bold, value: "Beneficiary: MTA Agencia Maritima Ltda."},
+        {style: :bold, value: "Bank: Santander Chile"},
+        {style: :bold, value: "Tax ID: 76.903.117-5"},
+        {style: :bold, value: "USD Account: 51002 93996"},
+        {style: :bold, value: "Swift: BSCHCLRM"},
+        {style: :bold, value: "mta@mtradeagents.com"}
+      ]
     when "marval"
       [  {style: :bold, value: "BENEFICIARY BANK: CITIBANK N.A."},
          {style: :bold, value: "666 5TH AVENUE, 7TH, FLOOR"},
