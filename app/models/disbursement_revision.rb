@@ -7,6 +7,29 @@ class DisbursementRevision < ActiveRecord::Base
            -> {order 'created_at DESC'},
            class_name: "PfdaView"
   after_save :schedule_sync
+  attr_accessor :target_currency
+  attr_accessor :target_currency_rate
+
+  def target_currency
+    self.data["target_currency"]
+  end
+
+  def target_currency=(value)
+    self.data["target_currency"] = value
+  end
+
+  def target_currency_rate
+    self.data["target_currency_rate"] || 1
+  end
+
+  def target_currency_rate=(value)
+    self.data["target_currency_rate"] = value || 1
+  end
+
+  def conversion_currency
+    currency_id = self.data["target_currency"]
+    Currency.find(currency_id) rescue nil
+  end
 
   def sbt_certified_display
     VesselsHelper.sbt_certified_display_from_string(self.data["vessel_sbt_certified"])

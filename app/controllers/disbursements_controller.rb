@@ -172,7 +172,8 @@ class DisbursementsController < ApplicationController
       :disbursement_id, :loadtime, :supplier_name, :supplier_id,
       :tax_exempt, :tugs_in, :tugs_out, :values, :values_with_tax,
       :cargo_type_id, :comments, :eta, :disabled,
-      :overriden, :voyage_number, :amount
+      :overriden, :voyage_number, :amount,
+      :target_currency, :target_currency_rate
     )
   end
 

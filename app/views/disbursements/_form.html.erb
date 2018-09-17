@@ -110,6 +110,12 @@
         <%= f.input_field :tax_exempt %>
       </div>
     </div>
+    <%= f.input :target_currency,
+        label: "Convert to Currency",
+        as: :select,
+        collection: Currency.all,
+        prompt: "No Currency Conversion" %>
+    <%= f.input :target_currency_rate, label: "Conversion Rate" %>
     </div>
     <div class="clearfix"></div>
     </div>
@@ -130,6 +136,8 @@
           <th>Supplier</th>
           <th>Amount (<%= @revision.data["currency_code"] %>)</th>
           <th class="tax_inc tax">Amount (<%= @revision.data["currency_code"] %>) Tax Included</th>
+          <th class="converted header">Converted Amount</th>
+          <th class="converted header tax_inc tax">Converted Amount Tax Included</th>
           <th>Disable</th>
         </tr>
       </thead>
@@ -181,6 +189,7 @@
               </div>
             </div>
           </td>
+          <td></td>
           <td><a id="add_named_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
           <% else %>
           <td class="form-inline">
@@ -201,8 +210,11 @@
           <td></td>
           <td></td>
           <th>TOTAL</th>
+          <th></th>
           <th class="total"></th>
           <th class="total_tax_inc tax"></th>
+          <th class="converted converted_total"></th>
+          <th class="converted converted_total_tax_inc tax"></th>
           <th></th>
         </tr>
       </tfoot>

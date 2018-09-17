@@ -122,7 +122,11 @@ class PdfDA < Prawn::Document
   end
 
   def table_column_widths
-    @revision.tax_exempt? ? [305, 218] : [174, 130, 219]
+    if @revision.conversion_currency
+      @revision.tax_exempt? ? [174, 130, 219] : [183, 80, 90, 80, 90]
+    else
+      @revision.tax_exempt? ? [305, 218] : [174, 130, 219]
+    end
   end
 
   def from_table
@@ -140,6 +144,10 @@ class PdfDA < Prawn::Document
       {content: "<b>Amount (#{@document.currency_code})</b>",
        align: :right},
       {content: "<b>Amount (#{@document.currency_code}) Including Taxes</b>",
+       align: :right},
+      {content: "<b>Amount (#{@document.converted_currency_code})</b>",
+       align: :right},
+      {content: "<b>Amount (#{@document.converted_currency_code}) Including Taxes</b>",
        align: :right}
     ]
   end
@@ -152,7 +160,9 @@ class PdfDA < Prawn::Document
     [
       desc,
       {content: @document.value_for(f), align: :right},
-      {content: @document.value_with_tax_for(f), align: :right}
+      {content: @document.value_with_tax_for(f), align: :right},
+      {content: @document.converted_value_for(f), align: :right},
+      {content: @document.converted_value_with_tax_for(f), align: :right}
     ]
   end
 
@@ -162,6 +172,10 @@ class PdfDA < Prawn::Document
       {content: make_bold(@document.total),
        align: :right},
       {content: "<b><font size=\"12\">#{@document.total_with_tax}</font></b>",
+       align: :right},
+      {content: make_bold(@document.converted_total),
+       align: :right},
+      {content: "<b><font size=\"12\">#{@document.converted_total_with_tax}</font></b>",
        align: :right}
     ]
   end
@@ -174,7 +188,13 @@ class PdfDA < Prawn::Document
     # totals
     services_data << services_table_footer
     # Remove tax included column if needed
-    services_data = services_data.map {|d| d.slice(0,2)} if @revision.tax_exempt?
+    services_data = services_data.map do |d|
+      [d[0], d[1],
+       (d[2] unless @revision.tax_exempt?),
+       (d[3] if @revision.conversion_currency),
+       (d[4] if @revision.conversion_currency and not @revision.tax_exempt?)
+      ].compact
+    end
     services_data
   end
 
@@ -200,27 +220,53 @@ class PdfDA < Prawn::Document
 
   def final_figure
     data = [
-      {
-        content: "<b><font-size=\"14\">ESTIMATED<br />AMOUNT</font></b>",
-        align: :right
-      },
-      {
-        content: "<b><font-size=\"24\">#{@document.amount}</font>"+
-                 "<font-size=\"12\">#{@document.currency_code}</font></b>",
-        align: :right,
-        valign: :center
-      }
+      [
+        ' ',
+        {
+          content: "<b><font-size=\"14\">ESTIMATED<br />AMOUNT</font></b>",
+          align: :right
+        },
+        {
+          content: "<b><font-size=\"24\">#{@document.amount}</font>"+
+                   "<font-size=\"12\">#{@document.currency_code}</font></b>",
+          align: :right,
+          valign: :center
+        }
+      ]
     ]
-    data.unshift(" ") unless @revision.tax_exempt?
-    table = make_table([data],
+    if @revision.conversion_currency
+      data.concat([
+        [
+          ' ',
+        {
+          content: "<b><font-size=\"14\">CONVERTED<br />AMOUNT</font></b>",
+          align: :right
+        },
+        {
+          content: "<b><font-size=\"24\">#{@document.converted_amount}</font>"+
+                   "<font-size=\"12\">#{@document.converted_currency_code}</font></b>",
+          align: :right,
+          valign: :center
+        }
+        ],
+        [' ', ' ',
+         "1 #{@document.currency_code} = #{@revision.data["target_currency_rate"]} #{@document.converted_currency_code}"
+        ]
+      ])
+    end
+    table = make_table(data,
                cell_style: {inline_format: true,
                             border_widths: NO_BORDER},
                header: false,
-               column_widths: table_column_widths) do |table|
-      row = table.row(0)
-      table.style(row.column(-1),
+               column_widths: [123, 200, 200]) do |table|
+      table.style(table.row(0).column(-1),
                   border_color: BLACK,
                   border_widths: FULL_BORDER)
+      if @revision.conversion_currency
+        table.style(table.row(1).column(-1),
+                    border_color: BLACK,
+                    border_widths: FULL_BORDER)
+      end
     end
     table.draw
   end

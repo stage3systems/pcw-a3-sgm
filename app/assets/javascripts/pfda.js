@@ -78,11 +78,13 @@ var rebuildTable = function(ctx) {
     $tr.append(supplierCell(ctx, s));
     $tr.append(amountCell(ctx, s));
     $tr.append(taxAmountCell(ctx, s));
+    $tr.append(convertedAmountCell(ctx, s));
+    $tr.append(convertedTaxAmountCell(ctx, s));
     $tr.append(disableCell(ctx, s));
     $tbody.append($tr);
   });
   setTimeout(function() {
-    displayTaxExempt();
+    handleColumnVisibility();
     updateTable(ctx);
     setupRequiredFieldsListeners(ctx);
     setupDisableListeners(ctx);
@@ -172,6 +174,19 @@ var updateTable = function(ctx) {
     ctx.estimate.tugs_out = parseInt($("input#disbursement_revision_tugs_out").val());
     ctx.estimate.loadtime = parseInt($("input#disbursement_revision_loadtime").val());
     ctx.estimate.days_alongside = parseFloat($("input#disbursement_revision_days_alongside").val());
+    ctx.estimate.target_currency = ctx.currencies[$("select#disbursement_revision_target_currency").val()];
+    ctx.estimate.target_currency_rate = parseFloat($("input#disbursement_revision_target_currency_rate").val());
+    var convertAmount = function() { return ""; };
+    if (ctx.estimate.target_currency) {
+      $("th.converted.header").html("Amount ("+ctx.estimate.target_currency.code+")");
+      $("th.converted.header.tax").html("Amount ("+ctx.estimate.target_currency.code+") Tax Included");
+      convertAmount = function(amount) {
+        return numberToCurrency(
+          parseFloat(amount)*ctx.estimate.target_currency_rate,
+          {unit: ctx.estimate.target_currency.symbol}
+        );
+      };
+    }
     parseCodes(ctx);
     compute(ctx);
     var n = ctx.services.length,
@@ -181,6 +196,10 @@ var updateTable = function(ctx) {
       $("td#service_"+key+" a").html(convert(ctx.values[key]));
       $("td#service_"+key+" a").attr("data-value", ctx.values[key]);
       $("td#service_with_tax_"+key).html(convert(ctx.values_with_tax[key]));
+      if (ctx.estimate.target_currency) {
+        $("td#converted_amount_"+key).html(convertAmount(ctx.values[key]));
+        $("td#converted_tax_amount_"+key).html(convertAmount(ctx.values_with_tax[key]));
+      }
       $('input[name="value_'+key+'"]').val(ctx.values[key]);
       $('input[name="value_with_tax_'+key+'"]').val(ctx.values_with_tax[key]);
       if ((key in ctx.overriden) && key.indexOf("EXTRAITEM") !== 0) {
@@ -198,6 +217,10 @@ var updateTable = function(ctx) {
     }
     $("th.total").html(convert(ctx.total));
     $("th.total_tax_inc").html(convert(ctx.totalTaxInc));
+    if (ctx.estimate.target_currency) {
+      $("th.converted_total").html(convertAmount(ctx.total));
+      $("th.converted_total_tax_inc").html(convertAmount(ctx.totalTaxInc));
+    }
     $("th span.editable_value").editable({
           display: function(value, sourceData) {
                       var key = $(this).attr("id").split("_")[1];
@@ -407,6 +430,18 @@ var taxAmountCell = function(ctx, s) {
   return $td;
 };
 
+var convertedAmountCell = function(ctx, s) {
+  var $td = $('<td class="converted"></td>');
+  $td.attr('id', 'converted_amount_'+s);
+  return $td;
+};
+
+var convertedTaxAmountCell = function(ctx, s) {
+  var $td = $('<td class="converted tax_inc tax"></td>');
+  $td.attr('id', 'converted_tax_amount_'+s);
+  return $td;
+};
+
 var disableCell = function(ctx, s) {
   var $td = $('<td></td>');
   if (!ctx.compulsory[s]) {
@@ -418,14 +453,25 @@ var disableCell = function(ctx, s) {
   return $td;
 };
 
-var displayTaxExempt = function() {
+var handleColumnVisibility = function() {
+  var currency = $("select#disbursement_revision_target_currency").val();
   var taxExempt = $("input#disbursement_revision_tax_exempt").is(':checked');
+  if (currency) {
+    $(".converted").show();
+  } else {
+    $(".converted").hide();
+  }
   if (taxExempt) {
     $(".tax").hide();
   } else {
     $(".tax").show();
   }
-};
+  if (!taxExempt && currency) {
+    $(".tax.converted").show();
+  } else {
+    $(".tax.converted").hide();
+  }
+}
 
 var setupDA = function(pfda, ctx) {
   var uuid = function() {
@@ -472,9 +518,17 @@ var setupDA = function(pfda, ctx) {
   };
 
   var handleTaxExempt = function() {
-    displayTaxExempt();
+    handleColumnVisibility();
     update();
   };
+
+  var handleTargetCurrency = function() {
+    handleColumnVisibility();
+    update();
+  }
+
+  $("select#disbursement_revision_target_currency").on("change", handleTargetCurrency);
+  $("input#disbursement_revision_target_currency_rate").on("change", handleTargetCurrency);
   $("input#disbursement_revision_cargo_qty").on("change", cleanCompute);
   $("input#disbursement_revision_tugs_in").on("change", cleanCompute);
   $("input#disbursement_revision_tugs_out").on("change", cleanCompute);
