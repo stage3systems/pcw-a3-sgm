@@ -1,6 +1,6 @@
 class Vessel < ActiveRecord::Base
   default_scope -> {order('name ASC')}
-  validates_presence_of :dwt, :grt, :loa, :name, :nrt
+  validates_presence_of :dwt, :grt, :loa, :beam, :name, :nrt
   has_many :disbursements
   belongs_to :tenant
 
@@ -21,6 +21,8 @@ class Vessel < ActiveRecord::Base
       "vessel_type" => self.maintype.to_s,
       "vessel_subtype" => self.subtype.to_s,
       "vessel_sbt_certified" => self.sbt_certified.to_s,
+      "vessel_beam" => self.beam.to_s,
+      "vessel_moulded_depth" => self.moulded_depth.to_s,
     })
   end
 
@@ -39,6 +41,8 @@ class Vessel < ActiveRecord::Base
     self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
     self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
     self.sbt_certified = data['sbtCertified'] if data['sbtCertified']
+    self.beam = data['beam'] if data['beam']
+    self.moulded_depth = data['mouldedDepth'] if data['mouldedDepth']
     self.imo_code = data['imoCode'] if data['imoCode']
     self.sbt_certified = data['sbtCertified']
   end

@@ -159,7 +159,7 @@ class DisbursementsController < ApplicationController
   private
   def disbursement_params
     params.require(:disbursement).permit(
-      :company_id, :dwt, :grt, :loa, :nrt, :sbt_certified,
+      :company_id, :dwt, :grt, :loa, :nrt, :sbt_certified, :beam, :moulded_depth,
       :port_id, :status_cd, :tbn, :terminal_id,
       :vessel_id, :tbn_template, :type_cd, :vessel_type, :vessel_subtype,
       :appointment_id, :nomination_id, :nomination_reference
