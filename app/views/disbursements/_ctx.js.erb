@@ -10,8 +10,8 @@ var ctx = {
     type: "<%= revision.data["vessel_type"] %>",
     subtype: "<%= revision.data["vessel_subtype"] %>",
     sbt_certified: <%= (revision.data["vessel_sbt_certified"] == "true") %>,
-    beam: <%= revision.data["vessel_beam"] %>,
-    moulded_depth: <%= revision.data["vessel_moulded_depth"] %>
+    beam: parseFloat(<%= revision.data["vessel_beam"] %>) === <%= revision.data["vessel_beam"] %> ? <%= revision.data["vessel_beam"] %> : null,
+    moulded_depth: parseFloat(<%= revision.data["vessel_moulded_depth"] %>) === <%= revision.data["vessel_moulded_depth"] %> ? <%= revision.data["vessel_moulded_depth"] %> : null
   },
   disbursement_type: "<%= revision.disbursement.type rescue "unknown" %>",
   estimate: {
