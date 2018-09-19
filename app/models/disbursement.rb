@@ -12,8 +12,8 @@ class Disbursement < ActiveRecord::Base
   validates_presence_of :type_cd, :port_id
   validates_presence_of :company_id, unless: "inquiry? or deleted?"
   validates_presence_of :vessel_id, :unless => :tbn?
-  validates_presence_of :dwt, :grt, :loa, :nrt, :beam, :if => :tbn?
-  validates_numericality_of :dwt, :grt, :nrt, :loa, :beam, :if => :tbn?
+  validates_presence_of :dwt, :grt, :loa, :nrt, :if => :tbn?
+  validates_numericality_of :dwt, :grt, :nrt, :loa, :if => :tbn?
   before_create :generate_publication_id
   after_create :create_initial_revision
 
