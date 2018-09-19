@@ -1,6 +1,6 @@
 class Vessel < ActiveRecord::Base
   default_scope -> {order('name ASC')}
-  validates_presence_of :dwt, :grt, :loa, :name, :nrt
+  validates_presence_of :dwt, :grt, :loa, :beam, :name, :nrt
   has_many :disbursements
   belongs_to :tenant
 
