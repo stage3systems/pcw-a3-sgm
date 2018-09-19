@@ -32,6 +32,6 @@ class VesselsController < CommonController
 
   private
   def safe_params
-    params.require(:vessel).permit(:dwt, :grt, :loa, :nrt, :name, :sbt_certified, :beam, :moulded_depth)
+    params.require(:vessel).permit(:dwt, :grt, :loa, :nrt, :name, :sbt_certified)
   end
 end
