@@ -406,6 +406,19 @@ class DisbursementDocument
       ]
     ]
 
+  elsif ["LUDERITZ", "WALVIS BAY"].member? @disbursement.port.name
+    [ 
+      {style: :bold, value: "BANKING DETAILS (NAD)"},
+        {value: "Account Holder: Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"},
+        {value: "Bank Name: First National Bank Namibia Ltd."},
+        {value: "Branch Name: Walvis Bay, Namibia"},
+        {value: "Branch Code: 28-21-72"},
+        {value: "Account Number: 55101754783"},
+        {value: "Type: Cheque Account"},
+        {value: "Swift Code: FIRNNANX"},
+        {value: "Correspondent Bank: Standard Chartered Bank, New York"}
+    ]
+
     else
       [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
