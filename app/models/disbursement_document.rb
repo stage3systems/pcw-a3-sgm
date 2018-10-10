@@ -469,6 +469,8 @@ class DisbursementDocument
         company = "Sturrock Shipping (Kenya) Ltd"
       elsif asian_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
+      elsif ["LUDERITZ", "WALVIS BAY"].member? @disbursement.port.name
+        company = "Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"  
       elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
       elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
