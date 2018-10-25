@@ -428,6 +428,10 @@ class DisbursementDocument
     end
   end
 
+  def abn
+    [{style: :bold, value: "ABN: 35 143148350"}, ""]
+  end
+
   def wire_reference
     [{style: :bold, value: "Reference: #{compute_wire_reference}"}, ""]
   end

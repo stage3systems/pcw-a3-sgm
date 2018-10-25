@@ -238,6 +238,9 @@
             <%= format_list(bank_details) %>
             <% end %>
             <%= format_list(@document.wire_reference) %>
+            <% if @disbursement.tenant.is_sgm? and @document.is_aus_or_png %>
+              <%= format_list(@document.abn) %>
+            <% end %>
             <%= format_list(@document.funding_disclaimer) %>
             <%= format_list(@document.freight_tax_disclaimer) %>
             <%= format_list(@document.tax_exempt_note) %>
