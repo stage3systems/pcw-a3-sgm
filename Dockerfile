@@ -28,6 +28,7 @@ COPY Rakefile ./
 COPY script script/
 COPY vendor vendor/
 COPY start_server.sh ./
+COPY backup.sh ./
 RUN mkdir -p pdfs
 RUN mkdir -p sheets
 RUN mkdir -p log
