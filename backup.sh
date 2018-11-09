@@ -1,5 +1,7 @@
 #! /bin/sh
 
+TARGET_BUCKET="a3-dumps"
+
 if [ -z "$ENVIRON" ]; then
     # Development
     export PCW_DB_HOST="db"
