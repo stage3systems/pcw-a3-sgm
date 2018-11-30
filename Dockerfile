@@ -29,6 +29,7 @@ COPY script script/
 COPY vendor vendor/
 COPY start_server.sh ./
 COPY start_job_queue.sh ./
+COPY rails_console.sh ./
 COPY backup.sh ./
 RUN mkdir -p pdfs
 RUN mkdir -p sheets
