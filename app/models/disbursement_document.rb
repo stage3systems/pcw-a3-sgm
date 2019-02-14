@@ -283,7 +283,7 @@ class DisbursementDocument
     when "mta"
       [ {style: :bold, value: "Beneficiary: MTA Agencia Maritima Ltda."},
         {style: :bold, value: "Bank: Santander Chile"},
-        {style: :bold, value: "Tax ID: 76.903.117-5"},
+        {style: :bold, value: "Tax ID: 76.902.117-5"},
         {style: :bold, value: "USD Account: 51002 93996"},
         {style: :bold, value: "Swift: BSCHCLRM"},
         {style: :bold, value: "mta@mtradeagents.com"}
