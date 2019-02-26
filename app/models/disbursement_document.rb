@@ -3,6 +3,7 @@ class DisbursementDocument
   include ActionView::Helpers::NumberHelper
   include DisbursementsHelper
   include ApplicationHelper
+  include PortsHelper
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
@@ -306,11 +307,12 @@ class DisbursementDocument
   end
 
   def sgm_bank_details
-    asian_ports = ["BANGKOK", "BONTANG", "CILACAP", "HAINAN STRAITS", "JAKARTA", "KOH SAMUI", "KOH SICHANG", "LAEM CHABANG", "LANQIAO", "MAP TA PHUT", "MEULABOH", "MUARA PANTAI", "PENGERANG", "PHUKET", "RAYONG", "RIZHAO", "RUWAIS", "SAMARINDA", "SEMARANG", "SHANGHAI", "SINGAPORE", "SRIRACHA", "SUNGAI PAKNING", "SURABAYA", "TIANJIN XIN GANG", "ZHOUSHAN", "YOSU", "BUSAN", "RAS TANURA", "KALIORANG", "MUARA SATUI", "MERAK", "BANG SAPHAN", "BUNATI", "KRABI", "TANJUNG BARA", "PADANG", "TABONEO", "TUBAN", "TANJUNG BUYUT", "TANJUNG KAMPEH"]
-
-    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND", "WELLINGTON", "TAURANGA"]
-
-    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+    asian_ports = get_asian_ports()
+    australian_ports = get_australian_ports()
+    png_ports = get_png_ports()
+    mozambique_ports = get_mozambique_ports()
+    tanzania_ports = get_tanzania_ports()
+    namibia_ports = get_namibia_ports()
 
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
@@ -341,7 +343,7 @@ class DisbursementDocument
           {value: "Swift Code: SCBLSGSG"}
         ]
       ]
-    elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+    elsif tanzania_ports.member? @disbursement.port.name
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Beneficiary Bank: Barclays Bank Tanzania Limited, TDFL Building Ohio Street, Dar Es Salaam, Tanzania"},
         {value: "Swift Code: BARCTZTZ"},
@@ -350,7 +352,7 @@ class DisbursementDocument
         {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
         {value: "Swift Code: CHASUS33"}
       ]
-    elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+    elsif mozambique_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "Banking Details (MZN)"},
           {value: "Account Holder: Sturrock Grindrod Maritime [Mozambique] Lda"},
           {value: "Bank: Standard Bank S.A.R.L"},
@@ -406,7 +408,7 @@ class DisbursementDocument
       ]
     ]
 
-  elsif ["LUDERITZ", "WALVIS BAY"].member? @disbursement.port.name
+  elsif namibia_ports.member? @disbursement.port.name
     [ 
       {style: :bold, value: "BANKING DETAILS (NAD)"},
         {value: "Account Holder: Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"},
@@ -450,13 +452,16 @@ class DisbursementDocument
   end
 
   def is_aus_or_png
-    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND"]
-    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+    australian_ports = get_australian_ports()
+    png_ports = get_png_ports()
     australian_ports.member? @disbursement.port.name or png_ports.member? @disbursement.port.name
   end
 
   def funding_disclaimer
-    asian_ports = ["BANGKOK", "BONTANG", "CILACAP", "HAINAN STRAITS", "JAKARTA", "KOH SAMUI", "KOH SICHANG", "LAEM CHABANG", "LANQIAO", "MAP TA PHUT", "MEULABOH", "MUARA PANTAI", "PENGERANG", "PHUKET", "RAYONG", "RIZHAO", "RUWAIS", "SAMARINDA", "SEMARANG", "SHANGHAI", "SINGAPORE", "SRIRACHA", "SUNGAI PAKNING", "SURABAYA", "TIANJIN XIN GANG", "ZHOUSHAN", "KRABI", "TANJUNG BARA", "PADANG", "TABONEO", "TUBAN", "TANJUNG BUYUT", "TANJUNG KAMPEH"]
+    asian_ports = get_asian_ports()
+    mozambique_ports = get_mozambique_ports()
+    namibia_ports = get_namibia_ports()
+    tanzania_ports = get_tanzania_ports()
     disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
       "Monson Agencies Australia take every care to ensure that the figures "+
@@ -469,11 +474,11 @@ class DisbursementDocument
         company = "Sturrock Shipping (Kenya) Ltd"
       elsif asian_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
-      elsif ["LUDERITZ", "WALVIS BAY"].member? @disbursement.port.name
+      elsif namibia_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"  
-      elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+      elsif mozambique_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
-      elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+      elsif tanzania_ports.member? @disbursement.port.name
         company = "Sturrock Flex Shipping Ltd"
       elsif is_aus_or_png
         company = "Sturrock Grindrod Maritime (Australia) Pty Ltd"
