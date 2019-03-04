@@ -223,13 +223,19 @@ class DisbursementDocument
     case @revision.tenant.customer_name
 
     when "mariteam"
-      [ {style: :bold, value: "Netherlands"},
+      [ 
+        {style: :bold, value: "By paying this proforma invoice and final invoice, the principal, or the payer, " +
+        "on behalf of the principal, declares that the seagoing ship in question is effectively " + 
+        "used for at least 70% for navigation on the high seas and that the seagoing ship " +
+        "is used entirely (100%) for commercial activities."},
+        {style: :bold_underline, value: "Netherlands"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
+        {style: :bold, value: "Bank: RABOBANK Rotterdam"},
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
         {style: :bold, value: "Swift/BIC: RABONL2U"},
         {style: :bold, value: ""},
-        {style: :bold, value: "Belgium"},
+        {style: :bold_underline, value: "Belgium"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
         {style: :bold, value: "Bank : BNP Paribas Fortis, Antwerpen, Londenstraat 6 - B-2000 ANTWERPEN"},
         {style: :bold, value: "Account No. : 001-4819039-58"},

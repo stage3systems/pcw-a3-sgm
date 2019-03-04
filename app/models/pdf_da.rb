@@ -97,6 +97,10 @@ class PdfDA < Prawn::Document
     with_font_size(5, v)
   end
 
+  def make_bold_underline(v)
+    "<b><u>#{v}</u></b>"
+  end
+
   def with_font_size(size, v)
     "<font-size=\"#{size}\">#{v}</font>"
   end
@@ -107,7 +111,8 @@ class PdfDA < Prawn::Document
        format_list(d,
                    method(:make_bold),
                    method(:make_small),
-                   "\n")]
+                   "\n",
+                   method(:make_bold_underline))]
     end
   end
 
@@ -311,7 +316,8 @@ class PdfDA < Prawn::Document
     format_list(data,
         method(:make_bold),
         method(:make_small),
-        "\n")
+        "\n",
+        method(:make_bold_underline))
   end
 
   def quick_render(formatted_data, use_draw_text = false, height = 0)
@@ -323,10 +329,22 @@ class PdfDA < Prawn::Document
   end
 
   def terms_and_conditions
-    text "\nDownload the full <link href=\""+
-         "#{@document.terms_url(@root_url)}"+
-         "\">Terms and Conditions</link>",
-         inline_format: true
+    if current_tenant.name.starts_with? "mariteam"
+
+      link_strings = "\nDownload our <link href=\""+
+      "/mariteam_agency_conditions.pdf"+
+      "\">Standard Port Agency Conditions</link>" + 
+      "\nDownload our <link href=\""+
+      "/mariteam_general_conditions.pdf"+
+      "\">General Conditions</link>"
+
+      text link_strings, inline_format: true
+    else
+      text "\nDownload the full <link href=\""+
+          "#{@document.terms_url(@root_url)}"+
+          "\">Terms and Conditions</link>",
+          inline_format: true
+    end
   end
 
 end
