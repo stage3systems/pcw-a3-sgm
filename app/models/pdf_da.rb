@@ -328,6 +328,10 @@ class PdfDA < Prawn::Document
     end
   end
 
+  def current_tenant
+    Tenant.find_by(id: @document.disbursement.tenant_id)
+  end
+
   def terms_and_conditions
     if current_tenant.name.starts_with? "mariteam"
 
