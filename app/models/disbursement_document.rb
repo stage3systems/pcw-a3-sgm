@@ -228,12 +228,14 @@ class DisbursementDocument
         "on behalf of the principal, declares that the seagoing ship in question is effectively " + 
         "used for at least 70% for navigation on the high seas and that the seagoing ship " +
         "is used entirely (100%) for commercial activities."},
+        {style: :bold, value: ""},
         {style: :bold_underline, value: "Netherlands"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
-        {style: :bold, value: "Bank: RABOBANK Rotterdam"},
+        {style: :bold, value: "Bank: RABOBANK, Blaak 333, 3011GB, Rotterdam"},
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
         {style: :bold, value: "Swift/BIC: RABONL2U"},
+        {style: :bold, value: "Reference: (Same reference as Belgium bank details)"},
         {style: :bold, value: ""},
         {style: :bold_underline, value: "Belgium"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},

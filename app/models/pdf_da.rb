@@ -336,10 +336,10 @@ class PdfDA < Prawn::Document
     if current_tenant.name.starts_with? "mariteam"
 
       link_strings = "\nDownload our <link href=\""+
-      "/mariteam_agency_conditions.pdf"+
+      "#{@root_url}/mariteam_agency_conditions.pdf"+
       "\">Standard Port Agency Conditions</link>" + 
       "\nDownload our <link href=\""+
-      "/mariteam_general_conditions.pdf"+
+      "#{@root_url}/mariteam_general_conditions.pdf"+
       "\">General Conditions</link>"
 
       text link_strings, inline_format: true
