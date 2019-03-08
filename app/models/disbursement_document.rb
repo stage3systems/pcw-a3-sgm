@@ -235,7 +235,7 @@ class DisbursementDocument
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
         {style: :bold, value: "Swift/BIC: RABONL2U"},
-        {style: :bold, value: "Reference: (Same reference as Belgium bank details)"},
+        {style: :bold, value: "Reference: #{compute_wire_reference}"},
         {style: :bold, value: ""},
         {style: :bold_underline, value: "Belgium"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
