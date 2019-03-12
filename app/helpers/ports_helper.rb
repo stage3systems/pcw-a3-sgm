@@ -13,7 +13,8 @@ module PortsHelper
         "RANONG",
         "SATTAHIP",
         "TANJUNG EMAS",
-        "TANJUNG INTAN"]
+        "TANJUNG INTAN",
+        "TANJUNG SABAU"]
     end
 
     def get_australian_ports()
