@@ -306,6 +306,16 @@ class DisbursementDocument
          {style: :bold, value: "BENEFICIARY ACCT NBR: 36893146"},
          {style: :bold, value: "BENEFICIARY FULL NAME: MARITIMA VALPARAISO CHILE SA."}
       ]
+    when "benline"
+      [  {style: :bold, value: "Bank: Westpac Banking Corporation"},
+         {style: :bold, value: "Bank Address: 743 Military Road, Mosman, New South Wales 2088, Australia"},
+         {style: :bold, value: "Swift Code: WPACAU2S"},
+         {style: :bold, value: "BSB No. 032097"},
+         {style: :bold, value: "A/C No. 425166"},
+         {style: :bold, value: "Currency: AUD"},
+         {style: :bold, value: "Beneficiary: Ben Line Agencies (Australia) Pty Ltd"},
+         {style: :bold, value: "Address: Building 1, Gateway Office Park 747 Lytton Road, Murarrie, QLD 4172, Australia"}
+      ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
