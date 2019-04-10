@@ -223,9 +223,9 @@ class DisbursementDocument
     case @revision.tenant.customer_name
 
     when "mariteam"
-      [ 
+      [
         {style: :bold, value: "By paying this proforma invoice and final invoice, the principal, or the payer, " +
-        "on behalf of the principal, declares that the seagoing ship in question is effectively " + 
+        "on behalf of the principal, declares that the seagoing ship in question is effectively " +
         "used for at least 70% for navigation on the high seas and that the seagoing ship " +
         "is used entirely (100%) for commercial activities."},
         {style: :bold, value: ""},
@@ -322,6 +322,10 @@ class DisbursementDocument
          {style: :bold, value: "Bank Code: 41 919"},
          {style: :bold, value: "IBAN: FR76 4191 9094 0101 5595 8729 196"},
          {style: :bold, value: "BIC: BNPARERXXXX"}
+      ]
+    when "fillettegreen"
+      [  {style: :bold, value: "BANKING DETAILS"},
+         {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
       ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
@@ -445,7 +449,7 @@ class DisbursementDocument
     ]
 
   elsif namibia_ports.member? @disbursement.port.name
-    [ 
+    [
       {style: :bold, value: "BANKING DETAILS (NAD)"},
         {value: "Account Holder: Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"},
         {value: "Bank Name: First National Bank Namibia Ltd."},
@@ -514,7 +518,7 @@ class DisbursementDocument
       elsif asian_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
       elsif namibia_ports.member? @disbursement.port.name
-        company = "Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"  
+        company = "Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"
       elsif mozambique_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
       elsif tanzania_ports.member? @disbursement.port.name
