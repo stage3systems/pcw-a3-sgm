@@ -338,6 +338,7 @@ class DisbursementDocument
     mozambique_ports = get_mozambique_ports()
     tanzania_ports = get_tanzania_ports()
     namibia_ports = get_namibia_ports()
+    thai_ports = get_thai_ports()
 
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
@@ -349,6 +350,16 @@ class DisbursementDocument
         {value: "Correspondent Bank: Deutsche Bank Trust Company Americas - New York"},
         {value: "Account No: 04096505"},
         {value: "Swift: BKTRUS 33"}
+      ]
+    elsif thai_ports.member? @disbursement.port.name
+      [ [ {style: :bold, value: "BANKING DETAILS (THB)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd"},
+          {value: "Bank Name: Bangkok Bank Public Company Limited"},
+          {value: "Bank Address: 333 Silom Road, Bangarak, Bangkok, 10500, Thailand"},
+          {value: "Branch: Sathorn"},
+          {value: "Account Number: 142-3-10246-4"},
+          {value: "BKKBTHBK"}
+        ]
       ]
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
@@ -487,6 +498,7 @@ class DisbursementDocument
     mozambique_ports = get_mozambique_ports()
     namibia_ports = get_namibia_ports()
     tanzania_ports = get_tanzania_ports()
+    thai_ports = get_thai_ports()
     disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
       "Monson Agencies Australia take every care to ensure that the figures "+
@@ -497,6 +509,8 @@ class DisbursementDocument
       company = "Sturrock Grindrod Maritime (Pty) Ltd"
       if @disbursement.port.name == "MOMBASA"
         company = "Sturrock Shipping (Kenya) Ltd"
+      elsif thai_ports.member? @disbursement.port.name
+        company = "Sturrock Grindrod Maritime (Thailand) Co., Ltd"
       elsif asian_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
       elsif namibia_ports.member? @disbursement.port.name

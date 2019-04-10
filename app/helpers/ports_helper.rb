@@ -1,5 +1,23 @@
 module PortsHelper
 
+    def get_thai_ports()
+        [
+            BANGKOK	
+            LAEM CHABANG	
+            MAP TA PHUT	
+            RAYONG	
+            SRIRACHA	
+            KOH SICHANG	
+            PHUKET	
+            KOH SAMUI	
+            KANTANG HARBOR	
+            RANONG	
+            BANG SAPHAN	
+            KRABI	
+            SATTAHIP
+        ]
+    end
+
     def get_asian_ports()
         ["BANGKOK", "BONTANG", "CILACAP", "HAINAN STRAITS", "JAKARTA", "KOH SAMUI", "KOH SICHANG", "LAEM CHABANG", "LANQIAO", "MAP TA PHUT", "MEULABOH", "MUARA PANTAI", "PENGERANG", "PHUKET", "RAYONG", "RIZHAO", "RUWAIS", "SAMARINDA", "SEMARANG", "SHANGHAI", "SINGAPORE", "SRIRACHA", "SUNGAI PAKNING", "SURABAYA", "TIANJIN XIN GANG", "ZHOUSHAN", "YOSU", "BUSAN", "RAS TANURA", "KALIORANG", "MUARA SATUI", "MERAK", "BANG SAPHAN", "BUNATI", "KRABI", "TANJUNG BARA", "PADANG", "TABONEO", "TUBAN", "TANJUNG BUYUT", "TANJUNG KAMPEH", "BALIKPAPAN",
         "BANJARMASIN",
