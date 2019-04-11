@@ -369,15 +369,31 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? @disbursement.port.name
-       [ {style: :bold, value: "BANKING DETAILS (THB)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd"},
-          {value: "Bank Name: Bangkok Bank Public Company Limited"},
-          {value: "Bank Address: 333 Silom Road, Bangarak, Bangkok, 10500, Thailand"},
-          {value: "Branch: Sathorn"},
-          {value: "Account Number: 142-3-10246-4"},
-          {value: "BKKBTHBK"}
+      #  [ {style: :bold, value: "BANKING DETAILS (THB)"},
+      #     {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd"},
+      #     {value: "Bank Name: Bangkok Bank Public Company Limited"},
+      #     {value: "Bank Address: 333 Silom Road, Bangarak, Bangkok, 10500, Thailand"},
+      #     {value: "Branch: Sathorn"},
+      #     {value: "Account Number: 142-3-10246-4"},
+      #     {value: "BKKBTHBK"}
+      #   ]
+      [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Bank: Standard Chartered"},
+          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
+          {value: "Bank Code: 7144"},
+          {value: "Account Number: 0106355465"},
+          {value: "Swift Code: SCBLSGSG"}
+        ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Bank: Standard Chartered"},
+          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
+          {value: "Bank Code: 7144"},
+          {value: "Account Number: 0104970324"},
+          {value: "Swift Code: SCBLSGSG"}
         ]
-      
+      ]
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
