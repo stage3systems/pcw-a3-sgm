@@ -2,19 +2,30 @@ module PortsHelper
 
     def get_thai_ports()
         [
-            BANGKOK	
-            LAEM CHABANG	
-            MAP TA PHUT	
-            RAYONG	
-            SRIRACHA	
-            KOH SICHANG	
-            PHUKET	
-            KOH SAMUI	
-            KANTANG HARBOR	
-            RANONG	
-            BANG SAPHAN	
-            KRABI	
-            SATTAHIP
+            "BANGKOK",	
+            "LAEM CHABANG",	
+            "MAP TA PHUT",	
+            "RAYONG",	
+            "SRIRACHA",	
+            "KOH SICHANG",	
+            "PHUKET",
+            "KOH SAMUI",
+            "KANTANG HARBOR",
+            "RANONG",
+            "BANG SAPHAN",
+            "KRABI",
+            "SATTAHIP"
+        ]
+    end
+
+    def get_madagascar_ports()
+        [
+            "ANTSIRANANA",
+            "MAHAJANGA",
+            "TOAMASINA",
+            "TAOLAGNARO",
+            "EHOALA",
+            "TOLIARA"
         ]
     end
 

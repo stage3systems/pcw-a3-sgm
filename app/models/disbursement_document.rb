@@ -323,6 +323,18 @@ class DisbursementDocument
          {style: :bold, value: "IBAN: FR76 4191 9094 0101 5595 8729 196"},
          {style: :bold, value: "BIC: BNPARERXXXX"}
       ]
+    when "mainport"
+      [  
+        {style: :bold, value: "OUR BANKING DETAILS:"},
+        {style: :bold, value: "Account name: Mainport Africa Shipping (Pty) Ltd"},
+        {style: :bold, value: "Bank: Nedbank"},
+        {style: :bold, value: "Branch: 303 Smith Street, Durban, 4001, South Africa"},
+        {style: :bold, value: "Branch code: 198765"},
+        {style: :bold, value: "Swift code: NEDSZAJJ"},
+        {style: :bold, value: "Account no: 1305 454 014 (ZAR account)"},
+        {style: :bold, value: "Account no: 7305 010 219 (USD account)"},
+        {style: :bold, value: "Account no: 7320 362 546 (EURO account)"}
+      ]
     when "fillettegreen"
       [  {style: :bold, value: "BANKING DETAILS"},
          {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
@@ -343,6 +355,7 @@ class DisbursementDocument
     tanzania_ports = get_tanzania_ports()
     namibia_ports = get_namibia_ports()
     thai_ports = get_thai_ports()
+    madagascar_ports = get_madagascar_ports()
 
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
@@ -356,7 +369,7 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? @disbursement.port.name
-      [ [ {style: :bold, value: "BANKING DETAILS (THB)"},
+       [ {style: :bold, value: "BANKING DETAILS (THB)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd"},
           {value: "Bank Name: Bangkok Bank Public Company Limited"},
           {value: "Bank Address: 333 Silom Road, Bangarak, Bangkok, 10500, Thailand"},
@@ -364,7 +377,7 @@ class DisbursementDocument
           {value: "Account Number: 142-3-10246-4"},
           {value: "BKKBTHBK"}
         ]
-      ]
+      
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
@@ -381,6 +394,35 @@ class DisbursementDocument
           {value: "Bank Code: 7144"},
           {value: "Account Number: 0104970324"},
           {value: "Swift Code: SCBLSGSG"}
+        ]
+      ]
+    elsif madagascar_ports.member? @disbursement.port.name
+      [ [ {style: :bold, value: "BANKING DETAILS (EURO)"},
+          {value: "Account Holder: Sturrock Flex Shipping LTD"},
+          {value: "Bank: B.M.O.I (Banque Malgache de l'Ocean Indien)"},
+          {value: "Bank address: Angle Lt. Emmanuel Berard & Bd Joffre, Toamasina 501 - Madagascar"},
+          {value: "IBAN Code: MG460000400010 021247 01101 58"},
+          {value: "Account Number: 00010 021247 011 01 58"},
+          {value: "Swift code: BMOIMGMG"},
+          {value: "BIC: BMOIMGMGXXX"},
+          {value: "Intermediary Bank details:	Natixis , Paris"},
+          {value: "IBAN: FR76 3000 7999 9906 0205 5000 070"},
+          {value: "Swift code: NATXFRPPXXX"},
+          {value: "Address: Avenue Pierre Mendes, 75013, France"}
+        ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "BANKING DETAILS: (USD)"},
+          {value: "Account Holder: Sturrock Flex Shipping LTD"},
+          {value: "Bank: B.M.O.I (Banque Malgache de l'Ocean Indien)"},
+          {value: "Bank address: Angle Lt. Emmanuel Berard & Bd Joffre, Toamasina 501 - Madagascar"},
+          {value: "IBAN Code: MG460000400010 021247 01102 55"},
+          {value: "Account Number: 00010 021247 011 02 55"},
+          {value: "Swift code: BMOIMGMG"},
+          {value: "BIC: BMOIMGMGXXX"},
+          {value: "Intermediary Bank details: Natixis , Paris"},
+          {value: "IBAN: FR76 3000 7999 9906 0205 5000 070"},
+          {value: "Swift code: NATXFRPPXXX"},
+          {value: "Address: Avenue Pierre Mendes, 75013, France"}
         ]
       ]
     elsif tanzania_ports.member? @disbursement.port.name
@@ -503,6 +545,7 @@ class DisbursementDocument
     namibia_ports = get_namibia_ports()
     tanzania_ports = get_tanzania_ports()
     thai_ports = get_thai_ports()
+    madagascar_ports = get_madagascar_ports()
     disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
       "Monson Agencies Australia take every care to ensure that the figures "+
@@ -522,6 +565,8 @@ class DisbursementDocument
       elsif mozambique_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
       elsif tanzania_ports.member? @disbursement.port.name
+        company = "Sturrock Flex Shipping Ltd"
+      elsif madagascar_ports.member? @disbursement.port.name
         company = "Sturrock Flex Shipping Ltd"
       elsif is_aus_or_png
         company = "Sturrock Grindrod Maritime (Australia) Pty Ltd"
