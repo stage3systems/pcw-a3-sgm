@@ -53,16 +53,16 @@
                              'VLOC CAPESIZE', 'CAPESIZE', 'PANAMAX',
                              'HANDYMAX', 'SUPRAMAX', 'HANDYSIZE'],
                 prompt: 'Select TBN template...' %>
-    <%= f.input :vessel_type, label: "Vessel Type", 
+    <%= f.input :vessel_type, label: "Vessel Type",
           prompt: '',
           collection: VesselType.order("vessel_type").select("DISTINCT(vessel_type)").map { |vt| vt.vessel_type } %>
     <%= f.input :vessel_subtype,
-      label: 'Vessel Subtype', 
+      label: 'Vessel Subtype',
       collection: [] %>
     <%= f.input :grt, label: 'GRT' %>
     <%= f.input :nrt, label: 'NRT' %>
     <%= f.input :dwt, label: 'DWT' %>
-    <%= f.input :loa, label: 'LOA' %>
+    <%= f.input :loa, label: 'LOA (metres)' %>
     <%= f.input :sbt_certified, label: "SBT Certified", as: :boolean %>
   </div>
   <input type="hidden" id="disbursement_nomination_id"
