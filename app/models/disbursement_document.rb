@@ -323,6 +323,22 @@ class DisbursementDocument
          {style: :bold, value: "IBAN: FR76 4191 9094 0101 5595 8729 196"},
          {style: :bold, value: "BIC: BNPARERXXXX"}
       ]
+    when "seaforth"
+      [  
+        {style: :bold, value: "Banking Details (USD):"},
+        {style: :bold, value: "Bank Account No.: 0100000430425"},
+        {style: :bold, value: "Beneficiary Name: Seaforth Shipping Kenya Limited"},
+        {style: :bold, value: "Bank Name: Stanbic Bank Kenya Limited"},
+        {style: :bold, value: "Branch: Digo Road, Mombasa, Kenya"},
+        {style: :bold, value: "Swift Code: SBICKENX"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "Through Correspondent Bank:"},
+        {style: :bold, value: "Bank Account No.: 04096505"},
+        {style: :bold, value: "Beneficiary Name: Stanbic Bank Kenya Limited"},
+        {style: :bold, value: "Bank Name: Deutsche Bank Trust Company"},
+        {style: :bold, value: "Branch: New York, 280 Park Ave, New York, NY 10017, USA"},
+        {style: :bold, value: "Swift Code: BKTRUS33"}
+      ]
     when "mainport"
       [  
         {style: :bold, value: "OUR BANKING DETAILS:"},
