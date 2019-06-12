@@ -84,9 +84,7 @@ class PdfDA < Prawn::Document
     bounding_box([0, HEIGHT-MARGIN],
                  width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
-      horizontal_dominant_logo_width = 120
-      vertical_dominant_logo_width = 60
-      image logo_path, fit: [horizontal_dominant_logo_width, HEADER_HEIGHT], position: :right, vposition: :center
+      image logo_path, fit: [120, 69], position: :right, vposition: :center
     end
   end
 
