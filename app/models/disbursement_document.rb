@@ -292,6 +292,10 @@ class DisbursementDocument
         {style: :bold, value: "USD Account no: 53680111"},
         {style: :bold, value: "USD IBAN: GB04 BARC 2051 0153 6801 11"}
       ]
+    when "wallem" 
+      [
+        {style: :bold, value: ""}
+      ]
     when "sgm", "sturrockgrindrod"
       sgm_bank_details
     when "nabsa"
