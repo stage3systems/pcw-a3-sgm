@@ -2,11 +2,11 @@ default: &default
   auth0:
     connection: 'rocket'
     client:
-      secret: "LiwfV5x88uyQznxol-HreVwNBQWV4O3XqmsdHPgu3_vAVzMQzxfFfgSpfWPmXtro"
-      id: "fY9rqnpItIgY7JyINtcsdCbSMG7rjl5B"
-  domain: "stage3dev.auth0.com"
+      secret: "MTk2696loCTKnGC3r3eY_uZoMqByOU0WV6IB310oA1FtyIN78YvTn6gpywe38C8c"
+      id: "aG4MaVo0u33LihkxarfQ9Ys5qUQPvlI0"
+  domain: "stage3demo.auth0.com"
   tenant: "stage3"
-  url: "https://identity-dev.stage3systems.net"
+  url: "https://identity-stg.stage3systems.com"
   user: "sedna"
   password: "arrabella"
   clear_token_on_logout: false
