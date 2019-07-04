@@ -16,4 +16,7 @@
 
 public/assets_dev
 config/database.yml
+config/database-dev.yml
+config/identity-dev.yml
+config/identity-stg.yml
 config/identity.yml
