@@ -624,8 +624,10 @@ class DisbursementDocument
       ", as agents only. <br>" +
       "All business transacted is undertaken subject to our Standard Trading Conditions of which a copy is available on request. All due care has been used to calculate costs for this vessel." +
       "Any additional/amended costs will be invoiced on Supplementary DA.<br>"
+    elsif @revision.tenant.is_biehl?
+      "This is only an estimate, based on current applicable tariffs. Any additional costs incurred for this vessel will be accounted for in our Final D/A."
     else
-      "Disclaimer: this is only an estimate and any additional costs "+
+      "Disclaimer: This is only an estimate and any additional costs "+
       "incurred for this vessel will be accounted for in our Final D/A."
     end
     [ disclaimer, ""]
