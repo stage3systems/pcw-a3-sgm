@@ -430,19 +430,19 @@ class DisbursementDocument
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
+          {value: "Bank: Standard Chartered Bank (Singapore) Limited"},
           {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
+          {value: "Bank Code: 9496"},
           {value: "Account Number: 0106355465"},
-          {value: "Swift Code: SCBLSGSG"}
+          {value: "Swift Code: SCBLSG22XXX"}
         ],
         [ {style: :bold, value: "BANKING DETAILS (USD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
+          {value: "Bank: Standard Chartered Bank (Singapore) Limited"},
           {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
+          {value: "Bank Code: 9496"},
           {value: "Account Number: 0104970324"},
-          {value: "Swift Code: SCBLSGSG"}
+          {value: "Swift Code: SCBLSG22XXX"}
         ]
       ]
     elsif madagascar_ports.member? @disbursement.port.name
