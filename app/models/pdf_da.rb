@@ -224,7 +224,26 @@ class PdfDA < Prawn::Document
     table.draw
   end
 
+  def get_amount_font_size(amount)
+    return 12 if amount >= 1000000000
+    return 18 if amount >= 1000000
+    return 24
+  end
+
+  def get_currency_font_size(amount)
+    return 6 if amount >= 1000000000
+    return 9 if amount >= 1000000
+    return 12
+  end
+
   def final_figure
+
+    amount_font_size = get_amount_font_size(@document.amount_float.to_f)
+    currency_font_size = get_currency_font_size(@document.amount_float.to_f)
+
+    converted_amount_font_size = get_amount_font_size(@document.converted_amount_float.to_f)
+    converted_currency_font_size = get_currency_font_size(@document.converted_amount_float.to_f)
+
     data = [
       [
         ' ',
@@ -233,8 +252,8 @@ class PdfDA < Prawn::Document
           align: :right
         },
         {
-          content: "<b><font-size=\"24\">#{@document.amount}</font>"+
-                   "<font-size=\"12\">#{@document.currency_code}</font></b>",
+          content: "<b><font-size=\"#{amount_font_size}\">#{@document.amount}</font>"+
+                   "<font-size=\"#{currency_font_size}\">#{@document.currency_code}</font></b>",
           align: :right,
           valign: :center
         }
@@ -249,8 +268,8 @@ class PdfDA < Prawn::Document
           align: :right
         },
         {
-          content: "<b><font-size=\"24\">#{@document.converted_amount}</font>"+
-                   "<font-size=\"12\">#{@document.converted_currency_code}</font></b>",
+          content: "<b><font-size=\"#{converted_amount_font_size}\">#{@document.converted_amount}</font>"+
+                   "<font-size=\"#{converted_currency_font_size}\">#{@document.converted_currency_code}</font></b>",
           align: :right,
           valign: :center
         }

@@ -111,6 +111,14 @@ class DisbursementDocument
     number_to_currency convert(@revision.data['total_with_tax']), unit: ""
   end
 
+  def amount_float
+    @revision.tax_exempt? ? @revision.data['total'] : @revision.data['total_with_tax']
+  end
+
+  def converted_amount_float
+    convert(amount_float)
+  end
+
   def amount
     @revision.tax_exempt? ? total : total_with_tax
   end
