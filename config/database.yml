@@ -13,7 +13,15 @@ production:
   <<: *default
 
 development:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  database: pcw2
+  host: postgresql
+  port: 5432
+  pool: 10
+  username: pcw
+  password: pcw
+  timeout: 5000
 
 test:
   <<: *default
