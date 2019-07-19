@@ -37,7 +37,7 @@ RUN mkdir -p log
 
 
 # Download and extract the GeoCity db
-ADD http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz ./
+ADD http://static.stage3systems.com/pcw/GeoLiteCity.dat.gz ./
 RUN gunzip GeoLiteCity.dat.gz
 
 RUN RAILS_ENV=production bundle exec rake assets:precompile
