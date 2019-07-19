@@ -1,4 +1,4 @@
-restore-dump: pcw.stg.sql
+restore-dump:
 	@docker-compose run pcw psql -U postgres -h db -f cycle_db.sql
 	@docker-compose run pcw psql -U postgres -h db pcw -f pcw.stg.sql
 
@@ -16,3 +16,9 @@ GeoLiteCity.dat:
 
 t: GeoLiteCity.dat
 	@docker-compose run pcw ./wait-for-it.sh db:5432 -- ./run_tests.sh
+
+docker-shell:
+	@docker-compose exec pcw bash
+
+ruby-shell:
+	@docker-compose exec pcw ./rails_console.sh
