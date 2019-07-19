@@ -11,7 +11,7 @@ dev:
 	@docker-compose up
 
 GeoLiteCity.dat:
-	@curl -O http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+	@curl -O http://static.stage3systems.com/pcw/GeoLiteCity.dat.gz
 	@gunzip GeoLiteCity.dat.gz
 
 t: GeoLiteCity.dat
