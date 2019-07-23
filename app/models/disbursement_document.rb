@@ -410,31 +410,15 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? @disbursement.port.name
-      #  [ {style: :bold, value: "BANKING DETAILS (THB)"},
-      #     {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd"},
-      #     {value: "Bank Name: Bangkok Bank Public Company Limited"},
-      #     {value: "Bank Address: 333 Silom Road, Bangarak, Bangkok, 10500, Thailand"},
-      #     {value: "Branch: Sathorn"},
-      #     {value: "Account Number: 142-3-10246-4"},
-      #     {value: "BKKBTHBK"}
-      #   ]
-      [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
-          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
-          {value: "Account Number: 0106355465"},
-          {value: "Swift Code: SCBLSGSG"}
-        ],
-        [ {style: :bold, value: "BANKING DETAILS (USD)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
-          {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
-          {value: "Account Number: 0104970324"},
-          {value: "Swift Code: SCBLSGSG"}
+       [ {style: :bold, value: "BANKING DETAILS (THB)"},
+          {value: "Beneficiary Name: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Beneficiary Address: 46A Tras Street #02-46A Singapore 078985"},
+          {value: "Bank Name: DBS Bank Ltd"},
+          {value: "Bank Address: 12 Marina Boulevard, DBS Asia Central, Marina Bay Financial Centre Tower 3, Singapore 018982"},
+          {value: "Bank Code: 7171"},
+          {value: "Account Number: 0003-037876-01-6"},
+          {value: "Swift Code: DBSSSGSG"}
         ]
-      ]
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
