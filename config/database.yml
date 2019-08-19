@@ -1,27 +1,19 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  database: pce
-  host: pce-prd-default.cefvztdkizng.us-west-2.rds.amazonaws.com
+  database: pcw
+  host: <%= ENV['PCW_DB_HOST'] || 'db' %>
   port: 5432
   pool: 10
-  username: pce
-  password: MKJqsTJ6v54q556c
+  username: <%= ENV['PCW_DB_USER'] || 'postgres' %>
+  password: <%= ENV['PCW_DB_PASSWORD'] || nil %>
   timeout: 5000
 
 production:
   <<: *default
 
 development:
-  adapter: postgresql
-  encoding: unicode
-  database: pcw2
-  host: postgresql
-  port: 5432
-  pool: 10
-  username: pcw
-  password: pcw
-  timeout: 5000
+  <<: *default
 
 test:
   <<: *default

@@ -2,26 +2,19 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.6.14
+-- Dumped by pg_dump version 11.4 (Debian 11.4-1.pgdg90+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+SET row_security = off;
 
 --
 -- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
@@ -37,17 +30,15 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: activity_codes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: activity_codes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE activity_codes (
+CREATE TABLE public.activity_codes (
     id integer NOT NULL,
     code character varying,
     name character varying,
@@ -62,7 +53,7 @@ CREATE TABLE activity_codes (
 -- Name: activity_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE activity_codes_id_seq
+CREATE SEQUENCE public.activity_codes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -74,14 +65,14 @@ CREATE SEQUENCE activity_codes_id_seq
 -- Name: activity_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE activity_codes_id_seq OWNED BY activity_codes.id;
+ALTER SEQUENCE public.activity_codes_id_seq OWNED BY public.activity_codes.id;
 
 
 --
--- Name: cargo_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: cargo_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE cargo_types (
+CREATE TABLE public.cargo_types (
     id integer NOT NULL,
     remote_id integer,
     maintype character varying(255),
@@ -99,7 +90,7 @@ CREATE TABLE cargo_types (
 -- Name: cargo_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE cargo_types_id_seq
+CREATE SEQUENCE public.cargo_types_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -111,14 +102,14 @@ CREATE SEQUENCE cargo_types_id_seq
 -- Name: cargo_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE cargo_types_id_seq OWNED BY cargo_types.id;
+ALTER SEQUENCE public.cargo_types_id_seq OWNED BY public.cargo_types.id;
 
 
 --
--- Name: companies; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE companies (
+CREATE TABLE public.companies (
     id integer NOT NULL,
     name character varying(255),
     email character varying(255),
@@ -127,7 +118,8 @@ CREATE TABLE companies (
     remote_id integer,
     prefunding_type character varying(255),
     prefunding_percent integer,
-    tenant_id integer
+    tenant_id integer,
+    is_supplier boolean
 );
 
 
@@ -135,7 +127,7 @@ CREATE TABLE companies (
 -- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE companies_id_seq
+CREATE SEQUENCE public.companies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -147,14 +139,14 @@ CREATE SEQUENCE companies_id_seq
 -- Name: companies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE companies_id_seq OWNED BY companies.id;
+ALTER SEQUENCE public.companies_id_seq OWNED BY public.companies.id;
 
 
 --
--- Name: configurations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: configurations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE configurations (
+CREATE TABLE public.configurations (
     id integer NOT NULL,
     company_name character varying(255),
     company_address1 character varying(255),
@@ -176,7 +168,7 @@ CREATE TABLE configurations (
 -- Name: configurations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE configurations_id_seq
+CREATE SEQUENCE public.configurations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -188,14 +180,14 @@ CREATE SEQUENCE configurations_id_seq
 -- Name: configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE configurations_id_seq OWNED BY configurations.id;
+ALTER SEQUENCE public.configurations_id_seq OWNED BY public.configurations.id;
 
 
 --
--- Name: currencies; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: currencies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE currencies (
+CREATE TABLE public.currencies (
     id integer NOT NULL,
     name character varying(255),
     code character varying(255),
@@ -209,7 +201,7 @@ CREATE TABLE currencies (
 -- Name: currencies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE currencies_id_seq
+CREATE SEQUENCE public.currencies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -221,14 +213,14 @@ CREATE SEQUENCE currencies_id_seq
 -- Name: currencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
+ALTER SEQUENCE public.currencies_id_seq OWNED BY public.currencies.id;
 
 
 --
--- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE delayed_jobs (
+CREATE TABLE public.delayed_jobs (
     id integer NOT NULL,
     priority integer DEFAULT 0 NOT NULL,
     attempts integer DEFAULT 0 NOT NULL,
@@ -248,7 +240,7 @@ CREATE TABLE delayed_jobs (
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE delayed_jobs_id_seq
+CREATE SEQUENCE public.delayed_jobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -260,22 +252,22 @@ CREATE SEQUENCE delayed_jobs_id_seq
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
+ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
 
 
 --
--- Name: disbursement_revisions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursement_revisions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE disbursement_revisions (
+CREATE TABLE public.disbursement_revisions (
     id integer NOT NULL,
     disbursement_id integer,
-    data hstore,
-    fields hstore,
-    descriptions hstore,
-    "values" hstore,
-    values_with_tax hstore,
-    codes hstore,
+    data public.hstore,
+    fields public.hstore,
+    descriptions public.hstore,
+    "values" public.hstore,
+    values_with_tax public.hstore,
+    codes public.hstore,
     tax_exempt boolean DEFAULT false,
     number integer,
     cargo_qty integer DEFAULT 0,
@@ -287,20 +279,22 @@ CREATE TABLE disbursement_revisions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     cargo_type_id integer,
-    comments hstore,
+    comments public.hstore,
     eta date,
-    compulsory hstore,
-    overriden hstore,
-    disabled hstore,
+    compulsory public.hstore,
+    overriden public.hstore,
+    disabled public.hstore,
     user_id integer,
     anonymous_views integer DEFAULT 0,
     pdf_views integer DEFAULT 0,
     voyage_number character varying(255),
     amount numeric,
     currency_symbol character varying(255),
-    hints hstore,
-    activity_codes hstore,
-    tenant_id integer
+    hints public.hstore,
+    activity_codes public.hstore,
+    tenant_id integer,
+    supplier_id public.hstore,
+    supplier_name public.hstore
 );
 
 
@@ -308,7 +302,7 @@ CREATE TABLE disbursement_revisions (
 -- Name: disbursement_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE disbursement_revisions_id_seq
+CREATE SEQUENCE public.disbursement_revisions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -320,14 +314,14 @@ CREATE SEQUENCE disbursement_revisions_id_seq
 -- Name: disbursement_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE disbursement_revisions_id_seq OWNED BY disbursement_revisions.id;
+ALTER SEQUENCE public.disbursement_revisions_id_seq OWNED BY public.disbursement_revisions.id;
 
 
 --
--- Name: disbursements; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursements; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE disbursements (
+CREATE TABLE public.disbursements (
     id integer NOT NULL,
     port_id integer,
     vessel_id integer,
@@ -359,7 +353,7 @@ CREATE TABLE disbursements (
 -- Name: disbursements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE disbursements_id_seq
+CREATE SEQUENCE public.disbursements_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -371,22 +365,22 @@ CREATE SEQUENCE disbursements_id_seq
 -- Name: disbursements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE disbursements_id_seq OWNED BY disbursements.id;
+ALTER SEQUENCE public.disbursements_id_seq OWNED BY public.disbursements.id;
 
 
 --
--- Name: estimate_revisions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: estimate_revisions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE estimate_revisions (
+CREATE TABLE public.estimate_revisions (
     id integer NOT NULL,
     estimate_id integer,
-    data hstore,
-    fields hstore,
-    descriptions hstore,
-    "values" hstore,
-    values_with_tax hstore,
-    codes hstore,
+    data public.hstore,
+    fields public.hstore,
+    descriptions public.hstore,
+    "values" public.hstore,
+    values_with_tax public.hstore,
+    codes public.hstore,
     number integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -402,7 +396,7 @@ CREATE TABLE estimate_revisions (
 -- Name: estimate_revisions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE estimate_revisions_id_seq
+CREATE SEQUENCE public.estimate_revisions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -414,14 +408,14 @@ CREATE SEQUENCE estimate_revisions_id_seq
 -- Name: estimate_revisions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE estimate_revisions_id_seq OWNED BY estimate_revisions.id;
+ALTER SEQUENCE public.estimate_revisions_id_seq OWNED BY public.estimate_revisions.id;
 
 
 --
--- Name: estimates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: estimates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE estimates (
+CREATE TABLE public.estimates (
     id integer NOT NULL,
     port_id integer,
     vessel_id integer,
@@ -436,7 +430,7 @@ CREATE TABLE estimates (
 -- Name: estimates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE estimates_id_seq
+CREATE SEQUENCE public.estimates_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -448,14 +442,14 @@ CREATE SEQUENCE estimates_id_seq
 -- Name: estimates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE estimates_id_seq OWNED BY estimates.id;
+ALTER SEQUENCE public.estimates_id_seq OWNED BY public.estimates.id;
 
 
 --
--- Name: offices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: offices; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE offices (
+CREATE TABLE public.offices (
     id integer NOT NULL,
     name character varying(255),
     address_1 character varying(255),
@@ -475,7 +469,7 @@ CREATE TABLE offices (
 -- Name: offices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE offices_id_seq
+CREATE SEQUENCE public.offices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -487,14 +481,14 @@ CREATE SEQUENCE offices_id_seq
 -- Name: offices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE offices_id_seq OWNED BY offices.id;
+ALTER SEQUENCE public.offices_id_seq OWNED BY public.offices.id;
 
 
 --
--- Name: offices_ports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: offices_ports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE offices_ports (
+CREATE TABLE public.offices_ports (
     id integer NOT NULL,
     office_id integer,
     port_id integer,
@@ -506,7 +500,7 @@ CREATE TABLE offices_ports (
 -- Name: offices_ports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE offices_ports_id_seq
+CREATE SEQUENCE public.offices_ports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -518,14 +512,14 @@ CREATE SEQUENCE offices_ports_id_seq
 -- Name: offices_ports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE offices_ports_id_seq OWNED BY offices_ports.id;
+ALTER SEQUENCE public.offices_ports_id_seq OWNED BY public.offices_ports.id;
 
 
 --
--- Name: pfda_views; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pfda_views; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pfda_views (
+CREATE TABLE public.pfda_views (
     id integer NOT NULL,
     user_agent text,
     browser character varying(255),
@@ -543,7 +537,7 @@ CREATE TABLE pfda_views (
 -- Name: pfda_views_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pfda_views_id_seq
+CREATE SEQUENCE public.pfda_views_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -555,14 +549,14 @@ CREATE SEQUENCE pfda_views_id_seq
 -- Name: pfda_views_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pfda_views_id_seq OWNED BY pfda_views.id;
+ALTER SEQUENCE public.pfda_views_id_seq OWNED BY public.pfda_views.id;
 
 
 --
--- Name: ports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ports (
+CREATE TABLE public.ports (
     id integer NOT NULL,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
@@ -574,7 +568,7 @@ CREATE TABLE ports (
     terminals_count integer DEFAULT 0,
     tariffs_count integer DEFAULT 0,
     remote_id integer,
-    metadata hstore,
+    metadata public.hstore,
     tenant_id integer
 );
 
@@ -583,7 +577,7 @@ CREATE TABLE ports (
 -- Name: ports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE ports_id_seq
+CREATE SEQUENCE public.ports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -595,23 +589,23 @@ CREATE SEQUENCE ports_id_seq
 -- Name: ports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE ports_id_seq OWNED BY ports.id;
+ALTER SEQUENCE public.ports_id_seq OWNED BY public.ports.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying(255) NOT NULL
 );
 
 
 --
--- Name: service_updates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: service_updates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE service_updates (
+CREATE TABLE public.service_updates (
     id integer NOT NULL,
     service_id integer,
     user_id integer,
@@ -629,7 +623,7 @@ CREATE TABLE service_updates (
 -- Name: service_updates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE service_updates_id_seq
+CREATE SEQUENCE public.service_updates_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -641,14 +635,14 @@ CREATE SEQUENCE service_updates_id_seq
 -- Name: service_updates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE service_updates_id_seq OWNED BY service_updates.id;
+ALTER SEQUENCE public.service_updates_id_seq OWNED BY public.service_updates.id;
 
 
 --
--- Name: services; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: services; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE services (
+CREATE TABLE public.services (
     id integer NOT NULL,
     port_id integer,
     terminal_id integer,
@@ -662,7 +656,9 @@ CREATE TABLE services (
     document character varying(255),
     compulsory boolean DEFAULT true,
     activity_code_id integer,
-    tenant_id integer
+    tenant_id integer,
+    company_id integer,
+    disabled boolean DEFAULT false
 );
 
 
@@ -670,7 +666,7 @@ CREATE TABLE services (
 -- Name: services_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE services_id_seq
+CREATE SEQUENCE public.services_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -682,14 +678,14 @@ CREATE SEQUENCE services_id_seq
 -- Name: services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE services_id_seq OWNED BY services.id;
+ALTER SEQUENCE public.services_id_seq OWNED BY public.services.id;
 
 
 --
--- Name: tariffs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE tariffs (
+CREATE TABLE public.tariffs (
     id integer NOT NULL,
     name character varying(255),
     document character varying(255),
@@ -708,7 +704,7 @@ CREATE TABLE tariffs (
 -- Name: tariffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE tariffs_id_seq
+CREATE SEQUENCE public.tariffs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -720,14 +716,14 @@ CREATE SEQUENCE tariffs_id_seq
 -- Name: tariffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tariffs_id_seq OWNED BY tariffs.id;
+ALTER SEQUENCE public.tariffs_id_seq OWNED BY public.tariffs.id;
 
 
 --
--- Name: taxes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: taxes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE taxes (
+CREATE TABLE public.taxes (
     id integer NOT NULL,
     name character varying(255),
     rate numeric,
@@ -741,7 +737,7 @@ CREATE TABLE taxes (
 -- Name: taxes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE taxes_id_seq
+CREATE SEQUENCE public.taxes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -753,14 +749,14 @@ CREATE SEQUENCE taxes_id_seq
 -- Name: taxes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE taxes_id_seq OWNED BY taxes.id;
+ALTER SEQUENCE public.taxes_id_seq OWNED BY public.taxes.id;
 
 
 --
--- Name: tenants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: tenants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE tenants (
+CREATE TABLE public.tenants (
     id integer NOT NULL,
     name character varying,
     display character varying,
@@ -784,7 +780,7 @@ CREATE TABLE tenants (
 -- Name: tenants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE tenants_id_seq
+CREATE SEQUENCE public.tenants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -796,21 +792,21 @@ CREATE SEQUENCE tenants_id_seq
 -- Name: tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tenants_id_seq OWNED BY tenants.id;
+ALTER SEQUENCE public.tenants_id_seq OWNED BY public.tenants.id;
 
 
 --
--- Name: terminals; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: terminals; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE terminals (
+CREATE TABLE public.terminals (
     id integer NOT NULL,
     port_id integer,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     remote_id integer,
-    metadata hstore,
+    metadata public.hstore,
     tenant_id integer
 );
 
@@ -819,7 +815,7 @@ CREATE TABLE terminals (
 -- Name: terminals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE terminals_id_seq
+CREATE SEQUENCE public.terminals_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -831,14 +827,14 @@ CREATE SEQUENCE terminals_id_seq
 -- Name: terminals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE terminals_id_seq OWNED BY terminals.id;
+ALTER SEQUENCE public.terminals_id_seq OWNED BY public.terminals.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE users (
+CREATE TABLE public.users (
     id integer NOT NULL,
     email character varying(255) DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying(255) DEFAULT ''::character varying NOT NULL,
@@ -861,7 +857,8 @@ CREATE TABLE users (
     remote_id integer,
     deleted boolean DEFAULT false,
     rocket_id integer,
-    tenant_id integer
+    tenant_id integer,
+    auth0_id character varying
 );
 
 
@@ -869,7 +866,7 @@ CREATE TABLE users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE users_id_seq
+CREATE SEQUENCE public.users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -881,14 +878,47 @@ CREATE SEQUENCE users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: vessels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: vessel_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE vessels (
+CREATE TABLE public.vessel_types (
+    id integer NOT NULL,
+    remote_id integer,
+    vessel_type character varying,
+    vessel_subtype character varying,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: vessel_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.vessel_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vessel_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.vessel_types_id_seq OWNED BY public.vessel_types.id;
+
+
+--
+-- Name: vessels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.vessels (
     id integer NOT NULL,
     name character varying(255),
     loa numeric,
@@ -910,7 +940,7 @@ CREATE TABLE vessels (
 -- Name: vessels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE vessels_id_seq
+CREATE SEQUENCE public.vessels_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -922,380 +952,395 @@ CREATE SEQUENCE vessels_id_seq
 -- Name: vessels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE vessels_id_seq OWNED BY vessels.id;
+ALTER SEQUENCE public.vessels_id_seq OWNED BY public.vessels.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: activity_codes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY activity_codes ALTER COLUMN id SET DEFAULT nextval('activity_codes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cargo_types ALTER COLUMN id SET DEFAULT nextval('cargo_types_id_seq'::regclass);
+ALTER TABLE ONLY public.activity_codes ALTER COLUMN id SET DEFAULT nextval('public.activity_codes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: cargo_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY configurations ALTER COLUMN id SET DEFAULT nextval('configurations_id_seq'::regclass);
+ALTER TABLE ONLY public.cargo_types ALTER COLUMN id SET DEFAULT nextval('public.cargo_types_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: companies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY currencies ALTER COLUMN id SET DEFAULT nextval('currencies_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_id_seq'::regclass);
+ALTER TABLE ONLY public.companies ALTER COLUMN id SET DEFAULT nextval('public.companies_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY disbursement_revisions ALTER COLUMN id SET DEFAULT nextval('disbursement_revisions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY disbursements ALTER COLUMN id SET DEFAULT nextval('disbursements_id_seq'::regclass);
+ALTER TABLE ONLY public.configurations ALTER COLUMN id SET DEFAULT nextval('public.configurations_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: currencies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY estimate_revisions ALTER COLUMN id SET DEFAULT nextval('estimate_revisions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY estimates ALTER COLUMN id SET DEFAULT nextval('estimates_id_seq'::regclass);
+ALTER TABLE ONLY public.currencies ALTER COLUMN id SET DEFAULT nextval('public.currencies_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY offices ALTER COLUMN id SET DEFAULT nextval('offices_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY offices_ports ALTER COLUMN id SET DEFAULT nextval('offices_ports_id_seq'::regclass);
+ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public.delayed_jobs_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: disbursement_revisions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pfda_views ALTER COLUMN id SET DEFAULT nextval('pfda_views_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY ports ALTER COLUMN id SET DEFAULT nextval('ports_id_seq'::regclass);
+ALTER TABLE ONLY public.disbursement_revisions ALTER COLUMN id SET DEFAULT nextval('public.disbursement_revisions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: disbursements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY service_updates ALTER COLUMN id SET DEFAULT nextval('service_updates_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY services ALTER COLUMN id SET DEFAULT nextval('services_id_seq'::regclass);
+ALTER TABLE ONLY public.disbursements ALTER COLUMN id SET DEFAULT nextval('public.disbursements_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: estimate_revisions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tariffs ALTER COLUMN id SET DEFAULT nextval('tariffs_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY taxes ALTER COLUMN id SET DEFAULT nextval('taxes_id_seq'::regclass);
+ALTER TABLE ONLY public.estimate_revisions ALTER COLUMN id SET DEFAULT nextval('public.estimate_revisions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: estimates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tenants ALTER COLUMN id SET DEFAULT nextval('tenants_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY terminals ALTER COLUMN id SET DEFAULT nextval('terminals_id_seq'::regclass);
+ALTER TABLE ONLY public.estimates ALTER COLUMN id SET DEFAULT nextval('public.estimates_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: offices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY vessels ALTER COLUMN id SET DEFAULT nextval('vessels_id_seq'::regclass);
+ALTER TABLE ONLY public.offices ALTER COLUMN id SET DEFAULT nextval('public.offices_id_seq'::regclass);
 
 
 --
--- Name: activity_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: offices_ports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY activity_codes
+ALTER TABLE ONLY public.offices_ports ALTER COLUMN id SET DEFAULT nextval('public.offices_ports_id_seq'::regclass);
+
+
+--
+-- Name: pfda_views id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pfda_views ALTER COLUMN id SET DEFAULT nextval('public.pfda_views_id_seq'::regclass);
+
+
+--
+-- Name: ports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ports ALTER COLUMN id SET DEFAULT nextval('public.ports_id_seq'::regclass);
+
+
+--
+-- Name: service_updates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.service_updates ALTER COLUMN id SET DEFAULT nextval('public.service_updates_id_seq'::regclass);
+
+
+--
+-- Name: services id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.services ALTER COLUMN id SET DEFAULT nextval('public.services_id_seq'::regclass);
+
+
+--
+-- Name: tariffs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tariffs ALTER COLUMN id SET DEFAULT nextval('public.tariffs_id_seq'::regclass);
+
+
+--
+-- Name: taxes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.taxes ALTER COLUMN id SET DEFAULT nextval('public.taxes_id_seq'::regclass);
+
+
+--
+-- Name: tenants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenants ALTER COLUMN id SET DEFAULT nextval('public.tenants_id_seq'::regclass);
+
+
+--
+-- Name: terminals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.terminals ALTER COLUMN id SET DEFAULT nextval('public.terminals_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: vessel_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.vessel_types ALTER COLUMN id SET DEFAULT nextval('public.vessel_types_id_seq'::regclass);
+
+
+--
+-- Name: vessels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.vessels ALTER COLUMN id SET DEFAULT nextval('public.vessels_id_seq'::regclass);
+
+
+--
+-- Name: activity_codes activity_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.activity_codes
     ADD CONSTRAINT activity_codes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: cargo_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: cargo_types cargo_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY cargo_types
+ALTER TABLE ONLY public.cargo_types
     ADD CONSTRAINT cargo_types_pkey PRIMARY KEY (id);
 
 
 --
--- Name: companies_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY companies
+ALTER TABLE ONLY public.companies
     ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
 
 
 --
--- Name: configurations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: configurations configurations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY configurations
+ALTER TABLE ONLY public.configurations
     ADD CONSTRAINT configurations_pkey PRIMARY KEY (id);
 
 
 --
--- Name: currencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: currencies currencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY currencies
+ALTER TABLE ONLY public.currencies
     ADD CONSTRAINT currencies_pkey PRIMARY KEY (id);
 
 
 --
--- Name: delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: delayed_jobs delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs
+ALTER TABLE ONLY public.delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
 
 
 --
--- Name: disbursement_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursement_revisions disbursement_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY disbursement_revisions
+ALTER TABLE ONLY public.disbursement_revisions
     ADD CONSTRAINT disbursement_revisions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: disbursements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: disbursements disbursements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY disbursements
+ALTER TABLE ONLY public.disbursements
     ADD CONSTRAINT disbursements_pkey PRIMARY KEY (id);
 
 
 --
--- Name: estimate_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: estimate_revisions estimate_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY estimate_revisions
+ALTER TABLE ONLY public.estimate_revisions
     ADD CONSTRAINT estimate_revisions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: estimates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: estimates estimates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY estimates
+ALTER TABLE ONLY public.estimates
     ADD CONSTRAINT estimates_pkey PRIMARY KEY (id);
 
 
 --
--- Name: offices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: offices offices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY offices
+ALTER TABLE ONLY public.offices
     ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
 
 
 --
--- Name: offices_ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: offices_ports offices_ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY offices_ports
+ALTER TABLE ONLY public.offices_ports
     ADD CONSTRAINT offices_ports_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pfda_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pfda_views pfda_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pfda_views
+ALTER TABLE ONLY public.pfda_views
     ADD CONSTRAINT pfda_views_pkey PRIMARY KEY (id);
 
 
 --
--- Name: ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: ports ports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ports
+ALTER TABLE ONLY public.ports
     ADD CONSTRAINT ports_pkey PRIMARY KEY (id);
 
 
 --
--- Name: service_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: service_updates service_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY service_updates
+ALTER TABLE ONLY public.service_updates
     ADD CONSTRAINT service_updates_pkey PRIMARY KEY (id);
 
 
 --
--- Name: services_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: services services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY services
+ALTER TABLE ONLY public.services
     ADD CONSTRAINT services_pkey PRIMARY KEY (id);
 
 
 --
--- Name: tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: tariffs tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tariffs
+ALTER TABLE ONLY public.tariffs
     ADD CONSTRAINT tariffs_pkey PRIMARY KEY (id);
 
 
 --
--- Name: taxes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: taxes taxes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxes
+ALTER TABLE ONLY public.taxes
     ADD CONSTRAINT taxes_pkey PRIMARY KEY (id);
 
 
 --
--- Name: tenants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: tenants tenants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tenants
+ALTER TABLE ONLY public.tenants
     ADD CONSTRAINT tenants_pkey PRIMARY KEY (id);
 
 
 --
--- Name: terminals_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: terminals terminals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY terminals
+ALTER TABLE ONLY public.terminals
     ADD CONSTRAINT terminals_pkey PRIMARY KEY (id);
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --
--- Name: vessels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: vessel_types vessel_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY vessels
+ALTER TABLE ONLY public.vessel_types
+    ADD CONSTRAINT vessel_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vessels vessels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.vessels
     ADD CONSTRAINT vessels_pkey PRIMARY KEY (id);
 
 
 --
--- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at);
-
-
---
--- Name: index_services_on_activity_code_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_services_on_activity_code_id ON services USING btree (activity_code_id);
+CREATE INDEX delayed_jobs_priority ON public.delayed_jobs USING btree (priority, run_at);
 
 
 --
--- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_services_on_activity_code_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
-
-
---
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+CREATE INDEX index_services_on_activity_code_id ON public.services USING btree (activity_code_id);
 
 
 --
--- Name: fk_rails_e798075302; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY services
-    ADD CONSTRAINT fk_rails_e798075302 FOREIGN KEY (activity_code_id) REFERENCES activity_codes(id);
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
+
+
+--
+-- Name: services fk_rails_e798075302; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.services
+    ADD CONSTRAINT fk_rails_e798075302 FOREIGN KEY (activity_code_id) REFERENCES public.activity_codes(id);
 
 
 --
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20130116125348');
 
@@ -1474,3 +1519,16 @@ INSERT INTO schema_migrations (version) VALUES ('20160704072219');
 INSERT INTO schema_migrations (version) VALUES ('20171025180000');
 
 INSERT INTO schema_migrations (version) VALUES ('20171125002900');
+
+INSERT INTO schema_migrations (version) VALUES ('20171201140000');
+
+INSERT INTO schema_migrations (version) VALUES ('20171204110000');
+
+INSERT INTO schema_migrations (version) VALUES ('20171205150000');
+
+INSERT INTO schema_migrations (version) VALUES ('20171222195804');
+
+INSERT INTO schema_migrations (version) VALUES ('20180125113825');
+
+INSERT INTO schema_migrations (version) VALUES ('20180615044550');
+

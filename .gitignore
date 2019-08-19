@@ -14,6 +14,16 @@
 /log/*.log
 /tmp
 
+GeoLiteCity.dat
+
+pdfs/*
+sheets/*
+pcw.stg.sql
+coverage
+
+.env
+.s3_tmp_data
+
 public/assets_dev
 config/database-dev.yml
 config/identity-dev.yml

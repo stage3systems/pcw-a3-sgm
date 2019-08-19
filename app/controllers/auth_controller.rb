@@ -1,11 +1,4 @@
 class AuthController < ApplicationController
-  def check
-    user = get_user() rescue nil
-    user = { name: user[:db].full_name,
-             identity_name: user[:identity][:username] } if user
-    render json: {user: user}
-  end
-
   def register
     ret = begin
       user = get_user()
@@ -22,12 +15,11 @@ class AuthController < ApplicationController
   end
 
   def login
-    cfg = Rails.application.config.x.identity
+    cfg = Rails.application.config.x.auth0
     @domain = cfg["domain"]
-    @client_id = cfg["auth0"]["client"]["id"]
+    @client_id = cfg["client_id"]
     @tenant = current_tenant.name
-    @connection = cfg["auth0"]["connection"]
-    @identity_url = cfg["url"]
+    @connection = cfg["connection"]
     if browser_valid?
       render layout: "auth"
     else
@@ -36,29 +28,57 @@ class AuthController < ApplicationController
   end
 
   def logout
+    cfg = Rails.application.config.x.auth0
+    @domain = cfg["domain"]
+    @client_id = cfg["client_id"]
+    @connection = cfg["connection"]
     session[:token] = nil
-    cfg = Rails.application.config.x.identity
-    @identity_url = cfg["url"]
-    @clear_token_on_logout = cfg["clear_token_on_logout"]
     render layout: "auth"
   end
 
   private
-  def client_secret
-    @client_secret ||= Base64::urlsafe_decode64(
-      Rails.application.config.x.identity["auth0"]["client"]["secret"])
-  end
+	def jwks_hash
+		@jwks_hash ||= compute_jwks_hash
+	end
+
+	def compute_jwks_hash
+    jwks_raw = Net::HTTP.get URI("https://#{Rails.application.config.x.auth0['domain']}/.well-known/jwks.json")
+    jwks_keys = Array(JSON.parse(jwks_raw)['keys'])
+    Hash[
+      jwks_keys
+      .map do |k|
+        [
+          k['kid'],
+          OpenSSL::X509::Certificate.new(
+            Base64.decode64(k['x5c'].first)
+          ).public_key
+        ]
+      end
+    ]
+	end
 
   def get_user
-    token = JWT.decode(params[:token], client_secret).first rescue nil
+    auth0 = Rails.application.config.x.auth0
+    token = JWT.decode(params[:token], nil, true,
+                       algorithm: 'RS256',
+                       iss: "https://#{auth0['domain']}/", verify_iss: true,
+                       aud: auth0['client_id'], verify_aud: true) do |header|
+			jwks_hash()[header['kid']]
+    end.first rescue nil
     return nil unless token
-    identity_id = (token["sub"].split('|')[1]).to_i
-    identity_user = IdentityApi.new.get_user(identity_id)
-    return nil unless identity_user
+    auth0_id = token["sub"]
     user = User.where(tenant_id: current_tenant.id,
-                      rocket_id: identity_id, deleted: false).first rescue nil
-    return nil unless user
-    return {db: user, identity: identity_user, token: token}
+                      auth0_id: auth0_id, deleted: false).first rescue nil
+    return {db: user, token: token} if user
+    rocket_id = (token["sub"].split('|')[1]).to_i
+    user = User.where(tenant_id: current_tenant.id,
+                      rocket_id: rocket_id, deleted: false).first rescue nil
+    if user
+      user.auth0_id = auth0_id
+      user.save
+      logger.info "Migrated user #{user.full_name} (#{auth0_id})"
+      {db: user, token: token}
+    end
   end
 
   def browser_valid?
