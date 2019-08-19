@@ -23,3 +23,9 @@ coverage
 
 .env
 .s3_tmp_data
+
+public/assets_dev
+config/database-dev.yml
+config/identity-dev.yml
+config/identity-stg.yml
+config/identity.yml

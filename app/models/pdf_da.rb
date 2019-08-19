@@ -66,7 +66,7 @@ class PdfDA < Prawn::Document
   end
 
   def title(title, subtitle=nil)
-    title_size = @disbursement.tenant.is_sgm?  ? 16 : 20
+    title_size = 16
     text title,
          size: title_size, style: :bold,
          align: :left, valign: :center
@@ -84,8 +84,9 @@ class PdfDA < Prawn::Document
     bounding_box([0, HEIGHT-MARGIN],
                  width: USABLE_WIDTH, height: HEADER_HEIGHT) do
       title(@document.title, @document.subtitle)
-      logo_width = @disbursement.tenant.is_sgm?  ? 120 : 60
-      image logo_path, width: logo_width, position: :right, vposition: :center
+      horizontal_dominant_logo_width = 120
+      vertical_dominant_logo_width = 60
+      image logo_path, fit: [120, 69], position: :right, vposition: :center
     end
   end
 
@@ -95,6 +96,10 @@ class PdfDA < Prawn::Document
 
   def make_small(v)
     with_font_size(5, v)
+  end
+
+  def make_bold_underline(v)
+    "<b><u>#{v}</u></b>"
   end
 
   def with_font_size(size, v)
@@ -107,7 +112,8 @@ class PdfDA < Prawn::Document
        format_list(d,
                    method(:make_bold),
                    method(:make_small),
-                   "\n")]
+                   "\n",
+                   method(:make_bold_underline))]
     end
   end
 
@@ -218,7 +224,26 @@ class PdfDA < Prawn::Document
     table.draw
   end
 
+  def get_amount_font_size(amount)
+    return 12 if amount >= 1000000000
+    return 18 if amount >= 1000000
+    return 24
+  end
+
+  def get_currency_font_size(amount)
+    return 6 if amount >= 1000000000
+    return 9 if amount >= 1000000
+    return 12
+  end
+
   def final_figure
+
+    amount_font_size = get_amount_font_size(@document.amount_float.to_f)
+    currency_font_size = get_currency_font_size(@document.amount_float.to_f)
+
+    converted_amount_font_size = get_amount_font_size(@document.converted_amount_float.to_f)
+    converted_currency_font_size = get_currency_font_size(@document.converted_amount_float.to_f)
+
     data = [
       [
         ' ',
@@ -227,8 +252,8 @@ class PdfDA < Prawn::Document
           align: :right
         },
         {
-          content: "<b><font-size=\"24\">#{@document.amount}</font>"+
-                   "<font-size=\"12\">#{@document.currency_code}</font></b>",
+          content: "<b><font-size=\"#{amount_font_size}\">#{@document.amount}</font>"+
+                   "<font-size=\"#{currency_font_size}\">#{@document.currency_code}</font></b>",
           align: :right,
           valign: :center
         }
@@ -243,8 +268,8 @@ class PdfDA < Prawn::Document
           align: :right
         },
         {
-          content: "<b><font-size=\"24\">#{@document.converted_amount}</font>"+
-                   "<font-size=\"12\">#{@document.converted_currency_code}</font></b>",
+          content: "<b><font-size=\"#{converted_amount_font_size}\">#{@document.converted_amount}</font>"+
+                   "<font-size=\"#{converted_currency_font_size}\">#{@document.converted_currency_code}</font></b>",
           align: :right,
           valign: :center
         }
@@ -311,7 +336,8 @@ class PdfDA < Prawn::Document
     format_list(data,
         method(:make_bold),
         method(:make_small),
-        "\n")
+        "\n",
+        method(:make_bold_underline))
   end
 
   def quick_render(formatted_data, use_draw_text = false, height = 0)
@@ -322,11 +348,27 @@ class PdfDA < Prawn::Document
     end
   end
 
+  def current_tenant
+    Tenant.find_by(id: @document.disbursement.tenant_id)
+  end
+
   def terms_and_conditions
-    text "\nDownload the full <link href=\""+
-         "#{@document.terms_url(@root_url)}"+
-         "\">Terms and Conditions</link>",
-         inline_format: true
+    if current_tenant.name.starts_with? "mariteam"
+
+      link_strings = "\nDownload our <link href=\""+
+      "#{@root_url}/mariteam_agency_conditions.pdf"+
+      "\">Standard Port Agency Conditions</link>" + 
+      "\nDownload our <link href=\""+
+      "#{@root_url}/mariteam_general_conditions.pdf"+
+      "\">General Conditions</link>"
+
+      text link_strings, inline_format: true
+    else
+      text "\nDownload the full <link href=\""+
+          "#{@document.terms_url(@root_url)}"+
+          "\">Terms and Conditions</link>",
+          inline_format: true
+    end
   end
 
 end

@@ -267,7 +267,7 @@ var updateTable = function(ctx) {
                 ctx.data[dataKey] = undefined;
                 updateTable(ctx);
               }
-            } 
+            }
           });
         }
       }, 0);
@@ -593,7 +593,8 @@ var setupDA = function(pfda, ctx) {
     altFormat: "yy-mm-dd"
   });
   $('input#extra_item').keypress(function(event) { return event.keyCode != 13; });
-  $("input#eta_picker").datepicker(
-    "setDate", new Date($("input#disbursement_revision_eta").val()));
+  var date = new Date($("input#disbursement_revision_eta").val());
+  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+  $("input#eta_picker").datepicker("setDate", date);
   handleTaxExempt();
 };

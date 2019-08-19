@@ -3,6 +3,7 @@ class DisbursementDocument
   include ActionView::Helpers::NumberHelper
   include DisbursementsHelper
   include ApplicationHelper
+  include PortsHelper
 
   def initialize(disbursement, revision=nil)
     @disbursement = disbursement
@@ -108,6 +109,14 @@ class DisbursementDocument
 
   def converted_total_with_tax
     number_to_currency convert(@revision.data['total_with_tax']), unit: ""
+  end
+
+  def amount_float
+    @revision.tax_exempt? ? @revision.data['total'] : @revision.data['total_with_tax']
+  end
+
+  def converted_amount_float
+    convert(amount_float)
   end
 
   def amount
@@ -222,13 +231,21 @@ class DisbursementDocument
     case @revision.tenant.customer_name
 
     when "mariteam"
-      [ {style: :bold, value: "Netherlands"},
+      [
+        {style: :bold, value: "By paying this proforma invoice and final invoice, the principal, or the payer, " +
+        "on behalf of the principal, declares that the seagoing ship in question is effectively " +
+        "used for at least 70% for navigation on the high seas and that the seagoing ship " +
+        "is used entirely (100%) for commercial activities."},
+        {style: :bold, value: ""},
+        {style: :bold_underline, value: "Netherlands"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
+        {style: :bold, value: "Bank: RABOBANK, Blaak 333, 3011GB, Rotterdam"},
         {style: :bold, value: "Account number: 1207.51.836"},
         {style: :bold, value: "IBAN: NL50 RABO 01207 51 836"},
         {style: :bold, value: "Swift/BIC: RABONL2U"},
+        {style: :bold, value: "Reference: #{compute_wire_reference}"},
         {style: :bold, value: ""},
-        {style: :bold, value: "Belgium"},
+        {style: :bold_underline, value: "Belgium"},
         {style: :bold, value: "Account name: MariTeam Shipping Agencies"},
         {style: :bold, value: "Bank : BNP Paribas Fortis, Antwerpen, Londenstraat 6 - B-2000 ANTWERPEN"},
         {style: :bold, value: "Account No. : 001-4819039-58"},
@@ -270,6 +287,27 @@ class DisbursementDocument
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
       ]
+    when "normac" 
+      [
+        {style: :bold, value: "Beneficiary: Normac Shipping Limited"},
+        {style: :bold, value: "Bank: Barclays Bank Plc"},
+        {style: :bold, value: "Branch: Lord Street, Liverpool, U.K"},
+        {style: :bold, value: "Sort Code: 20-51-01"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "GBP Account no: 50115479"},
+        {style: :bold, value: "GBP IBAN: GB04 BARC 2051 0150 1154 79"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "USD Account no: 53680111"},
+        {style: :bold, value: "USD IBAN: GB04 BARC 2051 0153 6801 11"}
+      ]
+    when "wallem"
+      [
+        {style: :bold, value: ""}
+      ]
+    when "wallemgroup"
+      [
+        {style: :bold, value: ""}
+      ]
     when "sgm", "sturrockgrindrod"
       sgm_bank_details
     when "nabsa"
@@ -283,7 +321,7 @@ class DisbursementDocument
     when "mta"
       [ {style: :bold, value: "Beneficiary: MTA Agencia Maritima Ltda."},
         {style: :bold, value: "Bank: Santander Chile"},
-        {style: :bold, value: "Tax ID: 76.903.117-5"},
+        {style: :bold, value: "Tax ID: 76.902.117-5"},
         {style: :bold, value: "USD Account: 51002 93996"},
         {style: :bold, value: "Swift: BSCHCLRM"},
         {style: :bold, value: "mta@mtradeagents.com"}
@@ -297,6 +335,55 @@ class DisbursementDocument
          {style: :bold, value: "BENEFICIARY ACCT NBR: 36893146"},
          {style: :bold, value: "BENEFICIARY FULL NAME: MARITIMA VALPARAISO CHILE SA."}
       ]
+    when "benline"
+      [  {style: :bold, value: "Bank: Westpac Banking Corporation"},
+         {style: :bold, value: "Bank Address: 743 Military Road, Mosman, New South Wales 2088, Australia"},
+         {style: :bold, value: "Swift Code: WPACAU2S"},
+         {style: :bold, value: "BSB No. 032097"},
+         {style: :bold, value: "A/C No. 425166"},
+         {style: :bold, value: "Currency: AUD"},
+         {style: :bold, value: "Beneficiary: Ben Line Agencies (Australia) Pty Ltd"},
+         {style: :bold, value: "Address: Building 1, Gateway Office Park 747 Lytton Road, Murarrie, QLD 4172, Australia"}
+      ]
+    when "gmc"
+      [  {style: :bold, value: "OUR BANKING DETAILS:"},
+         {style: :bold, value: "Bank: BNP PARIBAS"},
+         {style: :bold, value: "Bank Code: 41 919"},
+         {style: :bold, value: "IBAN: FR76 4191 9094 0101 5595 8729 196"},
+         {style: :bold, value: "BIC: BNPARERXXXX"}
+      ]
+    when "seaforth"
+      [  
+        {style: :bold, value: "Banking Details (USD):"},
+        {style: :bold, value: "Bank Account No.: 0100000430425"},
+        {style: :bold, value: "Beneficiary Name: Seaforth Shipping Kenya Limited"},
+        {style: :bold, value: "Bank Name: Stanbic Bank Kenya Limited"},
+        {style: :bold, value: "Branch: Digo Road, Mombasa, Kenya"},
+        {style: :bold, value: "Swift Code: SBICKENX"},
+        {style: :bold, value: ""},
+        {style: :bold, value: "Through Correspondent Bank:"},
+        {style: :bold, value: "Bank Account No.: 04096505"},
+        {style: :bold, value: "Beneficiary Name: Stanbic Bank Kenya Limited"},
+        {style: :bold, value: "Bank Name: Deutsche Bank Trust Company"},
+        {style: :bold, value: "Branch: New York, 280 Park Ave, New York, NY 10017, USA"},
+        {style: :bold, value: "Swift Code: BKTRUS33"}
+      ]
+    when "mainport"
+      [  
+        {style: :bold, value: "OUR BANKING DETAILS:"},
+        {style: :bold, value: "Account name: Mainport Africa Shipping (Pty) Ltd"},
+        {style: :bold, value: "Bank: Nedbank"},
+        {style: :bold, value: "Branch: 303 Smith Street, Durban, 4001, South Africa"},
+        {style: :bold, value: "Branch code: 198765"},
+        {style: :bold, value: "Swift code: NEDSZAJJ"},
+        {style: :bold, value: "Account no: 1305 454 014 (ZAR account)"},
+        {style: :bold, value: "Account no: 7305 010 219 (USD account)"},
+        {style: :bold, value: "Account no: 7320 362 546 (EURO account)"}
+      ]
+    when "fillettegreen"
+      [  {style: :bold, value: "BANKING DETAILS"},
+         {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
+      ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
@@ -306,11 +393,14 @@ class DisbursementDocument
   end
 
   def sgm_bank_details
-    asian_ports = ["BANGKOK", "BONTANG", "CILACAP", "HAINAN STRAITS", "JAKARTA", "KOH SAMUI", "KOH SICHANG", "LAEM CHABANG", "LANQIAO", "MAP TA PHUT", "MEULABOH", "MUARA PANTAI", "PENGERANG", "PHUKET", "RAYONG", "RIZHAO", "RUWAIS", "SAMARINDA", "SEMARANG", "SHANGHAI", "SINGAPORE", "SRIRACHA", "SUNGAI PAKNING", "SURABAYA", "TIANJIN XIN GANG", "ZHOUSHAN"]
-
-    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND"]
-
-    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+    asian_ports = get_asian_ports()
+    australian_ports = get_australian_ports()
+    png_ports = get_png_ports()
+    mozambique_ports = get_mozambique_ports()
+    tanzania_ports = get_tanzania_ports()
+    namibia_ports = get_namibia_ports()
+    thai_ports = get_thai_ports()
+    madagascar_ports = get_madagascar_ports()
 
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
@@ -323,25 +413,64 @@ class DisbursementDocument
         {value: "Account No: 04096505"},
         {value: "Swift: BKTRUS 33"}
       ]
+    elsif thai_ports.member? @disbursement.port.name
+       [ {style: :bold, value: "BANKING DETAILS (THB)"},
+          {value: "Beneficiary Name: Sturrock Grindrod Maritime Pte. Ltd."},
+          {value: "Beneficiary Address: 46A Tras Street #02-46A Singapore 078985"},
+          {value: "Bank Name: DBS Bank Ltd"},
+          {value: "Bank Address: 12 Marina Boulevard, DBS Asia Central, Marina Bay Financial Centre Tower 3, Singapore 018982"},
+          {value: "Bank Code: 7171"},
+          {value: "Account Number: 0003-037876-01-6"},
+          {value: "Swift Code: DBSSSGSG"}
+        ]
     elsif asian_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
+          {value: "Bank: Standard Chartered Bank (Singapore) Limited"},
           {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
+          {value: "Bank Code: 9496"},
           {value: "Account Number: 0106355465"},
-          {value: "Swift Code: SCBLSGSG"}
+          {value: "Swift Code: SCBLSG22XXX"}
         ],
         [ {style: :bold, value: "BANKING DETAILS (USD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Bank: Standard Chartered"},
+          {value: "Bank: Standard Chartered Bank (Singapore) Limited"},
           {value: "Bank Address: Battery Road Branch, 6 Battery Road, Singapore 049909"},
-          {value: "Bank Code: 7144"},
+          {value: "Bank Code: 9496"},
           {value: "Account Number: 0104970324"},
-          {value: "Swift Code: SCBLSGSG"}
+          {value: "Swift Code: SCBLSG22XXX"}
         ]
       ]
-    elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+    elsif madagascar_ports.member? @disbursement.port.name
+      [ [ {style: :bold, value: "BANKING DETAILS (EURO)"},
+          {value: "Account Holder: Sturrock Flex Shipping LTD"},
+          {value: "Bank: B.M.O.I (Banque Malgache de l'Ocean Indien)"},
+          {value: "Bank address: Angle Lt. Emmanuel Berard & Bd Joffre, Toamasina 501 - Madagascar"},
+          {value: "IBAN Code: MG460000400010 021247 01101 58"},
+          {value: "Account Number: 00010 021247 011 01 58"},
+          {value: "Swift code: BMOIMGMG"},
+          {value: "BIC: BMOIMGMGXXX"},
+          {value: "Intermediary Bank details:	Natixis , Paris"},
+          {value: "IBAN: FR76 3000 7999 9906 0205 5000 070"},
+          {value: "Swift code: NATXFRPPXXX"},
+          {value: "Address: Avenue Pierre Mendes, 75013, France"}
+        ],
+        [ {style: :bold, value: "BANKING DETAILS (USD)"},
+          {value: "BANKING DETAILS: (USD)"},
+          {value: "Account Holder: Sturrock Flex Shipping LTD"},
+          {value: "Bank: B.M.O.I (Banque Malgache de l'Ocean Indien)"},
+          {value: "Bank address: Angle Lt. Emmanuel Berard & Bd Joffre, Toamasina 501 - Madagascar"},
+          {value: "IBAN Code: MG460000400010 021247 01102 55"},
+          {value: "Account Number: 00010 021247 011 02 55"},
+          {value: "Swift code: BMOIMGMG"},
+          {value: "BIC: BMOIMGMGXXX"},
+          {value: "Intermediary Bank details: Natixis , Paris"},
+          {value: "IBAN: FR76 3000 7999 9906 0205 5000 070"},
+          {value: "Swift code: NATXFRPPXXX"},
+          {value: "Address: Avenue Pierre Mendes, 75013, France"}
+        ]
+      ]
+    elsif tanzania_ports.member? @disbursement.port.name
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Beneficiary Bank: Barclays Bank Tanzania Limited, TDFL Building Ohio Street, Dar Es Salaam, Tanzania"},
         {value: "Swift Code: BARCTZTZ"},
@@ -350,7 +479,7 @@ class DisbursementDocument
         {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
         {value: "Swift Code: CHASUS33"}
       ]
-    elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+    elsif mozambique_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "Banking Details (MZN)"},
           {value: "Account Holder: Sturrock Grindrod Maritime [Mozambique] Lda"},
           {value: "Bank: Standard Bank S.A.R.L"},
@@ -406,6 +535,19 @@ class DisbursementDocument
       ]
     ]
 
+  elsif namibia_ports.member? @disbursement.port.name
+    [
+      {style: :bold, value: "BANKING DETAILS (NAD)"},
+        {value: "Account Holder: Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"},
+        {value: "Bank Name: First National Bank Namibia Ltd."},
+        {value: "Branch Name: Walvis Bay, Namibia"},
+        {value: "Branch Code: 28-21-72"},
+        {value: "Account Number: 55101754783"},
+        {value: "Type: Cheque Account"},
+        {value: "Swift Code: FIRNNANX"},
+        {value: "Correspondent Bank: Standard Chartered Bank, New York"}
+    ]
+
     else
       [ [ {style: :bold, value: "BANKING DETAILS (ZAR)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Pty) Ltd"},
@@ -437,13 +579,18 @@ class DisbursementDocument
   end
 
   def is_aus_or_png
-    australian_ports = ["ABBOT POINT","ADELAIDE","BELL BAY","BRISBANE","BURNIE","DALRYMPLE BAY","DAMPIER","FREMANTLE","GEELONG","GERALDTON","GLADSTONE","HAY POINT","LAUNCESTON","MACKAY","MELBOURNE","NEWCASTLE","PORT BOTANY","PORT HEDLAND","PORT KEMBLA","PORT WALCOTT","SYDNEY","TOWNSVILLE","ALBANY","BUNDABERG","DARWIN","EDEN","GOVE","GROOTE EYLANDT","HASTINGS","PORT BONYTHON","PORT GILES","PORT LATTA","PORT LINCOLN","PORT PIRIE","STAG FIELD","THEVENARD","WALLAROO","WEIPA","WESTERN PORT","WHYALLA","BUNBURY","CAIRNS","CAPE CUVIER","CAPE PRESTON","DEVONPORT","ESPERANCE","HOBART","KWINANA","LUCINDA","MOURILYAN","PORT ALMA","PORTLAND"]
-    png_ports = ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE"]
+    australian_ports = get_australian_ports()
+    png_ports = get_png_ports()
     australian_ports.member? @disbursement.port.name or png_ports.member? @disbursement.port.name
   end
 
   def funding_disclaimer
-    asian_ports = ["BANGKOK", "BONTANG", "CILACAP", "HAINAN STRAITS", "JAKARTA", "KOH SAMUI", "KOH SICHANG", "LAEM CHABANG", "LANQIAO", "MAP TA PHUT", "MEULABOH", "MUARA PANTAI", "PENGERANG", "PHUKET", "RAYONG", "RIZHAO", "RUWAIS", "SAMARINDA", "SEMARANG", "SHANGHAI", "SINGAPORE", "SRIRACHA", "SUNGAI PAKNING", "SURABAYA", "TIANJIN XIN GANG", "ZHOUSHAN"]
+    asian_ports = get_asian_ports()
+    mozambique_ports = get_mozambique_ports()
+    namibia_ports = get_namibia_ports()
+    tanzania_ports = get_tanzania_ports()
+    thai_ports = get_thai_ports()
+    madagascar_ports = get_madagascar_ports()
     disclaimer = if @revision.tenant.is_monson? and @disbursement.inquiry?
       "Disclaimer: Please note that this is an Inquiry only, and whilst "+
       "Monson Agencies Australia take every care to ensure that the figures "+
@@ -454,11 +601,17 @@ class DisbursementDocument
       company = "Sturrock Grindrod Maritime (Pty) Ltd"
       if @disbursement.port.name == "MOMBASA"
         company = "Sturrock Shipping (Kenya) Ltd"
+      elsif thai_ports.member? @disbursement.port.name
+        company = "Sturrock Grindrod Maritime (Thailand) Co., Ltd"
       elsif asian_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime Pte Ltd"
-      elsif ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"].member? @disbursement.port.name
+      elsif namibia_ports.member? @disbursement.port.name
+        company = "Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"
+      elsif mozambique_ports.member? @disbursement.port.name
         company = "Sturrock Grindrod Maritime [Mozambique] Lda"
-      elsif ["DAR ES SALAAM", "MTWARA", "TANGA", "ZANZIBAR"].member? @disbursement.port.name
+      elsif tanzania_ports.member? @disbursement.port.name
+        company = "Sturrock Flex Shipping Ltd"
+      elsif madagascar_ports.member? @disbursement.port.name
         company = "Sturrock Flex Shipping Ltd"
       elsif is_aus_or_png
         company = "Sturrock Grindrod Maritime (Australia) Pty Ltd"
