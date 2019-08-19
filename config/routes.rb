@@ -110,7 +110,6 @@ ProformaDA::Application.routes.draw do
 
   # auth
   post 'auth/register' => 'auth#register'
-  post 'auth/check' => 'auth#check'
   get 'auth/login' => 'auth#login'
   get 'auth/logout' => 'auth#logout'
 
