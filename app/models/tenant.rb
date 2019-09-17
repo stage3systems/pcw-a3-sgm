@@ -40,7 +40,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def supports_named_services?
-    name.starts_with? "sgm"
+    name.starts_with? "sgm" || "wallem"
   end
 
   def supports_free_text_items?
