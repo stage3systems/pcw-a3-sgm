@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
     if tenant.name.starts_with? "sgm" and (data['personType'] == 'ACCOUNTING')
       self.deleted = true
     end
-    self.rocket_id = data['rocketId']
+    self.auth0_id = data['authZeroId']
   end
 
   def is_admin_type(t)
@@ -48,7 +48,8 @@ class User < ActiveRecord::Base
     return nil unless token
     valid = (Time.at(token["exp"]) > DateTime.now) rescue false
     return nil unless valid
-    rocket_id = (token["sub"].split('|')[1]).to_i
-    self.where(tenant_id: tenant.id, rocket_id: rocket_id).first
+    rocket_id = (token["sub"].split('|')[1])
+    auth0_id = token["sub"]
+    self.where(tenant_id: tenant.id, rocket_id: rocket_id).first rescue self.where(tenant_id: tenant.id, auth0_id: auth0_id).first 
   end
 end

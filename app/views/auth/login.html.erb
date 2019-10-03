@@ -46,8 +46,14 @@
     localStorage.setItem('expirationDate', Date.now() + Number.parseInt(authResults.expiresIn) * 1000);
   };
 
+  function parseAuth0Id(ssodata) {
+    var parsedSsoData = JSON.parse(JSON.parse(ssodata));
+    return parsedSsoData.lastUsedSub; 
+  }
+
   var checkState = function() {
     var token = localStorage.getItem('idToken');
+    var auth0_id = parseAuth0Id(localStorage.getItem('auth0.ssodata'));
     var expirationDate = new Date(Number.parseInt(localStorage.getItem('expirationDate')));
     var isExpired = expirationDate < new Date();
 
@@ -55,7 +61,7 @@
       $('div.spinner').fadeOut(100);
       $("div.login-form").fadeIn(100, setupLogin);
     } else {
-        $.post('/auth/register', {token: token})
+        $.post('/auth/register', {token: token, auth0_id: auth0_id})
         .done(function() {
             window.location = "<%= root_path %>";
         })
@@ -96,8 +102,9 @@
         $(button).removeAttr('disabled');
         return;
       }
+      var auth0_id = parseAuth0Id(localStorage.getItem('auth0.ssodata'));
       $.post('/auth/register',
-             {token: auth.idToken})
+             {token: auth.idToken, auth0_id: auth0_id})
         .done(function(r) {
           window.location = "<%= root_path %>";
         })
