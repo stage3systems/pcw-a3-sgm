@@ -55,7 +55,7 @@ module PortsHelper
     end
 
     def get_png_ports()
-        ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE", "LIHIR"]
+        ["LAE","PORT MORESBY","ALOTAU","KIRIWINA","RABAUL","CONFLICT ISLAND","DOINI ISLAND","KITAVA","MADANG","BASAMUK","KIMBE", "LIHIR", "WEWAK"]
     end
 
     def get_mozambique_ports()

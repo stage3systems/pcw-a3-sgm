@@ -3,7 +3,7 @@ class AuthController < ApplicationController
     ret = begin
       user = get_user()
       if user
-        session[:token] = user[:token]
+        session[:token] = user[:token] rescue params[:token]
         {result: 'ok'}
       else
         {error: 'Unkown User'}
@@ -68,7 +68,7 @@ class AuthController < ApplicationController
     return nil unless token
     auth0_id = token["sub"]
     user = User.where(tenant_id: current_tenant.id,
-                      rocket_id: rocket_id, deleted: false).first rescue User.where(tenant_id: tenant.id, auth0_id: auth0_id).first
+                      auth0_id: auth0_id, deleted: false).first rescue nil
     return {db: user, token: token} if user
     rocket_id = (token["sub"].split('|')[1]).to_i
     user = User.where(tenant_id: current_tenant.id,
