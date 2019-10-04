@@ -48,7 +48,10 @@
 
   function parseAuth0Id(ssodata) {
     var parsedSsoData = JSON.parse(JSON.parse(ssodata));
-    return parsedSsoData.lastUsedSub; 
+    if (parsedSsoData.hasOwnProperty('lastUsedSub')){
+        return parsedSsoData.lastUsedSub;
+    }
+    return null;
   }
 
   var checkState = function() {
