@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.14
+-- Dumped from database version 9.6.13
 -- Dumped by pg_dump version 11.4 (Debian 11.4-1.pgdg90+1)
 
 SET statement_timeout = 0;
@@ -856,7 +856,7 @@ CREATE TABLE public.users (
     office_id integer,
     remote_id integer,
     deleted boolean DEFAULT false,
-    rocket_id integer,
+    rocket_id character varying DEFAULT ''::character varying,
     tenant_id integer,
     auth0_id character varying
 );
@@ -1531,4 +1531,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171222195804');
 INSERT INTO schema_migrations (version) VALUES ('20180125113825');
 
 INSERT INTO schema_migrations (version) VALUES ('20180615044550');
+
+INSERT INTO schema_migrations (version) VALUES ('20191003143800');
 

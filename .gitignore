@@ -29,3 +29,5 @@ config/database-dev.yml
 config/identity-dev.yml
 config/identity-stg.yml
 config/identity.yml
+
+postgres-data
