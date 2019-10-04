@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
       self.deleted = true
     end
     self.auth0_id = data['authZeroId']
+    self.rocket_id = data['authZeroId'].split('|')[1]
   end
 
   def is_admin_type(t)
