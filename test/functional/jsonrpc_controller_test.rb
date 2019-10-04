@@ -39,6 +39,75 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert body['error']['code'] == -32001
   end
 
+  test "can create, modify and delete users" do
+    @tenant = tenants(:one)
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                      'changeme',
+                      "CREATE",
+                      "person",
+                      {
+                          id: 123,
+                          loginName: "jsmith",
+                          firstName: "John",
+                          lastName: "Smith",
+                          rocketId: 321
+                      }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "ok", body['result']
+    assert @tenant.users.find_by(remote_id: 123)
+    assert @tenant.users.find_by(rocket_id: 2)
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                      'changeme',
+                      "MODIFY",
+                      "person",
+                      {
+                          id: 123,
+                          loginName: "jsmith",
+                          firstName: "Jeremy",
+                          password: "$2a$14$AOXNCxxw6iLJw9Xwe1Bn9OjsWhRSXL5bi9Bk408ErsceSRgDVyZ7W",
+                          lastName: "Smith"
+                      }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal "ok", body['result']
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                      'changeme',
+                      "MODIFY",
+                      "person",
+                      {
+                          id: 1234,
+                          loginName: "jsmith",
+                          firstName: "Jeremy",
+                          password: "$2a$14$AOXNCxxw6iLJw9Xwe1Bn9OjsWhRSXL5bi9Bk408ErsceSRgDVyZ7W",
+                          lastName: "Smith"
+                      }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['error']['code'] == -32002
+    assert User.find_by(remote_id: 123).first_name == 'Jeremy'
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                      'changeme',
+                      "DELETE",
+                      "person",
+                      {
+                          id: 123,
+                      }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    assert User.find_by(remote_id: 123).nil?
+  end
+
+
   test "can create, modify and delete cargo_types" do
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
