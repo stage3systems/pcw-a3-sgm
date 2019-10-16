@@ -1,10 +1,14 @@
-restore-dump:
-	@docker-compose run pcw psql -U postgres -h db -f cycle_db.sql
-	@docker-compose run pcw psql -U postgres -h db pcw -f pcw.stg.sql
+download-db:
+	@rm pcw_${ENV}.sql*
+	@AWS_PROFILE=a3 aws s3 cp s3://a3-dumps/development/pcw_${ENV}.sql.bz2 .
+	@bunzip2 pcw_${ENV}.sql.bz2
 
-pcw.stg.sql:
-	@AWS_PROFILE=a3 aws s3 cp s3://a3-dumps/pcw.stg.sql.bz2 .
-	@bunzip2 pcw.stg.sql.bz2
+restore-dump: download-db
+	@docker-compose run pcw psql -U postgres -h db -f cycle_db.sql
+	@docker-compose run pcw psql -U postgres -h db pcw -f pcw_${ENV}.sql
+
+load-dev-db: download-db
+	@cat pcw_${ENV}.sql |docker-compose exec -T db psql -d pcw -U webadmin
 
 dev:
 	@docker-compose build
