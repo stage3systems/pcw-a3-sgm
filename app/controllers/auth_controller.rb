@@ -65,14 +65,10 @@ class AuthController < ApplicationController
                        aud: auth0['client_id'], verify_aud: true) do |header|
 			jwks_hash()[header['kid']]
     end.first rescue nil
-    return nil unless token
-    auth0_id = token["sub"]
-    user = User.where(tenant_id: current_tenant.id,
-                      auth0_id: auth0_id, deleted: false).first rescue nil
+    auth0_id = token["sub"] rescue params[:auth0_id]
+    rocket_id = (auth0_id.split('|')[1])
+    user = User.where(tenant_id: tenant.id, auth0_id: auth0_id).first
     return {db: user, token: token} if user
-    rocket_id = (token["sub"].split('|')[1]).to_i
-    user = User.where(tenant_id: current_tenant.id,
-                      rocket_id: rocket_id, deleted: false).first rescue nil
     if user
       user.auth0_id = auth0_id
       user.save
