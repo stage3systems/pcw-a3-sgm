@@ -72,9 +72,6 @@ class AuthController < ApplicationController
     user = User.where(tenant_id: current_tenant.id, auth0_id: auth0_id).first
 
     return {db: user, token: token} if user
-    rocket_id = (token["sub"].split('|')[1]).to_i
-    user = User.where(tenant_id: current_tenant.id,
-                      rocket_id: rocket_id, deleted: false).first rescue nil
     if user
       user.auth0_id = auth0_id
       user.save
