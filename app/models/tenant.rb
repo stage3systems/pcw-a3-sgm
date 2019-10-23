@@ -35,6 +35,10 @@ class Tenant < ActiveRecord::Base
     name.starts_with? 'monson'
   end
 
+  def is_biehl?
+    name.starts_with? 'biehl'
+  end
+
   def named_services
     Service.where(tenant_id: self.id, port_id: nil, terminal_id: nil)
   end
