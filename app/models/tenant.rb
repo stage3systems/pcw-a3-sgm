@@ -28,11 +28,15 @@ class Tenant < ActiveRecord::Base
   end
 
   def uses_new_da_sync?
-    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "gmc", "normac", "wallem", "mainport", "wallemgroup"].member? self.customer_name
+    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "gmc", "normac", "wallem", "mainport", "wallemgroup", "tormarshipping", "hbm"].member? self.customer_name
   end
 
   def is_monson?
     name.starts_with? 'monson'
+  end
+
+  def is_biehl?
+    name.starts_with? 'biehl'
   end
 
   def named_services
@@ -40,7 +44,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def supports_named_services?
-    name.starts_with? "sgm"
+    name.starts_with? "sgm" || "wallem"
   end
 
   def supports_free_text_items?

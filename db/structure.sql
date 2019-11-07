@@ -856,7 +856,7 @@ CREATE TABLE public.users (
     office_id integer,
     remote_id integer,
     deleted boolean DEFAULT false,
-    rocket_id integer,
+    rocket_id character varying DEFAULT ''::character varying,
     tenant_id integer,
     auth0_id character varying
 );
@@ -1531,4 +1531,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171222195804');
 INSERT INTO schema_migrations (version) VALUES ('20180125113825');
 
 INSERT INTO schema_migrations (version) VALUES ('20180615044550');
+
+INSERT INTO schema_migrations (version) VALUES ('20190910150600');
+
+INSERT INTO schema_migrations (version) VALUES ('20191003143800');
 
