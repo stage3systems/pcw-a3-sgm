@@ -261,7 +261,9 @@ class DisbursementDocument
         {style: :bold, value: "ACH ABA No. 111000025"},
         {style: :bold, value: "WIRE TRANSFER ABA No. 026009593"},
         {style: :bold, value: "SWIFT ID: BOFAUS3N"},
-        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO TEXAS LLC"}
+        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO TEXAS LLC"}, 
+        {style: :bold, value: ""},
+        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"}
       ]
     when "casper"
       [ {style: :bold, value: "Account Name: Casper Shipping Limited"},
