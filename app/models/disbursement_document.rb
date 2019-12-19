@@ -251,8 +251,9 @@ class DisbursementDocument
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
-    when "biehl"
-      [ {style: :bold, value: "BANK OF AMERICA"},
+    when "biehl", "biehltest"
+      [ 
+        {style: :bold, value: "BANK OF AMERICA"},
         {style: :bold, value: "901 MAIN STREET, 10TH FLOOR"},
         {style: :bold, value: "DALLAS, TX 75202-2911"},
         {style: :bold, value: ""},
@@ -260,9 +261,10 @@ class DisbursementDocument
         {style: :bold, value: "ACH ABA No. 111000025"},
         {style: :bold, value: "WIRE TRANSFER ABA No. 026009593"},
         {style: :bold, value: "SWIFT ID: BOFAUS3N"},
-        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO"},
+        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO TEXAS LLC"}, 
         {style: :bold, value: ""},
-        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"} ]
+        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"}
+      ]
     when "casper"
       [ {style: :bold, value: "Account Name: Casper Shipping Limited"},
         {style: :bold, value: "Sort Code: 60/08/46"},
