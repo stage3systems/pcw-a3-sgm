@@ -251,8 +251,9 @@ class DisbursementDocument
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
-    when "biehl"
-      [ {style: :bold, value: "BANK OF AMERICA"},
+    when "biehl", "biehltest"
+      [ 
+        {style: :bold, value: "BANK OF AMERICA"},
         {style: :bold, value: "901 MAIN STREET, 10TH FLOOR"},
         {style: :bold, value: "DALLAS, TX 75202-2911"},
         {style: :bold, value: ""},
@@ -260,9 +261,10 @@ class DisbursementDocument
         {style: :bold, value: "ACH ABA No. 111000025"},
         {style: :bold, value: "WIRE TRANSFER ABA No. 026009593"},
         {style: :bold, value: "SWIFT ID: BOFAUS3N"},
-        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO"},
+        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO TEXAS LLC"}, 
         {style: :bold, value: ""},
-        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"} ]
+        {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"}
+      ]
     when "casper"
       [ {style: :bold, value: "Account Name: Casper Shipping Limited"},
         {style: :bold, value: "Sort Code: 60/08/46"},
@@ -300,16 +302,10 @@ class DisbursementDocument
         {style: :bold, value: "USD Account no: 53680111"},
         {style: :bold, value: "USD IBAN: GB04 BARC 2051 0153 6801 11"}
       ]
-    when "wallem"
-      [
-        {style: :bold, value: ""}
-      ]
-    when "wallemgroup"
-      [
-        {style: :bold, value: ""}
-      ]
     when "sgm", "sturrockgrindrod"
       sgm_bank_details
+    when "wallem", "wallemgroup"
+      wallem_bank_details
     when "nabsa"
       [ {style: :bold, value: "HSBC Private Bank International"},
         {style: :bold, value: "1.441, Brickell Av, 17th floor"},
@@ -389,6 +385,29 @@ class DisbursementDocument
         {style: :bold,
          value: "#{f}: #{d[f.downcase.gsub(' ','_').gsub('/', '')]}"}
       end
+    end
+  end
+
+  def wallem_bank_details
+    if @disbursement.port.name == "SINGAPORE"
+      [
+        {value: "Beneficiary: Wallem Shipping (S) Pte Ltd"},
+        {value: "Beneficiary address: 991 Alexandra Road, 02-04/05, Singapore 119964"},
+        {value: "The Banker: Citibank, N.A."},
+        {value: "Banker's address: 8 Marina View, #21-00 Asia Square Tower 1, Singapore 018960"},
+        {value: "Account no.: 0858658012 (USD) / 0858658004 (SGD)"},
+        {value: "Swift code: CITISGSG "},
+        {value: "Bank Code: 7214 Branch Code: 001"} 
+      ]
+      else
+        [   
+            {value: "Beneficiary: 	Wallem Shipping (Hong Kong) Limited"},
+            {value: "The Banker: 	Citibank, N.A. Hong Kong Branch"},
+            {value: "Banker's address: 	3 Garden Road, Central, Hong Kong"},
+            {value: "Account no.: 	006-391-62341324 (USD)"},
+            {value: "Account no.: 	006-391-62341170 (HKD)"},
+            {value: "Swift Code: 	CITIHKHXXXX"}
+        ]
     end
   end
 
