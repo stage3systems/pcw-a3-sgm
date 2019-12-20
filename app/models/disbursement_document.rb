@@ -302,14 +302,6 @@ class DisbursementDocument
         {style: :bold, value: "USD Account no: 53680111"},
         {style: :bold, value: "USD IBAN: GB04 BARC 2051 0153 6801 11"}
       ]
-    when "wallem"
-      [
-        {style: :bold, value: ""}
-      ]
-    when "wallemgroup"
-      [
-        {style: :bold, value: ""}
-      ]
     when "sgm", "sturrockgrindrod"
       sgm_bank_details
     when "wallem", "wallemgroup"
@@ -397,25 +389,26 @@ class DisbursementDocument
   end
 
   def wallem_bank_details
-  if @disbursement.port.name == "SINGAPORE"
-    [
-      {value: "Beneficiary: Wallem Shipping (S) Pte Ltd"},
-      {value: "Beneficiary address: 991 Alexandra Road, 02-04/05, Singapore 119964"},
-      {value: "The Banker: Citibank, N.A."},
-      {value: "Banker's address: 8 Marina View, #21-00 Asia Square Tower 1, Singapore 018960"},
-      {value: "Account no.: 0858658012 (USD) / 0858658004 (SGD)"},
-      {value: "Swift code: CITISGSG "},
-      {value: "Bank Code: 7214 Branch Code: 001"} 
-    ]
-    else
-      [   
-          {value: "Beneficiary: 	Wallem Shipping (Hong Kong) Limited"},
-          {value: "The Banker: 	Citibank, N.A. Hong Kong Branch"},
-          {value: "Banker's address: 	3 Garden Road, Central, Hong Kong"},
-          {value: "Account no.: 	006-391-62341324 (USD)"},
-          {value: "Account no.: 	006-391-62341170 (HKD)"},
-          {value: "Swift Code: 	CITIHKHXXXX"}
+    if @disbursement.port.name == "SINGAPORE"
+      [
+        {value: "Beneficiary: Wallem Shipping (S) Pte Ltd"},
+        {value: "Beneficiary address: 991 Alexandra Road, 02-04/05, Singapore 119964"},
+        {value: "The Banker: Citibank, N.A."},
+        {value: "Banker's address: 8 Marina View, #21-00 Asia Square Tower 1, Singapore 018960"},
+        {value: "Account no.: 0858658012 (USD) / 0858658004 (SGD)"},
+        {value: "Swift code: CITISGSG "},
+        {value: "Bank Code: 7214 Branch Code: 001"} 
       ]
+      else
+        [   
+            {value: "Beneficiary: 	Wallem Shipping (Hong Kong) Limited"},
+            {value: "The Banker: 	Citibank, N.A. Hong Kong Branch"},
+            {value: "Banker's address: 	3 Garden Road, Central, Hong Kong"},
+            {value: "Account no.: 	006-391-62341324 (USD)"},
+            {value: "Account no.: 	006-391-62341170 (HKD)"},
+            {value: "Swift Code: 	CITIHKHXXXX"}
+        ]
+    end
   end
 
   def sgm_bank_details
