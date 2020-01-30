@@ -40,7 +40,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def named_services
-    Service.where(tenant_id: self.id, port_id: nil, terminal_id: nil)
+    Service.where(tenant_id: self.id, port_id: nil, terminal_id: nil).order(:item)
   end
 
   def supports_named_services?
