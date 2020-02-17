@@ -174,6 +174,6 @@ class Tenant < ActiveRecord::Base
   end
 
   def use_service_key_as_activity_code?
-    self.name.starts_with?("sgm")
+    ["sgm", "wallem", "wallemgroup"].member? self.customer_name
   end
 end
