@@ -20,6 +20,7 @@ GeoLiteCity.dat:
 
 docker-build-clear:
 	@docker-compose build --no-cache
+	@docker-compose up -d
 
 t: GeoLiteCity.dat
 	@docker-compose run pcw ./wait-for-it.sh db:5432 -- ./run_tests.sh
