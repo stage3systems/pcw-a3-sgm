@@ -18,6 +18,9 @@ GeoLiteCity.dat:
 	@curl -O http://static.stage3systems.com/pcw/GeoLiteCity.dat.gz
 	@gunzip GeoLiteCity.dat.gz
 
+docker-build-clear:
+	@docker-compose build --no-cache
+
 t: GeoLiteCity.dat
 	@docker-compose run pcw ./wait-for-it.sh db:5432 -- ./run_tests.sh
 
