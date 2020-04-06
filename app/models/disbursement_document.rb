@@ -364,18 +364,6 @@ class DisbursementDocument
         {style: :bold, value: "Branch: New York, 280 Park Ave, New York, NY 10017, USA"},
         {style: :bold, value: "Swift Code: BKTRUS33"}
       ]
-    when "mainport"
-      [  
-        {style: :bold, value: "OUR BANKING DETAILS:"},
-        {style: :bold, value: "Account name: Mainport Africa Shipping (Pty) Ltd"},
-        {style: :bold, value: "Bank: Nedbank"},
-        {style: :bold, value: "Branch: 303 Smith Street, Durban, 4001, South Africa"},
-        {style: :bold, value: "Branch code: 198765"},
-        {style: :bold, value: "Swift code: NEDSZAJJ"},
-        {style: :bold, value: "Account no: 1305 454 014 (ZAR account)"},
-        {style: :bold, value: "Account no: 7305 010 219 (USD account)"},
-        {style: :bold, value: "Account no: 7320 362 546 (EURO account)"}
-      ]
     when "fillettegreen"
       [  {style: :bold, value: "BANKING DETAILS"},
          {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
