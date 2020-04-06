@@ -21,6 +21,9 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
+    if name.end_with? 'stg'
+      return name[0..-4]
+    end
     if name.end_with? 'test'
       return name[0..-5]
     end

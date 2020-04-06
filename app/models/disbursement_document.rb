@@ -251,7 +251,7 @@ class DisbursementDocument
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
-    when "biehl", "biehltest"
+    when "biehl", "biehltest", "biehlstg"
       [ 
         {style: :bold, value: "BANK OF AMERICA"},
         {style: :bold, value: "901 MAIN STREET, 10TH FLOOR"},
