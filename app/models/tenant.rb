@@ -21,6 +21,9 @@ class Tenant < ActiveRecord::Base
   end
 
   def customer_name
+    if name.end_with? 'stg'
+      return name[0..-4]
+    end
     if name.end_with? 'test'
       return name[0..-5]
     end
@@ -28,7 +31,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def uses_new_da_sync?
-    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "gmc", "normac", "wallem", "mainport", "wallemgroup", "tormarshipping", "hbm"].member? self.customer_name
+    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "gmc", "normac", "wallem", "wallemgroup", "tormarshipping", "hbm"].member? self.customer_name
   end
 
   def is_monson?

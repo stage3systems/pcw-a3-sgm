@@ -251,7 +251,7 @@ class DisbursementDocument
         {style: :bold, value: "Account No. : 001-4819039-58"},
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
-    when "biehl", "biehltest"
+    when "biehl", "biehltest", "biehlstg"
       [ 
         {style: :bold, value: "BANK OF AMERICA"},
         {style: :bold, value: "901 MAIN STREET, 10TH FLOOR"},
@@ -363,18 +363,6 @@ class DisbursementDocument
         {style: :bold, value: "Bank Name: Deutsche Bank Trust Company"},
         {style: :bold, value: "Branch: New York, 280 Park Ave, New York, NY 10017, USA"},
         {style: :bold, value: "Swift Code: BKTRUS33"}
-      ]
-    when "mainport"
-      [  
-        {style: :bold, value: "OUR BANKING DETAILS:"},
-        {style: :bold, value: "Account name: Mainport Africa Shipping (Pty) Ltd"},
-        {style: :bold, value: "Bank: Nedbank"},
-        {style: :bold, value: "Branch: 303 Smith Street, Durban, 4001, South Africa"},
-        {style: :bold, value: "Branch code: 198765"},
-        {style: :bold, value: "Swift code: NEDSZAJJ"},
-        {style: :bold, value: "Account no: 1305 454 014 (ZAR account)"},
-        {style: :bold, value: "Account no: 7305 010 219 (USD account)"},
-        {style: :bold, value: "Account no: 7320 362 546 (EURO account)"}
       ]
     when "fillettegreen"
       [  {style: :bold, value: "BANKING DETAILS"},
