@@ -1,4 +1,4 @@
-class RemoveMainportTenant < ActiveRecord::Migration
+class RemoveFillettegreenTenant < ActiveRecord::Migration
   def up
     ActiveRecord::Base.transaction do
         t = Tenant.find_by(name: "fillettegreen")
