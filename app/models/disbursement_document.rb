@@ -341,13 +341,6 @@ class DisbursementDocument
          {style: :bold, value: "Beneficiary: Ben Line Agencies (Australia) Pty Ltd"},
          {style: :bold, value: "Address: Building 1, Gateway Office Park 747 Lytton Road, Murarrie, QLD 4172, Australia"}
       ]
-    when "gmc"
-      [  {style: :bold, value: "OUR BANKING DETAILS:"},
-         {style: :bold, value: "Bank: BNP PARIBAS"},
-         {style: :bold, value: "Bank Code: 41 919"},
-         {style: :bold, value: "IBAN: FR76 4191 9094 0101 5595 8729 196"},
-         {style: :bold, value: "BIC: BNPARERXXXX"}
-      ]
     when "seaforth"
       [  
         {style: :bold, value: "Banking Details (USD):"},
