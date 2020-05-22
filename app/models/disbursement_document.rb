@@ -361,6 +361,17 @@ class DisbursementDocument
       [  {style: :bold, value: "BANKING DETAILS"},
          {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
       ]
+    when "a3demo"
+      [  {style: :bold, value: "BANKING DETAILS (USD)"},
+         {value: "Account Name: A3 Demo Limited"},
+         {value: "Bank Name: Stanbic Bank Kenya Limited"},
+         {value: "Branch Name: Digo Road, Mombasa"},
+         {value: "Bank Account No.: 0000111122223"},
+         {value: "Swift Address: SHADOW"},
+         {value: "Correspondent Bank: Deutsche Bank Trust Company Americas - New York"},
+         {value: "Account No: 04125109"},
+         {value: "Swift: TEST 11"}
+     ]
     else
       ['SWIFT Code', 'BSB Number', 'A/C Number', 'A/C Name'].map do |f|
         {style: :bold,
