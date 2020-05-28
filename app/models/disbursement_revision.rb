@@ -146,7 +146,7 @@ class DisbursementRevision < ActiveRecord::Base
 
   def schedule_sync
     return if self.number == 0
-    self.delay.sync_with_aos
+    Delayed::Job.enqueue ProcessDisbursementRevisionSyncJob.new(self.id)
   end
 
   def date_updated

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.14
--- Dumped by pg_dump version 11.4 (Debian 11.4-1.pgdg90+1)
+-- Dumped from database version 9.6.16
+-- Dumped by pg_dump version 11.6 (Debian 11.6-1.pgdg90+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -253,6 +253,47 @@ CREATE SEQUENCE public.delayed_jobs_id_seq
 --
 
 ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
+
+
+--
+-- Name: delayed_jobs_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delayed_jobs_stats (
+    id integer NOT NULL,
+    attempt integer NOT NULL,
+    entity_id integer NOT NULL,
+    entity_name text NOT NULL,
+    status text DEFAULT 'pending'::text NOT NULL,
+    run_at timestamp without time zone,
+    started_at timestamp without time zone,
+    wait_time integer,
+    execution_time integer,
+    locked_at timestamp without time zone,
+    compled_at timestamp without time zone,
+    last_error text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: delayed_jobs_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.delayed_jobs_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: delayed_jobs_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.delayed_jobs_stats_id_seq OWNED BY public.delayed_jobs_stats.id;
 
 
 --
@@ -998,6 +1039,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: delayed_jobs_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delayed_jobs_stats ALTER COLUMN id SET DEFAULT nextval('public.delayed_jobs_stats_id_seq'::regclass);
+
+
+--
 -- Name: disbursement_revisions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1165,6 +1213,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 
 --
+-- Name: delayed_jobs_stats delayed_jobs_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delayed_jobs_stats
+    ADD CONSTRAINT delayed_jobs_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: disbursement_revisions disbursement_revisions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1305,6 +1361,20 @@ ALTER TABLE ONLY public.vessels
 --
 
 CREATE INDEX delayed_jobs_priority ON public.delayed_jobs USING btree (priority, run_at);
+
+
+--
+-- Name: index_delayed_jobs_stats_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delayed_jobs_stats_on_created_at ON public.delayed_jobs_stats USING btree (created_at);
+
+
+--
+-- Name: index_delayed_jobs_stats_on_entity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delayed_jobs_stats_on_entity_id ON public.delayed_jobs_stats USING btree (entity_id);
 
 
 --
@@ -1535,4 +1605,16 @@ INSERT INTO schema_migrations (version) VALUES ('20180615044550');
 INSERT INTO schema_migrations (version) VALUES ('20190910150600');
 
 INSERT INTO schema_migrations (version) VALUES ('20191003143800');
+
+INSERT INTO schema_migrations (version) VALUES ('20200324125348');
+
+INSERT INTO schema_migrations (version) VALUES ('20200324132958');
+
+INSERT INTO schema_migrations (version) VALUES ('20200421095129');
+
+INSERT INTO schema_migrations (version) VALUES ('20200506075210');
+
+INSERT INTO schema_migrations (version) VALUES ('20200511063828');
+
+INSERT INTO schema_migrations (version) VALUES ('20200522090841');
 
