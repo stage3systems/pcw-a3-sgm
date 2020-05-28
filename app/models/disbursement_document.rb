@@ -401,7 +401,7 @@ class DisbursementDocument
     namibia_ports = get_namibia_ports()
     thai_ports = get_thai_ports()
     madagascar_ports = get_madagascar_ports()
-
+   
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Account Name: Sturrock Shipping Kenya Limited"},
@@ -508,12 +508,12 @@ class DisbursementDocument
           {value: "Swift Code: CTBAAU2S"}
         ],
         [ {style: :bold, value: "Banking Details (USD)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
-          {value: "Bank: National Australia Bank"},
-          {value: "Bank Address: 255 George Street, Sydney, NSW 2000"},
-          {value: "Branch Code: 082 057"},
-          {value: "Account Number: STURRUSD01"},
-          {value: "Swift Code: NATAAU3302S"}
+          {value: "Account Holder: Sturrock Grindrod Maritime Australia Pty Ltd"},
+          {value: "Address: Suite 4,89-97 Jones Street, Ultimo, Sydney NSW 2007,Australia"},
+          {value: "Bank: Commonwealth Bank of Australia"},
+          {value: "Bank Address: 799 Pacific Highway, Chatswood NSW 2067 Australia"},
+          {value: "Account Number: 1141 7739 (BSB 062-223)"},
+          {value: "Swift Code: CTBAAU2S"}
         ]
       ]
 
