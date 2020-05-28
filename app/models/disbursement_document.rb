@@ -401,7 +401,7 @@ class DisbursementDocument
     namibia_ports = get_namibia_ports()
     thai_ports = get_thai_ports()
     madagascar_ports = get_madagascar_ports()
-   
+
     if @disbursement.port.name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Account Name: Sturrock Shipping Kenya Limited"},
@@ -472,12 +472,12 @@ class DisbursementDocument
       ]
     elsif tanzania_ports.member? @disbursement.port.name
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
-        {value: "Beneficiary Bank: Barclays Bank Tanzania Limited, TDFL Building Ohio Street, Dar Es Salaam, Tanzania"},
+        {value: "Beneficiary Bank: Absa Bank Tanzania"},
         {value: "Swift Code: BARCTZTZ"},
-        {value: "Beneficiary: Sturrock Flex Shipping Ltd"},
-        {value: "Account No: 8003848"},
+        {value: "Beneficiary: Sturrock-Flex Shipping Ltd"},
+        {value: "Account No: 001/8003848"},
         {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
-        {value: "Swift Code: CHASUS33"}
+        {value: "Correspondent Swift Code: CHASUS33"},
       ]
     elsif mozambique_ports.member? @disbursement.port.name
       [ [ {style: :bold, value: "Banking Details (MZN)"},
