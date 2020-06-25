@@ -31,7 +31,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def uses_new_da_sync?
-    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "normac", "wallem", "wallemgroup", "tormarshipping", "hbm"].member? self.customer_name
+    ["sgm", "biehl", "nabsa", "argelan", "marval", "robertreford", "mta", "benline", "fillettegreen", "seaforth", "normac", "wallem", "wallemgroup", "tormarshipping"].member? self.customer_name
   end
 
   def is_monson?
