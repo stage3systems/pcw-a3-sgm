@@ -1,6 +1,10 @@
 ---
 version: 0.2
 
+env:
+  variables:
+    ENV_NAME: test
+
 phases:
   install:
     commands:
@@ -27,15 +31,19 @@ phases:
       - >
         docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
         949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/\
-         pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION"
-      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/\
-         pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - >
+        docker tag pcw-rails:$CODEBUILD_RESOLVED_SOURCE_VERSION
+        949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails:$ENV_NAME
+      - >
+        docker tag pcw-nginx:$CODEBUILD_RESOLVED_SOURCE_VERSION
+        949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx:$ENV_NAME
+      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-rails"
+      - "docker push 949953444104.dkr.ecr.us-west-2.amazonaws.com/pcw-nginx"
 
       - >
         printf '{"Parameters" : {}, "StackPolicy" :{"Statement" : [{"Effect" : "Allow", "NotAction" : "Update:Delete", "Principal": "*", "Resource" : "*"}]}}' > changeset.json
-      - aws s3 cp s3://a3-templates-us-west-2/stg/master.yaml .
-      - aws cloudformation describe-stacks --region us-west-2 --stack-name stg  | jq -r --arg CODEBUILD_RESOLVED_SOURCE_VERSION $CODEBUILD_RESOLVED_SOURCE_VERSION '.Stacks[0].Parameters|.[]|select( .ParameterKey=="PCWRevision").ParameterValue= $CODEBUILD_RESOLVED_SOURCE_VERSION|to_entries|map(.value)|{ "key":.[0], "value":.[1] }'| jq -s 'from_entries'>params.json
+      - aws s3 cp s3://a3-templates-us-west-2/$ENV_NAME/master.yaml .
+      - aws cloudformation describe-stacks --region us-west-2 --stack-name $ENV_NAME  | jq -r --arg CODEBUILD_RESOLVED_SOURCE_VERSION $CODEBUILD_RESOLVED_SOURCE_VERSION '.Stacks[0].Parameters|.[]|select( .ParameterKey=="PCWRevision").ParameterValue= $CODEBUILD_RESOLVED_SOURCE_VERSION|to_entries|map(.value)|{ "key":.[0], "value":.[1] }'| jq -s 'from_entries'>params.json
       - jq -s '.[0].Parameters=.[1]|.[0]' changeset.json params.json > configuration.json
 
 
