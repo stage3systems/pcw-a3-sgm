@@ -31,3 +31,4 @@ config/identity-stg.yml
 config/identity.yml
 
 postgres-data
+.idea/
