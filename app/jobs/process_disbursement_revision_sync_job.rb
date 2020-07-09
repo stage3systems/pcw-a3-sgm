@@ -40,7 +40,12 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
   end
 
   def get_stat(job)
-    DelayedJobsStat.find_or_create_by({ entity_name: 'DisbursementRevision', entity_id: revisionId, attempt: job.attempts})
+    DelayedJobsStat.find_or_create_by({ 
+      entity_name: 'DisbursementRevision', 
+      entity_id: revisionId, 
+      attempt: job.attempts,
+      hostname: Socket.gethostname
+    })
   end
 
 end

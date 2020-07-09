@@ -273,7 +273,8 @@ CREATE TABLE public.delayed_jobs_stats (
     compled_at timestamp without time zone,
     last_error text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    hostname character varying
 );
 
 
@@ -1617,4 +1618,14 @@ INSERT INTO schema_migrations (version) VALUES ('20200506075210');
 INSERT INTO schema_migrations (version) VALUES ('20200511063828');
 
 INSERT INTO schema_migrations (version) VALUES ('20200522090841');
+
+INSERT INTO schema_migrations (version) VALUES ('20200601144904');
+
+INSERT INTO schema_migrations (version) VALUES ('20200619064604');
+
+INSERT INTO schema_migrations (version) VALUES ('20200622130545');
+
+INSERT INTO schema_migrations (version) VALUES ('20200622130604');
+
+INSERT INTO schema_migrations (version) VALUES ('20200709211308');
 
