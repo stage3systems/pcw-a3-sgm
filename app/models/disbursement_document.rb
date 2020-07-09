@@ -377,7 +377,9 @@ class DisbursementDocument
     thai_ports = get_thai_ports()
     madagascar_ports = get_madagascar_ports()
 
-    if @disbursement.port.name == "MOMBASA"
+    name = @disbursement.port.name.upcase
+
+    if name == "MOMBASA"
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Account Name: Sturrock Shipping Kenya Limited"},
         {value: "Bank Name: Stanbic Bank Kenya Limited"},
@@ -388,7 +390,7 @@ class DisbursementDocument
         {value: "Account No: 04096505"},
         {value: "Swift: BKTRUS 33"}
       ]
-    elsif thai_ports.member? @disbursement.port.name
+    elsif thai_ports.member? name
        [ {style: :bold, value: "BANKING DETAILS (THB)"},
           {value: "Beneficiary Name: Sturrock Grindrod Maritime Pte. Ltd."},
           {value: "Beneficiary Address: 46A Tras Street #02-46A Singapore 078985"},
@@ -398,7 +400,7 @@ class DisbursementDocument
           {value: "Account Number: 0003-037876-01-6"},
           {value: "Swift Code: DBSSSGSG"}
         ]
-    elsif asian_ports.member? @disbursement.port.name
+    elsif asian_ports.member? name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
           {value: "Bank: Standard Chartered Bank (Singapore) Limited"},
@@ -416,7 +418,7 @@ class DisbursementDocument
           {value: "Swift Code: SCBLSG22XXX"}
         ]
       ]
-    elsif madagascar_ports.member? @disbursement.port.name
+    elsif madagascar_ports.member? name
       [ [ {style: :bold, value: "BANKING DETAILS (EURO)"},
           {value: "Account Holder: Sturrock Flex Shipping LTD"},
           {value: "Bank: B.M.O.I (Banque Malgache de l'Ocean Indien)"},
@@ -445,7 +447,7 @@ class DisbursementDocument
           {value: "Address: Avenue Pierre Mendes, 75013, France"}
         ]
       ]
-    elsif tanzania_ports.member? @disbursement.port.name
+    elsif tanzania_ports.member? name
       [ {style: :bold, value: "BANKING DETAILS (USD)"},
         {value: "Beneficiary Bank: Absa Bank Tanzania"},
         {value: "Swift Code: BARCTZTZ"},
@@ -454,7 +456,7 @@ class DisbursementDocument
         {value: "Correspondent Bank: JP Morgan Chase Bank, N.A. New York, NY"},
         {value: "Correspondent Swift Code: CHASUS33"},
       ]
-    elsif mozambique_ports.member? @disbursement.port.name
+    elsif mozambique_ports.member? name
       [ [ {style: :bold, value: "Banking Details (MZN)"},
           {value: "Account Holder: Sturrock Grindrod Maritime [Mozambique] Lda"},
           {value: "Bank: Standard Bank S.A.R.L"},
@@ -473,7 +475,7 @@ class DisbursementDocument
         ]
       ]
 
-    elsif australian_ports.member? @disbursement.port.name
+    elsif australian_ports.member? name
       [ [ {style: :bold, value: "Banking Details (AUD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
           {value: "Bank: Commonwealth Bank of Australia (CBA)"},
@@ -492,7 +494,7 @@ class DisbursementDocument
         ]
       ]
 
-  elsif png_ports.member? @disbursement.port.name
+  elsif png_ports.member? name
     [ [ {style: :bold, value: "Banking Details (PGK)"},
         {value: "Account Holder: Sturrock Grindrod Maritime (Australia) Pty Ltd"},
         {value: "Bank: Westpack Bank - PNG - Limited"},
@@ -510,7 +512,7 @@ class DisbursementDocument
       ]
     ]
 
-  elsif namibia_ports.member? @disbursement.port.name
+  elsif namibia_ports.member? name
     [
       {style: :bold, value: "BANKING DETAILS (NAD)"},
         {value: "Account Holder: Sturrock Grindrod Maritime (Namibia) [PTY] Ltd"},
