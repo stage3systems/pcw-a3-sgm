@@ -60,7 +60,7 @@ module PortsHelper
     end
 
     def get_mozambique_ports()
-        ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA"]
+        ["MAPUTO", "MATOLA", "BEIRA", "NACALA", "PEMBA", "PORT OF AFUNG-PALMA"]
     end
 
     def get_tanzania_ports()
