@@ -27,7 +27,7 @@ class ServicesController < NestedCommonController
     update.service = @instance
     update.user = current_user
     update.changelog = @changelog
-    update.document = @instance.document
+    update.document = @instance.document if @instance.document.file and @instance.document.file.exists?
     update.old_code = @old_code
     update.new_code = @instance.code
     update.save!

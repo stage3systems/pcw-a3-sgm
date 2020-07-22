@@ -115,6 +115,8 @@ class DisbursementRevision < ActiveRecord::Base
   end
 
   def sync_with_aos
+    return if self.disbursement.nil?
+    
     aos_nom = AosNomination.from_tenant_and_aos_id(self.tenant, self.disbursement.nomination_id)
     return unless aos_nom
     if self.tenant.uses_new_da_sync?

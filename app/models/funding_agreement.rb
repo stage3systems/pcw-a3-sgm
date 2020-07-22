@@ -38,8 +38,8 @@ class FundingAgreement
   end
 
   def biehl_conditions
-    "Per our company policy, we require 100% funding of the estimated " +
-    "expenses below prior to vessels arrival. "+
+    "<strong style='font-size: 14px'>Per our company policy, we require 100% funding of the estimated " +
+    "expenses below prior to vessels arrival.</strong> "+
     "Our Banking Details as follows:"
   end
 
