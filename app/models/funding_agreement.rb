@@ -1,4 +1,5 @@
 class FundingAgreement
+  include PortsHelper
 
   def initialize(doc)
     @document = doc
@@ -7,6 +8,7 @@ class FundingAgreement
   end
 
   def conditions
+    return full_funding_conditions if is_sgm_mozambique_port()
     return "" if @revision.tenant.name.start_with? "sgm"
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
     return biehl_conditions if @revision.tenant.customer_name == "biehl"
@@ -31,6 +33,12 @@ class FundingAgreement
     end
   end
 
+  def is_sgm_mozambique_port()
+    is_sqm = @revision.tenant.name.start_with? "sgm"
+    mozambique_ports = get_mozambique_ports().member? @disbursement.port.name
+    is_sqm && mozambique_ports
+  end
+
   private
   def mariteam_conditions
     "Please remit funds to the following Country Bank Account " +
@@ -38,8 +46,8 @@ class FundingAgreement
   end
 
   def biehl_conditions
-    "Per our company policy, we require 100% funding of the estimated " +
-    "expenses below prior to vessels arrival. "+
+    "<strong style='font-size: 14px'>Per our company policy, we require 100% funding of the estimated " +
+    "expenses below prior to vessels arrival.</strong> "+
     "Our Banking Details as follows:"
   end
 
