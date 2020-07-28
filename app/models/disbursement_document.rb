@@ -38,6 +38,10 @@ class DisbursementDocument
     @revision.data['office_email'] || @revision.tenant.default_email
   end
 
+  def office_phone
+    @disbursement.office.phone if @disbursement.office
+  end
+
   def issued
     I18n.l @revision.updated_at.to_date
   end
@@ -87,6 +91,10 @@ class DisbursementDocument
     @revision.data['port_name'] || ""
   end
 
+  def terminal_name
+    @revision.data['terminal_name'] || ""
+  end
+  
   def currency_code
     @revision.data["currency_code"]
   end
