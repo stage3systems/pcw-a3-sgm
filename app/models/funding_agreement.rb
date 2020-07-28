@@ -7,6 +7,7 @@ class FundingAgreement
   end
 
   def conditions
+    return biehl_conditions if true
     return "" if @revision.tenant.name.start_with? "sgm"
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
     return biehl_conditions if @revision.tenant.customer_name == "biehl"
@@ -38,7 +39,7 @@ class FundingAgreement
   end
 
   def biehl_conditions
-    "<strong style='font-size: 14px'>Per our company policy, we require 100% funding of the estimated " +
+    "<strong style='font-size: 16px; background: yellow'>Per our company policy, we require 100% funding of the estimated " +
     "expenses below prior to vessels arrival.</strong> "+
     "Our Banking Details as follows:"
   end
