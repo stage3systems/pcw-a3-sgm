@@ -22,6 +22,7 @@ gem 'unicorn', group: :production
 gem 'prawn', '>= 1.0.0'
 gem 'prawn-table'
 gem 'carrierwave'
+gem 'copy_carrierwave_file'
 gem 'browser'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
