@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user!
     if current_user.nil?
-      redirect_to auth_login_path
+      redirect_to auth_logout_path
     end
   end
 
