@@ -1,4 +1,5 @@
 CarrierWave.configure do |config|
+  config.fog_provider = 'fog/aws'       
   config.fog_credentials = {
     provider:              'AWS',
     aws_access_key_id:     Rails.application.config.x.s3["aws_access_key_id"],
