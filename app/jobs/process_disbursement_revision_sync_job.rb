@@ -9,6 +9,7 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
     started_at = Time.now
     wait_time = started_at - job.run_at if job.run_at
     stat = get_stat(job)
+    stat.run_at = job.run_at if job.run_at
     stat.hostname = Socket.gethostname
     stat.wait_time = wait_time
     stat.started_at = started_at
