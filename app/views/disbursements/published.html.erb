@@ -222,7 +222,7 @@
         <hr class="published" />
         <div class="row">
           <div class="col-md-12">
-            <%= format_list(@document.prefunding) %>
+            <%= format_list(@document.prefunding).html_safe %>
             <%= format_list(@document.bank_details) %>
             <% bank_details = @document.bank_account_details() %>
             <% if @disbursement.tenant.is_sgm? and bank_details.length == 2 %>

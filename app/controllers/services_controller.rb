@@ -27,7 +27,7 @@ class ServicesController < NestedCommonController
     update.service = @instance
     update.user = current_user
     update.changelog = @changelog
-    update.document = @instance.document
+    update.document_from_service(@instance) 
     update.old_code = @old_code
     update.new_code = @instance.code
     update.save!
