@@ -8,7 +8,7 @@ class FundingAgreement
   end
 
   def conditions
-    return full_funding_conditions if is_sgm_mozambique_port()
+    return sgm_mozambique_conditions if is_sgm_mozambique_port()
     return "" if @revision.tenant.name.start_with? "sgm"
     return mariteam_conditions if @revision.tenant.customer_name == "mariteam"
     return biehl_conditions if @revision.tenant.customer_name == "biehl"
@@ -37,6 +37,10 @@ class FundingAgreement
     is_sqm = @revision.tenant.name.start_with? "sgm"
     mozambique_ports = get_mozambique_ports().member? @disbursement.port.name
     is_sqm && mozambique_ports
+  end
+
+  def sgm_mozambique_conditions
+    "<strong style='color: red; font-size:14px'>In light of global economic uncertainty, SGM Mozambique requires 100% prefunding prior to the vessel berthing.</strong>"
   end
 
   private
