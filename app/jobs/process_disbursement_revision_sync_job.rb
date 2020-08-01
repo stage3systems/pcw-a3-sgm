@@ -1,5 +1,7 @@
+require 'new_relic/agent/method_tracer'
 class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
-
+  include ::NewRelic::Agent::MethodTracer
+  
   def enqueue(job)
     stat = get_stat(job)
     stat.save!
@@ -49,4 +51,9 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
     })
   end
 
+  add_method_tracer :enqueue, 'Custom/enqueue'
+  add_method_tracer :before, 'Custom/before'
+  add_method_tracer :perform, 'Custom/perform'
+  add_method_tracer :success, 'Custom/success'
+  add_method_tracer :error, 'Custom/error'
 end
