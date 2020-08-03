@@ -1,4 +1,6 @@
+require 'new_relic/agent/method_tracer'
 class AosDa
+  include ::NewRelic::Agent::MethodTracer
   STATUSES = {
     0 => "DRAFT",
     1 => "INITIAL",
@@ -91,4 +93,5 @@ class AosDa
       "updatedAt" => revision.updated_at,
     }
   end
+  add_method_tracer :sync, 'Custom/sync'
 end
