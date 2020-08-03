@@ -1,4 +1,6 @@
+require 'new_relic/agent/method_tracer'
 class DisbursementRevision < ActiveRecord::Base
+  include ::NewRelic::Agent::MethodTracer
   belongs_to :disbursement
   belongs_to :cargo_type
   belongs_to :user
@@ -165,4 +167,5 @@ class DisbursementRevision < ActiveRecord::Base
     Company.find(id).remote_id rescue nil
   end
 
+  add_method_tracer :sync_with_aos, 'Custom/sync_with_aos'
 end
