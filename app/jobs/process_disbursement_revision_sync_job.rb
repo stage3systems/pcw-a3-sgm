@@ -1,7 +1,7 @@
 require 'new_relic/agent/method_tracer'
 class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
   include ::NewRelic::Agent::MethodTracer
-  
+
   def enqueue(job)
     stat = get_stat(job)
     stat.save!
@@ -21,6 +21,9 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
   def perform(*args)
     revision = DisbursementRevision.find revisionId
     revision.sync_with_aos
+    ::NewRelic::Agent.add_custom_attributes({ 
+        revisionId: revisionId
+    })
   end
 
   def success(job)
