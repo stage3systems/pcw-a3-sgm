@@ -1,4 +1,6 @@
+require 'new_relic/agent/method_tracer'
 class AosNomination
+  include ::NewRelic::Agent::MethodTracer
   def self.from_tenant_and_aos_id(tenant, id)
     return nil unless id
     self.new(tenant, id)
@@ -83,4 +85,6 @@ class AosNomination
   def aos_appt
     @aos_appt ||= @api.find('appointment', appointment_id)
   end
+
+  add_method_tracer :sync_revision, 'Custom/sync_revision'
 end

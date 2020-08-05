@@ -1,4 +1,6 @@
+require 'new_relic/agent/method_tracer'
 class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
+  include ::NewRelic::Agent::MethodTracer
 
   def enqueue(job)
     stat = get_stat(job)
@@ -9,6 +11,8 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
     started_at = Time.now
     wait_time = started_at - job.run_at if job.run_at
     stat = get_stat(job)
+    stat.run_at = job.run_at if job.run_at
+    stat.hostname = Socket.gethostname
     stat.wait_time = wait_time
     stat.started_at = started_at
     stat.save!
@@ -17,6 +21,9 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
   def perform(*args)
     revision = DisbursementRevision.find revisionId
     revision.sync_with_aos
+    ::NewRelic::Agent.add_custom_attributes({ 
+        revisionId: revisionId
+    })
   end
 
   def success(job)
@@ -43,9 +50,13 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
     DelayedJobsStat.find_or_create_by({ 
       entity_name: 'DisbursementRevision', 
       entity_id: revisionId, 
-      attempt: job.attempts,
-      hostname: Socket.gethostname
+      attempt: job.attempts
     })
   end
 
+  add_method_tracer :enqueue, 'Custom/enqueue'
+  add_method_tracer :before, 'Custom/before'
+  add_method_tracer :perform, 'Custom/perform'
+  add_method_tracer :success, 'Custom/success'
+  add_method_tracer :error, 'Custom/error'
 end
