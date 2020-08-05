@@ -320,15 +320,6 @@ class DisbursementDocument
         {style: :bold, value: "Swift: BSCHCLRM"},
         {style: :bold, value: "mta@mtradeagents.com"}
       ]
-    when "marval"
-      [  {style: :bold, value: "BENEFICIARY BANK: CITIBANK N.A."},
-         {style: :bold, value: "666 5TH AVENUE, 7TH, FLOOR"},
-         {style: :bold, value: "NY, NY10103"},
-         {style: :bold, value: "ABA: 021000089"},
-         {style: :bold, value: "SWIFT CODE: CITIUS33"},
-         {style: :bold, value: "BENEFICIARY ACCT NBR: 36893146"},
-         {style: :bold, value: "BENEFICIARY FULL NAME: MARITIMA VALPARAISO CHILE SA."}
-      ]
     when "benline"
       [  {style: :bold, value: "Bank: Westpac Banking Corporation"},
          {style: :bold, value: "Bank Address: 743 Military Road, Mosman, New South Wales 2088, Australia"},
