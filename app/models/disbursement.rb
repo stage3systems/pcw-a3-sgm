@@ -41,9 +41,15 @@ class Disbursement < ActiveRecord::Base
   end
 
   def aos_url
-    self.tenant.aos_api_url.sub(
+    if self.tenant.uses_new_da_sync?
+      self.tenant.aos_api_url.sub(
+        '/api',
+        '/da/'+self.appointment_id.to_s+'/nomination/'+self.nomination_id.to_s)
+    else
+      self.tenant.aos_api_url.sub(
       '/api',
       '/disbursement/'+self.appointment_id.to_s)
+    end
   end
 
   def next_revision
