@@ -1,4 +1,6 @@
+require 'new_relic/agent/method_tracer'
 class AosApi
+  include ::NewRelic::Agent::MethodTracer
   include HTTParty
 
   def initialize(tenant)
@@ -103,4 +105,6 @@ class AosApi
       return 67 if @tenant.customer_name == "transmarine"
       return 2
   end
+  add_method_tracer :get, 'Custom/aos_api-get'
+  add_method_tracer :each, 'Custom/aos_api-each'
 end
