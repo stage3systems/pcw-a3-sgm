@@ -47,7 +47,7 @@ class Tenant < ActiveRecord::Base
   end
 
   def supports_named_services?
-    ["sgm", "wallem", "wallemgroup", "biehl"].member? self.customer_name
+    ["sgm", "biehl"].member? self.customer_name
   end
 
   def supports_free_text_items?
@@ -177,6 +177,6 @@ class Tenant < ActiveRecord::Base
   end
 
   def use_service_key_as_activity_code?
-    ["sgm", "wallem", "wallemgroup"].member? self.customer_name
+    ["sgm"].member? self.customer_name
   end
 end
