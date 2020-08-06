@@ -32,3 +32,5 @@ config/identity.yml
 
 postgres-data
 .idea/
+
+db/schema_cache.dump

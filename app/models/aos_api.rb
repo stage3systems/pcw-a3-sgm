@@ -107,4 +107,5 @@ class AosApi
   end
   add_method_tracer :get, 'Custom/aos_api-get'
   add_method_tracer :each, 'Custom/aos_api-each'
+  add_method_tracer :save, 'Custom/aos_api-save'
 end
