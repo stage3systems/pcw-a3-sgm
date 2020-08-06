@@ -19,11 +19,11 @@ class ProcessDisbursementRevisionSyncJob < Struct.new(:revisionId)
   end
    
   def perform(*args)
-    revision = DisbursementRevision.find revisionId
-    revision.sync_with_aos
     ::NewRelic::Agent.add_custom_attributes({ 
         revisionId: revisionId
     })
+    revision = DisbursementRevision.find revisionId
+    revision.sync_with_aos
   end
 
   def success(job)
