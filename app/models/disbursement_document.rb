@@ -210,7 +210,6 @@ class DisbursementDocument
   end
 
   def prefunding
-    return [] if @disbursement.inquiry?
     txt = FundingAgreement.new(self).conditions
     return [] if txt.blank?
     [txt, ""]
