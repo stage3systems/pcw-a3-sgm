@@ -1,6 +1,5 @@
 class RemoveNormacTenant < ActiveRecord::Migration
   def change
-    def change
       ActiveRecord::Base.transaction do
         t = Tenant.find_by(name: "normac")
         if t != nil
