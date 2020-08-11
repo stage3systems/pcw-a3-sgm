@@ -1,6 +1,10 @@
 module Syncable
   def aos_create(tenant, data)
-    i = self.new
+    i = nil
+    if data['id'].present?
+      i = self.where(tenant_id: tenant.id, remote_id: data['id']).first
+    end
+    i = self.new if i.nil?
     i.update_from_json(tenant, data)
     i.save
   end
