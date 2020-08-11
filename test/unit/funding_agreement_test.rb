@@ -39,7 +39,6 @@ class FundingAgreementTest < ActiveSupport::TestCase
       else
         assert_not doc.prefunding.empty?
       end
-      assert_not fa.conditions.empty?
     end
     da.destroy
   end
