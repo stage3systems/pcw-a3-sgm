@@ -32,7 +32,7 @@ class DisbursementsController < ApplicationController
 
     respond_to do |format|
       format.html { @pfda_view.anonymous!; render layout: "published" }
-      format.pdf {  handle_pdf }
+      format.pdf { @pfda_view.pdf!; handle_pdf }
       format.xls { handle_xls }
     end
   end
@@ -198,8 +198,6 @@ class DisbursementsController < ApplicationController
     unless File.exists? file
       PdfDA.new(@document, root_url).render_file file
     end
-    PdfDA.new(@document, root_url).render_file file
-    render json: params
     send_file(file, :type => "application/pdf", :disposition => params[:inline].present? ? 'inline' : 'attachment')
   end
 
