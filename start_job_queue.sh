@@ -22,4 +22,6 @@ else
 fi
 cd /pcw
 rm -f /pcw/tmp/pids/server.pid
+
+bundle exec rake db:schema:cache:dump
 bin/delayed_job run
