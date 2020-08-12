@@ -34,12 +34,13 @@ class FundingAgreementTest < ActiveSupport::TestCase
       r.save
       doc = DisbursementDocument.new(da,r)
       fa = FundingAgreement.new(doc)
-      if da.inquiry?
+      if da.inquiry? and da.tenant.customer_name == "biehl"
+        assert_not doc.prefunding.empty?
+      elsif da.inquiry?
         assert doc.prefunding.empty?
       else
         assert_not doc.prefunding.empty?
       end
-      assert_not fa.conditions.empty?
     end
     da.destroy
   end
