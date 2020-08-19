@@ -143,11 +143,11 @@ class Tenant < ActiveRecord::Base
   def sync_ports
     api = AosApi.new(self)
     api.each('officePort') do |op|
-      self.sync_port_and_office(op['portId'], op['officeId'])
+      self.fetch_port_with_office(op['portId'], op['officeId'])
     end
   end
 
-  def sync_port_with_office(portId, officeId)
+  def fetch_port_with_office(portId, officeId)
       api = AosApi.new(self)
       aos_port = api.find("port", portId)
       aos_office = api.find("office", officeId)
