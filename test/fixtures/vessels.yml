@@ -15,3 +15,12 @@ vesseltwo:
   grt: 9.99
   nrt: 9.99
   dwt: 9.99
+
+vesselthree:
+  tenant: :one
+  name: vesselthree
+  loa: 9.99
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  remote_id: 91

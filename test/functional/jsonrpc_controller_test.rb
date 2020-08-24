@@ -165,14 +165,14 @@ class JsonrpcControllerTest < ActionController::TestCase
                     "CREATE",
                     "company",
                     {
-                      id: 123,
+                      id: 124,
                       name: 'Company One'
                     }
                   ]}
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    company = Company.find_by(remote_id: 123)
+    company = Company.find_by(remote_id: 124)
     assert company.name == 'Company One'
     assert company.email.nil?
     post :index, {format: :json, id: 1, method: 'sync',
@@ -182,7 +182,7 @@ class JsonrpcControllerTest < ActionController::TestCase
                     "emailAddress",
                     {
                       id: 123,
-                      companyId: 123,
+                      companyId: 124,
                       prime: 1,
                       address: 'info@company.one'
                     }
@@ -190,7 +190,7 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    assert Company.find_by(remote_id: 123).email == 'info@company.one'
+    assert Company.find_by(remote_id: 124).email == 'info@company.one'
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -198,7 +198,7 @@ class JsonrpcControllerTest < ActionController::TestCase
                     "emailAddress",
                     {
                       id: 123,
-                      companyId: 123,
+                      companyId: 124,
                       prime: 1,
                       address: 'contact@company.one'
                     }
@@ -206,7 +206,7 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    assert Company.find_by(remote_id: 123).email == 'contact@company.one'
+    assert Company.find_by(remote_id: 124).email == 'contact@company.one'
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
@@ -214,7 +214,7 @@ class JsonrpcControllerTest < ActionController::TestCase
                     "emailAddress",
                     {
                       id: 123,
-                      companyId: 123,
+                      companyId: 124,
                       prime: 1,
                       address: 'contact@company.one'
                     }
@@ -222,20 +222,20 @@ class JsonrpcControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    assert Company.find_by(remote_id: 123).email.nil?
+    assert Company.find_by(remote_id: 124).email.nil?
     post :index, {format: :json, id: 1, method: 'sync',
                   "params" => [
                     'changeme',
                     "DELETE",
                     "company",
                     {
-                      id: 123
+                      id: 124
                     }
                   ]}
     assert_response :success
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
-    assert Company.find_by(remote_id: 123).nil?
+    assert Company.find_by(remote_id: 124).nil?
   end
   test "offices and email addresses" do
     @tenant = tenants(:one)
@@ -460,5 +460,33 @@ class JsonrpcControllerTest < ActionController::TestCase
     body = JSON.parse(response.body)
     assert body['result'] == "ok"
     assert Vessel.find_by(remote_id: 123).nil?
+  end
+  
+  test "Prevent creates vessel with same remote_id" do
+    aos_stub(:get, "vesselType/1", :vesselType, [{
+      type: "maintype",
+      subtype: "subtype"
+    }])
+    assert 3 == Vessel.all.count
+    post :index, {format: :json, id: 1, method: 'sync',
+                  "params" => [
+                    'changeme',
+                    "CREATE",
+                    "vessel",
+                    {
+                      id: 91,
+                      name: 'hmbig',
+                      loa: 100,
+                      vesselTypeId: 1,
+                      intlNetRegisteredTonnage: 10000,
+                      intlGrossRegisteredTonnage: 20000,
+                      fullSummerDeadweight: 30000
+                    }
+                  ]}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert body['result'] == "ok"
+    
+    assert 3 == Vessel.all.count
   end
 end
