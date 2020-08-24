@@ -3,15 +3,6 @@ Please click on the link below to view the requested port disbursement inquiry f
 <% url = "#{root_url}/pda/#{doc.disbursement.publication_id}" %>
 <%= url %>
 
-For inquires relating to this estimate, please contact our local port office:
-
-Biehl & Co. – <%= doc.from %>
-<% doc.office_address_lines.each do |line| %>
-  <%= line %>
-<% end %>
-<%= doc.office_email %>
-
-<%= doc.office_phone %>
-
+For inquires relating to this estimate, please contact our local port office, the details of which can be found in the signature below.
 
 
