@@ -198,7 +198,7 @@ class DisbursementsController < ApplicationController
     unless File.exists? file
       PdfDA.new(@document, root_url).render_file file
     end
-    send_file(file, :type => "application/pdf")
+    send_file(file, :type => "application/pdf", :disposition => params[:inline].present? ? 'inline' : 'attachment')
   end
 
   def handle_xls

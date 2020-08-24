@@ -38,6 +38,10 @@ class DisbursementDocument
     @revision.data['office_email'] || @revision.tenant.default_email
   end
 
+  def office_phone
+    @disbursement.office.phone if @disbursement.office
+  end
+
   def issued
     I18n.l @revision.updated_at.to_date
   end
@@ -87,6 +91,10 @@ class DisbursementDocument
     @revision.data['port_name'] || ""
   end
 
+  def terminal_name
+    @revision.data['terminal_name'] || ""
+  end
+  
   def currency_code
     @revision.data["currency_code"]
   end
@@ -287,19 +295,6 @@ class DisbursementDocument
         {style: :bold, value: "301 EAST OCEAN BOULEVARD"},
         {style: :bold, value: "LONG BEACH"},
         {style: :bold, value: "CALIFORNIA 90802 4828 USA"}
-      ]
-    when "normac" 
-      [
-        {style: :bold, value: "Beneficiary: Normac Shipping Limited"},
-        {style: :bold, value: "Bank: Barclays Bank Plc"},
-        {style: :bold, value: "Branch: Lord Street, Liverpool, U.K"},
-        {style: :bold, value: "Sort Code: 20-51-01"},
-        {style: :bold, value: ""},
-        {style: :bold, value: "GBP Account no: 50115479"},
-        {style: :bold, value: "GBP IBAN: GB04 BARC 2051 0150 1154 79"},
-        {style: :bold, value: ""},
-        {style: :bold, value: "USD Account no: 53680111"},
-        {style: :bold, value: "USD IBAN: GB04 BARC 2051 0153 6801 11"}
       ]
     when "sgm", "sturrockgrindrod"
       sgm_bank_details

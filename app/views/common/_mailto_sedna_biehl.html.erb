@@ -1,0 +1,12 @@
+<div>
+Please click on the link below to view the requested port disbursement inquiry for the <%= doc.vessel_name %> calling <%= doc.terminal_name %> in the port of <%= doc.port_name %>. You can download a PDF version of the estimate by clicking the link below (no log in required).
+<br>
+<br>
+<% url = "#{root_url}/pda/#{doc.disbursement.publication_id}" %>
+<a href="<%= url %>"><%= url %></a>
+<br>
+<br>
+For inquires relating to this estimate, please contact our local port office, the details of which can be found in the signature below.<br>
+</div>
+
+
