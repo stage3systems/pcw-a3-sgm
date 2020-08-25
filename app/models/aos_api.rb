@@ -18,14 +18,11 @@ class AosApi
   end
 
   def save(entity, body)
-    r = JSON.parse(
-          self.class.post("/save/#{entity}",
-                          options.merge({
-                            body: body.to_json,
-                            headers: {'Content-Type' => 'application/json'}
-                          })).body)
-    return nil if r["status"] != "success"
-    return r["data"][entity][0]
+    self.class.post("/save/#{entity}",
+      options.merge({
+        body: body.to_json,
+        headers: {'Content-Type' => 'application/json'}
+    }))
   end
 
   def delete(entity, id)

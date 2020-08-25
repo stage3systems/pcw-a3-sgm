@@ -12,7 +12,8 @@ class AosDa
   def sync(revision)
     return unless [1, 3].include?(revision.disbursement.status_cd)
     api = AosApi.new(revision.tenant)
-    api.save("pcwDaRevision", da_container(revision))
+    response = api.save("pcwDaRevision", da_container(revision))
+    raise "AosDa sync failed, code: #{response.code}, uri:#{response.request.uri.to_s}, revision:#{revision.id}" if response.code != 200
   end
 
   def da_container(revision)
