@@ -68,8 +68,6 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.6)
-    d3js-rails (3.1.6)
-      railties (>= 3.0, < 5.0)
     daemons (1.1.9)
     delayed_job (4.1.8)
       activesupport (>= 3.0, < 6.1)
@@ -273,7 +271,6 @@ DEPENDENCIES
   codeclimate-test-reporter
   coffee-rails
   copy_carrierwave_file
-  d3js-rails
   daemons (= 1.1.9)
   delayed_job_active_record
   exception_notification
