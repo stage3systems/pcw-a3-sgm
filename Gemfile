@@ -15,7 +15,6 @@ gem 'uuidtools'
 gem 'simple_enum'
 gem 'ace-rails-ap'
 gem 'simple_form', '>= 3.1.0'
-gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn', group: :production
 gem 'prawn', '>= 1.0.0'
