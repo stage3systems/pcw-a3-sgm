@@ -24,10 +24,10 @@ else
     export RAILS_ENV=production
     export PCW_AWS_USE_IAM_PROFILE=true
     # PCW_DB_HOST should be set through an environment variable
+    RAILS_ENV=production bundle exec rake assets:precompile
 fi
 cd /pcw
 rm -f /pcw/tmp/pids/server.pid
-
 bundle exec rake db:migrate
 bundle exec rake db:schema:cache:dump
 bundle exec rails s -b 0.0.0.0
