@@ -47,8 +47,6 @@ RUN mkdir -p log
 ADD http://static.stage3systems.com/pcw/GeoLiteCity.dat.gz ./
 RUN gunzip GeoLiteCity.dat.gz
 
-RUN RAILS_ENV=production bundle exec rake assets:precompile
-
 VOLUME ["/pcw/public"]
 
 EXPOSE 3000
