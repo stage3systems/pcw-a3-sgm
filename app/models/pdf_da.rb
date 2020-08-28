@@ -297,7 +297,9 @@ class PdfDA < Prawn::Document
   end
 
   def funding_details
-    funding_details_item(@document.prefunding)
+    prefunding = @document.prefunding;
+    prefunding[0] = ActionView::Base.full_sanitizer.sanitize(prefunding[0]) unless prefunding.empty? # remove html
+    funding_details_item(prefunding)
     funding_details_item(@document.bank_details)
     details = @document.bank_account_details
     if @disbursement.tenant.is_sgm? and details.length == 2
@@ -305,7 +307,7 @@ class PdfDA < Prawn::Document
             start_new_page
             move_down(MARGIN)
         else
-          move_down(10)
+          move_down(prefunding.empty? ? 10 : 40)
         end
         start_y = y
         bounding_box([0, start_y],
