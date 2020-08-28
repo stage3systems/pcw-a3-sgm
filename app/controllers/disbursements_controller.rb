@@ -195,9 +195,9 @@ class DisbursementsController < ApplicationController
   def handle_pdf
     Dir.mkdir Rails.root.join('pdfs') unless Dir.exists? Rails.root.join('pdfs')
     file = Rails.root.join 'pdfs', "#{@revision.reference}.pdf"
-    unless File.exists? file
-      PdfDA.new(@document, root_url).render_file file
-    end
+    # unless File.exists? file
+    # end
+    PdfDA.new(@document, root_url).render_file file # always geenerate new pdf!
     send_file(file, :type => "application/pdf", :disposition => params[:inline].present? ? 'inline' : 'attachment')
   end
 
