@@ -28,7 +28,6 @@ else
 fi
 cd /pcw
 rm -f /pcw/tmp/pids/server.pid
-
 bundle exec rake db:migrate
 bundle exec rake db:schema:cache:dump
 bundle exec rails s -b 0.0.0.0

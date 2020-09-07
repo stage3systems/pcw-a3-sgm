@@ -1,4 +1,4 @@
-FROM ruby:2.3
+FROM ruby:2.6
 
 RUN apt-get update -qq && \
     apt-get install -y build-essential libpq-dev \
@@ -46,6 +46,7 @@ RUN mkdir -p log
 # Download and extract the GeoCity db
 ADD http://static.stage3systems.com/pcw/GeoLiteCity.dat.gz ./
 RUN gunzip GeoLiteCity.dat.gz
+
 
 VOLUME ["/pcw/public"]
 
