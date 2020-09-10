@@ -50,7 +50,8 @@ class AosNomination
     keys.each do |k|
       c = charges[k]
       j = base.merge(revision.charge_to_json(k))
-      @api.save('disbursement', c ? c.merge(j) : j)
+      response = @api.save('disbursement', c ? c.merge(j) : j)
+      raise "AosNomination sync_revision failed, code: #{response.code}, uri:#{response.request.uri.to_s}, revision:#{revision.id}" if response.code != 200
     end
     delete_missing(keys)
   end

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.6'
+gem 'rails', '4.2.8'
 
 gem 'pg'
 gem 'lograge'
@@ -12,11 +12,9 @@ gem 'font-awesome-sass'
 gem 'therubyracer', :require => 'v8'
 gem 'breadcrumbs_on_rails'
 gem 'uuidtools'
-gem 'd3js-rails'
 gem 'simple_enum'
 gem 'ace-rails-ap'
 gem 'simple_form', '>= 3.1.0'
-gem 'exception_notification'
 gem 'ranked-model'
 gem 'unicorn', group: :production
 gem 'prawn', '>= 1.0.0'
