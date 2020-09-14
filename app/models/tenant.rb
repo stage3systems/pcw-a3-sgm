@@ -109,8 +109,7 @@ class Tenant < ActiveRecord::Base
   def sync_companies
     api = AosApi.new(self)
     api.companies.each do |c|
-      company = self.companies.where('remote_id = :id OR name ilike :name',
-                                     id: c['id'], name: "#{c["name"]}").first
+      company = self.companies.where('remote_id = :id', id: c['id']).first
       company = Company.new unless company
       company.update_from_json(self, c)
       company.save!
