@@ -2,6 +2,7 @@ class Service < ActiveRecord::Base
   include RankedModel
   attr_accessor :changelog
   attr_accessor :tax_applies
+  validates_presence_of :key, :item
   validate :code_checks
   belongs_to :port, counter_cache: true
   belongs_to :terminal
@@ -12,7 +13,6 @@ class Service < ActiveRecord::Base
   has_many :service_updates
   mount_uploader :document, TariffUploader
   ranks :row_order, :with_same => [:port_id, :terminal_id]
-
   def mockup_context
     <<CTX
     var ctx = {
