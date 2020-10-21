@@ -273,7 +273,7 @@ PLATFORMS
 
 DEPENDENCIES
   ace-rails-ap
-  aws-sdk-sns
+  aws-sdk-sns (~> 1)
   bootstrap-editable-rails
   bootstrap-sass
   breadcrumbs_on_rails
