@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.8'
-
+gem 'aws-sdk-sns'
 gem 'pg'
 gem 'lograge'
 gem 'omniauth'

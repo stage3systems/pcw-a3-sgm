@@ -1,3 +1,5 @@
+require 'aws-sdk-sns'
+
 class AosSyncQueue
   
   def initialize(tenant, topicArn = nil, region = 'us-west-2')
@@ -6,7 +8,7 @@ class AosSyncQueue
     @topicArn = topicArn
   end
 
-  def publish(entity, body)
+  def publish(entity, data)
     paylaod = self.prepare_data(entity, data);
 
     sns = Aws::SNS::Resource.new(region: @region)

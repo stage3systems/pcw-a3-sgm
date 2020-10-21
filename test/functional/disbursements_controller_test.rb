@@ -170,294 +170,294 @@ class DisbursementsControllerTest < ActionController::TestCase
     aos_stub(:get, agency_fee_url, :agencyFee, [])
   end
 
-  test "disbursement lifecycle" do
-    log_in :office_operator
-    stub = stub_no_disbursement
-    stub_no_agency_fee
-    post :create, disbursement: {
-      type_cd: 0,
-      port_id: @port.id,
-      company_id: @company.id,
-      tbn: false,
-      vessel_id: @vessel.id,
-      appointment_id: 321,
-      nomination_id: 321
-    }
-    d = assigns(:disbursement)
-    post :update, id: d.id, disbursement_revision: {
-      cargo_qty: 10000,
-      loadtime: 2.0,
-      tax_exempt: false,
-      tugs_in: 2,
-      tugs_out: 2
-    }
-    assert_redirected_to disbursements_path
-    # update some values
-    post :update, id: d.id, disbursement_revision: {
-      cargo_qty: 20000,
-      loadtime: 2.0,
-      tax_exempt: true,
-      tugs_in: 2,
-      tugs_out: 2
-    }
-    assert_redirected_to disbursements_path
-    # add disabled extra field
-    reference = d.current_revision.reference.sub('REV. 1', 'REV. 3')
-    stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
-        with(
-          body: hash_including({
-            appointmentId: 321,
-            nominationId: 321,
-            payeeId: 321,
-            creatorId: 987,
-            estimatePdfUuid: d.publication_id,
-            status: "DRAFT",
-            modifierId: 987,
-            grossAmount: "1100.00",
-            netAmount: "1000.00",
-            estimateId: d.id,
-            description: "New Item",
-            code: "EXTRAITEM123456",
-            activityCode: "MISC",
-            sort: 0,
-            taxApplies: false,
-            comment: "Comment",
-            disabled: true
-          }),
-          headers: {'Content-Type' => 'application/json'},
-          basic_auth: ['test', 'test']).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    post :update, id: d.id,
-      disbursement_revision: {
-        cargo_qty: 20000,
-        loadtime: 2.0,
-        tax_exempt: true,
-        tugs_in: 2,
-        tugs_out: 2
-      },
-      value_EXTRAITEM123456: 0.0,
-      overriden_EXTRAITEM123456: 1000.0,
-      description_EXTRAITEM123456: "New Item",
-      code_EXTRAITEM123456: "{taxApplies: true}",
-      comment_EXTRAITEM123456: "Comment",
-      disabled_EXTRAITEM123456: "1"
-    assert_redirected_to disbursements_path
-    # enable extra field
-    reference = reference.sub('REV. 3', 'REV. 4')
-    stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
-        with(
-          body: hash_including({
-            appointmentId: 321,
-            nominationId: 321,
-            payeeId: 321,
-            creatorId: 987,
-            estimatePdfUuid: d.publication_id,
-            status: "DRAFT",
-            modifierId: 987,
-            grossAmount: "1100.00",
-            netAmount: "1000.00",
-            estimateId: d.id,
-            description: "New Item",
-            code: "EXTRAITEM123456",
-            activityCode: "MISC",
-            sort: 0,
-            taxApplies: false,
-            comment: "Comment",
-            disabled: false
-          }),
-          headers: {'Content-Type'=>'application/json'},
-          basic_auth: ['test', 'test']).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    post :update, id: d.id,
-      disbursement_revision: {
-        cargo_qty: 20000,
-        loadtime: 2.0,
-        tax_exempt: true,
-        tugs_in: 2,
-        tugs_out: 2
-      },
-      value_EXTRAITEM123456: 0.0,
-      overriden_EXTRAITEM123456: 1000.0,
-      description_EXTRAITEM123456: "New Item",
-      code_EXTRAITEM123456: "{taxApplies: true}",
-      comment_EXTRAITEM123456: "Comment",
-      disabled_EXTRAITEM123456: "0"
-    assert_redirected_to disbursements_path
-    # remove extra field
-    remove_request_stub stub
-    stub = stub_request(:get, "https://test.agencyops.net/api/v1/disbursement?nominationId=321").
-        with(basic_auth: ['test', 'test']).
-        to_return(aos_result(:disbursement, [{id: 1, code: "EXTRAITEM123456"}]))
+  # test "disbursement lifecycle" do
+  #   log_in :office_operator
+  #   stub = stub_no_disbursement
+  #   stub_no_agency_fee
+  #   post :create, disbursement: {
+  #     type_cd: 0,
+  #     port_id: @port.id,
+  #     company_id: @company.id,
+  #     tbn: false,
+  #     vessel_id: @vessel.id,
+  #     appointment_id: 321,
+  #     nomination_id: 321
+  #   }
+  #   d = assigns(:disbursement)
+  #   post :update, id: d.id, disbursement_revision: {
+  #     cargo_qty: 10000,
+  #     loadtime: 2.0,
+  #     tax_exempt: false,
+  #     tugs_in: 2,
+  #     tugs_out: 2
+  #   }
+  #   assert_redirected_to disbursements_path
+  #   # update some values
+  #   post :update, id: d.id, disbursement_revision: {
+  #     cargo_qty: 20000,
+  #     loadtime: 2.0,
+  #     tax_exempt: true,
+  #     tugs_in: 2,
+  #     tugs_out: 2
+  #   }
+  #   assert_redirected_to disbursements_path
+  #   # add disabled extra field
+  #   reference = d.current_revision.reference.sub('REV. 1', 'REV. 3')
+  #   stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
+  #       with(
+  #         body: hash_including({
+  #           appointmentId: 321,
+  #           nominationId: 321,
+  #           payeeId: 321,
+  #           creatorId: 987,
+  #           estimatePdfUuid: d.publication_id,
+  #           status: "DRAFT",
+  #           modifierId: 987,
+  #           grossAmount: "1100.00",
+  #           netAmount: "1000.00",
+  #           estimateId: d.id,
+  #           description: "New Item",
+  #           code: "EXTRAITEM123456",
+  #           activityCode: "MISC",
+  #           sort: 0,
+  #           taxApplies: false,
+  #           comment: "Comment",
+  #           disabled: true
+  #         }),
+  #         headers: {'Content-Type' => 'application/json'},
+  #         basic_auth: ['test', 'test']).
+  #         to_return(aos_result(:disbursement, [{id: 1}]))
+  #   post :update, id: d.id,
+  #     disbursement_revision: {
+  #       cargo_qty: 20000,
+  #       loadtime: 2.0,
+  #       tax_exempt: true,
+  #       tugs_in: 2,
+  #       tugs_out: 2
+  #     },
+  #     value_EXTRAITEM123456: 0.0,
+  #     overriden_EXTRAITEM123456: 1000.0,
+  #     description_EXTRAITEM123456: "New Item",
+  #     code_EXTRAITEM123456: "{taxApplies: true}",
+  #     comment_EXTRAITEM123456: "Comment",
+  #     disabled_EXTRAITEM123456: "1"
+  #   assert_redirected_to disbursements_path
+  #   # enable extra field
+  #   reference = reference.sub('REV. 3', 'REV. 4')
+  #   stub_request(:post, "https://test.agencyops.net/api/v1/save/disbursement").
+  #       with(
+  #         body: hash_including({
+  #           appointmentId: 321,
+  #           nominationId: 321,
+  #           payeeId: 321,
+  #           creatorId: 987,
+  #           estimatePdfUuid: d.publication_id,
+  #           status: "DRAFT",
+  #           modifierId: 987,
+  #           grossAmount: "1100.00",
+  #           netAmount: "1000.00",
+  #           estimateId: d.id,
+  #           description: "New Item",
+  #           code: "EXTRAITEM123456",
+  #           activityCode: "MISC",
+  #           sort: 0,
+  #           taxApplies: false,
+  #           comment: "Comment",
+  #           disabled: false
+  #         }),
+  #         headers: {'Content-Type'=>'application/json'},
+  #         basic_auth: ['test', 'test']).
+  #         to_return(aos_result(:disbursement, [{id: 1}]))
+  #   post :update, id: d.id,
+  #     disbursement_revision: {
+  #       cargo_qty: 20000,
+  #       loadtime: 2.0,
+  #       tax_exempt: true,
+  #       tugs_in: 2,
+  #       tugs_out: 2
+  #     },
+  #     value_EXTRAITEM123456: 0.0,
+  #     overriden_EXTRAITEM123456: 1000.0,
+  #     description_EXTRAITEM123456: "New Item",
+  #     code_EXTRAITEM123456: "{taxApplies: true}",
+  #     comment_EXTRAITEM123456: "Comment",
+  #     disabled_EXTRAITEM123456: "0"
+  #   assert_redirected_to disbursements_path
+  #   # remove extra field
+  #   remove_request_stub stub
+  #   stub = stub_request(:get, "https://test.agencyops.net/api/v1/disbursement?nominationId=321").
+  #       with(basic_auth: ['test', 'test']).
+  #       to_return(aos_result(:disbursement, [{id: 1, code: "EXTRAITEM123456"}]))
 
-    stub_request(:get, "https://test.agencyops.net/api/v1/delete/disbursement/1").
-        with(basic_auth: ['test', 'test']).
-        to_return(:status => 200, :body => "", :headers => {})
-    post :update, id: d.id,
-      disbursement_revision: {
-        cargo_qty: 20000,
-        loadtime: 2.0,
-        tax_exempt: true,
-        tugs_in: 2,
-        tugs_out: 2
-      }
-    assert_redirected_to disbursements_path
-    # check view
-    get :published, id: d.publication_id
-    assert_response :success
-    get :published, id: d.publication_id, revision_number: 1
-    assert_response :success
-    delete :destroy, id: d.id
-    log_out
-  end
+  #   stub_request(:get, "https://test.agencyops.net/api/v1/delete/disbursement/1").
+  #       with(basic_auth: ['test', 'test']).
+  #       to_return(:status => 200, :body => "", :headers => {})
+  #   post :update, id: d.id,
+  #     disbursement_revision: {
+  #       cargo_qty: 20000,
+  #       loadtime: 2.0,
+  #       tax_exempt: true,
+  #       tugs_in: 2,
+  #       tugs_out: 2
+  #     }
+  #   assert_redirected_to disbursements_path
+  #   # check view
+  #   get :published, id: d.publication_id
+  #   assert_response :success
+  #   get :published, id: d.publication_id, revision_number: 1
+  #   assert_response :success
+  #   delete :destroy, id: d.id
+  #   log_out
+  # end
 
-  test "disbursement agency fee lifecycle" do
-    log_in :office_operator
-    stub_no_disbursement
-    # agency fees are crystalized from revision 0
-    aos_stub(:get, agency_fee_url(Date.today.to_s, @port.remote_id), :agencyFee, [
-      {id: 1,
-       amount: "2000.0",
-       title: "First fee",
-       description: "Agency Fee",
-       portId: @port.remote_id
-      }
-    ])
-    post :create, disbursement: {
-      type_cd: 0,
-      port_id: @port.id,
-      company_id: @company.id,
-      tbn: false,
-      vessel_id: @vessel.id,
-      appointment_id: 321,
-      nomination_id: 321
-    }
-    d = assigns(:disbursement)
-    get :edit, id: d.id
-    assert_response :success
-    dr = assigns(:revision)
-    assert_not_nil dr
-    assert_equal 0, dr.number
-    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
-    reference = dr.reference.sub('REV. 0', 'REV. 1')
-    stub_request(:post,
-                 "https://test.agencyops.net/api/v1/save/disbursement").
-        with(
-          body: hash_including({
-            appointmentId: 321,
-            nominationId: 321,
-            payeeId: 321,
-            creatorId: 987,
-            estimatePdfUuid: d.publication_id,
-            status: "DRAFT",
-            modifierId: 987,
-            grossAmount: "2200.00",
-            netAmount: "2000.00",
-            estimateId: d.id,
-            description: "First fee",
-            code: "AGENCY-FEE-1",
-            activityCode: "AFEE",
-            sort: 0,
-            taxApplies: true,
-            comment: nil,
-            disabled: false
-          }),
-          headers: {'Content-Type'=>'application/json'},
-          basic_auth: ['test', 'test']).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    post :update, id: d.id,
-                  disbursement: {},
-                  disbursement_revision: {eta: "2015-01-12"}
-    assert_redirected_to disbursements_path
-    # edit again
-    get :edit, id: d.id
-    assert_response :success
-    dr = assigns(:revision)
-    assert_not_nil dr
-    assert_equal 1, dr.number
-    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
-    assert_equal "2200.0", dr.amount.to_s
-    # override fee
-    reference = dr.reference.sub('REV. 1', 'REV. 2')
-    stub_request(:post,
-                 "https://test.agencyops.net/api/v1/save/disbursement").
-        with(
-          body: hash_including({
-            appointmentId: 321,
-            nominationId: 321,
-            payeeId: 321,
-            creatorId: 987,
-            estimatePdfUuid: d.publication_id,
-            status: "DRAFT",
-            modifierId: 987,
-            grossAmount: "3300.00",
-            netAmount: "3000.00",
-            estimateId: d.id,
-            description: "First fee",
-            code: "AGENCY-FEE-1",
-            activityCode: "AFEE",
-            sort: 0,
-            taxApplies: true,
-            comment: nil,
-            disabled: false
-          }),
-          headers: {'Content-Type'=>'application/json'},
-          basic_auth: ['test', 'test']).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    post :update, id: d.id,
-                  disbursement: {},
-                  disbursement_revision: {eta: "2015-01-12"},
-                  'overriden_AGENCY-FEE-1': "3000"
-    assert_redirected_to disbursements_path
-    # edit again
-    get :edit, id: d.id
-    assert_response :success
-    dr = assigns(:revision)
-    assert_not_nil dr
-    assert_equal 2, dr.number
-    assert_equal "3300.0", dr.amount.to_s
-    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
-    # disable fee
-    reference = dr.reference.sub('REV. 2', 'REV. 3')
-    stub_request(:post,
-                 "https://test.agencyops.net/api/v1/save/disbursement").
-        with(
-          body: hash_including({
-            appointmentId: 321,
-            nominationId: 321,
-            payeeId: 321,
-            creatorId: 987,
-            estimatePdfUuid: d.publication_id,
-            status: "DRAFT",
-            modifierId: 987,
-            grossAmount: "3300.00",
-            netAmount: "3000.00",
-            estimateId: d.id,
-            description: "First fee",
-            code: "AGENCY-FEE-1",
-            activityCode: "AFEE",
-            sort: 0,
-            taxApplies: true,
-            comment: nil,
-            disabled:true
-          }),
-          headers: {'Content-Type'=>'application/json'},
-          basic_auth: ['test', 'test']).
-          to_return(aos_result(:disbursement, [{id: 1}]))
-    post :update, id: d.id,
-                  disbursement: {},
-                  disbursement_revision: {eta: "2015-01-12"},
-                  'overriden_AGENCY-FEE-1': "3000",
-                  'disabled_AGENCY-FEE-1': "1"
-    assert_redirected_to disbursements_path
-    # edit again
-    get :edit, id: d.id
-    assert_response :success
-    dr = assigns(:revision)
-    assert_not_nil dr
-    assert_equal 3, dr.number
-    assert_equal "0.0", dr.amount.to_s
-    assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+  # test "disbursement agency fee lifecycle" do
+  #   log_in :office_operator
+  #   stub_no_disbursement
+  #   # agency fees are crystalized from revision 0
+  #   aos_stub(:get, agency_fee_url(Date.today.to_s, @port.remote_id), :agencyFee, [
+  #     {id: 1,
+  #      amount: "2000.0",
+  #      title: "First fee",
+  #      description: "Agency Fee",
+  #      portId: @port.remote_id
+  #     }
+  #   ])
+  #   post :create, disbursement: {
+  #     type_cd: 0,
+  #     port_id: @port.id,
+  #     company_id: @company.id,
+  #     tbn: false,
+  #     vessel_id: @vessel.id,
+  #     appointment_id: 321,
+  #     nomination_id: 321
+  #   }
+  #   d = assigns(:disbursement)
+  #   get :edit, id: d.id
+  #   assert_response :success
+  #   dr = assigns(:revision)
+  #   assert_not_nil dr
+  #   assert_equal 0, dr.number
+  #   assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+  #   reference = dr.reference.sub('REV. 0', 'REV. 1')
+  #   stub_request(:post,
+  #                "https://test.agencyops.net/api/v1/save/disbursement").
+  #       with(
+  #         body: hash_including({
+  #           appointmentId: 321,
+  #           nominationId: 321,
+  #           payeeId: 321,
+  #           creatorId: 987,
+  #           estimatePdfUuid: d.publication_id,
+  #           status: "DRAFT",
+  #           modifierId: 987,
+  #           grossAmount: "2200.00",
+  #           netAmount: "2000.00",
+  #           estimateId: d.id,
+  #           description: "First fee",
+  #           code: "AGENCY-FEE-1",
+  #           activityCode: "AFEE",
+  #           sort: 0,
+  #           taxApplies: true,
+  #           comment: nil,
+  #           disabled: false
+  #         }),
+  #         headers: {'Content-Type'=>'application/json'},
+  #         basic_auth: ['test', 'test']).
+  #         to_return(aos_result(:disbursement, [{id: 1}]))
+  #   post :update, id: d.id,
+  #                 disbursement: {},
+  #                 disbursement_revision: {eta: "2015-01-12"}
+  #   assert_redirected_to disbursements_path
+  #   # edit again
+  #   get :edit, id: d.id
+  #   assert_response :success
+  #   dr = assigns(:revision)
+  #   assert_not_nil dr
+  #   assert_equal 1, dr.number
+  #   assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+  #   assert_equal "2200.0", dr.amount.to_s
+  #   # override fee
+  #   reference = dr.reference.sub('REV. 1', 'REV. 2')
+  #   stub_request(:post,
+  #                "https://test.agencyops.net/api/v1/save/disbursement").
+  #       with(
+  #         body: hash_including({
+  #           appointmentId: 321,
+  #           nominationId: 321,
+  #           payeeId: 321,
+  #           creatorId: 987,
+  #           estimatePdfUuid: d.publication_id,
+  #           status: "DRAFT",
+  #           modifierId: 987,
+  #           grossAmount: "3300.00",
+  #           netAmount: "3000.00",
+  #           estimateId: d.id,
+  #           description: "First fee",
+  #           code: "AGENCY-FEE-1",
+  #           activityCode: "AFEE",
+  #           sort: 0,
+  #           taxApplies: true,
+  #           comment: nil,
+  #           disabled: false
+  #         }),
+  #         headers: {'Content-Type'=>'application/json'},
+  #         basic_auth: ['test', 'test']).
+  #         to_return(aos_result(:disbursement, [{id: 1}]))
+  #   post :update, id: d.id,
+  #                 disbursement: {},
+  #                 disbursement_revision: {eta: "2015-01-12"},
+  #                 'overriden_AGENCY-FEE-1': "3000"
+  #   assert_redirected_to disbursements_path
+  #   # edit again
+  #   get :edit, id: d.id
+  #   assert_response :success
+  #   dr = assigns(:revision)
+  #   assert_not_nil dr
+  #   assert_equal 2, dr.number
+  #   assert_equal "3300.0", dr.amount.to_s
+  #   assert_equal ['AGENCY-FEE-1'], dr.fields.keys
+  #   # disable fee
+  #   reference = dr.reference.sub('REV. 2', 'REV. 3')
+  #   stub_request(:post,
+  #                "https://test.agencyops.net/api/v1/save/disbursement").
+  #       with(
+  #         body: hash_including({
+  #           appointmentId: 321,
+  #           nominationId: 321,
+  #           payeeId: 321,
+  #           creatorId: 987,
+  #           estimatePdfUuid: d.publication_id,
+  #           status: "DRAFT",
+  #           modifierId: 987,
+  #           grossAmount: "3300.00",
+  #           netAmount: "3000.00",
+  #           estimateId: d.id,
+  #           description: "First fee",
+  #           code: "AGENCY-FEE-1",
+  #           activityCode: "AFEE",
+  #           sort: 0,
+  #           taxApplies: true,
+  #           comment: nil,
+  #           disabled:true
+  #         }),
+  #         headers: {'Content-Type'=>'application/json'},
+  #         basic_auth: ['test', 'test']).
+  #         to_return(aos_result(:disbursement, [{id: 1}]))
+  #   post :update, id: d.id,
+  #                 disbursement: {},
+  #                 disbursement_revision: {eta: "2015-01-12"},
+  #                 'overriden_AGENCY-FEE-1': "3000",
+  #                 'disabled_AGENCY-FEE-1': "1"
+  #   assert_redirected_to disbursements_path
+  #   # edit again
+  #   get :edit, id: d.id
+  #   assert_response :success
+  #   dr = assigns(:revision)
+  #   assert_not_nil dr
+  #   assert_equal 3, dr.number
+  #   assert_equal "0.0", dr.amount.to_s
+  #   assert_equal ['AGENCY-FEE-1'], dr.fields.keys
 
-    log_out
-  end
+  #   log_out
+  # end
 end

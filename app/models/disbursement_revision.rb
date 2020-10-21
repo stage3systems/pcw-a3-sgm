@@ -8,7 +8,7 @@ class DisbursementRevision < ActiveRecord::Base
   has_many :views,
            -> {order 'created_at DESC'},
            class_name: "PfdaView"
-  after_save :schedule_sync
+  after_save :sync_with_aos
   attr_accessor :target_currency
   attr_accessor :target_currency_rate
 
@@ -146,11 +146,6 @@ class DisbursementRevision < ActiveRecord::Base
       "disabled" => self.disabled[k] == "1",
       "revisionNumber" => self.number
     }
-  end
-
-  def schedule_sync
-    return if self.number == 0
-    Delayed::Job.enqueue ProcessDisbursementRevisionSyncJob.new(self.id)
   end
 
   def date_updated
