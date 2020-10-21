@@ -12,11 +12,7 @@ class AosDa
   def sync(revision)
     return unless [1, 3].include?(revision.disbursement.status_cd)
     config = Rails.application.config.x.sns
-    if Rails.env.test?
-      syncQueue = AosSyncQueueNull.new(revision.tenant)
-    else
-      syncQueue = AosSyncQueue.new(revision.tenant, config['sns_topic'], config['region'])
-    end
+    syncQueue = AosSyncQueue.new(revision.tenant, config['sns_topic'], config['region'])
     syncQueue.publish("pcwDaRevision", da_container(revision))
   end
 
