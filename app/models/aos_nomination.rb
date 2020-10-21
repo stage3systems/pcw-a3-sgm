@@ -11,7 +11,11 @@ class AosNomination
     @id = id
     @tenant = tenant
     @api = AosApi.new(tenant)
-    @syncQueue = AosSyncQueue.new(tenant, config['sns_topic'], ['sns_region'])
+    if Rails.env.test?
+      @syncQueue = AosSyncQueueNull.new(tenant)
+    else
+      @syncQueue = AosSyncQueue.new(tenant, config['sns_topic'], config['region'])
+    end
   end
 
   def vessel
