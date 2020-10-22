@@ -260,15 +260,13 @@ class DisbursementDocument
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
     when "biehl", "biehltest", "biehlstg"
       [ 
-        {style: :bold, value: "BANK OF AMERICA"},
-        {style: :bold, value: "901 MAIN STREET, 10TH FLOOR"},
-        {style: :bold, value: "DALLAS, TX 75202-2911"},
+        {style: :bold, value: "IBERIA BANK"},
+        {style: :bold, value: "NAME OF CUSTOMER: BIEHL & CO TEXAS LLC"},
         {style: :bold, value: ""},
-        {style: :bold, value: "ACCOUNT # 004792003683"},
-        {style: :bold, value: "ACH ABA No. 111000025"},
-        {style: :bold, value: "WIRE TRANSFER ABA No. 026009593"},
-        {style: :bold, value: "SWIFT ID: BOFAUS3N"},
-        {style: :bold, value: "FOR THE ACCOUNT OF BIEHL & CO TEXAS LLC"}, 
+        {style: :bold, value: "ACCOUNT NUMBER: 20002217503"},
+        {style: :bold, value: "WIRE/ACH ABA NUMBER: 265270413"},
+        {style: :bold, value: "SWIFT CODE: IBEAUS44"},
+        
         {style: :bold, value: ""},
         {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"}
       ]

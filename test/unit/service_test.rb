@@ -28,4 +28,12 @@ class ServiceTest < ActiveSupport::TestCase
     s.code = "{compute: function(ctx) { return 0; }, taxApplies: false}"
     assert s.save, "Can save good code"
   end
+
+  test "key is required" do
+    s = Service.new
+    s.item = "Test"
+    s.code = "{compute: function(ctx) { return 0; }, taxApplies: false}"
+    assert !s.save, "Cannot save without key"
+    assert_not_nil s.errors[:key]
+  end
 end
