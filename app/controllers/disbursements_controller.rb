@@ -109,6 +109,15 @@ class DisbursementsController < ApplicationController
       if @disbursement.save
         format.html { redirect_to edit_disbursement_url(@disbursement) }
       else
+
+        if @disbursement.errors['nomination_id'][0]
+          @err = [
+              @disbursement.errors['nomination_id'][0],
+              edit_disbursement_url(Disbursement.find_by(nomination_id: @disbursement.nomination_id))
+          ]
+        end
+
+        @disbursement.errors['vessel_name'] = @disbursement.errors['vessel_id'][0]
         @disbursement.errors['company_name'] = @disbursement.errors['company_id'][0]
         format.html { render action: "new" }
       end
