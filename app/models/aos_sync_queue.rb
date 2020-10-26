@@ -9,11 +9,15 @@ class AosSyncQueue
   end
 
   def publish(entity, data)
-    sns = Aws::SNS::Resource.new
+    credentials = Aws::InstanceProfileCredentials.new(retries: 3)
+    client = Aws::SNS::Client.new(
+      region: @region,
+      credentials: credentials
+    )
+    sns = Aws::SNS::Resource.new(client: client)
     topic = sns.topic(@topicArn)
 
     paylaod = self.prepare_data(entity, data);
-    
     topic.publish({
       message: paylaod.to_json,
       message_attributes: {
