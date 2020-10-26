@@ -1,5 +1,11 @@
-# config = Rails.application.config.x.sns
-# Aws.config.update(
-#   region: config['region'],
-#   credentials: Aws::InstanceProfileCredentials.new(retries: 3)
-# )
+require 'aws-sdk-sns'
+config = Rails.application.config.x.sns
+credentials = Aws::InstanceProfileCredentials.new
+Aws.config.update({
+  region: "us-west-2",
+  credentials: credentials
+})
+
+
+
+
