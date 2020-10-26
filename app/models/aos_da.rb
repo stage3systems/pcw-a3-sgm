@@ -11,9 +11,9 @@ class AosDa
 
   def sync(revision)
     return unless [1, 3].include?(revision.disbursement.status_cd)
-    config = Rails.application.config.x.sns
-    syncQueue = AosSyncQueue.new(revision.tenant, config['sns_topic'], config['region'])
-    syncQueue.publish("pcwDaRevision", da_container(revision))
+    api = AosApi.new(revision.tenant)
+    response = api.save("pcwDaRevision", da_container(revision))
+    raise "AosDa sync failed, code: #{response.code}, uri:#{response.request.uri.to_s}, revision:#{revision.id}" if response.code != 200
   end
 
   def da_container(revision)
