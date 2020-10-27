@@ -31,7 +31,6 @@ gem 'newrelic_rpm', group: :production
 gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
 gem 'httparty'
-gem 'delayed_job_active_record'
 gem 'turbolinks'
 gem 'lodash-rails'
 gem 'nprogress-rails'
