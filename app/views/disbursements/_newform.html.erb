@@ -9,6 +9,10 @@
                     }) do |f| %>
   <%= f.error_notification %>
 
+  <% if defined?@err %>
+    <div class="alert alert-warning"><%= @err[0] %> <a href="<%= @err[1] %>">here</a></div>
+  <% end %>
+
   <div class="form-group">
     <%= f.input :type_cd,
                 label: 'Type',
