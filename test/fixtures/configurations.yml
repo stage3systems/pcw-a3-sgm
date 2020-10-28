@@ -13,8 +13,8 @@ one:
   ac_number: MyString
   ac_name: MyString
 
-two:
-  tenant: one
+sgm:
+  tenant: sgm
   company_name: MyString
   company_address1: MyString
   company_address2: MyString
