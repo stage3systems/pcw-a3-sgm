@@ -6,17 +6,7 @@ ProformaDA::Application.configure do
   config.log_level = :info
 
   # Code is not reloaded between requests
-  config.cache_classes = true
-
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-  config.lograge.logger = ActiveSupport::Logger.new(STDOUT)
-  config.lograge.enabled = true
-  config.lograge.custom_options = lambda do |event|
-    {
-      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
-      exception_object: event.payload[:exception_object] # the exception instance
-    }
-  end
+  config.cache_classes = false
 
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
