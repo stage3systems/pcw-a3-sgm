@@ -48,7 +48,7 @@ module PortsHelper
         "TANJUNG PELEPAS",
         "TARAHAN",
         "SATTASHIP", "BITUNG", "KENDARI", "BUNYU", "BALONGAN", "BANTONG", "PASIR GUDANG", "PORT KLANG", "TANJUNG BIN", "TANJUNG LANGSAT", "PANJANG", "CIWANDAN", "KOH PHALUAI", "BALI", "ANYER LOR", "CIGADING", "TANJUNG MANIS", "WEDA", "PELINTUNG", "MUARA SUGIHAN",
-        "NIPAH", "TARAKAN"]
+        "NIPAH", "TARAKAN", "BAHODOPI"]
     end
 
     def get_australian_ports()
