@@ -1,8 +1,4 @@
 class Disbursement < ActiveRecord::Base
-  validates :nomination_id, uniqueness: {
-      scope: :tenant_id,
-      message: "PDA for that nomination already exists"
-  }, allow_nil: true
   default_scope -> {where("status_cd != 2")}
   attr_accessor :tbn_template, :vessel_type, :vessel_subtype
   [:port, :terminal, :office, :vessel, :company, :user].each do |k|
