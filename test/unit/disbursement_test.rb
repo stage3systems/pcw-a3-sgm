@@ -8,8 +8,6 @@ class DisbursementTest < ActiveSupport::TestCase
     @coal = terminals(:coal)
     @stage3 = companies(:stage3)
     @feecompany = companies(:feecompany)
-    @monson = tenants(:one)
-    @sgm = tenants(:sgm)
     @date=Date.today
     aos_stub(:get,
              "agencyFee?companyId=987&dateEffectiveEnd=#{@date}&"+
@@ -43,32 +41,6 @@ class DisbursementTest < ActiveSupport::TestCase
     d.nrt = 1
     d.loa = 1
     d
-  end
-
-  test "Can not create more than one PDA for nomination per tenant" do
-    d = self.disbursement(@brisbane)
-    d.nomination_id = 1
-    d.tenant = @monson
-
-    d2 = self.disbursement(@brisbane)
-    d2.nomination_id = 1
-    d2.tenant = @monson
-
-    assert d.save
-    assert_not d2.save
-  end
-
-  test "Can create more than one PDA for nomination for different tenants" do
-    d = self.disbursement(@brisbane)
-    d.nomination_id = 1
-    d.tenant = @sgm
-
-    d2 = self.disbursement(@brisbane)
-    d2.nomination_id = 1
-    d2.tenant = @monson
-
-    assert d.save
-    assert d2.save
   end
 
   test "first revision is automatically created" do

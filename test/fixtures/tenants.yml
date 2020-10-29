@@ -29,19 +29,3 @@ two:
   aos_api_user: MyString
   aos_api_password: MyString
   aos_api_psk: MyString
-
-
-sgm:
-  name: sgm
-  display: MyString
-  full_name: MyString
-  aos_name: MyString
-  favicon: MyString
-  default_email: MyString
-  logo: sgm_agency.png
-  terms: MyString
-  piwik_id: 1
-  aos_api_url: https://test.agencyops.net/api
-  aos_api_user: test
-  aos_api_password: test
-  aos_api_psk: changeme
