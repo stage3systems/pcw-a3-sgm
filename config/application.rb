@@ -56,5 +56,8 @@ module ProformaDA
 
     # S3
     config.x.s3 = Rails.application.config_for(:s3)
+
+    # SNS
+    config.x.sns = Rails.application.config_for(:sns)
   end
 end

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.8'
-
+gem 'aws-sdk-sns', '~> 1'
 gem 'pg'
 gem 'lograge'
 gem 'omniauth'
@@ -31,7 +31,6 @@ gem 'newrelic_rpm', group: :production
 gem 'io-extra', :require => 'io/extra'
 gem 'geoip'
 gem 'httparty'
-gem 'delayed_job_active_record'
 gem 'turbolinks'
 gem 'lodash-rails'
 gem 'nprogress-rails'

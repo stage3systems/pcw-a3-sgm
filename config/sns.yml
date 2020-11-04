@@ -1,0 +1,12 @@
+default: &default
+  sns_topic: <%= ENV['PCW_SNS_TOPIC'] || 'topic' %>
+  region: <%= ENV['PCW_AWS_REGION'] || 'us-west-2' %>
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

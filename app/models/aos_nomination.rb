@@ -7,9 +7,11 @@ class AosNomination
   end
 
   def initialize(tenant, id)
+    config = Rails.application.config.x.sns
     @id = id
     @tenant = tenant
     @api = AosApi.new(tenant)
+    @syncQueue = AosSyncQueue.new(tenant, config['sns_topic'], config['region'])
   end
 
   def vessel
@@ -50,8 +52,7 @@ class AosNomination
     keys.each do |k|
       c = charges[k]
       j = base.merge(revision.charge_to_json(k))
-      response = @api.save('disbursement', c ? c.merge(j) : j)
-      raise "AosNomination sync_revision failed, code: #{response.code}, uri:#{response.request.uri.to_s}, revision:#{revision.id}" if response.code != 200
+      @syncQueue.publish('disbursement', c ? c.merge(j) : j)
     end
     delete_missing(keys)
   end
