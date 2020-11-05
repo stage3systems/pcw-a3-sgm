@@ -7,7 +7,6 @@ require 'rails/test_help'
 require 'webmock/minitest'
 
 WebMock.disable_net_connect!(allow_localhost: true, allow: 'codeclimate.com')
-Delayed::Worker.delay_jobs = false
 
 if RUBY_VERSION>='2.6.0'
   if Rails.version < '5'
