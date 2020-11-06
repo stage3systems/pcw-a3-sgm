@@ -37,14 +37,44 @@ class DisbursementsControllerTest < ActionController::TestCase
     }
     assert_select 'form  div.alert-danger', 'Please review the problems below:'
     assert_response :success
+    nomination_id = 1
     assert_difference('Disbursement.count') do
       post :create, disbursement: {
         port_id: @port.id,
         vessel_id: @vessel.id,
-        company_id: @company.id
+        company_id: @company.id,
+        nomination_id: nomination_id.next
       }
     end
     log_out
+  end
+
+  test "can not create more than one disbursement for single nomination per tenant" do
+    log_in :admin
+    stub_no_agency_fee
+
+    request.host = 'monson.test.host'
+    post :create, disbursement: {
+        port_id: @port.id,
+        vessel_id: @vessel.id,
+        company_id: @company.id,
+        nomination_id: 1
+    }
+
+    created = assigns(:disbursement)
+    assert created.id
+
+    post :create, disbursement: {
+        port_id: @port.id,
+        vessel_id: @vessel.id,
+        company_id: @company.id,
+        nomination_id: 1
+    }
+
+    not_created = assigns(:disbursement)
+    assert not_created.new_record?
+    assert_select 'form  div.alert-warning'
+    assert_response :success
   end
 
   test "new from nomination_id" do
