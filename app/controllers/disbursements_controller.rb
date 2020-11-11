@@ -102,25 +102,15 @@ class DisbursementsController < ApplicationController
   # POST /disbursements
   def create
     @title = "New PDA"
+    @disbursement = Disbursement.new(disbursement_params.merge(tenant_id: current_tenant.id))
+    set_user_and_office
+
     respond_to do |format|
-      @existingDisbursement = Disbursement.find_by(
-          :nomination_id => disbursement_params['nomination_id'],
-          :tenant_id => current_tenant.id
-      )
-      if @existingDisbursement
-        @disbursement = Disbursement.new(disbursement_params.merge(tenant_id: current_tenant.id))
-        @disbursement.valid?
-        @message = "PDA for that nomination already exists"
-        format.html { render action: "new" }
+      if @disbursement.save
+        format.html { redirect_to edit_disbursement_url(@disbursement) }
       else
-        @disbursement = Disbursement.new(disbursement_params.merge(tenant_id: current_tenant.id))
-        set_user_and_office
-        if @disbursement.save
-          format.html { redirect_to edit_disbursement_url(@disbursement) }
-        else
-          @disbursement.errors['company_name'] = @disbursement.errors['company_id'][0]
-          format.html { render action: "new" }
-        end
+        @disbursement.errors['company_name'] = @disbursement.errors['company_id'][0]
+        format.html { render action: "new" }
       end
     end
   end
