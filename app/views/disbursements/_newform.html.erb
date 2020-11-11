@@ -9,13 +9,6 @@
                     }) do |f| %>
   <%= f.error_notification %>
 
-  <% if defined?@message %>
-    <div class="alert alert-warning">
-      <%= @message %>
-      <a href="<%= edit_disbursement_url(@existingDisbursement) %>">here</a>
-    </div>
-  <% end %>
-
   <div class="form-group">
     <%= f.input :type_cd,
                 label: 'Type',
