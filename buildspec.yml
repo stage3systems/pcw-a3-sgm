@@ -4,6 +4,8 @@ version: 0.2
 env:
   variables:
     ENV_NAME: test
+  parameter-store:
+    DOCKER_HUB_PASS: docker-hub-password
 
 phases:
   install:
@@ -13,6 +15,7 @@ phases:
       - apt-get install jq
   pre_build:
     commands:
+      - echo $DOCKER_HUB_PASS | docker login --username a3service --password-stdin
       - echo Pre-Build phase - running the test suite - `date`
       - make docker-build-clear
       - make t
