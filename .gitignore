@@ -14,8 +14,6 @@
 /log/*.log
 /tmp
 
-GeoLiteCity.dat
-
 pdfs/*
 sheets/*
 pcw.stg.sql
