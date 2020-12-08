@@ -7,9 +7,14 @@ doc
 docker-compose.yml
 Dockerfile
 Dockerfile.nginx
-log
 pdfs
 README.rdoc
 run_tests
 sheets
-tmp
+/log
+/tmp
+*.md
+.git/
+.idea/
+.DS_Store/
+postgres-data/
