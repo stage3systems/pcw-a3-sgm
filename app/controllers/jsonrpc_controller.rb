@@ -1,5 +1,6 @@
 class JsonrpcController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  rescue_from Exception, with: :render_error_response
 
   def index
     respond_to do |format|
@@ -32,7 +33,7 @@ class JsonrpcController < ApplicationController
     if k.send("aos_#{action.downcase}", current_tenant, data)
       success("ok")
     else
-      error(-32002, "Failed to apply action to entity")
+      error(-32002, "Failed to apply action to entity", k.lastErrors)
     end
   end
 
@@ -58,9 +59,10 @@ class JsonrpcController < ApplicationController
     false
   end
 
-  def error(code, message)
+  def error(code, message, errors = nil)
     r = resp
     r["error"] = {"code" => code, "message" => message}
+    r["errors"] = errors if errors.present?
     r
   end
 
@@ -74,5 +76,9 @@ class JsonrpcController < ApplicationController
     r = {"jsonrpc" => "2.0"}
     r["id"] = params[:id] if params[:id]
     r
+  end
+
+  def render_error_response(exception)
+    render json: error(-32002, exception.message), status: :internal_server_error
   end
 end

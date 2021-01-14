@@ -34,10 +34,10 @@ class Vessel < ActiveRecord::Base
     end
     self.remote_id = data['id']
     self.name = data['name']
-    self.loa = data['loa'] if data['loa']
-    self.nrt = data['intlNetRegisteredTonnage'] if data['intlNetRegisteredTonnage']
-    self.grt = data['intlGrossRegisteredTonnage'] if data['intlGrossRegisteredTonnage']
-    self.dwt = data['fullSummerDeadweight'] if data['fullSummerDeadweight']
+    self.loa = self.parse_number(data['loa']) if data['loa']
+    self.nrt = self.parse_number(data['intlNetRegisteredTonnage']) if data['intlNetRegisteredTonnage']
+    self.grt = self.parse_number(data['intlGrossRegisteredTonnage']) if data['intlGrossRegisteredTonnage']
+    self.dwt = self.parse_number(data['fullSummerDeadweight']) if data['fullSummerDeadweight']
     self.sbt_certified = data['sbtCertified'] if data['sbtCertified']
     self.imo_code = data['imoCode'] if data['imoCode']
     self.sbt_certified = data['sbtCertified']
@@ -50,6 +50,12 @@ class Vessel < ActiveRecord::Base
     i.save
   end
 
+  def parse_number(val)
+    return val unless val.present?
+    # remove thousand separator e.g. "1,684""
+    val.to_s.tr(',','')
+  end
+  
   private
   def self.valid_data(data)
     missing = ['loa', 'intlNetRegisteredTonnage',
@@ -59,4 +65,5 @@ class Vessel < ActiveRecord::Base
     return false if missing.member? true
     true
   end
+
 end
