@@ -33,6 +33,7 @@
           <th>Author</th>
           <th>Change Log Message</th>
           <th>Reference Document</th>
+          <th class="hide">Code</th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +43,11 @@
           <td><%= u.user.full_name rescue 'N/A' %></td>
           <td><%= u.changelog %></td>
           <td><%= link_to(File.basename(u.document.path), u.document.url) rescue 'N/A' %></td>
+          <td class="hide"> 
+            <% if u.old_code.present? %>
+              <pre><%= u.old_code %></pre> 
+            <% end %>
+          </td>
         </tr>
       <% end %>
       </tbody>
