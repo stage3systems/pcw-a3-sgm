@@ -69,7 +69,11 @@ class AuthController < ApplicationController
     auth0_id = token["sub"] rescue params[:auth0_id]
     rocket_id = (auth0_id.split('|')[1])
 
-    user = User.where(tenant_id: current_tenant.id, auth0_id: auth0_id).first
+    if current_tenant.name.starts_with? "sgm"
+      user = User.where(tenant_id: current_tenant.id, auth0_id: auth0_id, deleted: false).first
+    else
+      user = User.where(tenant_id: current_tenant.id, auth0_id: auth0_id).first
+    end
 
     return {db: user, token: token} if user
     if user
