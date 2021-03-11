@@ -304,14 +304,6 @@ class DisbursementDocument
         {style: :bold, value: "Account: 337-289-657"},
         {style: :bold, value: "Favour: AGENCIA MARITIMA NABSA S.A."}
       ]
-    when "mta"
-      [ {style: :bold, value: "Beneficiary: MTA Agencia Maritima Ltda."},
-        {style: :bold, value: "Bank: Santander Chile"},
-        {style: :bold, value: "Tax ID: 76.902.117-5"},
-        {style: :bold, value: "USD Account: 51002 93996"},
-        {style: :bold, value: "Swift: BSCHCLRM"},
-        {style: :bold, value: "mta@mtradeagents.com"}
-      ]
     when "benline"
       [  {style: :bold, value: "Bank: Westpac Banking Corporation"},
          {style: :bold, value: "Bank Address: 743 Military Road, Mosman, New South Wales 2088, Australia"},
