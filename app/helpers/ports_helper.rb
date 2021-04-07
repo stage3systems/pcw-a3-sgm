@@ -15,8 +15,8 @@ module PortsHelper
             "BANG SAPHAN",
             "KRABI",
             "SATTAHIP",
+            "KOH LANTA",
             "KOH PHALUAI",
-            "KOH LANTA"
         ]
     end
 

@@ -377,13 +377,14 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? name
-       [ {style: :bold, value: "BANKING DETAILS (THB)"},
-          {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co."},
-          {value: "Bankers: Bangkok Bank Public Company Limited"},
-          {value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand"},
-          {value: "Branch: Sathorn"},
-          {value: "A/C No: 142-3-10246-4 (For THB remittance)"},
-          {value: "Swift Code: BKKBTHBK"}
+       [
+           {style: :bold, value: "BANKING DETAILS (THB)"},
+           {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co."},
+           {value: "Bankers: Bangkok Bank Public Company Limited"},
+           {value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand"},
+           {value: "Branch: Sathorn"},
+           {value: "A/C No: 142-3-10246-4 (For THB remittance)"},
+           {value: "SWIFT Code: BKKBTHBK"}
         ]
     elsif asian_ports.member? name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
