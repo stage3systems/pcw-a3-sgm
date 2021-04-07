@@ -94,7 +94,7 @@ class DisbursementDocument
   def terminal_name
     @revision.data['terminal_name'] || ""
   end
-  
+
   def currency_code
     @revision.data["currency_code"]
   end
@@ -259,14 +259,14 @@ class DisbursementDocument
         {style: :bold, value: "IBAN : BE95 0014 8190 3958"},
         {style: :bold, value: "Swiftcode : GEBABEBB"} ]
     when "biehl", "biehltest", "biehlstg"
-      [ 
+      [
         {style: :bold, value: "IBERIA BANK"},
         {style: :bold, value: "NAME OF CUSTOMER: BIEHL & CO TEXAS LLC"},
         {style: :bold, value: ""},
         {style: :bold, value: "ACCOUNT NUMBER: 20002217503"},
         {style: :bold, value: "WIRE/ACH ABA NUMBER: 265270413"},
         {style: :bold, value: "SWIFT CODE: IBEAUS44"},
-        
+
         {style: :bold, value: ""},
         {style: :bold, value: "PLS REFERENCE: VESSEL NAME & VOYAGE / IMO NUMBER / PORT NAME / PROFORMA ADVANCE"}
       ]
@@ -315,7 +315,7 @@ class DisbursementDocument
          {style: :bold, value: "Address: Building 1, Gateway Office Park 747 Lytton Road, Murarrie, QLD 4172, Australia"}
       ]
     when "seaforth"
-      [  
+      [
         {style: :bold, value: "Banking Details (USD):"},
         {style: :bold, value: "Bank Account No.: 0100000430425"},
         {style: :bold, value: "Beneficiary Name: Seaforth Shipping Kenya Limited"},
@@ -377,15 +377,15 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? name
-       [
-           {style: :bold, value: "BANKING DETAILS (THB)"},
-           {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co."},
-           {value: "Bankers: Bangkok Bank Public Company Limited"},
-           {value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand"},
-           {value: "Branch: Sathorn"},
-           {value: "A/C No: 142-3-10246-4 (For THB remittance)"},
-           {value: "SWIFT Code: BKKBTHBK"}
-        ]
+      [
+        { style: :bold, value: "BANKING DETAILS (THB)" },
+        { value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co." },
+        { value: "Bankers: Bangkok Bank Public Company Limited" },
+        { value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand" },
+        { value: "Branch: Sathorn" },
+        { value: "A/C No: 142-3-10246-4 (For THB remittance)" },
+        { value: "SWIFT Code: BKKBTHBK" }
+      ]
     elsif asian_ports.member? name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
           {value: "Account Holder: Sturrock Grindrod Maritime Pte. Ltd."},
