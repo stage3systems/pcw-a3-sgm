@@ -377,14 +377,14 @@ class DisbursementDocument
         {value: "Swift: BKTRUS 33"}
       ]
     elsif thai_ports.member? name
-       [ {style: :bold, value: "BANKING DETAILS (THB)"},
-          {value: "Beneficiary Name: Sturrock Grindrod Maritime Pte. Ltd."},
-          {value: "Beneficiary Address: 46A Tras Street #02-46A Singapore 078985"},
-          {value: "Bank Name: DBS Bank Ltd"},
-          {value: "Bank Address: 12 Marina Boulevard, DBS Asia Central, Marina Bay Financial Centre Tower 3, Singapore 018982"},
-          {value: "Bank Code: 7171"},
-          {value: "Account Number: 0003-037876-01-6"},
-          {value: "Swift Code: DBSSSGSG"}
+       [
+           {style: :bold, value: "BANKING DETAILS (THB)"},
+           {value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co."},
+           {value: "Bankers: Bangkok Bank Public Company Limited"},
+           {value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand"},
+           {value: "Branch: Sathorn"},
+           {value: "A/C No: 142-3-10246-4 (For THB remittance)"},
+           {value: "SWIFT Code: BKKBTHBK"}
         ]
     elsif asian_ports.member? name
       [ [ {style: :bold, value: "BANKING DETAILS (SGD)"},
