@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.19
--- Dumped by pg_dump version 11.9 (Debian 11.9-1.pgdg90+1)
+-- Dumped from database version 9.6.21
+-- Dumped by pg_dump version 11.11 (Debian 11.11-1.pgdg90+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1634,4 +1634,8 @@ INSERT INTO schema_migrations (version) VALUES ('20200804091510');
 INSERT INTO schema_migrations (version) VALUES ('20200811103703');
 
 INSERT INTO schema_migrations (version) VALUES ('20201001085152');
+
+INSERT INTO schema_migrations (version) VALUES ('20201207122559');
+
+INSERT INTO schema_migrations (version) VALUES ('20210311095245');
 

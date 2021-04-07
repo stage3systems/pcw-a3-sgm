@@ -9,6 +9,18 @@
                     }) do |f| %>
   <%= f.error_notification %>
 
+  <% if defined?@message %>
+    <div class="alert alert-warning">
+      <h4>
+        <%= @message %> <strong><a href="<%= edit_disbursement_url(@existing_disbursement) %>">here</a></strong>
+      </h4>
+      <p>
+        Do you want to create a new one anyway?
+        <button class="btn btn-warning" id="force-create">yes</button>
+      </p>
+    </div>
+  <% end %>
+
   <div class="form-group">
     <%= f.input :type_cd,
                 label: 'Type',
@@ -74,6 +86,7 @@
   <input type="hidden" id="disbursement_nomination_reference"
          name="disbursement[nomination_reference]"
          value="<%= @disbursement.nomination_reference %>" />
+  <input type="hidden" id="disbursement_force_create" name="disbursement[force_create]" value="false">
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
       <%= f.button :submit, 'Next' %>
@@ -381,4 +394,11 @@
     page = 1;
     updateNominations();
   });
+
+  $("#force-create").on('click', function (e) {
+    e.preventDefault();
+    $("#disbursement_force_create").val(true);
+    $("form").submit();
+  });
+
 </script>
