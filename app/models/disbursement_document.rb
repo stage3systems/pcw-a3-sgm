@@ -297,12 +297,12 @@ class DisbursementDocument
     when "sgm", "sturrockgrindrod"
       sgm_bank_details
     when "nabsa"
-      [ {style: :bold, value: "HSBC Private Bank International"},
-        {style: :bold, value: "1.441, Brickell Av, 17th floor"},
-        {style: :bold, value: "Miami FL 33131"},
-        {style: :bold, value: "ABA Nbr.: 066010445 - Swift: HSBCUS3M"},
-        {style: :bold, value: "Account: 337-289-657"},
-        {style: :bold, value: "Favour: AGENCIA MARITIMA NABSA S.A."}
+      [ {style: :bold, value: "HSBC BANK USA"},
+        {style: :bold, value: "452 Fifth Avenue, New York, NY 10018"},
+        {style: :bold, value: "Account: 605023433"},
+        {style: :bold, value: "Aba/routing: 021001088"},
+        {style: :bold, value: "Swift: MRMDUS33"},
+        {style: :bold, value: "Favour: Agencia Marìtima NABSA S.A."}
       ]
     when "benline"
       [  {style: :bold, value: "Bank: Westpac Banking Corporation"},
