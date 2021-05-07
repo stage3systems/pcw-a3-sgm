@@ -86,9 +86,7 @@
     if (username == '' && password == '') return;
     $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
     $(button).attr('disabled', 'disabled');
-    if (!username.match(/\.<%= @tenant %>$/)) {
-      username += '.<%= @tenant %>';
-    }
+    username += '.<%= @tenant %>';
     WebAuth.login({
       realm: '<%= @connection %>',
       username: username,
