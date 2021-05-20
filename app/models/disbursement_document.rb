@@ -372,7 +372,7 @@ class DisbursementDocument
         {value: "Branch Name: Digo Road, Mombasa"},
         {value: "Bank Account No.: 0100000431618"},
         {value: "Swift Address: SBICKENX"},
-        {value: "Bank: JP Morgan NY Branch - New York"},
+        {value: "Correspondent Bank: JP Morgan NY Branch - New York"},
         {value: "Account No: 890778116"},
         {value: "Swift: CHASUS33"},
         {value: "IBAN No.: Same as Account No."}
