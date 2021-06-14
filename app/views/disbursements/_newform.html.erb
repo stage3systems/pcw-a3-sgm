@@ -163,7 +163,7 @@
     $('input[type="submit"]').attr('disabled', true);
     <% end %>
     $("i.nomination-spinner").fadeIn();
-    var port = $("select#disbursement_port_id").find("option:selected").html();
+    var port = $("select#disbursement_port_id").find("option:selected").text();
     if (port == "Please select a Port") port = "";
     var principal = $("input#company_name").val();
     var vessel = $("input#vessel_name").val();
