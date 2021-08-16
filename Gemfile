@@ -52,3 +52,5 @@ gem 'coffee-rails'
 gem 'uglifier'
 
 gem 'webmock', group: [:test]
+
+gem "auth0", "~> 4.11"
