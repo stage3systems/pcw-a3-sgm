@@ -15,7 +15,6 @@ else
     export PCW_DB_PASSWORD=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-database-password" | jq -r .Parameter.Value`
     export PCW_AUTH0_DOMAIN=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-auth0-domain" | jq -r .Parameter.Value`
     export PCW_AUTH0_CLIENT_ID=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-auth0-client-id" | jq -r .Parameter.Value`
-    export PCW_AUTH0_CLIENT_SECRET=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-auth0-client-secret" | jq -r .Parameter.Value`
     export PCW_SNS_TOPIC=`aws ssm get-parameter --with-decryption --region us-west-2 --name "pcw-$ENVIRON-sns-topic" | jq -r .Parameter.Value`
     export PCW_DB_USER=pcw
     export RAILS_ENV=production
