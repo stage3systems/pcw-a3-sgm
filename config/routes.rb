@@ -112,7 +112,6 @@ ProformaDA::Application.routes.draw do
   post 'auth/register' => 'auth#register'
   get 'auth/login' => 'auth#login'
   get 'auth/logout' => 'auth#logout'
-  post 'auth/authenticate' => 'auth#authenticate'
 
   get "home/index"
   get "landing/index"
