@@ -1,3 +1,4 @@
+require 'auth0'
 class AuthController < ApplicationController
   def register
     ret = begin
@@ -36,12 +37,32 @@ class AuthController < ApplicationController
     render layout: "auth"
   end
 
-  private
-	def jwks_hash
-		@jwks_hash ||= compute_jwks_hash
-	end
+  def authenticate
+   
+    username = params['username'] ||=''
+    password = params['password'] ||=''
+   
+    auth0 = Auth0Service.new(Rails.application.config.x.auth0)
+    ret = auth0.auth(username, password)
 
-	def compute_jwks_hash
+    render json: ret
+    rescue Auth0::Exception => e  
+      code = e.error_data.present? ? e.error_data[:code] : 500
+      ret = nil
+      begin
+        ret = JSON.parse e.message
+      rescue JSON::ParserError  
+        ret = {error: 'request_error', 'error_description': e.message}
+      end
+      render json: ret, status: code
+  end
+
+  private
+  def jwks_hash
+    @jwks_hash ||= compute_jwks_hash
+  end
+
+  def compute_jwks_hash
     jwks_raw = Net::HTTP.get URI("https://#{Rails.application.config.x.auth0['domain']}/.well-known/jwks.json")
     jwks_keys = Array(JSON.parse(jwks_raw)['keys'])
     Hash[
@@ -55,7 +76,7 @@ class AuthController < ApplicationController
         ]
       end
     ]
-	end
+  end
 
   def get_user
     auth0 = Rails.application.config.x.auth0
@@ -63,7 +84,7 @@ class AuthController < ApplicationController
                        algorithm: 'RS256',
                        iss: "https://#{auth0['domain']}/", verify_iss: true,
                        aud: auth0['client_id'], verify_aud: true) do |header|
-			jwks_hash()[header['kid']]
+      jwks_hash()[header['kid']]
     end.first rescue nil
 
     auth0_id = token["sub"] rescue params[:auth0_id]
@@ -87,5 +108,17 @@ class AuthController < ApplicationController
   def browser_valid?
     return false if params[:browser_check]
     not (browser.ie? and browser.version.to_i < 10 and params[:force].nil?)
+  end
+
+  # Setup the Auth0 API connection.
+  def auth0_client
+    cfg = Rails.application.config.x.auth0
+    @auth0_client ||= Auth0Client.new(
+      client_id: cfg['client_id'],
+      client_secret: cfg['client_secret'],
+      domain: cfg['domain'],
+      api_version: 2,
+      timeout: 15 # optional, defaults to 10
+    )
   end
 end
