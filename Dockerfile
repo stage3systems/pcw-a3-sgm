@@ -7,7 +7,7 @@ RUN apt-get update -qq && \
 RUN apt-get update && apt-get install -y wget gnupg 
 RUN mkdir -p /usr/share/man/man1 \
     && mkdir -p /usr/share/man/man7 
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN wget -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN printf "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN apt-get update && apt-get install -y postgresql-client-common postgresql-client-11
 
@@ -21,7 +21,10 @@ RUN apt-get clean autoclean && \
 WORKDIR /pcw
 
 COPY Gemfile Gemfile.lock ./ 
+RUN gem update --system
+RUN gem install bundler:1.17.3
 RUN bundle config set without development test && \
+  bundle config build.nokogiri --use-system-libraries && \
   bundle install --jobs=8
 
 COPY . ./
