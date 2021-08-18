@@ -14,7 +14,6 @@ class Auth0Service
   end
 
   def auth(username, password)
-    @auth0_client.api_token
     @auth0_client.login_with_resource_owner(
       username, password,
       realm: 'Username-Password-Authentication'
