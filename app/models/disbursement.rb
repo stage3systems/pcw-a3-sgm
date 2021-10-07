@@ -16,8 +16,10 @@ class Disbursement < ActiveRecord::Base
   validates_numericality_of :dwt, :grt, :nrt, :loa, :if => :tbn?
   before_create :generate_publication_id
   after_create :create_initial_revision
+
   as_enum :status, draft: 0, initial: 1, deleted: 2, close: 3,
                    inquiry: 4, final: 5, archived: 6
+
   as_enum :type, standard: 0, owners_husbandry: 1, bunker_call: 2,
                  cleaning: 3, spare_parts: 4, other: 5, blank: 6
 
@@ -36,7 +38,6 @@ class Disbursement < ActiveRecord::Base
   def delete
     self.deleted!
     self.save
-    sync_delete_with_aos
   end
 
   def aos_url
@@ -117,19 +118,6 @@ class Disbursement < ActiveRecord::Base
     dr.save
     self.current_revision_id = dr.id
     self.save
-  end
-
-  def sync_delete_with_aos
-    return if Rails.env.test?
-    
-    if self.tenant.uses_new_da_sync?
-      config = Rails.application.config.x.sns
-      syncQueue = AosSyncQueue.new(self.tenant, config['sns_topic'], config['region'])
-      syncQueue.publish("pcw-da", {
-        appointment_id: self.appointment_id,
-        nomination_id: self.nomination_id
-      }, "delete")
-    end
   end
 
 end
