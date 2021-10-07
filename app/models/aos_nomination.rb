@@ -52,7 +52,7 @@ class AosNomination
     keys.each do |k|
       c = charges[k]
       j = base.merge(revision.charge_to_json(k))
-      @syncQueue.publish('disbursement', c ? c.merge(j) : j)
+      @syncQueue.publish('disbursement', c ? c.merge(j) : j, 'save')
     end
     delete_missing(keys)
   end

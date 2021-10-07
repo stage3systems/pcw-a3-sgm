@@ -8,11 +8,11 @@ class AosSyncQueue
     @topicArn = topicArn
   end
 
-  def publish(entity, data)
+  def publish(entity, data, action = 'save')
     sns = Aws::SNS::Resource.new
     topic = sns.topic(@topicArn)
 
-    paylaod = self.prepare_data(entity, data);
+    paylaod = self.prepare_data(entity, data, action);
     topic.publish({
       message: paylaod.to_json,
       message_attributes: {
@@ -24,9 +24,11 @@ class AosSyncQueue
     })
   end
 
-  def prepare_data(entity, body)
+  def prepare_data(entity, body, action )
+    url = "#{@tenant.aos_api_url}/v1/#{action}/#{entity}"
+    url+= "/#{body[:appointment_id]}/#{body[:nomination_id]}" if action == "delete" and body[:appointment_id].present?
     {
-      url: "#{@tenant.aos_api_url}/v1/save/#{entity}",
+      url: url,
       tenant: @tenant.name,
       data: body
     }
