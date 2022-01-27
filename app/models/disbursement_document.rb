@@ -314,22 +314,6 @@ class DisbursementDocument
          {style: :bold, value: "Beneficiary: Ben Line Agencies (Australia) Pty Ltd"},
          {style: :bold, value: "Address: Building 1, Gateway Office Park 747 Lytton Road, Murarrie, QLD 4172, Australia"}
       ]
-    when "seaforth"
-      [
-        {style: :bold, value: "Banking Details (USD):"},
-        {style: :bold, value: "Bank Account No.: 0100000430425"},
-        {style: :bold, value: "Beneficiary Name: Seaforth Shipping Kenya Limited"},
-        {style: :bold, value: "Bank Name: Stanbic Bank Kenya Limited"},
-        {style: :bold, value: "Branch: Digo Road, Mombasa, Kenya"},
-        {style: :bold, value: "Swift Code: SBICKENX"},
-        {style: :bold, value: ""},
-        {style: :bold, value: "Through Correspondent Bank:"},
-        {style: :bold, value: "Bank Account No.: 04096505"},
-        {style: :bold, value: "Beneficiary Name: Stanbic Bank Kenya Limited"},
-        {style: :bold, value: "Bank Name: Deutsche Bank Trust Company"},
-        {style: :bold, value: "Branch: New York, 280 Park Ave, New York, NY 10017, USA"},
-        {style: :bold, value: "Swift Code: BKTRUS33"}
-      ]
     when "fillettegreen"
       [  {style: :bold, value: "BANKING DETAILS"},
          {style: :bold, value: "For security purposes, we do not include our banking details in this document. When ready to send funding, please submit an email to accounting@fillettegreen.com requesting our banking details. Details will be forwarded under secure email. Should you receive this document with the inclusion of banking details, please contact our office immediately to verify same prior to the transmission of any funds."}
