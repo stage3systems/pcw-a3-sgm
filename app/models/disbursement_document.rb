@@ -364,7 +364,7 @@ class DisbursementDocument
     elsif thai_ports.member? name
       [
         { style: :bold, value: "BANKING DETAILS (THB)" },
-        { value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd" },
+        { value: "Account Holder: Sturrock Grindrod Maritime (Thailand) Co., Ltd." },
         { value: "Bankers: Bangkok Bank Public Company Limited" },
         { value: "Address: 333 Silom Road, Bangrak, Bangkok, 10500, Thailand" },
         { value: "Branch: Sathorn" },
