@@ -1,0 +1,12 @@
+Please click on the link below to view the requested <%= doc.title.titleize %> for <%= doc.vessel_name %> calling at <%= doc.port_name %>.
+You can download a PDF file view of the estimate from this link (no log in required).
+
+<%= "#{root_url}/pda/#{doc.disbursement.publication_id}" %>
+
+For enquiries relating to this Estimate please contact our local Port Office:
+
+<%= doc.disbursement.office.name rescue config.company_name %>
+<%= doc.disbursement.office.address_1 rescue config.company_address1 %>
+<%= doc.disbursement.office.address_2 rescue config.company_address2 %>
+<%= doc.disbursement.office.address_3 rescue "" %>
+<%= doc.disbursement.office.email rescue tenant.default_email %>

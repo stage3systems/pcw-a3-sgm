@@ -1,0 +1,53 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Service', new_named_service_path(),
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered" id="sortable"
+          data-update_url="<%= sort_named_services_path() %>"
+          data-object_type="service">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Key</th>
+          <th>Activity Code</th>
+          <th>Compulsory</th>
+          <th>Tax Applies</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @instances.each do |service| %>
+        <tr class="item" data-item_id="<%= service.id %>">
+          <td><%= link_to service.item, named_service_url(service)  %></td>
+          <td><%= service.key %></td>
+          <td><%= service.activity_code.code rescue "" %></td>
+          <td><%= service.compulsory ? 'Yes' : 'No' %></td>
+          <td><%= service.tax_applies ? 'Yes' : 'No' %></td>
+          <td>
+            <div class="btn-group" style="whitespace: no-wrap;">
+              <%= link_to icon('eye-open'), named_service_path(service),
+                          class: 'btn btn-info btn-sm',
+                          title: 'View' %>
+              <%= link_to icon('pencil'),
+                          edit_named_service_path(service),
+                          class: 'btn btn-default btn-sm',
+                          title: 'Edit' %>
+              <%= link_to icon('trash'),
+                          named_service_path(service), method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          class: 'btn btn-danger btn-sm',
+                          title: 'Delete' %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+    $("table.table").dataTable({bSort: false, bPaginate: false});
+</script>

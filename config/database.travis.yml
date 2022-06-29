@@ -1,0 +1,9 @@
+test:
+  adapter: postgresql
+  host: localhost
+  port: 5434
+  encoding: unicode
+  database: proformada_test
+  pool: 5
+  username: postgres
+  password:

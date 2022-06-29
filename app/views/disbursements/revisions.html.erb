@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2><%= @title %></h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Revision</th>
+          <th>Last Update</th>
+          <th>Amount</th>
+          <th>Views</th>
+          <th>Prints</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @revisions.each do |r| %>
+        <tr>
+          <td><%= link_to r.number, "/pfda/#{@disbursement.publication_id}/#{r.number}" %></td>
+          <td><%= l(r.updated_at) %><%= " by #{r.user.full_name}" if r.user %></td>
+          <td><%= number_to_currency r.amount %></td>
+          <td><%= r.anonymous_views %></td>
+          <td><%= r.pdf_views %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

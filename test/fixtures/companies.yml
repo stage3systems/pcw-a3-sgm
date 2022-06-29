@@ -1,0 +1,57 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+stage3:
+  tenant: one
+  remote_id: 987
+  name: Stage 3 Systems Inc.
+  email: contact@stage3systems.com
+
+evax:
+  tenant: one
+  remote_id: 321
+  name: Evax S.A.R.L.
+  email: contact@evax.fr
+
+test:
+  tenant: one
+  id: 123
+  remote_id: 123
+  name: Test
+  email: test@test.com
+
+feecompany:
+  tenant: one
+  remote_id: 654
+  name: Company With Remote Fee
+  email: remote@f.ee
+
+unset_funding:
+  tenant: one
+  name: Unset funding
+
+no_funding:
+  tenant: one
+  name: No Funding
+  prefunding_type: NONE
+
+percent_on_close:
+  tenant: one
+  name: Percent on Close
+  prefunding_type: PERCENT_ON_CLOSE
+
+percent_on_berth:
+  tenant: one
+  name: Percent on Berth
+  prefunding_type: PERCENT_ON_BERTH
+
+percent_on_berth_100:
+  tenant: one
+  name: 100% Percent on Berth
+  prefunding_type: PERCENT_ON_BERTH
+  prefunding_percent: 100
+
+less_agency_fee_on_berth:
+  tenant: one
+  name: Less Agency Fee on Berth
+  prefunding_type: LESS_AGENCY_FEE_ON_BERTH
+

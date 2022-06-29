@@ -1,0 +1,11 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'View', named_service_path(@instance), :class => "btn btn-default btn-sm" %>
+  <%= link_to 'Back', named_services_path(), :class => "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">Editing Named Service</h2>
+
+    <%= render 'form' %>
+  </div>
+</div>

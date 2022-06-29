@@ -1,0 +1,298 @@
+<div class="container-fluid <%= "pfda-container" if @disbursement and
+                                          (@disbursement.initial? or
+                                           @disbursement.close?) %>">
+  <% if @disbursement  %>
+    <% if @disbursement.initial? or @disbursement.close? or @disbursement.inquiry? or (@revision_number and current_user) %>
+    <div class="row pfda-header">
+      <div class="container">
+        <div class="row">
+          <div class="btn-group pull-right hidden-print">
+            <% if @revision_number %>
+            <a href="/pfda/<%= @disbursement.publication_id %>/<%= @revision_number.to_i-1 %>"
+               class="btn btn-default hint" title="Previous Revision"
+               <%= "disabled" unless @revision_number.to_i > 1 %>>
+               <i class="glyphicon glyphicon-chevron-left"></i> Prev
+            </a>
+            <a href="/pfda/<%= @disbursement.publication_id %>/<%= @revision_number.to_i+1 %>"
+               class="btn btn-default hint" title="Next Revision"
+               <%= "disabled" unless @revision_number.to_i < @disbursement.current_revision.number %>>
+               <i class="glyphicon glyphicon-chevron-right"></i> Next
+            </a>
+            <% end %>
+            <% if current_user %>
+            <%= render "common/mailto_pfda",
+                       tenant: current_tenant,
+                       sedna: false,
+                       button: 'hint',
+                       doc: @document,
+                       config: current_tenant.configurations.last %>
+            <%= render "common/mailto_pfda",
+                       tenant: current_tenant,
+                       sedna: true,
+                       button: 'hint',
+                       doc: @document,
+                       config: current_tenant.configurations.last %>
+            <%= link_to icon(:pencil), edit_disbursement_path(@disbursement),
+                        class: 'btn btn-default hint',
+                        title: 'Edit' %>
+            <% end %>
+            <a href="/pfda/<%= @disbursement.publication_id %>.pdf"
+               class="btn btn-default hint" title="Printable PDF version">
+              <%= image_tag "print.png" %>
+            </a>
+            <a href="/pfda/<%= @disbursement.publication_id %>.xls"
+               class="btn btn-default hint" title="Download as Excel Spreadsheet">
+              <%= image_tag "excel.png" %>
+            </a>
+          </div>
+          <div class="amount">
+            <span class="due">ESTIMATED</span>
+            <%= number_to_currency @revision.amount, unit: "" %>
+            <em class="currency"><%= @revision.data['currency_code'] %></em>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container pfda box-shadow">
+      <div class="pfda-inner">
+        <div class="row">
+          <div class="col-md-6">
+            <% if @revision_number %>
+              <h3 style="padding-top: 1em;">PFDA REVISION VIEW</h3>
+              <h4>Revision <%= @revision_number %><%= " (last revision)" if @revision_number == @disbursement.current_revision.number %></h4>
+            <% else %>
+              <h3 style="padding-top: 1em;"><%= @document.title %></h3>
+              <h4><%= @document.subtitle %></h4>
+            <% end %>
+          </div>
+          <div class="col-md-6">
+            <div class="pull-right"><%= image_tag @document.logo %></div>
+          </div>
+        </div>
+        <div class="btn-group"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <table class="table border-bottom">
+              <% @document.to_data.each do |h, v| %>
+              <tr>
+                <th><%= h %></th>
+                <td><%= format_list(v) %></td>
+              </tr>
+              <% end %>
+            </table>
+          </div>
+          <div class="col-md-1">&nbsp;</div>
+          <div class="col-md-5">
+            <table class="table border-bottom">
+              <% @document.from_data.each do |h, v| %>
+              <tr>
+                <th><%= h %></th>
+                <td><%= format_list(v) %></td>
+              </tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <div class="btn-group"></div>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-condensed header-emphasy">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th class="text-right">
+                    Amount (<%= @document.currency_code %>)
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    Amount (<%= @document.currency_code %>)
+                    Including Taxes
+                  </th>
+                  <% end %>
+                  <% if @revision.conversion_currency %>
+                  <th class="text-right">
+                    Amount (<%= @revision.conversion_currency.code %>)
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    Amount (<%= @revision.conversion_currency.code %>)
+                    Including Taxes
+                  </th>
+                  <% end %>
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @revision.field_keys.each do |f| %>
+                  <% unless @revision.disabled[f] == "1" %>
+                  <tr>
+                    <td>
+                      <%= @document.description_for(f) %>
+                      <% if @document.has_comment?(f) %>
+                        &nbsp;
+                        <span class="comment">
+                          <%= @document.comment_for(f) %>
+                        </span>
+                      <% end %>
+                    </td>
+                    <td class="text-right">
+                      <%= @document.value_for(f) %>
+                    </td>
+                    <% unless @revision.tax_exempt? %>
+                    <td class="text-right">
+                      <%= @document.value_with_tax_for(f) %>
+                    </td>
+                    <% end %>
+                    <% if @revision.conversion_currency %>
+                    <td class="text-right">
+                      <%= @document.converted_value_for(f) %>
+                    </td>
+                    <% unless @revision.tax_exempt? %>
+                    <td class="text-right">
+                      <%= @document.converted_value_with_tax_for(f) %>
+                    </td>
+                    <% end %>
+                    <% end %>
+                  </tr>
+                  <%end %>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Total</th>
+                  <th class="text-right">
+                    <%= @document.total %>
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    <%= @document.total_with_tax %>
+                  </th>
+                  <% end %>
+                  <% if @revision.conversion_currency %>
+                  <th class="text-right">
+                    <%= @document.converted_total %>
+                  </th>
+                  <% unless @revision.tax_exempt? %>
+                  <th class="text-right">
+                    <%= @document.converted_total_with_tax %>
+                  </th>
+                  <% end %>
+                  <% end %>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="final-figure">
+              <div class="final-figure-title">
+                <p>ESTIMATED AMOUNT</p>
+              </div>
+              <div class="final-figure-amount">
+                <span class="amount">
+                  <%= @document.amount %>
+                </span>
+                <span class="currency">
+                  <%= @document.currency_code %>
+                </span>
+              </div>
+            </div>
+            <% if @revision.conversion_currency %>
+            <div class="clearfix"></div>
+            <div class="final-figure">
+              <div class="final-figure-title">
+                <p>CONVERTED AMOUNT</p>
+              </div>
+              <div class="final-figure-amount">
+                <span class="amount">
+                  <%= @document.converted_amount %>
+                </span>
+                <span class="currency">
+                  <%= @document.converted_currency_code %>
+                </span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="finale-figure">
+              <div class="conversion-rate">
+                1 <%= @document.currency_code %> = <%= @document.conversion_rate %> <%= @document.converted_currency_code %>
+              </div>
+            </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="btn-group"></div>
+        <hr class="published" />
+        <div class="row">
+          <div class="col-md-12">
+            <%= format_list(@document.prefunding).html_safe %>
+            <%= format_list(@document.bank_details) %>
+            <% bank_details = @document.bank_account_details() %>
+            <% if @disbursement.tenant.is_sgm? and bank_details.length == 2 %>
+            <div class="row sgm-bank-details">
+              <div class="col-md-6">
+                <%= format_list(bank_details[0]) %>
+              </div>
+              <div class="col-md-6">
+                <%= format_list(bank_details[1]) %>
+              </div>
+            </div>
+            <% else %>
+            <%= format_list(bank_details) %>
+            <% end %>
+            <%= format_list(@document.wire_reference) %>
+            <% if @disbursement.tenant.is_sgm? and @document.is_aus_or_png %>
+              <%= format_list(@document.abn) %>
+            <% end %>
+            <%= format_list(@document.funding_disclaimer) %>
+            <%= format_list(@document.freight_tax_disclaimer) %>
+            <%= format_list(@document.tax_exempt_note) %>
+            <%= format_list(@document.towage_provider_note) %>
+
+            <% if current_tenant.name.starts_with? "mariteam" %>
+            <br />
+            Download our <%= link_to "Standard Port Agency Conditions",
+                                     "/mariteam_agency_conditions.pdf" %>.
+            <br />
+            Download our <%= link_to "General Conditions",
+                                     "/mariteam_general_conditions.pdf" %>.
+            <% else %>
+            <br />
+            Download the full <%= link_to "Terms and Conditions" ,
+                                          current_tenant.terms_url(root_url) %>.
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="pfda-logo">
+        <a href="https://my-a3.com">
+            <%= image_tag "logo_callisto_white_transparent@2x.png", title: "Callisto Agency Systems Co Ltd",
+                width: 125, height: 29 %>
+        </a>
+      </div>
+    </div>
+  <% else %>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="btn-group"></div>
+        <div class="well">
+          <h3>The requested document is no longer publicly accessible.</h3>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="btn-group"></div>
+        <div class="well">
+          <h3>The requested document cannot be found.</h3>
+        </div>
+      </div>
+    </div>
+<% end %>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("a.hint").tooltip({container: 'body'});
+  });
+</script>

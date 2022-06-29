@@ -1,0 +1,265 @@
+<% unless @disbursement.appointment_id.nil? %>
+  <% content_for :navbar_buttons do %>
+    <a href="<%= @disbursement.aos_url %>"
+       class="btn btn-primary"
+       target="_blank">Open in <%= current_tenant.aos_name %></a>
+  <% end %>
+<% end %>
+<%= simple_form_for(@revision, url: disbursement_url(@disbursement),
+                    method: :put,
+                    wrapper: :horizontal_form,
+                    wrapper_mappings: {
+                      boolean: :horizontal_boolean
+                    }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <div class="row form-horizontal">
+    <div class="col-md-4">
+      <table class="table table-condensed table-bordered">
+        <tbody>
+          <tr>
+            <th>Status</th>
+            <td><%= render partial: 'status_button',
+                           locals: {
+                            disbursement: @disbursement,
+                            deferred: true } %></td>
+          </tr>
+          <tr>
+            <th>Port</th>
+            <td><%= @revision.data["port_name"] %></td>
+          </tr>
+          <% if @revision.data.has_key? 'terminal_name' %>
+          <tr>
+            <th>Terminal</th>
+            <td><%= @revision.data["terminal_name"] %></td>
+          </tr>
+          <% end %>
+          <tr>
+            <th>Vessel</th>
+            <td><%= @revision.data["vessel_name"] %></td>
+          </tr>
+          <tr>
+            <th>NOMINATION</th>
+            <td><%= @disbursement.nomination_reference || "N/A" %></td>
+          </tr>
+          <tr>
+            <th>Vessel Type</th>
+            <td><%= @revision.data["vessel_type"] %></td>
+          </tr>
+          <% unless @revision.data["vessel_subtype"].blank? %>
+            <tr>
+              <th>Vessel Subtype</th>
+              <td><%= @revision.data["vessel_subtype"] %></td>
+            </tr>
+          <%end%>
+          <tr>
+            <th>GRT</th>
+            <td><%= @revision.data["vessel_grt"] %></td>
+          </tr>
+          <tr>
+            <th>NRT</th>
+            <td><%= @revision.data["vessel_nrt"] %></td>
+          </tr>
+          <tr>
+            <th>DWT</th>
+            <td><%= @revision.data["vessel_dwt"] %></td>
+          </tr>
+          <tr>
+            <th>LOA (metres)</th>
+            <td><%= @revision.data["vessel_loa"] %></td>
+          </tr>
+          <tr>
+            <th>SBT Certified</th>
+            <td><%= @revision.sbt_certified_display %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+    <%= f.input :voyage_number, label: 'Voyage Number' %>
+    <%= f.input :eta, label: 'ETA', as: :hidden %>
+    <%= f.input :eta_picker, label: 'ETA', as: :fake %>
+    <%= f.association :cargo_type,
+                      label: "Cargo Type",
+                      collection: @cargo_types,
+                      label_method: :display %>
+    <%= f.input :cargo_qty, label: "Cargo Quantity" %>
+    <%= f.input :company_name, label: "Principal", placeholder: "Search Principal",
+                required: (not @disbursement.inquiry?),
+                disabled: (not @disbursement.nomination_id.nil?),
+                as: :fake, input_html: {value: (@disbursement.company.name rescue nil)} %>
+    <input type="hidden"
+           id="disbursement_company_id"
+           name="disbursement[company_id]"
+           value="<%= @disbursement.company_id %>" />
+    <input type="hidden"
+           id="disbursement_nomination_reference"
+           name="disbursement[nomination_reference]"
+           value="<%= @disbursement.nomination_reference %>" />
+    </div>
+    <div class="col-md-4">
+    <%= f.input :loadtime, label: "Load/Discharge (Hours)" %>
+    <%= f.input :days_alongside, label: "Days Alongside" %>
+    <%= f.input :tugs_in, label: "Tugs In" %>
+    <%= f.input :tugs_out, label: "Tugs Out" %>
+    <div class="form-group boolean optional disbursement_revision_tax_exempt">
+      <label class="boolean optional col-sm-3 control-label"
+        for="disbursement_revision_tax_exempt">Tax Exempt</label>
+      <div class="col-sm-9">
+        <%= f.input_field :tax_exempt %>
+      </div>
+    </div>
+    <%= f.input :target_currency,
+        label: "Convert to Currency",
+        as: :select,
+        collection: Currency.all,
+        prompt: "No Currency Conversion" %>
+    <%= f.input :target_currency_rate, label: "Conversion Rate" %>
+    </div>
+    <div class="clearfix"></div>
+    </div>
+
+    <div class="required-inputs form-horizontal"></div>
+
+    <h4>Services</h4>
+    <div class="overriden">
+    </div>
+
+    <div class="table-responsive">
+    <table class="disbursement table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Supplier</th>
+          <th>Amount (<%= @revision.data["currency_code"] %>)</th>
+          <th class="tax_inc tax">Amount (<%= @revision.data["currency_code"] %>) Tax Included</th>
+          <th class="converted header">Converted Amount</th>
+          <th class="converted header tax_inc tax">Converted Amount Tax Included</th>
+          <th>Disable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center" colspan="6">
+            <h4>
+              Loading Data, please wait...
+              <span class="fa fa-spinner fa-spin"></span>
+            </h4>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <% if current_tenant.supports_named_services? %>
+          <td>
+            <div class="form-group">
+              <div class="col-sm-9">
+                <select id="named_items" class="form-control">
+                  <option value=""></option>
+                  <% current_tenant.named_services.map do |s| %>
+                  <option value="<%= s.key %>"><%= s.item %></option>
+                  <% end %>
+                </select>
+                <script>
+                  $("select#named_items").select2({
+                    <% if current_tenant.supports_free_text_items? %>
+                    placeholder: "Select a Named Item or enter a Free Text Label",
+                    language: {
+                      noResults: function() {
+                        setTimeout(function() {
+                          $('button.js-add-item').on('click', function() {
+                            var term = $("input.select2-search__field").val();
+                            $('select#named_items').trigger('add-extra-item', term);
+                          });
+                        }, 0);
+                        return $('<button class="btn btn-primary js-add-item">Add Free Text Item</button>');
+                      }
+                    },
+                    <% else %>
+                    placeholder: "Select a Named Service",
+                    <% end %>
+                    width: 'element'
+                  });
+                </script>
+              </div>
+            </div>
+          </td>
+          <td></td>
+          <td><a id="add_named_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
+          <% else %>
+          <td class="form-inline">
+            <input id="extra_item" class="form-control extra-item" />
+            <div class="checkbox">
+              <label>
+                Tax Applies: <input type="checkbox" id="extra_tax_applies" />
+              </label>
+            </div>
+          </td>
+          <td></td>
+          <td><a id="add_item" class="btn btn-default btn-sm btn-success" href="javascript:void(0)">Add Item</a></td>
+          <% end %>
+          <td class="tax"></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <th>TOTAL</th>
+          <th></th>
+          <th class="total"></th>
+          <th class="total_tax_inc tax"></th>
+          <th class="converted converted_total"></th>
+          <th class="converted converted_total_tax_inc tax"></th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+    </div>
+
+  <div class="form-actions">
+    <%= f.submit "Save PDA", class: "btn btn-primary disabled" %>
+    <% if @revision.number == 0 %>
+    <%= link_to "Cancel",
+                @disbursement,
+                method: :delete,
+                class: "btn btn-default" %>
+    <% else %>
+    <%= link_to "Cancel", disbursements_path, class: "btn btn-default" %>
+    <% end %>
+  </div>
+<% end %>
+<script type="text/javascript">
+  var convert = function(n) {
+    return numberToCurrency(parseFloat(n), {unit: '<%= @revision.data["currency_symbol"] %>'});
+  };
+  <%= @revision.context.html_safe %>
+  var pfda = {
+    portId: <%= @disbursement.port_id.to_json %>,
+    companyId: <%= @disbursement.company_id.to_json %>,
+    revisionId: <%= @revision.id || 0 %>,
+    numItems: <%= @revision.field_keys.count %>,
+    cargoTypes: {
+    <% @cargo_types.each do |ct| %>
+      "<%= ct.id %>": <%= ct.to_json.html_safe %><%= "," unless ct == @cargo_types.last %>
+    <% end %>
+    }
+  };
+  setupDA(pfda, ctx);
+  rebuildTable(ctx);
+  $('input[type="submit"]').removeClass('disabled');
+
+  $('select#disbursement_revision_cargo_type_id').select2();
+
+  $("#company_name").typeahead(null, {
+    name: 'principal',
+    displayKey: 'name',
+    source: getBloodhoundFor('companies').ttAdapter()
+    }).on('typeahead:selected', function(e, datum) {
+      $("#disbursement_company_id").val(datum.id);
+    });
+</script>

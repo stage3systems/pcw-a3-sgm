@@ -1,0 +1,10 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Cancel', port_terminals_path, :class => 'btn btn-default btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">New Terminal for <%= @port.name %></h2>
+
+    <%= render 'form' %>
+  </div>
+</div>

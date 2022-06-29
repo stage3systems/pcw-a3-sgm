@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+aud:
+  name: Australian Dollar
+  code: AUD
+  symbol: $
+
+usd:
+  name: United States Dollar
+  code: USD
+  symbol: $

@@ -1,0 +1,46 @@
+var ctx = {
+  services: <%= revision.field_keys.to_json %>,
+  descriptions: <%= revision.descriptions.to_json %>,
+  hints: <%= (revision.hints || {}).to_json rescue {} %>,
+  vessel: {
+    nrt: <%= revision.data["vessel_nrt"] %>,
+    grt: <%= revision.data["vessel_grt"] %>,
+    dwt: <%= revision.data["vessel_dwt"] %>,
+    loa: <%= revision.data["vessel_loa"] %>,
+    type: "<%= revision.data["vessel_type"] %>",
+    subtype: "<%= revision.data["vessel_subtype"] %>",
+    sbt_certified: <%= (revision.data["vessel_sbt_certified"] == "true") %>,
+
+  },
+  disbursement_type: "<%= revision.disbursement.type rescue "unknown" %>",
+  estimate: {
+    eta: new Date(<%= "\"" if revision.eta %><%= revision.eta %><%= "\"" if revision.eta %>),
+    cargo_qty: <%= revision.cargo_qty || 0 %>,
+    tugs_in: <%= revision.tugs_in || 0 %>,
+    tugs_out: <%= revision.tugs_out || 0 %>,
+    loadtime: <%= revision.loadtime || 0 %>,
+    days_alongside: <%= revision.days_alongside || 0 %>
+  },
+  cargo_type: {
+    type: "<%= revision.data["cargo_type"] %>",
+    subtype: "<%= revision.data["cargo_subtype"] %>",
+    subsubtype: "<%= revision.data["cargo_subsubtype"] %>",
+    subsubsubtype: "<%= revision.data["cargo_subsubsubtype"] %>"
+  },
+  currencies: <%= Currency.all.map {|c| [c.id, c]}.to_h.to_json %>,
+  tax_rate: <%= revision.data["tax_rate"] %>,
+  data: <%= revision.data.to_json %>,
+  codes: <%= revision.codes.to_json %>,
+  parsed_codes: {},
+  values: <%= revision.values.to_json %>,
+  values_with_tax: <%= revision.values_with_tax.to_json %>,
+  supplier_id: <%= (revision.supplier_id || {}).to_json %>,
+  supplier_name: <%= (revision.supplier_name || {}).to_json %>,
+  comments: <%= revision.comments.to_json %>,
+  compulsory: <%= Hash[revision.compulsory.map{|k,v| [k,v=="1"]}].to_json %>,
+  disabled: <%= Hash[revision.disabled.map{|k,v| [k,v=="1"]}].to_json %>,
+  overriden: <%= revision.overriden.to_json %>,
+  computed: {},
+  computed_with_tax: {},
+  named_services: <%= Service.where(tenant_id: revision.tenant_id, port_id: nil, terminal_id: nil).map{|s| s.as_json}.to_json %>
+};

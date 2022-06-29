@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  tenant: one
+  remote_id: 1
+  enabled: false
+  maintype: MyString
+  subtype: MyString
+  subsubtype: MyString
+  subsubsubtype: MyString
+
+two:
+  tenant: one
+  remote_id: 2
+  enabled: true
+  maintype: MyString
+  subtype: MyString
+  subsubtype: MyString
+  subsubsubtype: MyString

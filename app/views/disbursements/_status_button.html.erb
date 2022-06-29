@@ -1,0 +1,34 @@
+<div class="btn-group<%= ' btn-group-xs' if deferred %> status">
+  <button type="button" class="btn btn-status btn-<%= disbursement.status %> btn-sm" data-toggle="dropdown"><%= disbursement.status.upcase %></button>
+  <button type="button" class="btn btn-<%= disbursement.status %> btn-sm dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <% [:inquiry, :draft, :initial, :close, :archived].each do |s| %>
+    <li>
+    <a href="<% if deferred %>javascript:setStatus('<%= s %>');<% else %>/disbursements/<%= disbursement.id %>/status/<%= s %><% end %>"
+         class="hover-<%= s %>">
+      <%= s.upcase %>
+      </a>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% if deferred %>
+<input type="hidden"
+       id="disbursement_status_cd"
+       name="disbursement[status_cd]"
+       value="<%= disbursement.status_cd %>">
+<script type="text/javascript">
+var currentStatus = '<%= disbursement.status %>';
+var setStatus = function(s) {
+  var statuses = <%= Disbursement.statuses.hash.to_json.html_safe %>;
+  $("input#disbursement_status_cd").val(statuses[s]);
+  $("div.btn-group.status button").removeClass('btn-'+currentStatus);
+  $("div.btn-group.status button").first().html(s.toUpperCase());
+  currentStatus = s;
+  $("div.btn-group.status button").addClass('btn-'+currentStatus);
+};
+</script>
+<% end %>

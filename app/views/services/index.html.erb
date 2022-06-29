@@ -1,0 +1,83 @@
+<% content_for :navbar_buttons do %>
+  <% if @terminal %>
+    <%= link_to 'New Service',
+                new_port_terminal_service_path(@port, @terminal),
+                :class => 'btn btn-primary btn-sm' %>
+  <% else %>
+    <%= link_to 'New Service', new_port_service_path(@port),
+                :class => 'btn btn-primary btn-sm' %>
+  <% end %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered" id="sortable"
+          data-update_url="<%= @terminal.nil? ? sort_port_services_path(@port) : sort_port_terminal_services_path(@port, @terminal) %>"
+          data-object_type="service">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Key</th>
+          <th>Activity Code</th>
+          <th>Compulsory</th>
+          <th>Reference Document</th>
+          <th>Created By</th>
+          <th>Last Modified</th>
+          <th>Last Modified By</th>
+          <th>Last Change</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @instances.each do |service| %>
+        <tr class="item" data-item_id="<%= service.id %>">
+          <td><%= link_to service.item, @terminal.nil? ? port_service_url(@port, service) : port_terminal_service_url(@port, @terminal, service) %></td>
+          <td><%= service.key %></td>
+          <td><%= service.activity_code.code rescue "" %></td>
+          <td><%= service.compulsory ? 'Yes' : 'No' %></td>
+          <td><%= link_to(File.basename(service.document.path), service.document.url) rescue '' %></td>
+          <td><%= service.user.full_name rescue 'N/A' %></td>
+          <td><%= l service.updated_at %></td>
+          <td><%= service.service_updates.last.user.full_name rescue 'N/A' %></td>
+          <td><%= service.service_updates.last.changelog rescue 'N/A' %></td>
+          <td>
+            <div class="btn-group" style="whitespace: no-wrap;">
+              <% if @terminal %>
+                <%= link_to icon('eye-open'),
+                            port_terminal_service_path(@port, @terminal, service),
+                            class: 'btn btn-info btn-sm',
+                            title: 'View' %>
+                <%= link_to icon('pencil'),
+                            edit_port_terminal_service_path(@port, @terminal, service),
+                            class: 'btn btn-default btn-sm',
+                            title: 'Edit' %>
+                <%= link_to icon('trash'),
+                            port_terminal_service_path(@port, @terminal, service),
+                            method: :delete, data: { confirm: 'Are you sure?' },
+                            class:'btn btn-danger btn-sm',
+                            title: 'Delete' %>
+              <% else %>
+                <%= link_to icon('eye-open'), port_service_path(@port, service),
+                            class: 'btn btn-info btn-sm',
+                            title: 'View' %>
+                <%= link_to icon('pencil'),
+                            edit_port_service_path(@port, service),
+                            class: 'btn btn-default btn-sm',
+                            title: 'Edit' %>
+                <%= link_to icon('trash'),
+                            port_service_path(@port, service), method: :delete,
+                            data: { confirm: 'Are you sure?' },
+                            class: 'btn btn-danger btn-sm',
+                            title: 'Delete' %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+    $("table.table").dataTable({bSort: false, bPaginate: false});
+</script>

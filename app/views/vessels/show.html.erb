@@ -1,0 +1,16 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Edit', edit_vessel_path(@instance), :class => "btn btn-primary btn-sm" %>
+  <%= link_to 'Back', vessels_path, :class => "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <p id="notice"><%= notice %></p>
+
+    <h2 class="title"><%= @instance.name %></h2>
+    <p><strong>DWT:</strong> <%= @instance.dwt %></p>
+    <p><strong>GRT:</strong> <%= @instance.grt %></p>
+    <p><strong>LOA:</strong> <%= @instance.loa %></p>
+    <p><strong>NRT:</strong> <%= @instance.nrt %></p>
+    <p><strong>SBT Certified:</strong> <%= @instance.sbt_certified_display %></p>
+  </div>
+</div>

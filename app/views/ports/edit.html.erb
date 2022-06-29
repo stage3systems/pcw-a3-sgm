@@ -1,0 +1,11 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'View', @instance, :class => 'btn btn-default btn-sm' %>
+  <%= link_to 'Back', ports_path, :class => 'btn btn-default btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">Editing Port</h2>
+
+    <%= render 'form' %>
+  </div>
+</div>

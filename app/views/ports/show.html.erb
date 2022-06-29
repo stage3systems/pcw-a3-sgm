@@ -1,0 +1,31 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Edit', edit_port_path(@instance), class: "btn btn-primary btn-sm" %>
+  <%= link_to 'Back', ports_path, class: "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title"><%= @instance.name %></h2>
+    <p>There are currently <%= link_to pluralize(@instance.services.count, 'service'), port_services_path(@instance) %> defined.</p>
+    <p>This port has <%= link_to pluralize(@instance.tariffs.count, 'tariff'), port_tariffs_path(@instance) %> associated.</p>
+    <p>This port has <%= link_to pluralize(@instance.terminals.count, 'terminal'), port_terminals_path(@instance) %>.</p>
+    <% if @instance.metadata && @instance.metadata.size > 0 %>
+      <hr>
+      <p>
+        <h5>Metadata</h5>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+          <% @instance.metadata.each do |k, v| %>
+            <tr>
+              <td><%= k %></td>
+              <td><%= v %></td>
+            </tr>
+          <% end %>
+        </table>
+      </p>
+    <% end %>
+
+  </div>
+</div>

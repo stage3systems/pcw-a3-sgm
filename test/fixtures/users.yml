@@ -1,0 +1,45 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+admin:
+  tenant: one
+  uid: admin
+  remote_id: 1
+  first_name: Admin
+  last_name: Admin
+  admin: true
+  provider: test
+  email: admin@test.com
+  encrypted_password: $2a$14$oWymIMMTYrHMeEXwyWd5nOFmy6gZgYAQPFFVFrg6fSN.ddaEv3LnO
+  rocket_id: 1
+  auth0_id: "auth0|1"
+  deleted: false
+
+operator:
+  tenant: one
+  uid: operator
+  first_name: Head
+  last_name: Operator
+  admin: false
+  provider: test
+  email: operator@test.com
+  rocket_id: 2
+  auth0_id: "auth0|2"
+  deleted: false
+
+office_operator:
+  tenant: one
+  uid: officeop
+  remote_id: 987
+  first_name: Office
+  last_name: Operator
+  admin: false
+  provider: test
+  email: officeop@test.com
+  deleted: false
+  rocket_id: 3
+  auth0_id: "auth0|3"
+  office: one

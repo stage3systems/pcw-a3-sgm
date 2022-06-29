@@ -1,0 +1,20 @@
+<% content_for :navbar_buttons do %>
+  <% if @terminal %>
+    <%= link_to 'Edit', edit_port_terminal_tariff_path(@port, @terminal, @instance),
+                class: "btn btn-primary btn-sm" %>
+    <%= link_to 'Back', port_terminal_tariffs_path(@port, @terminal), :class => "btn btn-default btn-sm" %>
+  <% else %>
+    <%= link_to 'Edit', edit_port_tariff_path(@port, @instance),
+                class: "btn btn-primary btn-sm" %>
+    <%= link_to 'Back', port_tariffs_path(@port), :class => "btn btn-default btn-sm" %>
+  <% end %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">Tariff for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
+    <p><strong>Name:</strong> <%= @instance.name %></p>
+    <p><strong>Document:</strong> <% unless @instance.document.url.nil? %><%= link_to File.basename(@instance.document.path), @instance.document.url %><% end %></p>
+    <p><strong>Valid From:</strong> <%= l @instance.validity_start %></p>
+    <p><strong>Valid Until:</strong> <%= l @instance.validity_end %></p>
+  </div>
+</div>

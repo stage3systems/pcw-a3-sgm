@@ -1,0 +1,17 @@
+<div class="btn-toolbar">
+  <div class="btn-group btn-group-sm">
+    <%= link_to "Services", port_services_path(port),
+      class: 'btn btn-default btn-sm' %>
+    <%= link_to "Terminals", port_terminals_path(port),
+      class: 'btn btn-default btn-sm' %>
+    <%= link_to "Documents", port_tariffs_path(port),
+      class: 'btn btn-default btn-sm' %>
+    <%= link_to icon(:pencil), edit_port_path(port),
+      :class => 'btn btn-default btn-sm',
+      :title => 'Edit' %>
+    <%= link_to icon(:trash), port, method: :delete,
+              data: { confirm: 'Are you sure?' },
+              :class => "btn btn-danger btn-sm",
+              :title => 'Delete' %>
+  </div>
+</div>

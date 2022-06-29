@@ -1,0 +1,5 @@
+<%= link_to 'New Inquiry',
+            new_disbursement_path(status_cd: Disbursement.statuses[:inquiry]),
+            class: 'btn btn-default' %>
+<%= link_to 'New Initial PDA', new_disbursement_path,
+            class: 'btn btn-primary' %>

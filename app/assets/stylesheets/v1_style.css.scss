@@ -1,0 +1,182 @@
+/* base layout */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  overflow-x: hidden;
+  margin-bottom: 40px;
+  background-color: #eee;
+  color: #333;
+  font-size: 13px;
+}
+footer#ft {
+  padding: 0.7em;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 40px;
+  background-color: #fff;
+  border-top: 1px solid #999;
+  color: #999;
+}
+footer a {
+  padding-right: 2rem;
+}
+
+label {color: #aaa;}
+
+#hd {height: 50px; margin-bottom: 20px; background: #216495 url(bg_hd.jpg) top left repeat-x; color: #fff;}
+#mainmenu {padding: 15px 0 0 20px; color: #fff; overflow: hidden;}
+#mainmenu .nav-tabs {border-bottom: none;}
+#mainmenu .nav-tabs > li > a {-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;}
+#mainmenu ul {margin: 0; padding: 0;}
+#mainmenu li > a {
+  margin-right: -1px;
+  padding: 8px 12px;
+  border: 1px solid #174669;
+  background: #6daedf;
+  background: -moz-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#216597),color-stop(100%,#174669));
+  background: -webkit-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -o-linear-gradient(top,#216597 0%,#174669 100%);
+  background: -ms-linear-gradient(top,#216597 0%,#174669 100%);
+  background: linear-gradient(to bottom,#216597 0%,#174669 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#216597,endColorstr=#174669,GradientType=0);
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 -1px 0 #000;
+  display: inline-block;
+}
+#mainmenu li:first-child > a {-moz-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; border-radius: 3px 0 0 0;}
+#mainmenu li:last-child > a {-moz-border-radius: 0 3px 0 0; -webkit-border-radius: 0 3px 0 0; border-radius: 0 3px 0 0;}
+#mainmenu li.active > a {
+  margin-top: -3px;
+  padding-top: 11px;
+  background: #eeeeee;
+  border-bottom: none;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  position: relative;
+  z-index: 3;
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+}
+#mainmenu li > a > [class^="icon-"] {background-image: url(/assets/glyphicons-halflings-white.png);}
+#mainmenu li.active > a > [class^="icon-"] {background-image: url(/assets/glyphicons-halflings.png);}
+a.back { color: #fff; text-shadow: none; font-weight: bold; padding-top: 30px; }
+
+
+ul.breadcrumb { background-color: #eeeeee; padding-left: 2em; margin-bottom: 0;}
+h2.title { margin-top: 0; margin-bottom: 20px; text-shadow: #fff 0px 1px 0px; color: #333;}
+h2.title a {
+  text-shadow: none;
+}
+ul.userbox {padding-top: 6px;}
+
+.browsers ul > li {list-style: none;}
+.browsers ul > li > a {height: 70px; min-width: 200px; padding: 30px 0 0 120px; background-image: url(logo_browsers.png); background-repeat: no-repeat; text-decoration: none; display: block;}
+.browsers ul > li > a span {font-weight: bold; display: block;}
+.browsers li.ie a {background-position: 0 0;}
+.browsers li.ff a {background-position: 0 -100px;}
+.browsers li.safari a {background-position: 0 -200px;}
+.browsers li.chrome a {background-position: 0 -300px;}
+
+#hd { margin-bottom: 0px; }
+
+.logged-in {line-height: 52px; float: right;}
+.logged-in a {color: #fff;}
+.logged-in a:hover {color: #0099ff; text-decoration: none;}
+.logged-in .name {font-weight: bold; text-transform: capitalize;}
+
+table.table { background-color: #fff;}
+#sortable {
+  tr.item {
+    cursor: row-resize;
+  }
+}
+select.draft { background-color: #f09090; }
+select.initial { background-color: #f0f090; }
+select.final { background-color: #90f090; }
+hr.published { margin-top: 60px; border-top: 1px solid #999; }
+table.table { background-color: #ffffff; }
+table.table.border-bottom { border-bottom: 1px solid #ddd; }
+table.table.header-emphasy th { border-bottom: 1px solid #bbb; }
+td.right-align, th.right-align {text-align: right;}
+td.eta { min-width: 80px; text-transform: uppercase;}
+
+.table th { font-size: 11px; line-height: normal; text-transform: uppercase; }
+.table .wg-filter-row th { font-weight: normal; vertical-align: top; }
+.table .wg-filter-row input[type="text"] { margin-bottom: 0; }
+.table .wg-filter-row .date-filter > span { padding-bottom: 2px; display: inline-block; white-space: nowrap; }
+.table .da-actions { min-width: 180px; margin-bottom: 5px; } /* temp classes to add spacing below buttons */
+
+div.pfda-container { background: url(published_bg.png); };
+div.pfda-inner {padding: 5em;}
+div.pfda-inner .sgm-bank-details > div.col-md-6 + br {
+  display: none;
+}
+div.pfda {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  box-shadow: 0 3px 8px #aaa;}
+div.pfda-header {background-color: #eee; padding: 1em; box-shadow: 0 3px 8px #aaa; margin-bottom: 40px;}
+div.pfda-header div.due {float: left; font-size: 24px; margin-top: 12px; font-weight: bold; color: #999;}
+div.pfda-logo {margin: 0 auto; float: none; text-align: center; padding: 20px; }
+div.pfda-header div.amount {
+  // IE7 workaround, replaces margin-top: 8px;
+  padding-top: 5px;
+  margin-top: 3px;
+  padding-bottom: 5px;
+  margin-bottom: -5px;
+  float: left; padding-left: 20px; font-size: 36px; font-weight: bold;}
+div.pfda-header em.currency {font-size: 20px; font-style: normal; font-weight: normal; }
+div.pfda-header span.small {font-size: 20px; font-weight: bold; color: #999;}
+div.final-figure {
+  vertical-align: middle;
+  height: 60px;
+}
+div.final-figure-title {
+  padding-top: 10px;
+  padding-right: 10px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 14px;
+}
+div.final-figure-amount {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  line-height: normal;
+  border: 2px solid #000;
+  font-size: 36px;
+  text-align: right;
+  font-weight: bold;
+}
+div.final-figure-amount span.amount {
+  padding-left: 10px;
+}
+div.final-figure-amount span.currency {
+  font-size: 20px;
+  padding-right: 1em;
+}
+div.no-padding { padding: 0; }
+div.vpad {padding: 2em;}
+th.big { font-size: 160%; }
+th span.editable_value { font-size: 80%; font-weight: normal; cursor: pointer;}
+tr.muted td a {color: #999999 !important;}
+tr.muted th span {color: #999999 !important;}
+span.comment {font-size: 80%; }
+div#code {
+    position: absolute;
+    width: 800px;
+    height: 400px;
+}
+
+.wice-grid .wg-show-filter.clickable, .wice-grid .wg-hide-filter.clickable {
+  background-image: url(/assets/glyphicons-halflings.png);
+  background-position: -48px 0;
+}
+form.searchable {
+  margin-bottom: 1em;
+}

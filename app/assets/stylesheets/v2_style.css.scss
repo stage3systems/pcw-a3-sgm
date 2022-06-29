@@ -1,0 +1,237 @@
+/* v2 style */
+$brand-primary: #52c7e6;
+
+$navbar-inverse-bg: #303a43;
+$navbar-inverse-link-color: #fff;
+$navbar-inverse-brand-color: $brand-primary;
+$navbar-margin-bottom: 0px;
+
+$sidebar-bg: #cfd8df;
+$sidebar-active-bg: #b2c3cd;
+$main-bg: #f2f3f5;
+$body-bg: $main-bg;
+
+/* tabs */
+$nav-tabs-border-color: $main-bg;
+$nav-tabs-active-link-hover-bg: $main-bg;
+$nav-tabs-active-link-border-color: $main-bg;
+$well-bg: #fff;
+$well-border: darken($well-bg, 20%);
+
+/* tables */
+$table-bg: white;
+
+/* nprogress */
+$nprogress-color: $brand-primary;
+
+/* fonts */
+$font-size-base: 13px;
+
+body {
+  padding-top: 50px;
+  height: 100%;
+  background-color: $main-bg;
+  font-size: 13px;
+}
+html {
+  background-color: $main-bg;
+}
+.sidebar {
+  z-index: 1000;
+  padding: 0;
+  background-color: $sidebar-bg;
+  position: fixed;
+  top: 51px;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  height: 70px;
+}
+.sidebar ul {
+  height: 70px;
+  padding: 0;
+  margin: 0;
+}
+p.nav-item {
+  height: 70px;
+}
+.sidebar ul li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: inline-block;
+  width: percentage(1/3);
+}
+.main {
+  background-color: $main-bg;
+  margin-top: 70px;
+  margin-left: 0;
+  margin-bottom: 80px;
+}
+.footer {
+  z-index: 1000;
+  border-top: 1px solid #ddd;
+  font-size: 11px;
+  line-height: 30px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 30px;
+  a {
+    margin: 0 1em;
+  }
+}
+
+.nav-tabs {
+  background-color: #fff;
+}
+.nav-tabs li.active a {
+  border: 1px solid $main-bg !important;
+}
+.nav-tabs li a {
+  border: none;
+  color: #999;
+  line-height: 24px !important;
+  min-height: 24px;
+}
+
+p.nav-item {
+  margin: 0;
+  padding: 1em 0;
+  font-size: 10px;
+  text-align: center;
+  font-weight: bold;
+  .logo {
+    margin-top: -5px;
+    font-size: 30px;
+    display: inline-block;
+  }
+  &:hover {
+    background-color: $sidebar-active-bg;
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 120px;
+    top: 51px;
+    right: auto;
+    height: auto;
+    bottom: 0;
+  }
+  .sidebar ul li {
+    display: block;
+    width: auto;
+  }
+  .sidebar ul {
+    height: 90px;
+  }
+  p.nav-item {
+    height: 90px;
+    padding: 1.5em 0 1em;
+  }
+
+  .main {
+    margin-top: 0;
+    margin-left: 120px;
+  }
+  .footer {
+    left: 120px;
+  }
+  .nav-tabs li a {
+    line-height: 50px !important;
+    min-height: 50px;
+  }
+  p.nav-item .logo {
+    font-size: 36px;
+  }
+}
+
+nav-tabs li.active a {
+  border: 1px solid $main-bg !important;
+}
+
+li.active p.nav-item {
+  background-color: $sidebar-active-bg;
+  border-bottom: 1px solid #aaa;
+}
+ul.nav-sidebar li a {
+  color: #333;
+  padding: 0;
+  margin: 0;
+}
+a.navbar-brand {
+  font-weight: bold;
+}
+a.company {
+  font-weight: bold;
+  color: #999;
+  &:hover {
+    color: #999;
+  }
+}
+div.nav-buttons {
+  padding-top: 10px;
+}
+
+/* dashboard search */
+select#search_cargo_type {
+  max-width: 220px;
+}
+input.date {
+  max-width: 104px;
+}
+div.search-form div.form-group {
+  margin-bottom: 1em;
+}
+.search-form form { margin: 0; }
+.search-form legend { font-size: 16px; line-height: 36px; text-transform: uppercase; }
+
+.search-results { margin-bottom: 10px; background: #fff; }
+.search-results ul { margin: 0; padding: 0; }
+.search-results li { list-style: none; padding: 10px; }
+.search-results .summary { padding: 10px; }
+.search-results .search-nav { float: right; }
+
+.dashboard-da {
+  padding: 0.5em 0;
+  min-height: 45px;
+}
+hr.dashboard {
+  margin-top: 10px;
+  border-top: 3px solid #ddd;
+}
+.table .da-actions { min-width: 210px; margin-bottom: 5px; }
+
+.list-last-updated > li { padding: 8px 0; border-top: 1px solid #ccc; }
+.list-last-updated > li:first-child { padding-top: 0; border-top: 0; }
+.list-last-updated small { color: #777; }
+
+div.top-pad {
+  padding-top: 20px;
+}
+a.btn.logout {
+  margin-right: 10px;
+}
+
+div#code {
+    position: absolute;
+    width: 800px;
+    height: 400px;
+}
+th span.editable_value { font-size: 80%; font-weight: normal; cursor: pointer;}
+tr.muted td a {color: #999999 !important;}
+tr.muted th span {color: #999999 !important;}
+span.comment {font-size: 80%; }
+
+.table th { font-size: 11px; line-height: normal; text-transform: uppercase; }
+.table th label {text-transform: none;}
+
+
+.disbursement th.total { font-size: 15px; }
+
+@media (min-width: 768px) {
+  .disbursement .form-inline .extra-item { width: 320px; }
+}

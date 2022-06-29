@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  tenant: one
+  document: MyString
+  user_id: MyString
+  validity_start: 2013-04-12
+  validity_end: 2013-04-12
+
+two:
+  tenant: one
+  document: MyString
+  user_id: MyString
+  validity_start: 2013-04-12
+  validity_end: 2013-04-12

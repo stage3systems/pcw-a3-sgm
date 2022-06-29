@@ -1,0 +1,62 @@
+@import "v2_style.css.scss";
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "bootstrap-editable";
+@import "wice_grid";
+@import "published";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "nprogress";
+@import "nprogress-bootstrap";
+@import "typeaheadjs";
+
+#nprogress .spinner {
+  top: 16px;
+  right: 4px;
+}
+.btn-draft, li > a.hover-draft:hover { background-color: lighten($brand-danger, 20%); }
+.btn-initial, li > a.hover-initial:hover { background-color: lighten($brand-warning, 20%); }
+.btn-close, li > a.hover-close:hover { background-color: lighten($brand-success, 20%); }
+.btn-archived, li > a.hover-archived:hover { background-color: $gray-light; }
+button.btn-status { min-width: 85px; }
+div.btn-group.status {min-width: 110px; }
+
+.breadcrumb {
+  background-color: $main-bg;
+  color: #999;
+  margin-bottom: 0;
+}
+/* BS3ize dataTables */
+table.dataTable tr.odd { background-color: $table-bg-accent; }
+form.simple_form {
+  div.ace-editor-wrapper {
+    div { display: block; }
+  }
+}
+div.notice {
+  padding-top: 1em;
+}
+
+div.nominations {
+  padding: 1em;
+  background: #fff;
+  ul {
+    cursor: pointer;
+    margin: 0.5em 0 0 0;
+    padding: 0;
+  }
+  li {
+    list-style: none;
+    padding: 0.5em;
+  }
+  li.selected { background: $sidebar-active-bg; }
+  li:hover { background: lighten($sidebar-active-bg, 20%); }
+  li.selected:hover { background: lighten($sidebar-active-bg, 10%); }
+}
+
+div.hint {
+  text-transform: none;
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}

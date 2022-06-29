@@ -1,0 +1,9 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'New Port', new_port_path,
+              :class => 'btn btn-primary btn-sm' %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'grid' %>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  tenant: one
+  name: MyString
+  address_1: MyString
+  address_2: MyString
+  address_3: MyString
+  phone: MyString
+  fax: MyString
+  ports: newcastle
+
+two:
+  tenant: one
+  name: MyString
+  address_1: MyString
+  address_2: MyString
+  address_3: MyString
+  phone: MyString
+  fax: MyString

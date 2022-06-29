@@ -1,0 +1,30 @@
+<div class="btn-toolbar da-actions">
+          <div class="btn-group btn-group-sm">
+                    <%= render "common/mailto_pfda",
+                              tenant: current_tenant,
+                              sedna: false,
+                              doc: DisbursementDocument.new(disbursement),
+                              config: current_tenant.configurations.last %>
+                    <%= render "common/mailto_pfda",
+                              tenant: current_tenant,
+                              sedna: true,
+                              doc: DisbursementDocument.new(disbursement),
+                              config: current_tenant.configurations.last %>
+                    <%= link_to icon(:list), access_log_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Access Log' %>
+                    <%= link_to icon(:pencil), edit_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Revise' %>
+                    <%= render partial: "aos_link", locals: {disbursement: disbursement} %>
+          </div>
+          <div class="btn-group btn-group-sm">
+                    <%= link_to icon(:print), print_disbursement_path(disbursement),
+                              :class => 'btn btn-default btn-sm',
+                              :title => 'Print' %>
+                    <%= link_to icon(:trash), disbursement, method: :delete,
+                              data: { confirm: 'Are you sure?' },
+                              :class => 'btn btn-danger btn-sm',
+                              :title => 'Delete' %>
+          </div>
+</div>

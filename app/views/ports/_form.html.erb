@@ -1,0 +1,18 @@
+<%= simple_form_for(@instance) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.association :currency %>
+    <%= f.association :tax %>
+    <%= f.input :metadata,
+        hint: 'The metadata values defined here will be available to services as <code>ctx.port_KEY</code>.'.html_safe,
+        as: :metadata,
+        entity: 'port'
+      %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+<% end %>

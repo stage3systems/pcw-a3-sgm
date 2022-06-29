@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= "#{@title} | " if defined?(@title) %><%= current_tenant.display %> | Port Cost Watch</title>
+  <!--[if lt IE 9]>
+  <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= render partial: 'common/head' %>
+  <%= csrf_meta_tags %>
+  <style>
+    html {
+      height: 100%;
+      font-size: 62.5%;
+    }
+    body {
+      height: 100%;
+    }
+    body#login {
+      background-image: url(<%= asset_path 'bg_login.jpg' %>);
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .login {
+      width: 90%;
+      min-width: 280px;
+      min-height: 380px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.7); /* rgba(48,58,67,0.5); navy */
+      font-size: 15px;
+      color: #fff;
+    }
+    .login-logo {
+      width: 100%;
+      height: 40px;
+      margin: 40px auto 55px;
+      background: url(<%= asset_path 'logo.png' %>) top center no-repeat;
+      background-size: 80%;
+    }
+    .login > p {
+      color: #8594a1;
+      text-align: center;
+    }
+    .login input,
+    .login a,
+    .login button {
+      width: 100%;
+      margin: 0 0 2px;
+      border-radius: 4px;
+    }
+    .login input[type='checkbox'],
+    .login input[type='radio'] {
+      width: auto;
+    }
+    .login .login-username,
+    .login .login-password {
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: #fff;
+    }
+    .login .login-username {
+      border-radius: 4px 4px 0 0;
+    }
+    .login .login-password {
+      border-radius: 0 0 4px 4px;
+    }
+    .login .login-submit {
+      font-size: inherit;
+      margin-top: 10px;
+      padding: 8px;
+      background: #37ad58;
+      border: none;
+      color: rgba(255,255,255,0.8);
+    }
+    .login-footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+    }
+    .login-footer a {
+      color: #fff;
+    }
+    .login-error {
+      margin: 0 -20px 20px;
+      padding: 20px;
+      background: #a94442;
+      font-size: 12px;
+      color: #f2dede;
+    }
+    .login-error a {
+      color: #fff;
+    }
+    .login .lets-go,
+    .login .switch-user {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      display: block;
+      border-radius: 4px;
+    }
+    .login .lets-go {
+      margin-bottom: 20px;
+      background: #277ed7;
+      border: none;
+      color: rgba(255,255,255,0.8);
+    }
+    .login .switch-user {
+      background: none;
+      border: 1px solid #277ed7; /* blue */
+    }
+    .login .login-submit:hover,
+    .login .login-submit:focus,
+    .login .logged-in a:hover,
+    .login .logged-in a:focus {
+      color: #fff;
+      text-decoration: none;
+    }
+    .login .switch-user:hover,
+    .login .switch-user:focus {
+      background: #37ad58; /* green */
+      border-color: #37ad58;
+    }
+    .login .icon-refresh-lg {
+      margin: 20px auto;
+      vertical-align: middle;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .login {
+        width: 360px;
+        height: 100%;
+        min-height: 420px;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .login-logo {
+        margin-top: 80px;
+      }
+      .login-footer .company {
+        width: 125px;
+        height: 29px;
+        margin: 20px auto 0;
+        background: url(<%= asset_path 'logo_callisto_white_transparent@2x.png' %>) top center no-repeat;
+        background-size: 125px 29px;
+        display: block;
+        text-indent: -999px;
+      }
+    }
+    @media (min-width: 480px) {
+      .login-logo {
+        width: 263px;
+        background-size: 263px 40px;
+      }
+    }
+    @media (min-height: 600px) and (min-width: 768px) {
+      .login-logo {
+        margin-top: 100px;
+      }
+      .login-footer {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 20px;
+      }
+    }
+    /*
+    @media (min-width: 992px) {
+      body#login { /* load hq image if likely to be desktop
+        background-image: url('images/bg_login_hq.jpg');
+      }
+    }*/
+
+    /* browser checks */
+    .browsers { color: #fff; border: 1px solid #fff;}
+    .browsers ul > li {list-style: none;}
+    .browsers ul > li > a {height: 100px; min-width: 200px; padding: 30px 0 0 120px; background-image: url(<%= asset_path 'logo_browsers.png' %>); background-repeat: no-repeat; text-decoration: none; display: block;}
+    .browsers ul > li > a span {font-weight: bold; display: block;}
+    .browsers li.ie a {background-position: 0 0;}
+    .browsers li.ff a {background-position: 0 -100px;}
+    .browsers li.safari a {background-position: 0 -200px;}
+    .browsers li.chrome a {background-position: 0 -300px;}
+
+  </style>
+</head>
+<body id="login">
+<div class="container-fluid">
+  <%= yield %>
+</div>
+</body>
+</html>

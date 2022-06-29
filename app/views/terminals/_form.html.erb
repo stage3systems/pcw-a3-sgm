@@ -1,0 +1,16 @@
+<%= simple_form_for([@port, @terminal]) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :metadata,
+        hint: 'The metadata values defined here will be available to services as <code>ctx.terminal_KEY</code>.'.html_safe,
+        as: :metadata,
+        entity: 'terminal'
+      %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+<% end %>

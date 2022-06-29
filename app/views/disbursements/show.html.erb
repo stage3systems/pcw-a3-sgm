@@ -1,0 +1,8 @@
+<div class="">
+  <h2 class="title">PDA from <%= l @disbursement.updated_at %></h2>
+
+  <div class="btn-group">
+    <%= link_to 'Edit', edit_disbursement_path(@disbursement), :class => "btn btn-default btn-sm" %>
+    <%= link_to 'Back', disbursements_path, :class => "btn btn-default btn-sm" %>
+  </div>
+</div>

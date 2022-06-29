@@ -1,0 +1,6 @@
+<%= link_to icon(:share),
+            disbursement.aos_url,
+            target: '_blank',
+            class: "btn btn-default btn-sm#{
+                    disbursement.nomination_id ? '' : ' disabled'}",
+            title: "Open in #{current_tenant.aos_name}" %>

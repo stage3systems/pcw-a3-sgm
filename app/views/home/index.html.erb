@@ -1,0 +1,307 @@
+<% content_for :navbar_buttons do %>
+  <%= render partial: 'common/new_pfda' %>
+<% end %>
+<div class="row top-pad">
+  <div class="col-md-12">
+    <h4>Search</h4>
+    <div class="search-form">
+    <%= simple_form_for :search, url: disbursements_path,
+                        html: {class: 'form-inline'}  do |f| %>
+      <%= f.input :port, prompt: 'Select a Port',
+                  label: false,
+                  collection: current_user.authorized_ports.all.to_a %>
+      <%= f.input :terminal, prompt: 'Select a Terminal',
+                  label: false, collection: [] %>
+      <%= f.input :vessel_name, placeholder: "Vessel Name",
+                  label: false, class: 'reset' %>
+      <%= f.input :cargo_type,
+                  prompt: 'Select a Cargo Type', label: false,
+                  class: 'cargo-type',
+                  collection: CargoType.authorized(current_tenant), label_method: :display %>
+      <%= f.input :min_dwt, label: false, placeholder: 'Minimum DWT', class: 'form-control reset' %>
+      <%= f.input :max_dwt, label: false, placeholder: 'Maximum DWT', class: 'form-control reset' %>
+      <div class="form-group">
+          <%= f.input_field :start_date_picker, placeholder: "Start Date",
+                             class: 'form-control date reset' %>
+          <%= f.input :start_date, as: :hidden %>
+          <%= f.input_field :end_date_picker, placeholder: "End Date",
+                            class: 'form-control date reset' %>
+          <%= f.input :end_date, as: :hidden %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Search", name: "search", class: 'btn btn-primary' %>
+        <%= f.submit "Reset", name: "reset", class: 'btn' %>
+      </div>
+    <% end %>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="search-results" id="searchresults">
+        </div>
+      </div>
+    </div>
+    <hr class="dashboard">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Last Updated 10 Disbursements</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <h4>Draft</h4>
+        <ul class="list-unstyled list-last-updated">
+        <% if @drafts.each do |d| %>
+          <li>
+            <% editor = d.current_revision.user %>
+            <%= link_to d.title, edit_disbursement_url(d) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
+          </li>
+        <% end.empty? %>
+          <li> No DRAFT disbursement available.</li>
+        <% end %>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h4>Inquiry</h4>
+        <ul class="list-unstyled list-last-updated">
+        <% if @inquiries.each do |d| %>
+          <li>
+            <% editor = d.current_revision.user %>
+            <%= link_to d.title, edit_disbursement_url(d) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
+          </li>
+        <% end.empty? %>
+          <li> No DRAFT disbursement available.</li>
+        <% end %>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h4>Initial</h4>
+        <ul class="list-unstyled list-last-updated">
+        <% if @initials.each do |d| %>
+          <li>
+            <% publisher = d.current_revision.user %>
+            <%= link_to d.title, published_short_url(id: d.publication_id) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{publisher.full_name}" if publisher %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
+          </li>
+        <% end.empty? %>
+          <li>No INITIAL disbursement available.</li>
+        <% end %>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h4>Close</h4>
+        <ul class="list-unstyled list-last-updated">
+        <% if @closes.each do |d| %>
+          <li>
+            <% editor = d.current_revision.user %>
+            <%= link_to d.title, published_short_url(id: d.publication_id) %><br>
+            <small>Updated on <strong><%= l d.current_revision.updated_at %></strong><%= " by #{editor.full_name}" if editor %></small>
+            <div class="btn-group btn-group-xs">
+                <%= link_to icon(:pencil), edit_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Revise' %>
+                <%= render partial: "disbursements/aos_link", locals: {disbursement: d} %>
+                <%= link_to icon(:print), print_disbursement_path(d),
+                          :class => 'btn btn-default btn-sm',
+                          :title => 'Print' %>
+            </div>
+          </li>
+        <% end.empty? %>
+          <li>No CLOSE disbursement available.</li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="//fast.appcues.com/35529.js"></script>
+<script>
+      Appcues.identify('<%= current_user.remote_id %>', { // Replace with unique identifier for current user
+        username: '<%= current_user.uid %>', 
+        name: '<%= current_user.full_name %>',   // Current user's name
+        email: null, // Current user's email, leave it null for now
+        created_at: '<%= (DateTime.now.utc).strftime('%d %b %Y - %H%M%S').upcase %>',    // ser signup date
+        tenantshort: '<%= current_tenant.name %>',
+        tenant: '<%= current_tenant.name %>',
+        // Additional user properties.
+        // is_trial: false,
+        // plan: "enterprise"
+      });
+    </script>
+<script type="text/javascript">
+  $("input[name='reset']").on("click", function(e) {
+      e.stopPropagation();
+      cleanupTerminals();
+      $("div#searchresults").empty();
+      page = 1;
+      $("input.reset").val("");
+      $("select").val("");
+      return false;
+  });
+  var page = 1;
+  var toPage = function(p) {
+    page = parseInt(p);
+    setTimeout(doSearch, 0);
+    return false;
+  }
+  var doSearch = function() {
+      $("div#searchresults").empty();
+      $("div#searchresults").append(
+        '<div class="progress progress-striped active">'+
+        '  <div class="bar" style="width: 100%;">Loading...</div>'+
+        '</div>');
+      $.ajax('/disbursements/search', {
+        type: 'POST',
+        data: {
+          page: page-1,
+          port_id: $("select#search_port").val(),
+          terminal_id: $("select#search_terminal").val(),
+          vessel_name: $("input#search_vessel_name").val(),
+          cargo_type_id: $("select#search_cargo_type").val(),
+          min_dwt: $("input#search_min_dwt").val(),
+          max_dwt: $("input#search_max_dwt").val(),
+          start_date: $("input#search_start_date").val(),
+          end_date: $("input#search_end_date").val()
+        },
+        dataType: 'json',
+        success: function(d) {
+          $("div#searchresults").empty();
+          if (d.count == 0) {
+            $("div#searchresults").append('<div class=""><p>No Results</p></div>');
+          } else {
+            var prevLink = 'javascript:void(0)';
+            var maxPage = parseInt(d.count/10.0+(d.count%10 == 0 ? 0 : 1));
+            if (page > 1) {
+              prevLink = 'toPage('+(page-1)+')';
+            }
+            var nextLink = 'javascript:void(0)';
+            if (page < maxPage) {
+              nextLink = 'toPage('+(page+1)+')';
+            }
+            var prevNext = '<div class="btn-group">'+
+            '<button class="btn btn-default btn-xs'+((page > 1) ? "" : " disabled")+
+            '" onclick="'+prevLink+'"><i class="glyphicon glyphicon-chevron-left"></i></button>'+
+            '<button class="btn btn-default btn-xs'+((page < maxPage) ? "" : " disabled")+
+            '" onclick="'+nextLink+'"><i class="glyphicon glyphicon-chevron-right"></i></button></div>';
+            $("div#searchresults").append(
+                '<div class="summary">'+
+                  '<div class="search-nav">'+
+                  'Page '+d.page+' of '+maxPage+'\n'+
+                  prevNext+
+                  '</div>'+
+                  '<strong>'+d.count+' estimates found.</strong>'+
+                '</div>');
+            var ul = '<ul>';
+            $.each(d.disbursements, function(i, e) {
+              var rev = e.disbursement_revisions[0];
+              var row = '<li>';
+              switch (e.status_cd) {
+                case 0: // DRAFT
+                  row += '<a href="/disbursements/'+e.id+'/edit">';
+                  row += 'DRAFT PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
+                case 1: // INITIAL
+                  row += '<a href="/pfda/'+e.publication_id+'">';
+                  row += 'INITIAL PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
+                case 3: // CLOSE
+                  row += '<a href="/pfda/'+e.publication_id+'">';
+                  row += 'CLOSE PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break
+                case 4: // INQUIRY
+                  row += '<a href="/disbursements/'+e.id+'/edit">';
+                  row += 'INQUIRY PDA for '+rev.data.vessel_name+' in '+e.port.name;
+                  row += ' ('+moment(rev.updated_at).format('llll')+')';
+                  row += '</a>';
+                  break;
+                default:
+                  row += rev.reference
+                  break
+              }
+              row += '</li>';
+              ul += row;
+            });
+            ul += '</ul>';
+            $("div#searchresults").append(ul);
+          }
+        },
+        error: function() {
+          $("div#searchresults").empty();
+          $("div#searchresults").append('<div class=""><p>Backend Error, please try again later</p></div>');
+        }
+      });
+  }
+  $("input[name='search']").on("click", function(e) {
+      e.stopPropagation();
+      page = 1;
+      doSearch();
+      return false;
+  });
+  $("input#search_start_date_picker").datepicker({
+    dateFormat: "dd M yy",
+    altField: "input#search_start_date",
+    altFormat: "yy-mm-dd"
+  });
+  $("input#search_end_date_picker").datepicker({
+    dateFormat: "dd M yy",
+    altField: "input#search_end_date",
+    altFormat: "yy-mm-dd"
+  });
+  var cleanupTerminals = function() {
+      $("select#search_terminal").find("option").remove();
+      $("select#search_terminal").append("<option value>Select a Terminal</option>");
+  };
+  var updateTerminals = function() {
+    var portId = $("select#search_port").val();
+    if (portId == "" || typeof portId == 'undefined') {
+      cleanupTerminals();
+      return;
+    }
+    $.ajax('/ports/'+portId+'/terminals.json', {
+      type: 'GET',
+      dataType: 'json',
+      success: function(d) {
+        cleanupTerminals();
+        $.each(d, function(i, e) {
+          $("select#search_terminal").append('<option value="' + e.id + '">' + e.name + '</option>');
+        })
+      }
+    });
+  }
+  $("select#search_port").on("change", updateTerminals);
+</script>

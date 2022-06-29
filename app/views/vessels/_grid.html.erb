@@ -1,0 +1,23 @@
+<%= grid(@vessels_grid) do |g|
+  g.column name: 'Name', attribute: 'name' do |v|
+    link_to v.name, vessel_path(v)
+  end
+  g.column name: 'LOA', attribute: 'loa' do |v|
+    [v.loa, class: 'text-right']
+  end
+  g.column name: 'GRT', attribute: 'grt' do |v|
+    [v.grt, class: 'text-right']
+  end
+  g.column name: 'NRT', attribute: 'nrt' do |v|
+    [v.nrt, class: 'text-right']
+  end
+  g.column name: 'DWT', attribute: 'dwt' do |v|
+    [v.dwt, class: 'text-right']
+  end
+  g.column name: 'SBT Certified', attribute: 'sbt_certified' do |v|
+    [v.sbt_certified_display, class: 'text-right']
+  end
+  g.column do |v|
+    render partial: 'actions', locals: {vessel: v}
+  end
+end %>

@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+require 'delayed/command'
+
+filename = File.join(ProformaDA::Application.config.paths["db"].first, "schema_cache.dump")
+if File.file?(filename)
+  cache = Marshal.load File.binread filename
+  if cache.version == ActiveRecord::Migrator.current_version
+    ActiveRecord::Base.connection.schema_cache = cache
+    puts "db/schema_cache.dump loaded"
+  else
+    puts "Ignoring db/schema_cache.dump because it has expired. The current schema version is #{ActiveRecord::Migrator.current_version}, but the one in the cache is #{cache.version}."
+    warn "Ignoring db/schema_cache.dump because it has expired. The current schema version is #{ActiveRecord::Migrator.current_version}, but the one in the cache is #{cache.version}."
+  end
+else
+  puts "file #{filename} not exists"
+  warn "file #{filename} not exists"
+end
+
+Delayed::Command.new(ARGV).daemonize

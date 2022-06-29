@@ -1,0 +1,24 @@
+# This is a basic workflow to help you get started with Actions
+
+name: QA merge
+
+# Controls when the action will run. 
+on:
+  pull_request:
+    branches: [ master ]
+    types: [ closed ]  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  merge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Branch Merge
+        uses: everlytic/branch-merge@1.1.0
+        with:
+          # Branch name or Ref that you wish to merge into the target_branch.
+          source_ref: master
+          # Branch you are merging the source ref into.
+          target_branch: QA

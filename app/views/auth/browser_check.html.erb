@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="col-md-10 col-md-offset-1 browsers">
+      <h2 class="title">Please Upgrade Your Browser</h2>
+      <p>This service uses the latest web technologies to make it faster
+         and easier to use.
+         Unfortunately, your browser does not support these technologies.</p>
+         <p>Please download or upgrade to one of the following browsers and
+            you will be on your way.</p>
+
+      <ul class="row">
+        <li class="col-md-6 ff">
+          <a href="http://www.mozilla.org/en-US/firefox/new/"
+             target="_blank">
+            <span>Mozilla Firefox</span> Version 4 or higher
+          </a>
+        </li>
+        <li class="col-md-6 safari">
+          <a href="http://support.apple.com/kb/dl1531"
+             target="_blank">
+            <span>Apple Safari</span> Version 5 or higher
+          </a>
+        </li>
+      </ul>
+      <ul class="row">
+        <li class="col-md-6 chrome">
+          <a href="https://www.google.com/intl/en/chrome/browser/"
+             target="_blank">
+            <span>Google Chrome</span> Version 4 or higher
+        </a>
+        </li>
+        <li class="col-md-6 ie">
+          <a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie"
+             target="_blank">
+            <span>Internet Explorer</span> Version 10 or higher
+         </a>
+        </li>
+      </ul>
+
+      <p class="ignore-browser">
+        <%= link_to "I know what I'm doing, let me in »",
+                    auth_login_path(force: 1) %></p>
+    </div>
+  </div>
+</div>

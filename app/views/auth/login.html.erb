@@ -1,0 +1,141 @@
+<div class="login">
+  <div class="login-logo"></div>
+  <div class="spinner">
+    <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+  </div>
+  <div class="login-error" style="display: none;">
+    <p><strong class="js-error-title"></strong></p>
+    <span class="js-error-msg"></span>
+  </div>
+  <div class="login-form" style="display: none;">
+    <form id="login">
+      <input type="text" name="username" class="input login-username"
+             placeholder="Username" autocomplete="off"
+             autocorrect="off" autocapitalize="off"
+             spellcheck="false">
+      <input type="password" name="password" class="input login-password"
+             placeholder="Password">
+      <a href="#" class="btn login-submit">Log In</a>
+    </form>
+  </div>
+
+  <div class="login-footer">
+    &copy; 2013-<%= Date.today.year %>
+    <a href="https://my-a3.com" target="_blank"
+       class="company">Callisto Agenty Systems Co Ltd</a>
+  </div>
+</div>
+<script type="text/javascript">
+  var setupLogin = function() {
+    $('input.login-username').focus();
+    $('input.input').val('');
+    $('input.input').on('keypress', function(e) {
+      var keycode = (e.keyCode ? e.keyCode : e.which);
+      if (keycode === 13) logIn();
+    });
+    $('a.login-submit').removeAttr('disabled');
+    $('a.login-submit').on('click', function(e) {
+        e.preventDefault();
+        logIn();
+    });
+  };
+
+  var saveAuth = function(authResults) {
+    localStorage.setItem('idToken', authResults.idToken);
+    localStorage.setItem('expirationDate', Date.now() + Number.parseInt(authResults.expiresIn) * 1000);
+  };
+
+  function parseAuth0Id(ssodata) {
+    var parsedSsoData = JSON.parse(JSON.parse(ssodata));
+    if (parsedSsoData!=null && parsedSsoData.hasOwnProperty('lastUsedSub')){
+        return parsedSsoData.lastUsedSub;
+    }
+    return null;
+  }
+
+  var checkState = function() {
+    var token = localStorage.getItem('idToken');
+    var auth0_id = parseAuth0Id(localStorage.getItem('auth0.ssodata'));
+    var expirationDate = new Date(Number.parseInt(localStorage.getItem('expirationDate')));
+    var isExpired = expirationDate < new Date();
+
+    if (!token || isExpired) {
+      $('div.spinner').fadeOut(100);
+      $("div.login-form").fadeIn(100, setupLogin);
+    } else {
+        $.post('/auth/register', {token: token, auth0_id: auth0_id})
+        .done(function() {
+            window.location = "<%= root_path %>";
+        })
+    }
+  };
+
+  var clearError = function() {
+    $('div.login-error').hide();
+  };
+  var showError = function(title, msg) {
+    $('.js-error-title').html(title);
+    $('.js-error-msg').html(msg);
+    $('div.login-error').show();
+  };
+
+  var logIn = function() {
+    var button = $('a.login-submit');
+    var username = $('input[name="username"]').val();
+    var password = $('input[name="password"]').val();
+    if (username == '' && password == '') return;
+    $(button).html($('<span class="fa fa-spinner fa-spin"></span>'));
+    $(button).attr('disabled', 'disabled');
+    username += '.<%= @tenant %>';
+
+    $.post('/auth/authenticate', {username, password})
+      .done(function(auth) {
+        var auth0_id = parseAuth0Id(localStorage.getItem('auth0.ssodata'));
+        $.post('/auth/register',
+               {token: auth.id_token, auth0_id: auth0_id})
+          .done(function(r) {
+            window.location = "<%= root_path %>";
+          })
+          .fail(function() {
+            showError(
+              'An unknown error occurred.',
+              'Please try again and contact Customer Support '+
+              'if the problem persists.');
+          });
+      })
+      .fail(function(response) {
+        const err = response.responseJSON;
+        if (err.error === 'too_many_attempts') {
+          showError('Your account has been blocked after multiple consecutive login attempts. Please contact Customer Support.');
+        } else {
+          showError(
+            'The login details you entered were not '+
+            'found in the system or are incorrect.',
+            'Please contact Customer Support for assistance.');
+        }
+        $(button).html('Log In');
+        $(button).removeAttr('disabled');
+        return;
+      });  
+  };
+
+  var WebAuth = new auth0.WebAuth({
+    domain: '<%= @domain %>',
+    clientID: '<%= @client_id %>',
+    responseType: 'token id_token',
+    redirectUri: '<%= auth_login_url %>'
+  });
+  WebAuth.parseHash(window.location.hash, function(err, results) {
+    if (!err && results) {
+      saveAuth(results);
+      checkState();
+    } else {
+      WebAuth.checkSession({}, function (err, results) {
+        if (!err && results) {
+          saveAuth(results);
+        }
+        checkState();
+      });
+    }
+  });
+</script>

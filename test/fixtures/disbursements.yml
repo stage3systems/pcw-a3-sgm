@@ -1,0 +1,64 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+draft:
+  tenant: one
+  port: :brisbane
+  vessel: :vesselone
+  company: :stage3
+  status_cd: 0
+  publication_id: id1
+  current_revision: revisionone
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
+published:
+  tenant: one
+  port: :brisbane
+  user: admin
+  terminal: coal
+  vessel: :vesseltwo
+  company: :evax
+  status_cd: 1
+  publication_id: id2
+  current_revision: revisiontwo
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
+generic:
+  tenant: one
+  port: :brisbane
+  user: admin
+  terminal: coal
+  vessel: :vesseltwo
+  company: :evax
+  status_cd: 1
+  publication_id: id3
+  current_revision: generic_revision
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+
+generic_tax_exempt:
+  tenant: one
+  port: :brisbane
+  user: admin
+  terminal: coal
+  vessel: :vesseltwo
+  company: :evax
+  status_cd: 1
+  publication_id: id4
+  current_revision: generic_revision_tax_exempt
+  tbn: true
+  grt: 9.99
+  nrt: 9.99
+  dwt: 9.99
+  loa: 9.99
+

@@ -1,0 +1,21 @@
+<div class="login">
+  <div class="login-logo"></div>
+  <div class="spinner">
+    <h1 class="text-center"><span class="fa fa-spinner fa-spin"></span></h1>
+  </div>
+  <div class="login-footer">
+    &copy; 2013-<%= Date.today.year %>
+    <a href="https://my-a3.com" target="_blank"
+       class="company">Callisto Agenty Systems Co Ltd</a>
+  </div>
+</div>
+<script type="text/javascript">
+  localStorage.removeItem('idToken');
+  var WebAuth = new auth0.WebAuth({
+    domain: '<%= @domain %>',
+    clientID: '<%= @client_id %>',
+    responseType: 'token id_token',
+    redirectUri: '<%= auth_login_url %>'
+  });
+  WebAuth.logout({returnTo: '<%= auth_login_url %>'});
+</script>

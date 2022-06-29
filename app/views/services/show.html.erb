@@ -1,0 +1,64 @@
+<% content_for :navbar_buttons do %>
+  <% if @terminal %>
+    <%= link_to 'Edit', edit_port_terminal_service_path(@port, @terminal, @instance), :class => "btn btn-primary btn-sm" %>
+    <%= link_to 'Back', port_terminal_services_path(@port, @terminal), :class => "btn btn-default btn-sm" %>
+  <% else %>
+    <%= link_to 'Edit', edit_port_service_path(@port, @instance), :class => "btn btn-primary btn-sm" %>
+    <%= link_to 'Back', port_services_path(@port), :class => "btn btn-default btn-sm" %>
+  <% end %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="title">Service for <%= @port.name %><%= " / #{@terminal.name}" if @terminal %></h2>
+    <% ['item', 'key'].each do |k| %>
+      <p><strong><%= k.capitalize %>:</strong> <%= @instance.send(k) %></p>
+    <% end %>
+    <p><strong>Supplier:</strong> <%= @instance.company.name rescue 'N/A' %></p>
+    <p><strong>Compulsory:</strong> <%= @instance.compulsory ? 'Yes' : 'No' %></p>
+    <p><strong>Disabled by Default:</strong> <%= @instance.disabled ? 'Yes' : 'No' %></p>
+    <p><strong>Reference Document:</strong> <%= link_to(File.basename(@instance.document.path), @instance.document.url) rescue 'N/A' %></p>
+
+    <p><strong>Created By:</strong> <%= @instance.user.full_name rescue 'N/A' %></p>
+    <p><strong>Created On:</strong> <%= l @instance.created_at %></p>
+    <p><strong>Code:</strong></p>
+    <div style="height: 440px;">
+      <div id="code" data-ace-mode="javascript"><%= @instance.code %></div>
+    </div>
+    <div class="clearfix"></div>
+    <p><strong>Change Log:</strong></p>
+    <table class="table">
+       <thead>
+        <tr>
+          <th>Date</th>
+          <th>Author</th>
+          <th>Change Log Message</th>
+          <th>Reference Document</th>
+          <th class="hide">Code</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @instance.service_updates.order('created_at DESC').each do |u| %>
+        <tr>
+          <td><%= l u.created_at %></td>
+          <td><%= u.user.full_name rescue 'N/A' %></td>
+          <td><%= u.changelog %></td>
+          <td><%= link_to(File.basename(u.document.path), u.document.url) rescue 'N/A' %></td>
+          <td class="hide"> 
+            <% if u.old_code.present? %>
+              <pre><%= u.old_code %></pre> 
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+  var editor = ace.edit("code");
+  editor.setTheme("ace/theme/clouds");
+  editor.setReadOnly("true");
+  editor.getSession().setUseWorker(false);
+  var mode = require("ace/mode/javascript").Mode;
+  editor.getSession().setMode(new mode());
+</script>

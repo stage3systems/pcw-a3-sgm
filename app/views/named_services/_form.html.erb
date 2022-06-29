@@ -1,0 +1,21 @@
+<%= simple_form_for([:named, @instance]) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :item %>
+    <%= f.input :key, 
+                hint: 'e.g abbr of item'%>
+    <%= f.association :activity_code,
+                      label: "Activity Code",
+                      label_method: :display %>
+    <%= f.input :compulsory %>
+    <%= f.input :tax_applies, as: :boolean %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+  <script type="text/javascript">
+    $('select#service_activity_code_id').select2();
+  </script>
+<% end %>

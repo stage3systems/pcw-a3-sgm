@@ -1,0 +1,105 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+revisionone:
+  tenant: one
+  disbursement: draft
+  eta: <%= Date.today.to_s(:db) %>
+  data: {}
+  fields: 
+  descriptions: 
+  values: 
+  values_with_tax: 
+  codes: 
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference1
+
+revisiontwo:
+  tenant: one
+  disbursement: published
+  eta: <%= Date.today.to_s(:db) %>
+  user: admin
+  data: {
+    tax_rate: 1.1,
+    vessel_nrt: 100,
+    vessel_grt: 100,
+    vessel_loa: 100,
+    vessel_dwt: 100
+  }
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  compulsory: {}
+  overriden: {}
+  supplier_id: {}
+  supplier_name: {}
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference2
+  cargo_type: one
+  voyage_number: voyage123
+
+generic_revision:
+  tenant: one
+  disbursement: generic
+  eta: <%= Date.today.to_s(:db) %>
+  user: admin
+  data: {}
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  compulsory: {}
+  overriden: {}
+  tax_exempt: false
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference3
+  cargo_type: one
+  voyage_number: voyage123
+
+generic_revision_tax_exempt:
+  tenant: one
+  disbursement: generic_tax_exempt
+  eta: <%= Date.today.to_s(:db) %>
+  user: admin
+  data: {}
+  fields: {MNL: 1}
+  descriptions: {MNL: Marine Levy}
+  comments: {MNL: Comment for Marine Levy}
+  values:  {MNL: 1000.0}
+  values_with_tax: {MNL: 1100.0}
+  codes: {}
+  disabled: {}
+  compulsory: {}
+  overriden: {}
+  tax_exempt: true
+  number: 1
+  cargo_qty: 1
+  days_alongside: 1
+  loadtime: 1
+  tugs_in: 1
+  tugs_out: 1
+  reference: reference3
+  cargo_type: one
+  voyage_number: voyage123

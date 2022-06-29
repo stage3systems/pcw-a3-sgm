@@ -1,0 +1,12 @@
+<% content_for :navbar_buttons do %>
+  <%= link_to 'Edit', edit_tax_path(@instance), class: "btn btn-primary btn-sm" %>
+  <%= link_to 'Back', taxes_path, class: "btn btn-default btn-sm" %>
+<% end %>
+<div class="row">
+  <div class="col-md-12">
+    <p id="notice"><%= notice %></p>
+
+    <h2 class="title"><%= @instance.name %></h2>
+    <p>Code: <%= @instance.code %><br />Rate: <%= @instance.rate %> (<%= (@instance.rate-1)*100 %>%)</p>
+  </div>
+</div>
