@@ -7,4 +7,4 @@ function sync_tenant() {
     AWS_PROFILE=a3 aws s3 sync ./.s3_tmp_data/$1/pcw s3://a3-customer-data/$1/pcw
 }
 
-sync_tenant "sgm"
+sync_tenant "monson"

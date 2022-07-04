@@ -375,7 +375,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     assert_not_nil dr
     assert_equal 1, dr.number
     assert_equal ['AGENCY-FEE-1'], dr.fields.keys
-    assert_equal "2200.0", dr.amount.to_s
+    assert_equal "2000.0", dr.amount.to_s
     # override fee
     reference = dr.reference.sub('REV. 1', 'REV. 2')
     stub_request(:post,
@@ -414,7 +414,7 @@ class DisbursementsControllerTest < ActionController::TestCase
     dr = assigns(:revision)
     assert_not_nil dr
     assert_equal 2, dr.number
-    assert_equal "3300.0", dr.amount.to_s
+    assert_equal "3000.0", dr.amount.to_s
     assert_equal ['AGENCY-FEE-1'], dr.fields.keys
     # disable fee
     reference = dr.reference.sub('REV. 2', 'REV. 3')

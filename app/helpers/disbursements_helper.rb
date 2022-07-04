@@ -7,6 +7,7 @@ module DisbursementsHelper
     return d if d.class == String
     entries = (d.map do |e|
       next "" if e == nil
+      next "" if e.kind_of?(Array)
       next e if e.class == String
       case e[:style]
         when :bold

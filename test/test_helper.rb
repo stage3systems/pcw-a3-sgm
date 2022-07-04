@@ -37,7 +37,7 @@ end
 class ActionController::TestCase
 
   setup do
-    request.host = 'sgm.test.host'
+    request.host = 'monson.test.host'
   end
 
   def log_in(user)
